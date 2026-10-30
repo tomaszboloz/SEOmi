@@ -1,3 +1,5 @@
+import { inRanges } from './ipRanges';
+
 /**
  * Claimed vs verified crawler identity (#92). A User-Agent is only a claim.
  * No network access here: DNS resolvers and published IP ranges are injected by the caller.
@@ -29,24 +31,8 @@ export const canonicalIp = (ip: string): string => {
 
 export const claimedFamily = (userAgent: string): BotFamily | null => TOKENS.find(([re]) => re.test(userAgent))?.[1] ?? null;
 
-const ipv4 = (ip: string): number | null => {
-  const parts = ip.split('.').map(Number);
-  return parts.length === 4 && parts.every((p) => Number.isInteger(p) && p >= 0 && p <= 255) ? parts.reduce((acc, p) => acc * 256 + p, 0) : null;
-};
-
-/** IPv4 CIDR match; IPv6 and malformed ranges never match (they stay unknown). */
-export const inRanges = (ip: string, cidrs: readonly string[]): boolean => {
-  const value = ipv4(ip);
-  if (value === null) return false;
-  return cidrs.some((cidr) => {
-    const [base, bits] = cidr.split('/');
-    const start = ipv4(base);
-    const length = Number(bits);
-    if (start === null || !Number.isInteger(length) || length < 0 || length > 32) return false;
-    const size = 2 ** (32 - length);
-    return Math.floor(value / size) === Math.floor(start / size);
-  });
-};
+/** IPv4 and IPv6 CIDR match; malformed ranges never match (the claim stays unproven). */
+export { inRanges };
 
 export interface VerifyDeps { resolver?: Resolver; ranges?: Partial<Record<BotFamily, readonly string[]>>; now?: () => number }
 

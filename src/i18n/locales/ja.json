@@ -3592,7 +3592,8 @@
         "pending": "待機中",
         "rendering": "レンダリング中…",
         "cancelled": "キャンセル済み"
-      }
+      },
+      "auto": "クロールのたびにシェルページを自動レンダリング（デスクトップアプリ、最大 {{count}} ページ、既定はオフ）"
     }
   },
   "ai": {
@@ -8300,6 +8301,44 @@
     "chunk": {
       "leading-pronoun": "パッセージ {{index}} は前の文脈が必要な代名詞で始まっています。",
       "too-short": "パッセージ {{index}} は単独で成立するには短すぎます。"
+    },
+    "policy": {
+      "advisory": "助言",
+      "enforced": "強制"
+    },
+    "gate": {
+      "advice": "ポリシー：{{policy}}。助言のみで、公開の判断はあなたが行います。",
+      "pass": "ポリシー：{{policy}}。この入力内容でチェックに合格しました。",
+      "hold": "ポリシー：{{policy}}。人によるレビューのため保留：チェックが完全な OK ではありません。"
+    },
+    "gap": {
+      "stale-baseline": "基準クロールが 30 日より古くなっています。",
+      "unsupported-language": "パッセージのルールがサイトの言語に対応していないため、パッセージのチェックは部分的です。",
+      "no-baseline-date": "基準クロールに完了日がありません。"
+    },
+    "donors": {
+      "title": "内部リンクのドナー",
+      "rule": "類似度 60～85% かつ関連度（TRS）70 以上の既存ページを最大 3 件。",
+      "none": "ドナーの条件を満たすページはありません。",
+      "row": "{{url}}（類似度 {{similarity}}%、TRS {{trs}}）",
+      "links": {
+        "yes": "すでに下書き URL にリンクしています",
+        "no": "まだ下書き URL にリンクしていません",
+        "unknown": "既存のリンクは不明です"
+      },
+      "anchor": "提案アンカー：「{{anchor}}」",
+      "noAnchor": "アンカーの提案なし（短いタイトル行がありません）",
+      "placement": "配置の提案：同じトピックの本文パッセージ。ファーストビューに関する主張ではなく、ビューポートはレンダリングしていません。"
+    },
+    "aio": {
+      "title": "パッセージの準備状況（AIO-R）",
+      "language": {
+        "supported": "{{language}} のルール：完全。",
+        "uncertain": "{{language}} のルール：基本のみ。結果は目安です。",
+        "unsupported": "{{language}} のパッセージのルールはありません。結果は部分的です。"
+      },
+      "summary": "弱いパッセージ：{{total}} 件中 {{weak}} 件。",
+      "chunk": "パッセージ {{index}}（文字 {{start}}～{{end}}、スコア {{score}}）"
     }
   },
   "parityUi": {
@@ -8563,6 +8602,22 @@
       "ok": "正常",
       "inconclusive": "判定不能",
       "no-logs": "ログなし"
+    },
+    "ranges": {
+      "title": "ボット検証の根拠",
+      "note": "任意：クローラー運営者からダウンロードした公式 IP 範囲ファイル（例：gptbot.json、perplexitybot.json）を読み込みます。SEOmi 自体はダウンロードしません。範囲はそのボットについて DNS より優先され、次回のインポートから適用されます。",
+      "family": "ボット",
+      "file": "公式 IP 範囲ファイル（JSON）",
+      "loaded": "{{family}}：{{source}} から {{count}} 件の範囲（公開 {{created}}、読み込み {{loaded}} UTC）",
+      "summary": "ID チェック：{{checks}} 件（検証済み {{verified}}、自己申告 {{claimed}}、なりすまし {{spoofed}}）。方法：DNS {{dns}}、公開範囲 {{ranges}}、なし {{none}}。最終チェック：{{time}} UTC。",
+      "noChecks": "クローラーの ID はまだチェックされていません。",
+      "errors": {
+        "invalid-json": "ファイルが有効な JSON ではありません。",
+        "unsupported-format": "未対応の形式です：ipv4Prefix または ipv6Prefix を含む prefixes リストが必要です。",
+        "no-valid-prefix": "ファイルに有効な IP 範囲がありません。",
+        "too-many-prefixes": "ファイルに 5,000 件を超える範囲があります。",
+        "storageFailed": "ローカルストレージを更新できず、範囲は保存されませんでした。"
+      }
     }
   },
   "altCheckUi": {
@@ -8606,14 +8661,19 @@
     "running": "下書きとクロールデータの埋め込みを作成中…",
     "unreachable": "選択した埋め込みプロバイダーからベクトルを取得できませんでした。プロジェクトの設定と接続を確認してください。",
     "cancelled": "チェックをキャンセルしました。結果は適用されていません。",
-    "stale": "入力またはクロールが変更されました。チェックを再実行してください。"
+    "stale": "入力またはクロールが変更されました。チェックを再実行してください。",
+    "policy": "レビューポリシー",
+    "policyAdvisory": "助言（既定）",
+    "policyEnforced": "強制（オプトイン）",
+    "policyHint": "強制ポリシーは、チェックが完全な OK でない場合に下書きを人の判断のために保留するだけです。公開・削除・リダイレクトは一切行いません。"
   },
   "telemetrySourcesUi": {
     "title": "データソース",
     "sources": {
       "gsc": "GSC",
       "ga4": "GA4",
-      "backlinks": "被リンク"
+      "backlinks": "被リンク",
+      "revenue": "収益"
     },
     "states": {
       "measured": "計測済み",
@@ -8632,7 +8692,11 @@
       "no": "データの切り詰め: なし"
     },
     "coverage": "カバレッジ: {{value}}%",
-    "unknownNote": "不明なデータをゼロとして数えることはありません。"
+    "unknownNote": "不明なデータをゼロとして数えることはありません。",
+    "currency": "通貨：{{value}}",
+    "attribution": {
+      "ga4-session-landing-page": "アトリビューション：GA4 のセッションのランディングページ"
+    }
   },
   "offPageSourcesUi": {
     "analyze": "リンク元を分析",
@@ -8787,5 +8851,113 @@
     "languageFallback": "ページの言語が不明なため、文は英語です。",
     "copy": "コピー",
     "copied": "コピーしました"
+  },
+  "offPageLinksUi": {
+    "profileTitle": "サイト全体リンクと重複リンクのプロファイル",
+    "profileSummary": "{{domains}} 件の参照元ドメインから生リンク {{raw}} 件（follow リンクあり {{follow}} 件）。サイト全体ドメイン：{{sitewide}} 件（生リンクの {{share}}%）、繰り返しドメイン：{{repeated}} 件。TBVA は参照元ドメインごとに 1 リンクのみ数えます。",
+    "unknown": "不明",
+    "sample": "読み込んだサンプルに基づくもので、プロバイダーの全プロファイルではありません。",
+    "complete": "プロバイダーが返したすべての行に基づきます。",
+    "rule": "サイト全体 = 参照元ページ 5 件以上かつ異なるアンカー 2 件以下（未較正のヒューリスティックで、ペナルティではありません）。",
+    "columns": {
+      "domain": "参照元ドメイン",
+      "raw": "生リンク",
+      "follow": "Follow",
+      "pages": "参照元ページ",
+      "anchors": "異なるアンカー",
+      "pattern": "パターン"
+    },
+    "patterns": {
+      "single": "単一ページ",
+      "repeated": "繰り返し",
+      "sitewide": "サイト全体"
+    },
+    "anchorTitle": "分析したリンクのアンカー文脈",
+    "anchorNote": "プロバイダーが報告したアンカーテキストを取得済みの参照元テキストから探します。テキストにはリンクのマークアップがないため、一致は周辺の語を示すだけで、その出現がリンクである証拠ではありません。",
+    "noAnchors": "読み込んだサンプルには、分析した参照元ページのリンクがありません。",
+    "anchorRow": "{{source}} → {{target}} · アンカー「{{anchor}}」",
+    "follow": "follow",
+    "nofollow": "nofollow",
+    "offset": "オフセット {{offset}}：",
+    "status": {
+      "located": "アンカーが 1 回見つかりました",
+      "ambiguous": "アンカーが {{n}} 回見つかりました（曖昧）",
+      "not-found": "参照元テキストにアンカーが見つかりません",
+      "no-anchor-text": "アンカーテキストなし（画像リンクなど）",
+      "source-unavailable": "参照元テキストを利用できません"
+    }
+  },
+  "imagePhashUi": {
+    "title": "ほぼ重複する画像（知覚ハッシュ）",
+    "note": "このアプリ内でサイト自身の画像を最大 {{max}} 件、1 回だけダウンロードし、64 ビットの知覚ハッシュを比較します。サーバーがクロスオリジン読み取りを拒否する画像は利用不可のままです。一致は見た目が似ていることを示すだけで、ストック素材の使用、著作者、価値のなさを示すものではありません。",
+    "run": "{{count}} 件の画像をハッシュ化",
+    "cancel": "キャンセル",
+    "threshold": "異なるビット数の上限（0～16）",
+    "uncalibrated": "既定は 8 ビット。このしきい値は実データで較正されていません。",
+    "status": {
+      "running": "ハッシュ化中… {{hashed}} 件完了、{{failed}} 件利用不可",
+      "done": "完了：{{hashed}} 件ハッシュ化、{{failed}} 件利用不可",
+      "cancelled": "キャンセル：{{hashed}} 件ハッシュ化、{{failed}} 件利用不可"
+    },
+    "failures": {
+      "blocked": "{{n}} 件がブロックまたは到達不可",
+      "http-error": "{{n}} 件が HTTP エラー",
+      "too-large": "{{n}} 件が 5 MB 超",
+      "not-image": "{{n}} 件がラスター画像ではない",
+      "decode-failed": "{{n}} 件がデコード不可",
+      "unsupported-url": "{{n}} 件が未対応の URL"
+    },
+    "pair": "{{left}} ≈ {{right}}（{{distance}} ビット異なる）",
+    "identical": "{{left}} = {{right}}（同一ファイル）",
+    "noPairs": "このしきい値ではほぼ重複するペアはありません。",
+    "external": "外部の画像検索結果との比較：利用不可（画像プロバイダーが未設定）。"
+  },
+  "causalImpactUi": {
+    "title": "反事実推定（コントロール系列）",
+    "method": "このプロパティの Search Console の日次クリック数を、変更前最大 90 日間について独立したコントロールプロパティに回帰し、変更がなかった場合のクリック数を予測します。季節性をモデル化しない、Causal Impact の頻度論的な近似です。",
+    "unavailable": {
+      "page-series-unavailable": "単一 URL では推定できません。保存されているのはプロパティ全体の日次クリック数のみです。",
+      "no-test-series": "推定できません。このサイトの保存済み Search Console 日次系列がありません。"
+    },
+    "series": "テスト系列：{{test}} · コントロール：{{control}}",
+    "none": "なし",
+    "status": {
+      "estimated": "変更前 {{pre}} 日と変更後 {{post}} 日から推定しました。",
+      "not-estimable": "推定できません（データのある変更前 {{pre}} 日、変更後 {{post}} 日）。"
+    },
+    "reasons": {
+      "short-pre-period": "変更前の期間が 28 日未満です。",
+      "short-post-period": "変更後の期間が 7 日未満です。",
+      "missing-data": "いずれかの期間で 10% を超える日が欠けています。",
+      "no-control": "同じフィルターの独立したコントロールプロパティが保存されていません。コントロールとして使う別ドメインの Search Console データを保存してください。",
+      "flat-control": "コントロール系列が変更前の期間に変動していません。",
+      "poor-prefit": "コントロールが変更前の期間をほとんど説明できません（R² が 0.5 未満）。",
+      "placebo-failed": "変更前の期間でのプラセボテストが、効果がないはずの所で効果を検出しました。モデルは信頼できません。"
+    },
+    "prefit": "変更前の当てはまり：R² {{r2}}、残差の自己相関 {{rho}}。",
+    "placeboPassed": "プラセボテスト合格（変更前の区間 {{lower}}～{{upper}} は 0 を含みます）。",
+    "placeboFailed": "プラセボテスト不合格（変更前の区間 {{lower}}～{{upper}} は 0 を含みません）。",
+    "absolute": "クリック数への累積効果：{{value}}（95% 区間 {{lower}}～{{upper}}）。",
+    "relative": "相対効果：{{value}}（95% 区間 {{lower}}～{{upper}}）。",
+    "probability": "効果がこの符号である確率：{{value}}（正規近似であり、ベイズ事後確率ではありません）。",
+    "caveat": "コントロールで調整した推定は因果関係の証明ではありません。他の変更、Google のアップデート、コントロールにも及ぶ変動によって偏ることがあります。ROI は推定しません。"
+  },
+  "revenueImportUi": {
+    "title": "収益（任意の GA4 エクスポート）",
+    "model": "ランディングページと収益を含み、オーガニック検索のセッションに絞り込んだ GA4 レポートの CSV をインポートします。収益は GA4 が報告するとおりセッションのランディングページに帰属させ、指定した通貨のまま保持します。エクスポートにないページは 0 ではなく不明のままです。",
+    "current": "{{file}} をインポート済み：{{currency}} のランディングページ {{rows}} 件、期間 {{period}}。",
+    "noPeriod": "ファイルに記載なし",
+    "clear": "削除",
+    "none": "収益のエクスポートはインポートされていません。収益は利用不可のままです。",
+    "currency": "通貨（ISO コード）",
+    "organic": "エクスポートにはオーガニック検索のセッションのみが含まれます",
+    "file": "GA4 の CSV エクスポート",
+    "errors": {
+      "invalid-currency": "プロパティの通貨を 3 文字の ISO コード（例：JPY）で入力してください。",
+      "not-organic": "エクスポートがオーガニック検索のセッションに限定されていることを確認してください。",
+      "no-header": "ランディングページ列と収益列を含むヘッダーが見つかりません。",
+      "no-rows": "数値の収益を持つランディングページがファイルにありません。",
+      "storage-failed": "ローカルストレージを更新できず、インポートは保存されませんでした。"
+    }
   }
 }

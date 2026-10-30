@@ -3592,7 +3592,8 @@
         "pending": "waiting",
         "rendering": "rendering…",
         "cancelled": "cancelled"
-      }
+      },
+      "auto": "Render shell pages automatically after each crawl (desktop app, up to {{count}} pages; off by default)"
     }
   },
   "ai": {
@@ -8300,6 +8301,44 @@
     "chunk": {
       "leading-pronoun": "Passage {{index}} starts with a pronoun that needs earlier context.",
       "too-short": "Passage {{index}} is too short to stand alone."
+    },
+    "policy": {
+      "advisory": "advisory",
+      "enforced": "enforced"
+    },
+    "gate": {
+      "advice": "Policy: {{policy}}. Advice only; publishing is your decision.",
+      "pass": "Policy: {{policy}}. The check passed for these exact inputs.",
+      "hold": "Policy: {{policy}}. Held for human review: the check is not a complete OK."
+    },
+    "gap": {
+      "stale-baseline": "The baseline crawl is older than 30 days.",
+      "unsupported-language": "Passage rules do not support the site language; passage checks are partial.",
+      "no-baseline-date": "The baseline crawl has no completion date."
+    },
+    "donors": {
+      "title": "Internal link donors",
+      "rule": "Up to 3 existing pages with similarity 60–85% and relevance (TRS) of at least 70.",
+      "none": "No page meets the donor rule.",
+      "row": "{{url}} (similarity {{similarity}}%, TRS {{trs}})",
+      "links": {
+        "yes": "already links to the draft URL",
+        "no": "does not link to the draft URL yet",
+        "unknown": "existing links unknown"
+      },
+      "anchor": "proposed anchor: “{{anchor}}”",
+      "noAnchor": "no anchor proposed (no short title line)",
+      "placement": "Placement proposal: a body passage on the same topic. Not an above-the-fold claim; no viewport was rendered."
+    },
+    "aio": {
+      "title": "Passage readiness (AIO-R)",
+      "language": {
+        "supported": "Rules for {{language}}: full.",
+        "uncertain": "Rules for {{language}}: basic; results are indicative.",
+        "unsupported": "No passage rules for {{language}}; results are partial."
+      },
+      "summary": "Weak passages: {{weak}} of {{total}}.",
+      "chunk": "Passage {{index}} (characters {{start}}–{{end}}, score {{score}})"
     }
   },
   "parityUi": {
@@ -8563,6 +8602,22 @@
       "ok": "OK",
       "inconclusive": "Inconclusive",
       "no-logs": "No logs"
+    },
+    "ranges": {
+      "title": "Bot verification evidence",
+      "note": "Optional: load the official IP range file you downloaded from the crawler operator (for example gptbot.json or perplexitybot.json). SEOmi does not download it. Ranges take precedence over DNS for that bot and apply to the next import.",
+      "family": "Bot",
+      "file": "Official IP range file (JSON)",
+      "loaded": "{{family}}: {{count}} ranges from {{source}} (published {{created}}, loaded {{loaded}} UTC)",
+      "summary": "Identity checks: {{checks}} (verified {{verified}}, claimed {{claimed}}, spoofed {{spoofed}}). Method: DNS {{dns}}, published ranges {{ranges}}, none {{none}}. Last check: {{time}} UTC.",
+      "noChecks": "No crawler identity has been checked yet.",
+      "errors": {
+        "invalid-json": "The file is not valid JSON.",
+        "unsupported-format": "Unsupported format: expected a prefixes list with ipv4Prefix or ipv6Prefix entries.",
+        "no-valid-prefix": "The file contains no valid IP range.",
+        "too-many-prefixes": "The file contains more than 5,000 ranges.",
+        "storageFailed": "Local storage could not be updated; the ranges were not saved."
+      }
     }
   },
   "altCheckUi": {
@@ -8606,14 +8661,19 @@
     "running": "Embedding the draft and crawl evidence…",
     "unreachable": "The selected embedding provider could not return vectors. Check the project embedding settings and provider connection.",
     "cancelled": "Check cancelled. No result was applied.",
-    "stale": "Inputs or crawl changed. Run the check again."
+    "stale": "Inputs or crawl changed. Run the check again.",
+    "policy": "Review policy",
+    "policyAdvisory": "Advisory (default)",
+    "policyEnforced": "Enforced (opt-in)",
+    "policyHint": "Enforced only holds the draft for a human decision when the check is not a complete OK. Nothing is ever published, deleted or redirected."
   },
   "telemetrySourcesUi": {
     "title": "Sources",
     "sources": {
       "gsc": "GSC",
       "ga4": "GA4",
-      "backlinks": "Backlinks"
+      "backlinks": "Backlinks",
+      "revenue": "Revenue"
     },
     "states": {
       "measured": "Measured",
@@ -8632,7 +8692,11 @@
       "no": "Truncated: no"
     },
     "coverage": "Coverage: {{value}}%",
-    "unknownNote": "Unknown data is never counted as zero."
+    "unknownNote": "Unknown data is never counted as zero.",
+    "currency": "Currency: {{value}}",
+    "attribution": {
+      "ga4-session-landing-page": "Attribution: GA4 session landing page"
+    }
   },
   "offPageSourcesUi": {
     "analyze": "Analyze link sources",
@@ -8787,5 +8851,113 @@
     "languageFallback": "Page language unknown: the sentence is in English.",
     "copy": "Copy",
     "copied": "Copied"
+  },
+  "offPageLinksUi": {
+    "profileTitle": "Sitewide and duplicate link profile",
+    "profileSummary": "{{raw}} raw links from {{domains}} source domains ({{follow}} with a follow link). Sitewide domains: {{sitewide}} ({{share}}% of raw links); repeated domains: {{repeated}}. TBVA counts one link per source domain.",
+    "unknown": "unknown",
+    "sample": "Based on the loaded sample, not the full provider profile.",
+    "complete": "Based on all rows the provider returned.",
+    "rule": "Sitewide = at least 5 source pages with at most 2 distinct anchors (uncalibrated heuristic, not a penalty).",
+    "columns": {
+      "domain": "Source domain",
+      "raw": "Raw links",
+      "follow": "Follow",
+      "pages": "Source pages",
+      "anchors": "Distinct anchors",
+      "pattern": "Pattern"
+    },
+    "patterns": {
+      "single": "Single page",
+      "repeated": "Repeated",
+      "sitewide": "Sitewide"
+    },
+    "anchorTitle": "Anchor context of analysed links",
+    "anchorNote": "Searches the provider-reported anchor text in the fetched source text. The text has no link markup, so a match shows the surrounding words, not proof that this occurrence is the link.",
+    "noAnchors": "No analysed source page has a link in the loaded sample.",
+    "anchorRow": "{{source}} → {{target}} · anchor “{{anchor}}”",
+    "follow": "follow",
+    "nofollow": "nofollow",
+    "offset": "Offset {{offset}}:",
+    "status": {
+      "located": "anchor found once",
+      "ambiguous": "anchor found {{n}} times (ambiguous)",
+      "not-found": "anchor not found in the source text",
+      "no-anchor-text": "no anchor text (for example an image link)",
+      "source-unavailable": "source text unavailable"
+    }
+  },
+  "imagePhashUi": {
+    "title": "Near-duplicate images (perceptual hash)",
+    "note": "Downloads up to {{max}} of the site's own images once, in this app, and compares their 64-bit perceptual hashes. Images whose server blocks cross-origin reads stay unavailable. A match means the pictures look alike; it does not show stock use, authorship or lack of value.",
+    "run": "Hash {{count}} images",
+    "cancel": "Cancel",
+    "threshold": "Maximum differing bits (0–16)",
+    "uncalibrated": "Default 8 bits; this threshold is not calibrated on real data.",
+    "status": {
+      "running": "Hashing… {{hashed}} hashed, {{failed}} unavailable",
+      "done": "Done: {{hashed}} hashed, {{failed}} unavailable",
+      "cancelled": "Cancelled: {{hashed}} hashed, {{failed}} unavailable"
+    },
+    "failures": {
+      "blocked": "{{n}} blocked or unreachable",
+      "http-error": "{{n}} HTTP error",
+      "too-large": "{{n}} larger than 5 MB",
+      "not-image": "{{n}} not a raster image",
+      "decode-failed": "{{n}} could not be decoded",
+      "unsupported-url": "{{n}} unsupported URL"
+    },
+    "pair": "{{left}} ≈ {{right}} ({{distance}} bits differ)",
+    "identical": "{{left}} = {{right}} (identical file)",
+    "noPairs": "No near-duplicate pair at this threshold.",
+    "external": "Comparison with external image search results: unavailable (no images provider configured)."
+  },
+  "causalImpactUi": {
+    "title": "Counterfactual estimate (control series)",
+    "method": "Daily Search Console clicks of this property are regressed on an independent control property over up to 90 days before the change; the model predicts the clicks without the change. Frequentist approximation of Causal Impact, without seasonality modelling.",
+    "unavailable": {
+      "page-series-unavailable": "Not estimable for a single URL: only property-level daily clicks are saved.",
+      "no-test-series": "Not estimable: no saved daily Search Console series for this site."
+    },
+    "series": "Test series: {{test}} · control: {{control}}",
+    "none": "none",
+    "status": {
+      "estimated": "Estimated from {{pre}} pre-period and {{post}} post-period days.",
+      "not-estimable": "Not estimable ({{pre}} pre-period and {{post}} post-period days with data)."
+    },
+    "reasons": {
+      "short-pre-period": "Fewer than 28 pre-period days.",
+      "short-post-period": "Fewer than 7 post-period days.",
+      "missing-data": "More than 10% of days are missing in a window.",
+      "no-control": "No independent control property with the same filters is saved. Save Search Console data for another domain to use as a control.",
+      "flat-control": "The control series has no variation in the pre-period.",
+      "poor-prefit": "The control explains too little of the pre-period (R² below 0.5).",
+      "placebo-failed": "A placebo test inside the pre-period found an effect where none should be; the model is unreliable."
+    },
+    "prefit": "Pre-period fit: R² {{r2}}, residual autocorrelation {{rho}}.",
+    "placeboPassed": "Placebo test passed (pre-period interval {{lower}} to {{upper}} includes zero).",
+    "placeboFailed": "Placebo test failed (pre-period interval {{lower}} to {{upper}} excludes zero).",
+    "absolute": "Cumulative effect on clicks: {{value}} (95% interval {{lower}} to {{upper}}).",
+    "relative": "Relative effect: {{value}} (95% interval {{lower}} to {{upper}}).",
+    "probability": "Probability that the effect has this sign: {{value}} (normal approximation, not a Bayesian posterior).",
+    "caveat": "An estimate adjusted for the control is not proof of causality. Other changes, Google updates or a shift that also affects the control can bias it. No ROI is inferred."
+  },
+  "revenueImportUi": {
+    "title": "Revenue (optional GA4 export)",
+    "model": "Import a GA4 report CSV with landing page and revenue, filtered to organic search sessions. Revenue is attributed to the session landing page as GA4 reports it and kept in the currency you state. Pages missing from the export stay unknown, not zero.",
+    "current": "Imported {{file}}: {{rows}} landing pages in {{currency}}, period {{period}}.",
+    "noPeriod": "not stated in the file",
+    "clear": "Remove",
+    "none": "No revenue export imported; revenue stays unavailable.",
+    "currency": "Currency (ISO code)",
+    "organic": "The export contains organic search sessions only",
+    "file": "GA4 CSV export",
+    "errors": {
+      "invalid-currency": "Enter the property currency as a 3-letter ISO code, for example EUR.",
+      "not-organic": "Confirm that the export is limited to organic search sessions.",
+      "no-header": "No header with a landing page column and a revenue column was found.",
+      "no-rows": "The file has no landing page with a numeric revenue value.",
+      "storage-failed": "Local storage could not be updated; the import was not saved."
+    }
   }
 }

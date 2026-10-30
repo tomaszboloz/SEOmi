@@ -3592,7 +3592,8 @@
         "pending": "en attente",
         "rendering": "rendu en cours…",
         "cancelled": "annulé"
-      }
+      },
+      "auto": "Rendre automatiquement les pages coquilles après chaque crawl (application de bureau, jusqu’à {{count}} pages ; désactivé par défaut)"
     }
   },
   "ai": {
@@ -8300,6 +8301,44 @@
     "chunk": {
       "leading-pronoun": "Le passage {{index}} commence par un pronom qui exige un contexte antérieur.",
       "too-short": "Le passage {{index}} est trop court pour tenir seul."
+    },
+    "policy": {
+      "advisory": "consultative",
+      "enforced": "appliquée"
+    },
+    "gate": {
+      "advice": "Politique : {{policy}}. Simple conseil ; la publication reste votre décision.",
+      "pass": "Politique : {{policy}}. La vérification est réussie pour ces entrées exactes.",
+      "hold": "Politique : {{policy}}. Retenu pour revue humaine : la vérification n’est pas un OK complet."
+    },
+    "gap": {
+      "stale-baseline": "Le crawl de référence date de plus de 30 jours.",
+      "unsupported-language": "Les règles de passages ne prennent pas en charge la langue du site ; la vérification des passages est partielle.",
+      "no-baseline-date": "Le crawl de référence n’a pas de date de fin."
+    },
+    "donors": {
+      "title": "Donneurs de liens internes",
+      "rule": "Jusqu’à 3 pages existantes avec une similarité de 60 à 85 % et une pertinence (TRS) d’au moins 70.",
+      "none": "Aucune page ne respecte la règle de donneur.",
+      "row": "{{url}} (similarité {{similarity}} %, TRS {{trs}})",
+      "links": {
+        "yes": "renvoie déjà vers l’URL du brouillon",
+        "no": "ne renvoie pas encore vers l’URL du brouillon",
+        "unknown": "liens existants inconnus"
+      },
+      "anchor": "ancre proposée : « {{anchor}} »",
+      "noAnchor": "aucune ancre proposée (pas de ligne de titre courte)",
+      "placement": "Proposition d’emplacement : un passage du corps sur le même sujet. Ce n’est pas une affirmation sur la partie visible sans défilement ; aucun viewport n’a été rendu."
+    },
+    "aio": {
+      "title": "Préparation des passages (AIO-R)",
+      "language": {
+        "supported": "Règles pour {{language}} : complètes.",
+        "uncertain": "Règles pour {{language}} : de base ; résultats indicatifs.",
+        "unsupported": "Aucune règle de passages pour {{language}} ; résultats partiels."
+      },
+      "summary": "Passages faibles : {{weak}} sur {{total}}.",
+      "chunk": "Passage {{index}} (caractères {{start}}–{{end}}, score {{score}})"
     }
   },
   "parityUi": {
@@ -8563,6 +8602,22 @@
       "ok": "Correct",
       "inconclusive": "Indéterminé",
       "no-logs": "Aucun journal"
+    },
+    "ranges": {
+      "title": "Preuves de vérification des robots",
+      "note": "Facultatif : chargez le fichier officiel de plages IP téléchargé auprès de l’opérateur du robot (par exemple gptbot.json ou perplexitybot.json). SEOmi ne le télécharge pas. Les plages priment sur le DNS pour ce robot et s’appliquent à la prochaine importation.",
+      "family": "Robot",
+      "file": "Fichier officiel de plages IP (JSON)",
+      "loaded": "{{family}} : {{count}} plages depuis {{source}} (publié {{created}}, chargé {{loaded}} UTC)",
+      "summary": "Vérifications d’identité : {{checks}} (vérifiés {{verified}}, déclarés {{claimed}}, usurpés {{spoofed}}). Méthode : DNS {{dns}}, plages publiées {{ranges}}, aucune {{none}}. Dernière vérification : {{time}} UTC.",
+      "noChecks": "Aucune identité de robot n’a encore été vérifiée.",
+      "errors": {
+        "invalid-json": "Le fichier n’est pas un JSON valide.",
+        "unsupported-format": "Format non pris en charge : une liste prefixes avec des entrées ipv4Prefix ou ipv6Prefix est attendue.",
+        "no-valid-prefix": "Le fichier ne contient aucune plage IP valide.",
+        "too-many-prefixes": "Le fichier contient plus de 5 000 plages.",
+        "storageFailed": "Le stockage local n’a pas pu être mis à jour ; les plages n’ont pas été enregistrées."
+      }
     }
   },
   "altCheckUi": {
@@ -8606,14 +8661,19 @@
     "running": "Création des embeddings du brouillon et des données du crawl…",
     "unreachable": "Le fournisseur d’embeddings sélectionné n’a pas renvoyé de vecteurs. Vérifiez les paramètres du projet et la connexion.",
     "cancelled": "Vérification annulée. Aucun résultat appliqué.",
-    "stale": "Les données ou le crawl ont changé. Relancez la vérification."
+    "stale": "Les données ou le crawl ont changé. Relancez la vérification.",
+    "policy": "Politique de revue",
+    "policyAdvisory": "Consultative (par défaut)",
+    "policyEnforced": "Appliquée (sur option)",
+    "policyHint": "La politique appliquée retient seulement le brouillon pour une décision humaine lorsque la vérification n’est pas un OK complet. Rien n’est jamais publié, supprimé ni redirigé."
   },
   "telemetrySourcesUi": {
     "title": "Sources",
     "sources": {
       "gsc": "GSC",
       "ga4": "GA4",
-      "backlinks": "Liens entrants"
+      "backlinks": "Liens entrants",
+      "revenue": "Revenus"
     },
     "states": {
       "measured": "Mesuré",
@@ -8632,7 +8692,11 @@
       "no": "Données tronquées : non"
     },
     "coverage": "Couverture : {{value}} %",
-    "unknownNote": "Les données inconnues ne sont jamais comptées comme zéro."
+    "unknownNote": "Les données inconnues ne sont jamais comptées comme zéro.",
+    "currency": "Devise : {{value}}",
+    "attribution": {
+      "ga4-session-landing-page": "Attribution : page de destination de la session GA4"
+    }
   },
   "offPageSourcesUi": {
     "analyze": "Analyser les sources des liens",
@@ -8787,5 +8851,113 @@
     "languageFallback": "Langue de la page inconnue : la phrase est en anglais.",
     "copy": "Copier",
     "copied": "Copié"
+  },
+  "offPageLinksUi": {
+    "profileTitle": "Profil des liens sitewide et dupliqués",
+    "profileSummary": "{{raw}} liens bruts depuis {{domains}} domaines sources ({{follow}} avec un lien follow). Domaines sitewide : {{sitewide}} ({{share}} % des liens bruts) ; domaines répétés : {{repeated}}. Le TBVA compte un lien par domaine source.",
+    "unknown": "inconnu",
+    "sample": "Basé sur l’échantillon chargé, pas sur le profil complet du fournisseur.",
+    "complete": "Basé sur toutes les lignes renvoyées par le fournisseur.",
+    "rule": "Sitewide = au moins 5 pages sources avec au plus 2 ancres distinctes (heuristique non calibrée, pas une pénalité).",
+    "columns": {
+      "domain": "Domaine source",
+      "raw": "Liens bruts",
+      "follow": "Follow",
+      "pages": "Pages sources",
+      "anchors": "Ancres distinctes",
+      "pattern": "Schéma"
+    },
+    "patterns": {
+      "single": "Page unique",
+      "repeated": "Répété",
+      "sitewide": "Sitewide"
+    },
+    "anchorTitle": "Contexte d’ancre des liens analysés",
+    "anchorNote": "Recherche le texte d’ancre indiqué par le fournisseur dans le texte source récupéré. Le texte ne contient pas de balisage de lien : une correspondance montre les mots voisins, pas la preuve que cette occurrence est le lien.",
+    "noAnchors": "Aucune page source analysée n’a de lien dans l’échantillon chargé.",
+    "anchorRow": "{{source}} → {{target}} · ancre « {{anchor}} »",
+    "follow": "follow",
+    "nofollow": "nofollow",
+    "offset": "Décalage {{offset}} :",
+    "status": {
+      "located": "ancre trouvée une fois",
+      "ambiguous": "ancre trouvée {{n}} fois (ambigu)",
+      "not-found": "ancre introuvable dans le texte source",
+      "no-anchor-text": "pas de texte d’ancre (par exemple un lien image)",
+      "source-unavailable": "texte source indisponible"
+    }
+  },
+  "imagePhashUi": {
+    "title": "Images quasi dupliquées (hash perceptuel)",
+    "note": "Télécharge une seule fois, dans cette application, jusqu’à {{max}} images du site et compare leurs hashs perceptuels de 64 bits. Les images dont le serveur bloque la lecture inter-origine restent indisponibles. Une correspondance signifie que les images se ressemblent ; elle ne prouve ni usage de banque d’images, ni paternité, ni absence de valeur.",
+    "run": "Hacher {{count}} images",
+    "cancel": "Annuler",
+    "threshold": "Bits différents maximum (0–16)",
+    "uncalibrated": "8 bits par défaut ; ce seuil n’est pas calibré sur des données réelles.",
+    "status": {
+      "running": "Calcul… {{hashed}} hachées, {{failed}} indisponibles",
+      "done": "Terminé : {{hashed}} hachées, {{failed}} indisponibles",
+      "cancelled": "Annulé : {{hashed}} hachées, {{failed}} indisponibles"
+    },
+    "failures": {
+      "blocked": "{{n}} bloquées ou injoignables",
+      "http-error": "{{n}} erreur HTTP",
+      "too-large": "{{n}} de plus de 5 Mo",
+      "not-image": "{{n}} pas une image matricielle",
+      "decode-failed": "{{n}} non décodables",
+      "unsupported-url": "{{n}} URL non prise en charge"
+    },
+    "pair": "{{left}} ≈ {{right}} ({{distance}} bits différents)",
+    "identical": "{{left}} = {{right}} (fichier identique)",
+    "noPairs": "Aucune paire quasi dupliquée à ce seuil.",
+    "external": "Comparaison avec des résultats externes de recherche d’images : indisponible (aucun fournisseur d’images configuré)."
+  },
+  "causalImpactUi": {
+    "title": "Estimation contrefactuelle (série témoin)",
+    "method": "Les clics quotidiens Search Console de cette propriété sont régressés sur une propriété témoin indépendante sur jusqu’à 90 jours avant le changement ; le modèle prédit les clics sans le changement. Approximation fréquentiste de Causal Impact, sans modélisation de la saisonnalité.",
+    "unavailable": {
+      "page-series-unavailable": "Non estimable pour une seule URL : seuls les clics quotidiens de la propriété sont enregistrés.",
+      "no-test-series": "Non estimable : aucune série quotidienne Search Console enregistrée pour ce site."
+    },
+    "series": "Série testée : {{test}} · témoin : {{control}}",
+    "none": "aucun",
+    "status": {
+      "estimated": "Estimé sur {{pre}} jours avant et {{post}} jours après.",
+      "not-estimable": "Non estimable ({{pre}} jours avant et {{post}} jours après avec données)."
+    },
+    "reasons": {
+      "short-pre-period": "Moins de 28 jours avant le changement.",
+      "short-post-period": "Moins de 7 jours après le changement.",
+      "missing-data": "Plus de 10 % des jours manquent dans une fenêtre.",
+      "no-control": "Aucune propriété témoin indépendante avec les mêmes filtres n’est enregistrée. Enregistrez des données Search Console d’un autre domaine comme témoin.",
+      "flat-control": "La série témoin ne varie pas avant le changement.",
+      "poor-prefit": "Le témoin explique trop peu la période avant le changement (R² inférieur à 0,5).",
+      "placebo-failed": "Un test placebo dans la période avant le changement a trouvé un effet là où il ne devrait pas y en avoir ; le modèle n’est pas fiable."
+    },
+    "prefit": "Ajustement avant changement : R² {{r2}}, autocorrélation des résidus {{rho}}.",
+    "placeboPassed": "Test placebo réussi (l’intervalle avant changement de {{lower}} à {{upper}} contient zéro).",
+    "placeboFailed": "Test placebo échoué (l’intervalle avant changement de {{lower}} à {{upper}} exclut zéro).",
+    "absolute": "Effet cumulé sur les clics : {{value}} (intervalle à 95 % de {{lower}} à {{upper}}).",
+    "relative": "Effet relatif : {{value}} (intervalle à 95 % de {{lower}} à {{upper}}).",
+    "probability": "Probabilité que l’effet ait ce signe : {{value}} (approximation normale, pas une loi a posteriori bayésienne).",
+    "caveat": "Une estimation ajustée sur le témoin ne prouve pas la causalité. D’autres changements, des mises à jour Google ou une variation touchant aussi le témoin peuvent la biaiser. Aucun ROI n’est déduit."
+  },
+  "revenueImportUi": {
+    "title": "Revenus (export GA4 facultatif)",
+    "model": "Importez un rapport GA4 au format CSV avec page de destination et revenus, filtré sur les sessions de recherche organique. Les revenus sont attribués à la page de destination de la session telle que GA4 la rapporte et restent dans la devise que vous indiquez. Les pages absentes de l’export restent inconnues, pas nulles.",
+    "current": "{{file}} importé : {{rows}} pages de destination en {{currency}}, période {{period}}.",
+    "noPeriod": "non indiquée dans le fichier",
+    "clear": "Supprimer",
+    "none": "Aucun export de revenus importé ; les revenus restent indisponibles.",
+    "currency": "Devise (code ISO)",
+    "organic": "L’export ne contient que des sessions de recherche organique",
+    "file": "Export CSV GA4",
+    "errors": {
+      "invalid-currency": "Indiquez la devise de la propriété sous forme de code ISO à 3 lettres, par exemple EUR.",
+      "not-organic": "Confirmez que l’export est limité aux sessions de recherche organique.",
+      "no-header": "Aucun en-tête avec une colonne page de destination et une colonne revenus n’a été trouvé.",
+      "no-rows": "Le fichier ne contient aucune page de destination avec un revenu numérique.",
+      "storage-failed": "Le stockage local n’a pas pu être mis à jour ; l’import n’a pas été enregistré."
+    }
   }
 }

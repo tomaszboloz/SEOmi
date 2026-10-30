@@ -3592,7 +3592,8 @@
         "pending": "wartet",
         "rendering": "wird gerendert…",
         "cancelled": "abgebrochen"
-      }
+      },
+      "auto": "Shell-Seiten nach jedem Crawl automatisch rendern (Desktop-App, bis zu {{count}} Seiten; standardmäßig aus)"
     }
   },
   "ai": {
@@ -8300,6 +8301,44 @@
     "chunk": {
       "leading-pronoun": "Abschnitt {{index}} beginnt mit einem Pronomen, das früheren Kontext braucht.",
       "too-short": "Abschnitt {{index}} ist zu kurz, um allein zu bestehen."
+    },
+    "policy": {
+      "advisory": "beratend",
+      "enforced": "verbindlich"
+    },
+    "gate": {
+      "advice": "Richtlinie: {{policy}}. Nur Empfehlung; die Veröffentlichung entscheiden Sie.",
+      "pass": "Richtlinie: {{policy}}. Die Prüfung ist für genau diese Eingaben bestanden.",
+      "hold": "Richtlinie: {{policy}}. Zur menschlichen Prüfung zurückgehalten: kein vollständiges OK."
+    },
+    "gap": {
+      "stale-baseline": "Der Basis-Crawl ist älter als 30 Tage.",
+      "unsupported-language": "Die Passagenregeln unterstützen die Sprache der Website nicht; die Passagenprüfung ist unvollständig.",
+      "no-baseline-date": "Der Basis-Crawl hat kein Abschlussdatum."
+    },
+    "donors": {
+      "title": "Interne Linkgeber",
+      "rule": "Bis zu 3 bestehende Seiten mit 60–85 % Ähnlichkeit und einer Relevanz (TRS) von mindestens 70.",
+      "none": "Keine Seite erfüllt die Linkgeber-Regel.",
+      "row": "{{url}} (Ähnlichkeit {{similarity}} %, TRS {{trs}})",
+      "links": {
+        "yes": "verlinkt bereits auf die Entwurfs-URL",
+        "no": "verlinkt noch nicht auf die Entwurfs-URL",
+        "unknown": "bestehende Links unbekannt"
+      },
+      "anchor": "vorgeschlagener Anker: „{{anchor}}“",
+      "noAnchor": "kein Anker vorgeschlagen (keine kurze Titelzeile)",
+      "placement": "Platzierungsvorschlag: ein Textabschnitt zum selben Thema. Keine Aussage über den sichtbaren Bereich; es wurde kein Viewport gerendert."
+    },
+    "aio": {
+      "title": "Passagenbereitschaft (AIO-R)",
+      "language": {
+        "supported": "Regeln für {{language}}: vollständig.",
+        "uncertain": "Regeln für {{language}}: grundlegend; Ergebnisse sind Richtwerte.",
+        "unsupported": "Keine Passagenregeln für {{language}}; Ergebnisse sind unvollständig."
+      },
+      "summary": "Schwache Passagen: {{weak}} von {{total}}.",
+      "chunk": "Passage {{index}} (Zeichen {{start}}–{{end}}, Wert {{score}})"
     }
   },
   "parityUi": {
@@ -8563,6 +8602,22 @@
       "ok": "OK",
       "inconclusive": "Unklar",
       "no-logs": "Keine Logs"
+    },
+    "ranges": {
+      "title": "Nachweise der Bot-Verifizierung",
+      "note": "Optional: Laden Sie die offizielle IP-Bereichsdatei, die Sie vom Crawler-Betreiber heruntergeladen haben (z. B. gptbot.json oder perplexitybot.json). SEOmi lädt sie nicht selbst herunter. Bereiche haben für diesen Bot Vorrang vor DNS und gelten ab dem nächsten Import.",
+      "family": "Bot",
+      "file": "Offizielle IP-Bereichsdatei (JSON)",
+      "loaded": "{{family}}: {{count}} Bereiche aus {{source}} (veröffentlicht {{created}}, geladen {{loaded}} UTC)",
+      "summary": "Identitätsprüfungen: {{checks}} (verifiziert {{verified}}, behauptet {{claimed}}, gefälscht {{spoofed}}). Methode: DNS {{dns}}, veröffentlichte Bereiche {{ranges}}, keine {{none}}. Letzte Prüfung: {{time}} UTC.",
+      "noChecks": "Noch keine Crawler-Identität geprüft.",
+      "errors": {
+        "invalid-json": "Die Datei ist kein gültiges JSON.",
+        "unsupported-format": "Nicht unterstütztes Format: erwartet wird eine prefixes-Liste mit ipv4Prefix- oder ipv6Prefix-Einträgen.",
+        "no-valid-prefix": "Die Datei enthält keinen gültigen IP-Bereich.",
+        "too-many-prefixes": "Die Datei enthält mehr als 5.000 Bereiche.",
+        "storageFailed": "Der lokale Speicher konnte nicht aktualisiert werden; die Bereiche wurden nicht gespeichert."
+      }
     }
   },
   "altCheckUi": {
@@ -8606,14 +8661,19 @@
     "running": "Embeddings für Entwurf und Crawl-Daten werden erstellt…",
     "unreachable": "Der gewählte Embedding-Anbieter konnte keine Vektoren liefern. Projekteinstellungen und Verbindung prüfen.",
     "cancelled": "Prüfung abgebrochen. Kein Ergebnis wurde übernommen.",
-    "stale": "Eingaben oder Crawl geändert. Prüfung erneut starten."
+    "stale": "Eingaben oder Crawl geändert. Prüfung erneut starten.",
+    "policy": "Prüfrichtlinie",
+    "policyAdvisory": "Beratend (Standard)",
+    "policyEnforced": "Verbindlich (Opt-in)",
+    "policyHint": "Verbindlich hält den Entwurf nur für eine menschliche Entscheidung zurück, wenn die Prüfung kein vollständiges OK ergibt. Es wird nie etwas veröffentlicht, gelöscht oder umgeleitet."
   },
   "telemetrySourcesUi": {
     "title": "Quellen",
     "sources": {
       "gsc": "GSC",
       "ga4": "GA4",
-      "backlinks": "Backlinks"
+      "backlinks": "Backlinks",
+      "revenue": "Umsatz"
     },
     "states": {
       "measured": "Gemessen",
@@ -8632,7 +8692,11 @@
       "no": "Gekürzt: nein"
     },
     "coverage": "Abdeckung: {{value}}%",
-    "unknownNote": "Unbekannte Daten werden niemals als null gezählt."
+    "unknownNote": "Unbekannte Daten werden niemals als null gezählt.",
+    "currency": "Währung: {{value}}",
+    "attribution": {
+      "ga4-session-landing-page": "Attribution: GA4-Sitzungs-Landingpage"
+    }
   },
   "offPageSourcesUi": {
     "analyze": "Linkquellen analysieren",
@@ -8787,5 +8851,113 @@
     "languageFallback": "Seitensprache unbekannt: Der Satz ist auf Englisch.",
     "copy": "Kopieren",
     "copied": "Kopiert"
+  },
+  "offPageLinksUi": {
+    "profileTitle": "Sitewide- und Duplikat-Linkprofil",
+    "profileSummary": "{{raw}} Rohlinks von {{domains}} Quelldomains ({{follow}} mit Follow-Link). Sitewide-Domains: {{sitewide}} ({{share}} % der Rohlinks); wiederholte Domains: {{repeated}}. TBVA zählt einen Link pro Quelldomain.",
+    "unknown": "unbekannt",
+    "sample": "Basierend auf der geladenen Stichprobe, nicht dem vollständigen Anbieterprofil.",
+    "complete": "Basierend auf allen vom Anbieter gelieferten Zeilen.",
+    "rule": "Sitewide = mindestens 5 Quellseiten mit höchstens 2 verschiedenen Ankern (unkalibrierte Heuristik, keine Abwertung).",
+    "columns": {
+      "domain": "Quelldomain",
+      "raw": "Rohlinks",
+      "follow": "Follow",
+      "pages": "Quellseiten",
+      "anchors": "Verschiedene Anker",
+      "pattern": "Muster"
+    },
+    "patterns": {
+      "single": "Einzelseite",
+      "repeated": "Wiederholt",
+      "sitewide": "Sitewide"
+    },
+    "anchorTitle": "Ankerkontext der analysierten Links",
+    "anchorNote": "Sucht den vom Anbieter gemeldeten Ankertext im abgerufenen Quelltext. Der Text enthält kein Link-Markup; ein Treffer zeigt die umgebenden Wörter, ist aber kein Beweis, dass genau dieses Vorkommen der Link ist.",
+    "noAnchors": "Keine analysierte Quellseite hat einen Link in der geladenen Stichprobe.",
+    "anchorRow": "{{source}} → {{target}} · Anker „{{anchor}}“",
+    "follow": "follow",
+    "nofollow": "nofollow",
+    "offset": "Offset {{offset}}:",
+    "status": {
+      "located": "Anker einmal gefunden",
+      "ambiguous": "Anker {{n}}-mal gefunden (mehrdeutig)",
+      "not-found": "Anker im Quelltext nicht gefunden",
+      "no-anchor-text": "kein Ankertext (z. B. Bildlink)",
+      "source-unavailable": "Quelltext nicht verfügbar"
+    }
+  },
+  "imagePhashUi": {
+    "title": "Nahezu doppelte Bilder (Wahrnehmungs-Hash)",
+    "note": "Lädt bis zu {{max}} eigene Bilder der Website einmalig in dieser App und vergleicht ihre 64-Bit-Wahrnehmungs-Hashes. Bilder, deren Server Cross-Origin-Lesezugriffe blockiert, bleiben nicht verfügbar. Ein Treffer bedeutet, dass die Bilder ähnlich aussehen; er belegt weder Stock-Nutzung noch Urheberschaft oder fehlenden Wert.",
+    "run": "{{count}} Bilder hashen",
+    "cancel": "Abbrechen",
+    "threshold": "Maximal abweichende Bits (0–16)",
+    "uncalibrated": "Standard 8 Bit; dieser Schwellenwert ist nicht an echten Daten kalibriert.",
+    "status": {
+      "running": "Hashen… {{hashed}} gehasht, {{failed}} nicht verfügbar",
+      "done": "Fertig: {{hashed}} gehasht, {{failed}} nicht verfügbar",
+      "cancelled": "Abgebrochen: {{hashed}} gehasht, {{failed}} nicht verfügbar"
+    },
+    "failures": {
+      "blocked": "{{n}} blockiert oder nicht erreichbar",
+      "http-error": "{{n}} HTTP-Fehler",
+      "too-large": "{{n}} größer als 5 MB",
+      "not-image": "{{n}} kein Rasterbild",
+      "decode-failed": "{{n}} nicht dekodierbar",
+      "unsupported-url": "{{n}} nicht unterstützte URL"
+    },
+    "pair": "{{left}} ≈ {{right}} ({{distance}} Bit abweichend)",
+    "identical": "{{left}} = {{right}} (identische Datei)",
+    "noPairs": "Kein nahezu doppeltes Paar bei diesem Schwellenwert.",
+    "external": "Vergleich mit externen Bildsuchergebnissen: nicht verfügbar (kein Bildanbieter konfiguriert)."
+  },
+  "causalImpactUi": {
+    "title": "Kontrafaktische Schätzung (Kontrollreihe)",
+    "method": "Die täglichen Search-Console-Klicks dieser Property werden über bis zu 90 Tage vor der Änderung auf eine unabhängige Kontroll-Property regressiert; das Modell sagt die Klicks ohne Änderung voraus. Frequentistische Näherung von Causal Impact ohne Saisonmodellierung.",
+    "unavailable": {
+      "page-series-unavailable": "Für eine einzelne URL nicht schätzbar: Gespeichert werden nur tägliche Klicks der gesamten Property.",
+      "no-test-series": "Nicht schätzbar: keine gespeicherte tägliche Search-Console-Reihe für diese Website."
+    },
+    "series": "Testreihe: {{test}} · Kontrolle: {{control}}",
+    "none": "keine",
+    "status": {
+      "estimated": "Geschätzt aus {{pre}} Tagen vor und {{post}} Tagen nach der Änderung.",
+      "not-estimable": "Nicht schätzbar ({{pre}} Tage davor und {{post}} Tage danach mit Daten)."
+    },
+    "reasons": {
+      "short-pre-period": "Weniger als 28 Tage vor der Änderung.",
+      "short-post-period": "Weniger als 7 Tage nach der Änderung.",
+      "missing-data": "In einem Zeitfenster fehlen mehr als 10 % der Tage.",
+      "no-control": "Keine unabhängige Kontroll-Property mit denselben Filtern gespeichert. Speichern Sie Search-Console-Daten einer anderen Domain als Kontrolle.",
+      "flat-control": "Die Kontrollreihe variiert vor der Änderung nicht.",
+      "poor-prefit": "Die Kontrolle erklärt den Zeitraum vor der Änderung zu wenig (R² unter 0,5).",
+      "placebo-failed": "Ein Placebotest im Zeitraum vor der Änderung fand einen Effekt, wo keiner sein sollte; das Modell ist unzuverlässig."
+    },
+    "prefit": "Anpassung vor der Änderung: R² {{r2}}, Residuen-Autokorrelation {{rho}}.",
+    "placeboPassed": "Placebotest bestanden (Intervall vor der Änderung {{lower}} bis {{upper}} enthält null).",
+    "placeboFailed": "Placebotest nicht bestanden (Intervall vor der Änderung {{lower}} bis {{upper}} schließt null aus).",
+    "absolute": "Kumulierter Effekt auf Klicks: {{value}} (95-%-Intervall {{lower}} bis {{upper}}).",
+    "relative": "Relativer Effekt: {{value}} (95-%-Intervall {{lower}} bis {{upper}}).",
+    "probability": "Wahrscheinlichkeit, dass der Effekt dieses Vorzeichen hat: {{value}} (Normalapproximation, keine Bayes-Posterior).",
+    "caveat": "Eine um die Kontrolle bereinigte Schätzung beweist keine Kausalität. Andere Änderungen, Google-Updates oder Verschiebungen, die auch die Kontrolle betreffen, können sie verzerren. Kein ROI wird abgeleitet."
+  },
+  "revenueImportUi": {
+    "title": "Umsatz (optionaler GA4-Export)",
+    "model": "Importieren Sie einen GA4-Bericht als CSV mit Landingpage und Umsatz, gefiltert auf Sitzungen aus der organischen Suche. Der Umsatz wird der Sitzungs-Landingpage zugeordnet, wie GA4 sie meldet, und bleibt in der von Ihnen angegebenen Währung. Seiten, die im Export fehlen, bleiben unbekannt, nicht null.",
+    "current": "{{file}} importiert: {{rows}} Landingpages in {{currency}}, Zeitraum {{period}}.",
+    "noPeriod": "in der Datei nicht angegeben",
+    "clear": "Entfernen",
+    "none": "Kein Umsatzexport importiert; der Umsatz bleibt nicht verfügbar.",
+    "currency": "Währung (ISO-Code)",
+    "organic": "Der Export enthält nur Sitzungen aus der organischen Suche",
+    "file": "GA4-CSV-Export",
+    "errors": {
+      "invalid-currency": "Geben Sie die Property-Währung als dreistelligen ISO-Code an, z. B. EUR.",
+      "not-organic": "Bestätigen Sie, dass der Export auf Sitzungen aus der organischen Suche beschränkt ist.",
+      "no-header": "Keine Kopfzeile mit einer Landingpage- und einer Umsatzspalte gefunden.",
+      "no-rows": "Die Datei enthält keine Landingpage mit numerischem Umsatz.",
+      "storage-failed": "Der lokale Speicher konnte nicht aktualisiert werden; der Import wurde nicht gespeichert."
+    }
   }
 }

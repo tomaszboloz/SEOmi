@@ -7,6 +7,7 @@ import { flattenPageImages } from './mediaTabTypes';
 import { CrawlMediaImageRow } from './CrawlMediaImageRow';
 import { checkAlt } from '@/services/multimodal';
 import { CrawlModelAnalysisNotice } from './CrawlModelAnalysisNotice';
+import { CrawlImageNearDuplicates } from './CrawlImageNearDuplicates';
 
 interface CrawlMediaImagesSectionProps {
   pages: CrawledPageSummary[];
@@ -40,6 +41,7 @@ export const CrawlMediaImagesSection: React.FC<CrawlMediaImagesSectionProps> = (
       <p className="mb-2 text-[11px] text-slate-500">{t('crawl.ui.imagesDescription')}</p>
       <p className="mb-2 text-xs text-slate-400">{t('altCheckUi.summary', { checked: images.length, issues: withIssues })}</p>
       <CrawlModelAnalysisNotice t={t} />
+      <CrawlImageNearDuplicates pages={pages} t={t} />
       {images.length ? (
         <Table minWidth="min-w-[1120px]">
           <thead className={tableHead}>

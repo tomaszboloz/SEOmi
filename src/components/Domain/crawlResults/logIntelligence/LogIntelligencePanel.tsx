@@ -5,6 +5,7 @@ import type { CrawlRunRecord } from '@/types';
 import { buildLogMatrixView } from './matrixView';
 import { LogMatrixTable } from './LogMatrixTable';
 import { useLogImport } from './useLogImport';
+import { BotVerificationEvidence } from './BotVerificationEvidence';
 
 export default function LogIntelligencePanel({ projectId, run }: { projectId: string; run?: CrawlRunRecord }) {
   const { t: translate, i18n } = useTranslation();
@@ -32,6 +33,7 @@ export default function LogIntelligencePanel({ projectId, run }: { projectId: st
     {importer.error && <p role="alert" className="text-amber-300">{translate(`logIntelUi.${importer.error}`)}</p>}
     {importer.state.inProgress && <p>{translate('logIntelUi.resume')}</p>}
     <p className="text-sm text-slate-400">{translate(desktopResolver() ? 'logIntelUi.verificationNoteDesktop' : 'logIntelUi.verificationNote')}</p>
+    <BotVerificationEvidence key={projectId} projectId={projectId} summary={importer.state.verification} />
     <h3 className="font-semibold">{translate('logIntelUi.matrix')}</h3>
     <p>{translate('logIntelUi.coverage', { days: matrix.coverageDays, period: matrix.periodDays })}</p>
     {start !== null && end !== null && <p>{translate('logIntelUi.period', { start: date.format(start), end: date.format(end) })}</p>}

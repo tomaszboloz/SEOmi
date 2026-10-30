@@ -4,6 +4,7 @@ import type { CrawledPageSummary } from '@/types';
 import { addIntervention, listInterventions, removeIntervention } from '@/services/experiments/registry';
 import { evaluateIntervention } from '@/services/experiments/evaluate';
 import { readGscSnapshots } from '@/services/gscTracker/read';
+import { causalImpactFor } from '@/services/experiments/causalSeries';
 import { InterventionForm } from './experiments/InterventionForm';
 import { ExperimentCard } from './experiments/ExperimentCard';
 
@@ -22,7 +23,7 @@ const ProjectExperiments = ({ projectId, pages }: { projectId: string; pages: Cr
     }} />
     {!entries.length && <p>{t('experimentsUi.empty')}</p>}
     {entries.map(intervention => <ExperimentCard key={intervention.id} intervention={intervention}
-      evaluation={evaluateIntervention(intervention, snapshots)} onRemove={() => {
+      evaluation={evaluateIntervention(intervention, snapshots)} causal={causalImpactFor(intervention, snapshots, pages[0]?.url)} onRemove={() => {
         const removed = removeIntervention(projectId, intervention.id);
         setRemoveFailed(!removed);
         if (removed) setEntries(listInterventions(projectId));

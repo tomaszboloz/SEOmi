@@ -3592,7 +3592,8 @@
         "pending": "w kolejce",
         "rendering": "renderowanie…",
         "cancelled": "przerwano"
-      }
+      },
+      "auto": "Renderuj strony-szkielety automatycznie po każdym crawlu (aplikacja desktopowa, maks. {{count}} stron; domyślnie wyłączone)"
     }
   },
   "ai": {
@@ -8300,6 +8301,44 @@
     "chunk": {
       "leading-pronoun": "Fragment {{index}} zaczyna się zaimkiem wymagającym wcześniejszego kontekstu.",
       "too-short": "Fragment {{index}} jest za krótki, by działać samodzielnie."
+    },
+    "policy": {
+      "advisory": "doradcza",
+      "enforced": "egzekwowana"
+    },
+    "gate": {
+      "advice": "Polityka: {{policy}}. Tylko porada; decyzja o publikacji należy do Ciebie.",
+      "pass": "Polityka: {{policy}}. Kontrola zaliczona dla dokładnie tych danych.",
+      "hold": "Polityka: {{policy}}. Wstrzymane do przeglądu przez człowieka: kontrola nie daje pełnego OK."
+    },
+    "gap": {
+      "stale-baseline": "Bazowy crawl jest starszy niż 30 dni.",
+      "unsupported-language": "Reguły fragmentów nie obsługują języka witryny; kontrola fragmentów jest częściowa.",
+      "no-baseline-date": "Bazowy crawl nie ma daty zakończenia."
+    },
+    "donors": {
+      "title": "Dawcy linków wewnętrznych",
+      "rule": "Do 3 istniejących stron o podobieństwie 60–85% i trafności (TRS) co najmniej 70.",
+      "none": "Żadna strona nie spełnia reguły dawcy.",
+      "row": "{{url}} (podobieństwo {{similarity}}%, TRS {{trs}})",
+      "links": {
+        "yes": "już linkuje do URL szkicu",
+        "no": "jeszcze nie linkuje do URL szkicu",
+        "unknown": "istniejące linki nieznane"
+      },
+      "anchor": "proponowany anchor: „{{anchor}}”",
+      "noAnchor": "brak propozycji anchora (brak krótkiej linii tytułu)",
+      "placement": "Propozycja umiejscowienia: fragment treści o tym samym temacie. To nie jest twierdzenie o widoczności bez przewijania; nie renderowano viewportu."
+    },
+    "aio": {
+      "title": "Gotowość fragmentów (AIO-R)",
+      "language": {
+        "supported": "Reguły dla {{language}}: pełne.",
+        "uncertain": "Reguły dla {{language}}: podstawowe; wyniki orientacyjne.",
+        "unsupported": "Brak reguł fragmentów dla {{language}}; wyniki częściowe."
+      },
+      "summary": "Słabe fragmenty: {{weak}} z {{total}}.",
+      "chunk": "Fragment {{index}} (znaki {{start}}–{{end}}, wynik {{score}})"
     }
   },
   "parityUi": {
@@ -8563,6 +8602,22 @@
       "ok": "OK",
       "inconclusive": "Nierozstrzygnięte",
       "no-logs": "Brak logów"
+    },
+    "ranges": {
+      "title": "Dowody weryfikacji botów",
+      "note": "Opcjonalnie: wczytaj oficjalny plik zakresów IP pobrany od operatora crawlera (np. gptbot.json lub perplexitybot.json). SEOmi go nie pobiera. Zakresy mają pierwszeństwo przed DNS dla danego bota i działają przy następnym imporcie.",
+      "family": "Bot",
+      "file": "Oficjalny plik zakresów IP (JSON)",
+      "loaded": "{{family}}: {{count}} zakresów z {{source}} (opublikowano {{created}}, wczytano {{loaded}} UTC)",
+      "summary": "Sprawdzenia tożsamości: {{checks}} (zweryfikowane {{verified}}, deklarowane {{claimed}}, podszyte {{spoofed}}). Metoda: DNS {{dns}}, opublikowane zakresy {{ranges}}, brak {{none}}. Ostatnie sprawdzenie: {{time}} UTC.",
+      "noChecks": "Nie sprawdzono jeszcze tożsamości żadnego crawlera.",
+      "errors": {
+        "invalid-json": "Plik nie jest poprawnym JSON.",
+        "unsupported-format": "Nieobsługiwany format: oczekiwano listy prefixes z wpisami ipv4Prefix lub ipv6Prefix.",
+        "no-valid-prefix": "Plik nie zawiera żadnego poprawnego zakresu IP.",
+        "too-many-prefixes": "Plik zawiera ponad 5000 zakresów.",
+        "storageFailed": "Nie udało się zapisać w pamięci lokalnej; zakresy nie zostały zapisane."
+      }
     }
   },
   "altCheckUi": {
@@ -8606,14 +8661,19 @@
     "running": "Tworzenie embeddingów szkicu i danych z crawla…",
     "unreachable": "Wybrany dostawca embeddingów nie zwrócił wektorów. Sprawdź ustawienia embeddingów projektu i połączenie z dostawcą.",
     "cancelled": "Kontrola anulowana. Nie zastosowano żadnego wyniku.",
-    "stale": "Zmieniono dane wejściowe lub crawl. Uruchom kontrolę ponownie."
+    "stale": "Zmieniono dane wejściowe lub crawl. Uruchom kontrolę ponownie.",
+    "policy": "Polityka przeglądu",
+    "policyAdvisory": "Doradcza (domyślna)",
+    "policyEnforced": "Egzekwowana (opcjonalna)",
+    "policyHint": "Tryb egzekwowany jedynie wstrzymuje szkic do decyzji człowieka, gdy kontrola nie daje pełnego OK. Nic nie jest publikowane, usuwane ani przekierowywane."
   },
   "telemetrySourcesUi": {
     "title": "Źródła",
     "sources": {
       "gsc": "GSC",
       "ga4": "GA4",
-      "backlinks": "Linki zwrotne"
+      "backlinks": "Linki zwrotne",
+      "revenue": "Przychód"
     },
     "states": {
       "measured": "Zmierzone",
@@ -8632,7 +8692,11 @@
       "no": "Dane obcięte: nie"
     },
     "coverage": "Pokrycie: {{value}}%",
-    "unknownNote": "Nieznane dane nigdy nie są liczone jako zero."
+    "unknownNote": "Nieznane dane nigdy nie są liczone jako zero.",
+    "currency": "Waluta: {{value}}",
+    "attribution": {
+      "ga4-session-landing-page": "Atrybucja: strona docelowa sesji GA4"
+    }
   },
   "offPageSourcesUi": {
     "analyze": "Analizuj źródła linków",
@@ -8787,5 +8851,113 @@
     "languageFallback": "Nieznany język strony: zdanie jest po angielsku.",
     "copy": "Kopiuj",
     "copied": "Skopiowano"
+  },
+  "offPageLinksUi": {
+    "profileTitle": "Profil linków sitewide i duplikatów",
+    "profileSummary": "{{raw}} surowych linków z {{domains}} domen źródłowych ({{follow}} z linkiem follow). Domeny sitewide: {{sitewide}} ({{share}}% surowych linków); domeny powtarzalne: {{repeated}}. TBVA liczy jeden link na domenę źródłową.",
+    "unknown": "nieznane",
+    "sample": "Na podstawie wczytanej próbki, nie pełnego profilu dostawcy.",
+    "complete": "Na podstawie wszystkich wierszy zwróconych przez dostawcę.",
+    "rule": "Sitewide = co najmniej 5 stron źródłowych i najwyżej 2 różne anchory (heurystyka bez kalibracji, nie kara).",
+    "columns": {
+      "domain": "Domena źródłowa",
+      "raw": "Surowe linki",
+      "follow": "Follow",
+      "pages": "Strony źródłowe",
+      "anchors": "Różne anchory",
+      "pattern": "Wzorzec"
+    },
+    "patterns": {
+      "single": "Pojedyncza strona",
+      "repeated": "Powtarzalny",
+      "sitewide": "Sitewide"
+    },
+    "anchorTitle": "Kontekst anchorów analizowanych linków",
+    "anchorNote": "Wyszukuje tekst anchora podany przez dostawcę w pobranym tekście źródła. Tekst nie zawiera znaczników linków, więc trafienie pokazuje otaczające słowa, a nie dowód, że to wystąpienie jest linkiem.",
+    "noAnchors": "Żadna analizowana strona źródłowa nie ma linku we wczytanej próbce.",
+    "anchorRow": "{{source}} → {{target}} · anchor „{{anchor}}”",
+    "follow": "follow",
+    "nofollow": "nofollow",
+    "offset": "Przesunięcie {{offset}}:",
+    "status": {
+      "located": "anchor znaleziony raz",
+      "ambiguous": "anchor znaleziony {{n}} razy (niejednoznaczne)",
+      "not-found": "anchora nie znaleziono w tekście źródła",
+      "no-anchor-text": "brak tekstu anchora (np. link obrazkowy)",
+      "source-unavailable": "tekst źródła niedostępny"
+    }
+  },
+  "imagePhashUi": {
+    "title": "Prawie identyczne obrazy (hash percepcyjny)",
+    "note": "Pobiera jednorazowo, w tej aplikacji, do {{max}} własnych obrazów witryny i porównuje ich 64-bitowe hashe percepcyjne. Obrazy, których serwer blokuje odczyt cross-origin, pozostają niedostępne. Dopasowanie oznacza, że obrazy wyglądają podobnie; nie dowodzi użycia stocku, autorstwa ani braku wartości.",
+    "run": "Oblicz hash dla {{count}} obrazów",
+    "cancel": "Anuluj",
+    "threshold": "Maksymalna liczba różnych bitów (0–16)",
+    "uncalibrated": "Domyślnie 8 bitów; ten próg nie jest skalibrowany na rzeczywistych danych.",
+    "status": {
+      "running": "Obliczanie… {{hashed}} obliczonych, {{failed}} niedostępnych",
+      "done": "Gotowe: {{hashed}} obliczonych, {{failed}} niedostępnych",
+      "cancelled": "Anulowano: {{hashed}} obliczonych, {{failed}} niedostępnych"
+    },
+    "failures": {
+      "blocked": "{{n}} zablokowanych lub nieosiągalnych",
+      "http-error": "{{n}} z błędem HTTP",
+      "too-large": "{{n}} większych niż 5 MB",
+      "not-image": "{{n}} niebędących obrazem rastrowym",
+      "decode-failed": "{{n}} nie dało się zdekodować",
+      "unsupported-url": "{{n}} z nieobsługiwanym URL"
+    },
+    "pair": "{{left}} ≈ {{right}} (różni się {{distance}} bitów)",
+    "identical": "{{left}} = {{right}} (identyczny plik)",
+    "noPairs": "Brak par prawie identycznych przy tym progu.",
+    "external": "Porównanie z zewnętrznymi wynikami wyszukiwania grafik: niedostępne (brak skonfigurowanego dostawcy obrazów)."
+  },
+  "causalImpactUi": {
+    "title": "Estymacja kontrfaktyczna (seria kontrolna)",
+    "method": "Dzienne kliknięcia Search Console tej usługi są regresowane względem niezależnej usługi kontrolnej w okresie do 90 dni przed zmianą; model przewiduje kliknięcia bez zmiany. Częstościowe przybliżenie Causal Impact, bez modelowania sezonowości.",
+    "unavailable": {
+      "page-series-unavailable": "Nie do oszacowania dla pojedynczego URL: zapisywane są tylko dzienne kliknięcia całej usługi.",
+      "no-test-series": "Nie do oszacowania: brak zapisanej dziennej serii Search Console dla tej witryny."
+    },
+    "series": "Seria testowa: {{test}} · kontrola: {{control}}",
+    "none": "brak",
+    "status": {
+      "estimated": "Oszacowano na podstawie {{pre}} dni przed i {{post}} dni po zmianie.",
+      "not-estimable": "Nie do oszacowania ({{pre}} dni przed i {{post}} dni po zmianie z danymi)."
+    },
+    "reasons": {
+      "short-pre-period": "Mniej niż 28 dni przed zmianą.",
+      "short-post-period": "Mniej niż 7 dni po zmianie.",
+      "missing-data": "W jednym z okien brakuje ponad 10% dni.",
+      "no-control": "Brak zapisanej niezależnej usługi kontrolnej z tymi samymi filtrami. Zapisz dane Search Console innej domeny, aby użyć jej jako kontroli.",
+      "flat-control": "Seria kontrolna nie zmienia się w okresie przed zmianą.",
+      "poor-prefit": "Kontrola wyjaśnia zbyt mało okresu przed zmianą (R² poniżej 0,5).",
+      "placebo-failed": "Test placebo w okresie przed zmianą wykrył efekt tam, gdzie go nie powinno być; model jest niewiarygodny."
+    },
+    "prefit": "Dopasowanie przed zmianą: R² {{r2}}, autokorelacja reszt {{rho}}.",
+    "placeboPassed": "Test placebo zaliczony (przedział przed zmianą {{lower}} do {{upper}} obejmuje zero).",
+    "placeboFailed": "Test placebo niezaliczony (przedział przed zmianą {{lower}} do {{upper}} nie obejmuje zera).",
+    "absolute": "Skumulowany efekt na kliknięcia: {{value}} (przedział 95% od {{lower}} do {{upper}}).",
+    "relative": "Efekt względny: {{value}} (przedział 95% od {{lower}} do {{upper}}).",
+    "probability": "Prawdopodobieństwo, że efekt ma ten znak: {{value}} (przybliżenie normalne, nie bayesowski rozkład a posteriori).",
+    "caveat": "Estymacja skorygowana o kontrolę nie dowodzi przyczynowości. Inne zmiany, aktualizacje Google lub przesunięcie wpływające też na kontrolę mogą ją zniekształcić. Nie wyliczamy ROI."
+  },
+  "revenueImportUi": {
+    "title": "Przychód (opcjonalny eksport GA4)",
+    "model": "Zaimportuj CSV raportu GA4 ze stroną docelową i przychodem, przefiltrowany do sesji z wyszukiwania organicznego. Przychód jest przypisany do strony docelowej sesji tak, jak raportuje go GA4, i pozostaje w podanej przez Ciebie walucie. Strony nieobecne w eksporcie pozostają nieznane, a nie zerowe.",
+    "current": "Zaimportowano {{file}}: {{rows}} stron docelowych w {{currency}}, okres {{period}}.",
+    "noPeriod": "nie podano w pliku",
+    "clear": "Usuń",
+    "none": "Nie zaimportowano eksportu przychodu; przychód pozostaje niedostępny.",
+    "currency": "Waluta (kod ISO)",
+    "organic": "Eksport zawiera wyłącznie sesje z wyszukiwania organicznego",
+    "file": "Eksport CSV z GA4",
+    "errors": {
+      "invalid-currency": "Podaj walutę usługi jako 3-literowy kod ISO, np. PLN.",
+      "not-organic": "Potwierdź, że eksport obejmuje wyłącznie sesje z wyszukiwania organicznego.",
+      "no-header": "Nie znaleziono nagłówka z kolumną strony docelowej i kolumną przychodu.",
+      "no-rows": "Plik nie zawiera strony docelowej z liczbową wartością przychodu.",
+      "storage-failed": "Nie udało się zapisać w pamięci lokalnej; import nie został zapisany."
+    }
   }
 }

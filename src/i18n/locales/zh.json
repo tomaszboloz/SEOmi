@@ -3592,7 +3592,8 @@
         "pending": "等待中",
         "rendering": "渲染中…",
         "cancelled": "已取消"
-      }
+      },
+      "auto": "每次抓取后自动渲染外壳页面（桌面应用，最多 {{count}} 个页面；默认关闭）"
     }
   },
   "ai": {
@@ -8300,6 +8301,44 @@
     "chunk": {
       "leading-pronoun": "第 {{index}} 段以需要上文语境的代词开头。",
       "too-short": "第 {{index}} 段太短，无法独立成立。"
+    },
+    "policy": {
+      "advisory": "建议",
+      "enforced": "强制"
+    },
+    "gate": {
+      "advice": "策略：{{policy}}。仅供参考；是否发布由您决定。",
+      "pass": "策略：{{policy}}。对这些确切输入，检查已通过。",
+      "hold": "策略：{{policy}}。保留以待人工审核：检查不是完整 OK。"
+    },
+    "gap": {
+      "stale-baseline": "基准抓取已超过 30 天。",
+      "unsupported-language": "段落规则不支持网站语言；段落检查不完整。",
+      "no-baseline-date": "基准抓取没有完成日期。"
+    },
+    "donors": {
+      "title": "内部链接来源页",
+      "rule": "最多 3 个相似度为 60–85% 且相关度（TRS）不低于 70 的现有页面。",
+      "none": "没有页面符合来源页规则。",
+      "row": "{{url}}（相似度 {{similarity}}%，TRS {{trs}}）",
+      "links": {
+        "yes": "已链接到草稿 URL",
+        "no": "尚未链接到草稿 URL",
+        "unknown": "现有链接未知"
+      },
+      "anchor": "建议锚文本：“{{anchor}}”",
+      "noAnchor": "未建议锚文本（没有简短的标题行）",
+      "placement": "放置建议：同一主题的正文段落。这不是关于首屏的结论；未渲染任何视口。"
+    },
+    "aio": {
+      "title": "段落就绪度（AIO-R）",
+      "language": {
+        "supported": "{{language}} 规则：完整。",
+        "uncertain": "{{language}} 规则：基础；结果仅供参考。",
+        "unsupported": "没有 {{language}} 的段落规则；结果不完整。"
+      },
+      "summary": "薄弱段落：{{weak}} / {{total}}。",
+      "chunk": "段落 {{index}}（字符 {{start}}–{{end}}，得分 {{score}}）"
     }
   },
   "parityUi": {
@@ -8563,6 +8602,22 @@
       "ok": "正常",
       "inconclusive": "无法确定",
       "no-logs": "无日志"
+    },
+    "ranges": {
+      "title": "爬虫验证证据",
+      "note": "可选：加载您从爬虫运营方下载的官方 IP 范围文件（例如 gptbot.json 或 perplexitybot.json）。SEOmi 不会自行下载。对该爬虫，IP 范围优先于 DNS，并在下一次导入时生效。",
+      "family": "爬虫",
+      "file": "官方 IP 范围文件（JSON）",
+      "loaded": "{{family}}：来自 {{source}} 的 {{count}} 个范围（发布于 {{created}}，加载于 {{loaded}} UTC）",
+      "summary": "身份检查：{{checks}} 次（已验证 {{verified}}，声称 {{claimed}}，伪造 {{spoofed}}）。方法：DNS {{dns}}，公开范围 {{ranges}}，无 {{none}}。最近检查：{{time}} UTC。",
+      "noChecks": "尚未检查任何爬虫身份。",
+      "errors": {
+        "invalid-json": "文件不是有效的 JSON。",
+        "unsupported-format": "不支持的格式：需要包含 ipv4Prefix 或 ipv6Prefix 条目的 prefixes 列表。",
+        "no-valid-prefix": "文件中没有有效的 IP 范围。",
+        "too-many-prefixes": "文件包含超过 5,000 个范围。",
+        "storageFailed": "无法更新本地存储；范围未保存。"
+      }
     }
   },
   "altCheckUi": {
@@ -8606,14 +8661,19 @@
     "running": "正在生成草稿和抓取数据的嵌入…",
     "unreachable": "所选嵌入提供方未能返回向量。请检查项目设置和提供方连接。",
     "cancelled": "检查已取消，未应用任何结果。",
-    "stale": "输入或抓取已更改，请重新运行检查。"
+    "stale": "输入或抓取已更改，请重新运行检查。",
+    "policy": "审核策略",
+    "policyAdvisory": "建议（默认）",
+    "policyEnforced": "强制（可选）",
+    "policyHint": "强制策略仅在检查不是完整 OK 时将草稿保留以待人工决定。不会发布、删除或重定向任何内容。"
   },
   "telemetrySourcesUi": {
     "title": "数据来源",
     "sources": {
       "gsc": "GSC",
       "ga4": "GA4",
-      "backlinks": "反向链接"
+      "backlinks": "反向链接",
+      "revenue": "收入"
     },
     "states": {
       "measured": "已测量",
@@ -8632,7 +8692,11 @@
       "no": "数据截断：否"
     },
     "coverage": "覆盖率：{{value}}%",
-    "unknownNote": "未知数据绝不会被计为零。"
+    "unknownNote": "未知数据绝不会被计为零。",
+    "currency": "货币：{{value}}",
+    "attribution": {
+      "ga4-session-landing-page": "归因：GA4 会话着陆页"
+    }
   },
   "offPageSourcesUi": {
     "analyze": "分析链接来源",
@@ -8787,5 +8851,113 @@
     "languageFallback": "页面语言未知：句子为英文。",
     "copy": "复制",
     "copied": "已复制"
+  },
+  "offPageLinksUi": {
+    "profileTitle": "全站链接与重复链接概况",
+    "profileSummary": "来自 {{domains}} 个来源域名的 {{raw}} 条原始链接（{{follow}} 个含 follow 链接）。全站链接域名：{{sitewide}} 个（占原始链接 {{share}}%）；重复域名：{{repeated}} 个。TBVA 每个来源域名只计一条链接。",
+    "unknown": "未知",
+    "sample": "基于已加载的样本，而非提供商的完整概况。",
+    "complete": "基于提供商返回的全部行。",
+    "rule": "全站链接 = 至少 5 个来源页面且不同锚文本不超过 2 个（未校准的启发式规则，不是惩罚）。",
+    "columns": {
+      "domain": "来源域名",
+      "raw": "原始链接",
+      "follow": "Follow",
+      "pages": "来源页面",
+      "anchors": "不同锚文本",
+      "pattern": "模式"
+    },
+    "patterns": {
+      "single": "单页",
+      "repeated": "重复",
+      "sitewide": "全站"
+    },
+    "anchorTitle": "已分析链接的锚文本上下文",
+    "anchorNote": "在已抓取的来源文本中查找提供商报告的锚文本。文本不含链接标记，因此匹配只显示周围的词语，不能证明该处出现就是链接。",
+    "noAnchors": "已加载的样本中，已分析的来源页面没有链接。",
+    "anchorRow": "{{source}} → {{target}} · 锚文本“{{anchor}}”",
+    "follow": "follow",
+    "nofollow": "nofollow",
+    "offset": "偏移 {{offset}}：",
+    "status": {
+      "located": "锚文本出现一次",
+      "ambiguous": "锚文本出现 {{n}} 次（不明确）",
+      "not-found": "来源文本中未找到锚文本",
+      "no-anchor-text": "无锚文本（例如图片链接）",
+      "source-unavailable": "来源文本不可用"
+    }
+  },
+  "imagePhashUi": {
+    "title": "近似重复图片（感知哈希）",
+    "note": "在本应用中一次性下载网站自身最多 {{max}} 张图片，并比较其 64 位感知哈希。服务器禁止跨源读取的图片将保持不可用。匹配仅表示图片看起来相似，不能证明使用了图库、作者身份或缺乏价值。",
+    "run": "计算 {{count}} 张图片的哈希",
+    "cancel": "取消",
+    "threshold": "最大不同位数（0–16）",
+    "uncalibrated": "默认 8 位；该阈值未经真实数据校准。",
+    "status": {
+      "running": "计算中… 已完成 {{hashed}}，不可用 {{failed}}",
+      "done": "完成：已计算 {{hashed}}，不可用 {{failed}}",
+      "cancelled": "已取消：已计算 {{hashed}}，不可用 {{failed}}"
+    },
+    "failures": {
+      "blocked": "{{n}} 个被阻止或无法访问",
+      "http-error": "{{n}} 个 HTTP 错误",
+      "too-large": "{{n}} 个大于 5 MB",
+      "not-image": "{{n}} 个不是位图",
+      "decode-failed": "{{n}} 个无法解码",
+      "unsupported-url": "{{n}} 个 URL 不受支持"
+    },
+    "pair": "{{left}} ≈ {{right}}（相差 {{distance}} 位）",
+    "identical": "{{left}} = {{right}}（相同文件）",
+    "noPairs": "在此阈值下没有近似重复的图片对。",
+    "external": "与外部图片搜索结果比较：不可用（未配置图片提供商）。"
+  },
+  "causalImpactUi": {
+    "title": "反事实估计（对照序列）",
+    "method": "将此资源的 Search Console 每日点击量在变更前最多 90 天内对一个独立的对照资源做回归，模型预测没有变更时的点击量。这是 Causal Impact 的频率学近似，不对季节性建模。",
+    "unavailable": {
+      "page-series-unavailable": "无法对单个 URL 估计：只保存了资源级别的每日点击。",
+      "no-test-series": "无法估计：没有为此网站保存的 Search Console 每日序列。"
+    },
+    "series": "测试序列：{{test}} · 对照：{{control}}",
+    "none": "无",
+    "status": {
+      "estimated": "基于变更前 {{pre}} 天和变更后 {{post}} 天估计。",
+      "not-estimable": "无法估计（有数据的变更前 {{pre}} 天、变更后 {{post}} 天）。"
+    },
+    "reasons": {
+      "short-pre-period": "变更前少于 28 天。",
+      "short-post-period": "变更后少于 7 天。",
+      "missing-data": "某个窗口中缺失超过 10% 的天数。",
+      "no-control": "未保存使用相同筛选条件的独立对照资源。请保存另一个域名的 Search Console 数据作为对照。",
+      "flat-control": "对照序列在变更前没有变化。",
+      "poor-prefit": "对照对变更前时期的解释力太弱（R² 低于 0.5）。",
+      "placebo-failed": "变更前时期内的安慰剂检验在不应有效应处发现了效应；模型不可靠。"
+    },
+    "prefit": "变更前拟合：R² {{r2}}，残差自相关 {{rho}}。",
+    "placeboPassed": "安慰剂检验通过（变更前区间 {{lower}} 至 {{upper}} 包含零）。",
+    "placeboFailed": "安慰剂检验未通过（变更前区间 {{lower}} 至 {{upper}} 不包含零）。",
+    "absolute": "对点击的累计效应：{{value}}（95% 区间 {{lower}} 至 {{upper}}）。",
+    "relative": "相对效应：{{value}}（95% 区间 {{lower}} 至 {{upper}}）。",
+    "probability": "效应为此符号的概率：{{value}}（正态近似，不是贝叶斯后验）。",
+    "caveat": "经对照调整的估计并不能证明因果关系。其他变更、Google 更新或同样影响对照的变化都可能使其产生偏差。不推断 ROI。"
+  },
+  "revenueImportUi": {
+    "title": "收入（可选的 GA4 导出）",
+    "model": "导入包含着陆页和收入、并筛选为自然搜索会话的 GA4 报告 CSV。收入按 GA4 报告的方式归因到会话着陆页，并保留您指定的货币。导出中缺失的页面保持未知，而不是零。",
+    "current": "已导入 {{file}}：{{rows}} 个着陆页，货币 {{currency}}，期间 {{period}}。",
+    "noPeriod": "文件中未注明",
+    "clear": "移除",
+    "none": "尚未导入收入导出；收入保持不可用。",
+    "currency": "货币（ISO 代码）",
+    "organic": "导出仅包含自然搜索会话",
+    "file": "GA4 CSV 导出",
+    "errors": {
+      "invalid-currency": "请用 3 个字母的 ISO 代码输入媒体资源货币，例如 CNY。",
+      "not-organic": "请确认导出仅限于自然搜索会话。",
+      "no-header": "未找到包含着陆页列和收入列的表头。",
+      "no-rows": "文件中没有带数值收入的着陆页。",
+      "storage-failed": "无法更新本地存储；导入未保存。"
+    }
   }
 }

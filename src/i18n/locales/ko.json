@@ -3592,7 +3592,8 @@
         "pending": "대기 중",
         "rendering": "렌더링 중…",
         "cancelled": "취소됨"
-      }
+      },
+      "auto": "크롤링할 때마다 셸 페이지를 자동 렌더링(데스크톱 앱, 최대 {{count}}페이지, 기본값 꺼짐)"
     }
   },
   "ai": {
@@ -8300,6 +8301,44 @@
     "chunk": {
       "leading-pronoun": "구절 {{index}}이(가) 앞선 문맥이 필요한 대명사로 시작합니다.",
       "too-short": "구절 {{index}}이(가) 단독으로 쓰기엔 너무 짧습니다."
+    },
+    "policy": {
+      "advisory": "권고",
+      "enforced": "강제"
+    },
+    "gate": {
+      "advice": "정책: {{policy}}. 권고일 뿐이며 게시는 직접 결정합니다.",
+      "pass": "정책: {{policy}}. 이 입력 그대로 검사를 통과했습니다.",
+      "hold": "정책: {{policy}}. 사람의 검토를 위해 보류됨: 검사가 완전한 OK가 아닙니다."
+    },
+    "gap": {
+      "stale-baseline": "기준 크롤링이 30일보다 오래되었습니다.",
+      "unsupported-language": "구절 규칙이 사이트 언어를 지원하지 않아 구절 검사가 부분적입니다.",
+      "no-baseline-date": "기준 크롤링에 완료 날짜가 없습니다."
+    },
+    "donors": {
+      "title": "내부 링크 기여 페이지",
+      "rule": "유사도 60–85%, 관련도(TRS) 70 이상인 기존 페이지 최대 3개.",
+      "none": "기여 페이지 규칙을 충족하는 페이지가 없습니다.",
+      "row": "{{url}} (유사도 {{similarity}}%, TRS {{trs}})",
+      "links": {
+        "yes": "이미 초안 URL로 링크함",
+        "no": "아직 초안 URL로 링크하지 않음",
+        "unknown": "기존 링크 알 수 없음"
+      },
+      "anchor": "제안 앵커: “{{anchor}}”",
+      "noAnchor": "제안된 앵커 없음(짧은 제목 줄 없음)",
+      "placement": "배치 제안: 같은 주제의 본문 구절. 첫 화면 노출에 대한 주장이 아니며 뷰포트를 렌더링하지 않았습니다."
+    },
+    "aio": {
+      "title": "구절 준비도(AIO-R)",
+      "language": {
+        "supported": "{{language}} 규칙: 전체.",
+        "uncertain": "{{language}} 규칙: 기본; 결과는 참고용입니다.",
+        "unsupported": "{{language}}에 대한 구절 규칙이 없어 결과가 부분적입니다."
+      },
+      "summary": "약한 구절: {{total}}개 중 {{weak}}개.",
+      "chunk": "구절 {{index}} (문자 {{start}}–{{end}}, 점수 {{score}})"
     }
   },
   "parityUi": {
@@ -8563,6 +8602,22 @@
       "ok": "정상",
       "inconclusive": "판단 불가",
       "no-logs": "로그 없음"
+    },
+    "ranges": {
+      "title": "봇 검증 증거",
+      "note": "선택 사항: 크롤러 운영자에게서 내려받은 공식 IP 범위 파일(예: gptbot.json, perplexitybot.json)을 불러옵니다. SEOmi는 직접 내려받지 않습니다. 해당 봇에는 범위가 DNS보다 우선하며 다음 가져오기부터 적용됩니다.",
+      "family": "봇",
+      "file": "공식 IP 범위 파일(JSON)",
+      "loaded": "{{family}}: {{source}}의 범위 {{count}}개(게시 {{created}}, 불러옴 {{loaded}} UTC)",
+      "summary": "신원 확인: {{checks}}건(검증됨 {{verified}}, 주장 {{claimed}}, 위조 {{spoofed}}). 방법: DNS {{dns}}, 게시된 범위 {{ranges}}, 없음 {{none}}. 마지막 확인: {{time}} UTC.",
+      "noChecks": "아직 확인한 크롤러 신원이 없습니다.",
+      "errors": {
+        "invalid-json": "파일이 올바른 JSON이 아닙니다.",
+        "unsupported-format": "지원하지 않는 형식입니다. ipv4Prefix 또는 ipv6Prefix 항목이 있는 prefixes 목록이 필요합니다.",
+        "no-valid-prefix": "파일에 올바른 IP 범위가 없습니다.",
+        "too-many-prefixes": "파일에 범위가 5,000개를 초과합니다.",
+        "storageFailed": "로컬 저장소를 업데이트하지 못해 범위가 저장되지 않았습니다."
+      }
     }
   },
   "altCheckUi": {
@@ -8606,14 +8661,19 @@
     "running": "초안과 크롤링 데이터의 임베딩 생성 중…",
     "unreachable": "선택한 임베딩 제공자가 벡터를 반환하지 못했습니다. 프로젝트 설정과 연결을 확인하세요.",
     "cancelled": "검사가 취소되었습니다. 결과가 적용되지 않았습니다.",
-    "stale": "입력 또는 크롤링이 변경되었습니다. 검사를 다시 실행하세요."
+    "stale": "입력 또는 크롤링이 변경되었습니다. 검사를 다시 실행하세요.",
+    "policy": "검토 정책",
+    "policyAdvisory": "권고(기본값)",
+    "policyEnforced": "강제(선택)",
+    "policyHint": "강제 정책은 검사가 완전한 OK가 아닐 때 사람의 결정을 위해 초안을 보류할 뿐입니다. 게시, 삭제, 리디렉션은 절대 하지 않습니다."
   },
   "telemetrySourcesUi": {
     "title": "데이터 소스",
     "sources": {
       "gsc": "GSC",
       "ga4": "GA4",
-      "backlinks": "백링크"
+      "backlinks": "백링크",
+      "revenue": "수익"
     },
     "states": {
       "measured": "측정됨",
@@ -8632,7 +8692,11 @@
       "no": "데이터 잘림: 아니요"
     },
     "coverage": "포함 비율: {{value}}%",
-    "unknownNote": "알 수 없는 데이터는 절대 0으로 계산하지 않습니다."
+    "unknownNote": "알 수 없는 데이터는 절대 0으로 계산하지 않습니다.",
+    "currency": "통화: {{value}}",
+    "attribution": {
+      "ga4-session-landing-page": "기여 분석: GA4 세션 방문 페이지"
+    }
   },
   "offPageSourcesUi": {
     "analyze": "링크 출처 분석",
@@ -8787,5 +8851,113 @@
     "languageFallback": "페이지 언어를 알 수 없어 문장은 영어입니다.",
     "copy": "복사",
     "copied": "복사됨"
+  },
+  "offPageLinksUi": {
+    "profileTitle": "사이트 전체 링크 및 중복 링크 프로필",
+    "profileSummary": "참조 도메인 {{domains}}개에서 원시 링크 {{raw}}개(follow 링크 보유 {{follow}}개). 사이트 전체 도메인: {{sitewide}}개(원시 링크의 {{share}}%), 반복 도메인: {{repeated}}개. TBVA는 참조 도메인당 링크 하나만 셉니다.",
+    "unknown": "알 수 없음",
+    "sample": "불러온 샘플 기준이며 제공업체의 전체 프로필이 아닙니다.",
+    "complete": "제공업체가 반환한 모든 행 기준입니다.",
+    "rule": "사이트 전체 = 참조 페이지 5개 이상, 서로 다른 앵커 2개 이하(보정되지 않은 휴리스틱이며 감점이 아님).",
+    "columns": {
+      "domain": "참조 도메인",
+      "raw": "원시 링크",
+      "follow": "Follow",
+      "pages": "참조 페이지",
+      "anchors": "서로 다른 앵커",
+      "pattern": "패턴"
+    },
+    "patterns": {
+      "single": "단일 페이지",
+      "repeated": "반복",
+      "sitewide": "사이트 전체"
+    },
+    "anchorTitle": "분석한 링크의 앵커 문맥",
+    "anchorNote": "제공업체가 보고한 앵커 텍스트를 가져온 원본 텍스트에서 찾습니다. 텍스트에 링크 마크업이 없으므로 일치 결과는 주변 단어를 보여 줄 뿐, 그 위치가 링크라는 증거는 아닙니다.",
+    "noAnchors": "불러온 샘플에 분석한 참조 페이지의 링크가 없습니다.",
+    "anchorRow": "{{source}} → {{target}} · 앵커 “{{anchor}}”",
+    "follow": "follow",
+    "nofollow": "nofollow",
+    "offset": "오프셋 {{offset}}:",
+    "status": {
+      "located": "앵커를 한 번 찾음",
+      "ambiguous": "앵커를 {{n}}번 찾음(모호함)",
+      "not-found": "원본 텍스트에서 앵커를 찾지 못함",
+      "no-anchor-text": "앵커 텍스트 없음(예: 이미지 링크)",
+      "source-unavailable": "원본 텍스트를 사용할 수 없음"
+    }
+  },
+  "imagePhashUi": {
+    "title": "거의 중복된 이미지(지각 해시)",
+    "note": "이 앱에서 사이트 자체 이미지를 최대 {{max}}개까지 한 번만 내려받아 64비트 지각 해시를 비교합니다. 서버가 교차 출처 읽기를 막는 이미지는 사용할 수 없음으로 남습니다. 일치는 이미지가 비슷해 보인다는 뜻일 뿐, 스톡 사용, 저작자, 가치 없음을 증명하지 않습니다.",
+    "run": "이미지 {{count}}개 해시 계산",
+    "cancel": "취소",
+    "threshold": "최대 다른 비트 수(0–16)",
+    "uncalibrated": "기본값 8비트이며 이 임계값은 실제 데이터로 보정되지 않았습니다.",
+    "status": {
+      "running": "계산 중… {{hashed}}개 완료, {{failed}}개 사용 불가",
+      "done": "완료: {{hashed}}개 해시, {{failed}}개 사용 불가",
+      "cancelled": "취소됨: {{hashed}}개 해시, {{failed}}개 사용 불가"
+    },
+    "failures": {
+      "blocked": "{{n}}개 차단 또는 접근 불가",
+      "http-error": "{{n}}개 HTTP 오류",
+      "too-large": "{{n}}개 5MB 초과",
+      "not-image": "{{n}}개 래스터 이미지 아님",
+      "decode-failed": "{{n}}개 디코딩 실패",
+      "unsupported-url": "{{n}}개 지원하지 않는 URL"
+    },
+    "pair": "{{left}} ≈ {{right}} ({{distance}}비트 다름)",
+    "identical": "{{left}} = {{right}} (동일한 파일)",
+    "noPairs": "이 임계값에서는 거의 중복된 쌍이 없습니다.",
+    "external": "외부 이미지 검색 결과와의 비교: 사용할 수 없음(이미지 제공업체 미설정)."
+  },
+  "causalImpactUi": {
+    "title": "반사실 추정(대조 시계열)",
+    "method": "이 속성의 Search Console 일별 클릭을 변경 전 최대 90일 동안 독립된 대조 속성에 회귀하여, 변경이 없었을 때의 클릭을 예측합니다. 계절성을 모델링하지 않는 Causal Impact의 빈도주의 근사입니다.",
+    "unavailable": {
+      "page-series-unavailable": "단일 URL은 추정할 수 없습니다. 속성 전체의 일별 클릭만 저장됩니다.",
+      "no-test-series": "추정할 수 없습니다. 이 사이트의 저장된 Search Console 일별 시계열이 없습니다."
+    },
+    "series": "테스트 시계열: {{test}} · 대조: {{control}}",
+    "none": "없음",
+    "status": {
+      "estimated": "변경 전 {{pre}}일, 변경 후 {{post}}일로 추정했습니다.",
+      "not-estimable": "추정할 수 없습니다(데이터가 있는 변경 전 {{pre}}일, 변경 후 {{post}}일)."
+    },
+    "reasons": {
+      "short-pre-period": "변경 전 기간이 28일 미만입니다.",
+      "short-post-period": "변경 후 기간이 7일 미만입니다.",
+      "missing-data": "한 기간에서 10%를 넘는 날짜가 누락되었습니다.",
+      "no-control": "같은 필터를 쓰는 독립 대조 속성이 저장되어 있지 않습니다. 대조로 쓸 다른 도메인의 Search Console 데이터를 저장하세요.",
+      "flat-control": "대조 시계열이 변경 전 기간에 변하지 않습니다.",
+      "poor-prefit": "대조가 변경 전 기간을 충분히 설명하지 못합니다(R² 0.5 미만).",
+      "placebo-failed": "변경 전 기간의 위약 검정에서 효과가 없어야 할 곳에 효과가 나타났습니다. 모델을 신뢰할 수 없습니다."
+    },
+    "prefit": "변경 전 적합도: R² {{r2}}, 잔차 자기상관 {{rho}}.",
+    "placeboPassed": "위약 검정 통과(변경 전 구간 {{lower}}~{{upper}}에 0 포함).",
+    "placeboFailed": "위약 검정 실패(변경 전 구간 {{lower}}~{{upper}}에 0 미포함).",
+    "absolute": "클릭에 대한 누적 효과: {{value}}(95% 구간 {{lower}}~{{upper}}).",
+    "relative": "상대 효과: {{value}}(95% 구간 {{lower}}~{{upper}}).",
+    "probability": "효과가 이 부호일 확률: {{value}}(정규 근사이며 베이즈 사후확률이 아님).",
+    "caveat": "대조로 보정한 추정은 인과관계의 증거가 아닙니다. 다른 변경, Google 업데이트, 대조에도 영향을 주는 변화로 편향될 수 있습니다. ROI는 추론하지 않습니다."
+  },
+  "revenueImportUi": {
+    "title": "수익(선택 사항인 GA4 내보내기)",
+    "model": "방문 페이지와 수익이 포함되고 자연 검색 세션으로 필터링된 GA4 보고서 CSV를 가져옵니다. 수익은 GA4가 보고하는 대로 세션 방문 페이지에 귀속되며 입력한 통화로 유지됩니다. 내보내기에 없는 페이지는 0이 아니라 알 수 없음으로 남습니다.",
+    "current": "{{file}} 가져옴: {{currency}} 기준 방문 페이지 {{rows}}개, 기간 {{period}}.",
+    "noPeriod": "파일에 명시되지 않음",
+    "clear": "제거",
+    "none": "가져온 수익 내보내기가 없어 수익은 사용할 수 없음으로 남습니다.",
+    "currency": "통화(ISO 코드)",
+    "organic": "내보내기에는 자연 검색 세션만 포함됩니다",
+    "file": "GA4 CSV 내보내기",
+    "errors": {
+      "invalid-currency": "속성 통화를 3자리 ISO 코드(예: KRW)로 입력하세요.",
+      "not-organic": "내보내기가 자연 검색 세션으로 제한되어 있는지 확인하세요.",
+      "no-header": "방문 페이지 열과 수익 열이 있는 머리글을 찾지 못했습니다.",
+      "no-rows": "파일에 숫자 수익 값이 있는 방문 페이지가 없습니다.",
+      "storage-failed": "로컬 저장소를 업데이트하지 못해 가져오기가 저장되지 않았습니다."
+    }
   }
 }
