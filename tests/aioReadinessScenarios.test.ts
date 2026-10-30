@@ -94,9 +94,9 @@ describe('GEM-63-T05 structure, languages, empty corpus and AEO regression', () 
 
   it('leaves the historical brief AEO profile independent of AIO-R', () => {
     const markdown = '# CGM sensor\n\nA CGM sensor is a device that reads glucose every 5 minutes.\n\n## How long does it last?\n\nA CGM sensor lasts 14 days.';
-    const first = assessAeoReadiness(markdown, undefined);
+    const first = assessAeoReadiness(markdown, 'none');
     buildAioReport([GOOD_PAGE]);
-    expect(assessAeoReadiness(markdown, undefined)).toEqual(first);
+    expect(assessAeoReadiness(markdown, 'none')).toEqual(first);
     expect(first.score).toEqual(expect.any(Number));
   });
 });

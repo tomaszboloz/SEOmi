@@ -24,6 +24,8 @@ describe('AIO PDF passage inspector DTO (#64 GEM-64-08)', () => {
     expect(out.offset_start).toBeNull();
     expect(out.offset_end).toBeNull();
     expect(out.facts).toEqual([]);
+    const bare = pdfPassage(chunk({ spoTriples: [{ subject: 'S', object: 'O' } as never] }));
+    expect(bare.facts).toEqual([{ subject: 'S', predicate: '', object: 'O', negated: false }]);
   });
 
   it('reports Answer-First as not applicable for continuation windows', () => {

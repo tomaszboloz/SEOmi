@@ -44,7 +44,7 @@ export const pdfPassage = (chunk: AioChunk & { url: string }): AioPdfPassage => 
     offset_start: offsets?.start ?? null,
     offset_end: offsets?.end ?? null,
     facts: (chunk.spoTriples ?? []).slice(0, AIO_PDF_FACTS).map((fact) => ({
-      subject: fact.subject, predicate: fact.predicate, object: fact.object, negated: !!fact.negated,
+      subject: fact.subject, predicate: fact.predicate ?? '', object: fact.object, negated: !!fact.negated,
     })),
   };
 };
