@@ -7736,7 +7736,8 @@
       "rolePublisher": "Wydawca",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · deklaracja sameAs {{recall}}%",
       "roleRecall": "Deklaracja sameAs ważona rolą: {{pct}}% (autor 50%, recenzent 25%, wydawca 25%; wagi proponowane, sygnał deklaracji, nie weryfikacja tożsamości).",
-      "declaredNote": "Zadeklarowane to nie zweryfikowane: link sameAs liczy się jako deklaracja. Status verified pojawia się dopiero po pobraniu profilu z rejestru i zgodności imienia lub aliasu z autorem; zgodność to słaby dowód i nie potwierdza kwalifikacji. Myślnik oznacza brak danych."
+      "declaredNote": "Zadeklarowane to nie zweryfikowane: link sameAs liczy się jako deklaracja. Status verified pojawia się dopiero po pobraniu profilu z rejestru i zgodności imienia lub aliasu z autorem; zgodność to słaby dowód i nie potwierdza kwalifikacji. Myślnik oznacza brak danych.",
+      "verifyNote": "Weryfikacja profili to sprawdzenie sieciowe na żądanie: wysyła zapytania do publicznego API ORCID i Wikidata dla każdego poprawnego ORCID lub Q-ID autora (maks. 8). Nic nie jest wysyłane, dopóki nie klikniesz."
     },
     "signals": {
       "claimEvidence": "Dowody twierdzeń",
@@ -7877,7 +7878,8 @@
         "body-limit": "odpowiedź za duża; nie odczytano",
         "transport-error": "zapytanie nie powiodło się lub przekroczyło czas"
       },
-      "more": "Nie pokazano kolejnych profili: {{n}}."
+      "more": "Nie pokazano kolejnych profili: {{n}}.",
+      "checked": "sprawdzono {{date}} przez {{source}}"
     }
   },
   "executionCard": {

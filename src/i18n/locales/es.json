@@ -7736,7 +7736,8 @@
       "rolePublisher": "Editor",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · declaración sameAs {{recall}}%",
       "roleRecall": "Declaración sameAs ponderada por rol: {{pct}}% (autor 50%, revisor 25%, editor 25%; pesos propuestos, una señal declarada, no una verificación de identidad).",
-      "declaredNote": "Declarado no es verificado: un enlace sameAs cuenta como declaración. Verified aparece solo cuando se obtuvo el perfil del registro y su nombre o alias coincidió con el autor; una coincidencia es una prueba débil y no demuestra cualificaciones. Un guion significa que no hay datos."
+      "declaredNote": "Declarado no es verificado: un enlace sameAs cuenta como declaración. Verified aparece solo cuando se obtuvo el perfil del registro y su nombre o alias coincidió con el autor; una coincidencia es una prueba débil y no demuestra cualificaciones. Un guion significa que no hay datos.",
+      "verifyNote": "Verificar perfiles es una comprobación de red opcional: envía solicitudes a la API pública de ORCID y a Wikidata por cada ORCID o Q-ID válido del autor (máx. 8). No se envía nada hasta que hagas clic."
     },
     "signals": {
       "claimEvidence": "Evidencia de afirmaciones",
@@ -7877,7 +7878,8 @@
         "body-limit": "respuesta demasiado grande; no leída",
         "transport-error": "la solicitud falló o agotó el tiempo"
       },
-      "more": "Perfiles adicionales no mostrados: {{n}}."
+      "more": "Perfiles adicionales no mostrados: {{n}}.",
+      "checked": "comprobado el {{date}} mediante {{source}}"
     }
   },
   "executionCard": {

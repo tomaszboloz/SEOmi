@@ -7736,7 +7736,8 @@
       "rolePublisher": "Herausgeber",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs-Angabe {{recall}}%",
       "roleRecall": "Rollengewichtete sameAs-Angabe: {{pct}}% (Autor 50 %, Prüfer 25 %, Herausgeber 25 %; vorgeschlagene Gewichte, ein Angabesignal, keine Identitätsprüfung).",
-      "declaredNote": "Angegeben heißt nicht geprüft: Ein sameAs-Link zählt als Angabe. Verified erscheint erst, wenn das Registerprofil abgerufen wurde und Name oder Alias zum Autor passen; ein Treffer ist ein schwacher Beleg und beweist keine Qualifikation. Ein Strich bedeutet keine Daten."
+      "declaredNote": "Angegeben heißt nicht geprüft: Ein sameAs-Link zählt als Angabe. Verified erscheint erst, wenn das Registerprofil abgerufen wurde und Name oder Alias zum Autor passen; ein Treffer ist ein schwacher Beleg und beweist keine Qualifikation. Ein Strich bedeutet keine Daten.",
+      "verifyNote": "Profile prüfen ist eine optionale Netzwerkprüfung: Für jede gültige ORCID oder Q-ID des Autors (max. 8) werden Anfragen an die öffentliche ORCID-API und Wikidata gesendet. Vor dem Klick wird nichts gesendet."
     },
     "signals": {
       "claimEvidence": "Belege für Aussagen",
@@ -7877,7 +7878,8 @@
         "body-limit": "Antwort zu groß; nicht gelesen",
         "transport-error": "Anfrage fehlgeschlagen oder Zeitüberschreitung"
       },
-      "more": "Weitere nicht angezeigte Profile: {{n}}."
+      "more": "Weitere nicht angezeigte Profile: {{n}}.",
+      "checked": "geprüft am {{date}} über {{source}}"
     }
   },
   "executionCard": {

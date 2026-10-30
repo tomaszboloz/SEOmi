@@ -4,6 +4,7 @@ import { isKnownProfileDetail, profileIdentifierUrl } from '@/services/eeatTrust
 import { FOCUS_RING } from './trustHelpers';
 
 const SHOWN = 8;
+const hostOf = (url: string): string => { try { return new URL(url).hostname; } catch { return url; } };
 
 /**
  * sameAs reconciliation evidence for one entity (#87): translated status, declaration recall (a dash
@@ -31,6 +32,7 @@ export const TrustProfileEvidence = ({ reconciliation, profiles }: { reconciliat
                 : <span>{profile.id}</span>}</>}
               {' · '}{t(`trust.identity.status.${profile.status}`)}
               {profile.detail && <> · {isKnownProfileDetail(profile.detail) ? t(`trust.identity.detail.${profile.detail}`) : profile.detail}</>}
+              {profile.lookupUrl && profile.fetchedAt && <> · <span data-testid="trust-profile-lookup">{t('trust.identity.checked', { date: profile.fetchedAt.slice(0, 10), source: hostOf(profile.lookupUrl) })}</span></>}
               {' · '}{profile.url}
             </li>
           );

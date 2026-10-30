@@ -7736,7 +7736,8 @@
       "rolePublisher": "Publisher",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs declaration {{recall}}%",
       "roleRecall": "Role-weighted sameAs declaration: {{pct}}% (author 50%, reviewer 25%, publisher 25%; proposed weights, a declaration signal, not identity verification).",
-      "declaredNote": "Declared is not verified: a sameAs link counts as a declaration. Verified appears only after the registry profile was fetched and its name or alias matched the author; a match is weak evidence and does not prove qualifications. A dash means no data."
+      "declaredNote": "Declared is not verified: a sameAs link counts as a declaration. Verified appears only after the registry profile was fetched and its name or alias matched the author; a match is weak evidence and does not prove qualifications. A dash means no data.",
+      "verifyNote": "Verify profiles is an opt-in network check: it sends requests to the ORCID public API and Wikidata for each valid ORCID or Q-ID of that author (max 8). Nothing is sent until you click."
     },
     "signals": {
       "claimEvidence": "Claim evidence",
@@ -7877,7 +7878,8 @@
         "body-limit": "response too large; not read",
         "transport-error": "request failed or timed out"
       },
-      "more": "{{n}} more profiles not shown."
+      "more": "{{n}} more profiles not shown.",
+      "checked": "checked {{date}} via {{source}}"
     }
   },
   "executionCard": {

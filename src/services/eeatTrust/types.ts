@@ -65,6 +65,8 @@ export type ProfileStatus = 'syntax-valid' | 'declared' | 'fetched' | 'verified'
 export interface ProfileEvidence {
   url: string; kind: ProfileKind; status: ProfileStatus; tier?: 1 | 2 | 3; id?: string;
   fetchedAt?: string; expiresAt?: string; sourceDate?: string; detail?: string;
+  /** Registry record actually fetched for a live lookup (ORCID public API, Wikidata wbgetentities). */
+  lookupUrl?: string;
   /** Declared name and aliases of the entity owning this profile; input of the default identity matcher. */
   subjects?: string[];
 }
