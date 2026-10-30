@@ -1,5 +1,6 @@
 import {
   Activity,
+  BarChart3,
   BadgeCheck,
   Bot,
   Braces,
@@ -24,6 +25,7 @@ import type { CrawlRunRecord, SiteCrawlResult } from '@/types';
 
 export type CrawlTab =
   | 'overview'
+  | 'executive'
   | 'urls'
   | 'crawlerReadiness'
   | 'issues'
@@ -59,6 +61,7 @@ export interface CrawlResultsTabsProps {
 
 export const tabs: Array<{ id: CrawlTab; labelKey: string; icon: typeof Rows3 }> = [
   { id: 'overview', labelKey: 'tabs.overview', icon: Radar },
+  { id: 'executive', labelKey: 'tabs.executive', icon: BarChart3 },
   { id: 'visualisations', labelKey: 'tabs.visualisations', icon: Map },
   { id: 'focus', labelKey: 'tabs.focus', icon: Target },
   { id: 'authority', labelKey: 'tabs.authority', icon: Landmark },
@@ -92,7 +95,7 @@ export const tabGroups: Array<{
     id: 'core',
     labelKey: 'groups.core',
     shortLabelKey: 'groups.coreShort',
-    tabs: ['overview', 'visualisations', 'focus', 'authority', 'aio', 'trust', 'crawlerReadiness', 'urls', 'issues'],
+    tabs: ['overview', 'executive', 'visualisations', 'focus', 'authority', 'aio', 'trust', 'crawlerReadiness', 'urls', 'issues'],
   },
   {
     id: 'content',

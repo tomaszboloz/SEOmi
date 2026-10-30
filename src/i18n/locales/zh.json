@@ -3194,7 +3194,8 @@
       "focus": "站点聚焦度",
       "authority": "主题权威",
       "aio": "AI 就绪度",
-      "trust": "实体信任度"
+      "trust": "实体信任度",
+      "executive": "管理层"
     },
     "groups": {
       "core": "概览",
@@ -7976,6 +7977,100 @@
       },
       "expectedDelta": "预期效果（分）",
       "expectedVsMeasured": "预期 {{expected}}，实测 {{measured}}"
+    }
+  },
+  "executive": {
+    "title": "管理层仪表板",
+    "subtitle": "汇总所选抓取的各模块报告。基于已保存数据在本地计算：不会重新抓取，也不会发布任何内容。",
+    "workflow": "流程：诊断 → 选择优先级 → 模块证据 → What-If → 简报 / 复制 / 导出。不会发布到 CMS。",
+    "run": "抓取：{{date}}",
+    "runUnsaved": "抓取：尚未保存",
+    "hss": {
+      "title": "Holistic Semantic Score（HSS）",
+      "valueAria": "HSS {{value}}",
+      "status": {
+        "complete": "完整",
+        "partial": "部分",
+        "insufficient": "覆盖不足",
+        "unavailable": "不可用"
+      },
+      "coverageAria": "HSS 权重中已测量的比例",
+      "coverage": "已测量权重 {{pct}}% · {{total}} 个模块中的 {{count}} 个",
+      "insufficient": "已测量模块的权重低于 {{min}}%，因此不显示分数。",
+      "renormalised": "按已测量模块重新归一化：{{value}}。",
+      "partialHint": "部分分数：仅按已测量模块重新归一化。缺失的模块不计为 0。",
+      "disclaimer": "SEOmi 启发式指标，并非 Google 指标。与技术审核分数分开。配置 {{profile}}。"
+    },
+    "modules": {
+      "title": "模块",
+      "weight": "权重 {{weight}}%（有效 {{effective}}%）",
+      "open": "打开详情"
+    },
+    "module": {
+      "sfs": "站点聚焦（SFS）",
+      "tas": "主题权威（TAS）",
+      "igos": "信息增益（IGOS）",
+      "sprs": "语义 PageRank（SPRS）",
+      "eetv": "实体信任（EETV）",
+      "sija": "搜索意图（SIJA）",
+      "aior": "AI 就绪度（AIO-R）"
+    },
+    "componentStatus": {
+      "measured": "已测量",
+      "unavailable": "不可用",
+      "invalid": "无效值",
+      "incompatible": "其他抓取或已过期"
+    },
+    "reason": {
+      "not-provided": "未提供数值。",
+      "not-run": "此次抓取未运行该模块。",
+      "domain-aggregation-undefined": "按页面计算的模块：尚未定义站点级分数，因此予以排除而不是取平均。",
+      "sfs-no-scored-pages": "没有可评分的页面。",
+      "tas-no-reference-map": "请先构建参考主题图以测量 TAS。",
+      "eetv-no-signals": "未发现信任信号。",
+      "aio-unavailable": "没有可评估 AI 就绪度的页面。",
+      "aio-error": "AI 就绪度分析失败。",
+      "aio-cancelled": "AI 就绪度分析已取消。",
+      "aio-partial": "部分页面已跳过（部分覆盖）。",
+      "aio-stale": "AI 就绪度结果已过期。",
+      "out-of-range": "数值超出 0–100 范围。",
+      "different-run": "数值来自其他抓取。",
+      "what-if-removed": "已在 What-If 场景中移除。"
+    },
+    "whatIf": {
+      "title": "What-If（此次抓取的副本）",
+      "hint": "修改已测量模块的数值，查看重新计算后的 HSS。不会保存任何内容，也不是流量预测。",
+      "result": "场景 HSS {{value}}（{{delta}}）",
+      "unavailable": "场景 HSS 不可用。",
+      "reset": "重置"
+    },
+    "actions": {
+      "title": "行动列表",
+      "hint": "按每估算小时的 HSS 变化量排序。变化量仅来自各模块自身的模拟；没有模拟时显示为不可用。不承诺流量、引用或投资回报。",
+      "empty": "此次抓取的模块报告未生成任何行动。",
+      "internalLink": "添加内部链接：{{from}} → {{to}}",
+      "delta": "HSS Δ {{value}}",
+      "deltaUnavailable": "HSS Δ 不可用（无声明的模型）",
+      "moduleDelta": "{{module}} Δ {{value}}",
+      "effort": "估算工作量 {{min}}–{{max}} 小时",
+      "effortUnknown": "工作量未知",
+      "scope": "URL：{{urls}} · 证据：{{evidence}}",
+      "blocked": "已阻止：请保留页面或先收集数据。",
+      "conflict": {
+        "protected-by-evidence": "受流量、转化或链接保护（URL：{{count}}）。",
+        "needs-data": "遥测数据缺失或过期；删除前请核查（URL：{{count}}）。",
+        "merge-vs-expand": "存在内容蚕食的 URL：先合并，再扩展（URL：{{count}}）。",
+        "keep-vs-prune": "另一项行动会保留或改进此 URL；保留优先（URL：{{count}}）。"
+      },
+      "dependsOn": "在其他行动之后执行：{{count}}。",
+      "open": "打开{{tab}}",
+      "more": "更多行动见各模块标签页：{{count}}。"
+    },
+    "export": {
+      "copy": "复制 HSS + 行动（JSON）",
+      "copied": "已复制",
+      "failed": "复制失败",
+      "hint": "导出包含确切的输入和权重，因此可以重新计算分数。"
     }
   },
   "scoreDropAlert": {

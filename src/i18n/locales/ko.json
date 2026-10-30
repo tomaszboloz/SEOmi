@@ -3194,7 +3194,8 @@
       "focus": "사이트 포커스",
       "authority": "주제 권위도",
       "aio": "AI 준비도",
-      "trust": "엔터티 신뢰도"
+      "trust": "엔터티 신뢰도",
+      "executive": "경영진"
     },
     "groups": {
       "core": "개요",
@@ -7976,6 +7977,100 @@
       },
       "expectedDelta": "예상 효과(점)",
       "expectedVsMeasured": "예상 {{expected}}, 측정 {{measured}}"
+    }
+  },
+  "executive": {
+    "title": "경영진 대시보드",
+    "subtitle": "선택한 크롤의 모듈 보고서를 한 화면에 보여 줍니다. 저장된 데이터로 로컬에서 계산하며 다시 크롤하거나 게시하지 않습니다.",
+    "workflow": "흐름: 진단 → 우선순위 선택 → 모듈 근거 → What-If → 브리프 / 복사 / 내보내기. CMS에 게시하지 않습니다.",
+    "run": "크롤: {{date}}",
+    "runUnsaved": "크롤: 아직 저장되지 않음",
+    "hss": {
+      "title": "Holistic Semantic Score(HSS)",
+      "valueAria": "HSS {{value}}",
+      "status": {
+        "complete": "완전",
+        "partial": "부분",
+        "insufficient": "커버리지 부족",
+        "unavailable": "사용 불가"
+      },
+      "coverageAria": "HSS 가중치 중 측정된 비율",
+      "coverage": "측정된 가중치 {{pct}}% · {{total}}개 모듈 중 {{count}}개",
+      "insufficient": "측정된 모듈의 가중치가 {{min}}% 미만이므로 점수를 표시하지 않습니다.",
+      "renormalised": "측정된 모듈로 재정규화한 값: {{value}}.",
+      "partialHint": "부분 점수: 측정된 모듈만으로 재정규화했습니다. 누락된 모듈은 0으로 계산하지 않습니다.",
+      "disclaimer": "SEOmi 휴리스틱이며 Google 지표가 아닙니다. 기술 감사 점수와 별개입니다. 프로필 {{profile}}."
+    },
+    "modules": {
+      "title": "모듈",
+      "weight": "가중치 {{weight}}% (실효 {{effective}}%)",
+      "open": "세부 정보 열기"
+    },
+    "module": {
+      "sfs": "사이트 포커스(SFS)",
+      "tas": "주제 권위(TAS)",
+      "igos": "정보 이득(IGOS)",
+      "sprs": "시맨틱 PageRank(SPRS)",
+      "eetv": "엔터티 신뢰(EETV)",
+      "sija": "검색 의도(SIJA)",
+      "aior": "AI 준비도(AIO-R)"
+    },
+    "componentStatus": {
+      "measured": "측정됨",
+      "unavailable": "사용 불가",
+      "invalid": "잘못된 값",
+      "incompatible": "다른 크롤 또는 오래됨"
+    },
+    "reason": {
+      "not-provided": "값이 제공되지 않았습니다.",
+      "not-run": "이 크롤에서는 모듈이 실행되지 않았습니다.",
+      "domain-aggregation-undefined": "페이지 단위 모듈입니다. 사이트 단위 점수가 아직 정의되지 않아 평균하지 않고 제외합니다.",
+      "sfs-no-scored-pages": "점수를 매길 수 있는 페이지가 없습니다.",
+      "tas-no-reference-map": "TAS를 측정하려면 참조 주제 맵을 만드세요.",
+      "eetv-no-signals": "신뢰 신호가 관찰되지 않았습니다.",
+      "aio-unavailable": "AI 준비도를 평가할 수 있는 페이지가 없습니다.",
+      "aio-error": "AI 준비도 분석에 실패했습니다.",
+      "aio-cancelled": "AI 준비도 분석이 취소되었습니다.",
+      "aio-partial": "일부 페이지를 건너뛰었습니다(부분 커버리지).",
+      "aio-stale": "AI 준비도 결과가 오래되었습니다.",
+      "out-of-range": "값이 0–100 범위를 벗어났습니다.",
+      "different-run": "값이 다른 크롤에서 왔습니다.",
+      "what-if-removed": "What-If 시나리오에서 제외되었습니다."
+    },
+    "whatIf": {
+      "title": "What-If(이 크롤의 사본)",
+      "hint": "측정된 모듈 값을 바꾸면 다시 계산된 HSS를 볼 수 있습니다. 아무것도 저장되지 않으며 트래픽 예측이 아닙니다.",
+      "result": "시나리오 HSS {{value}} ({{delta}})",
+      "unavailable": "시나리오 HSS를 사용할 수 없습니다.",
+      "reset": "초기화"
+    },
+    "actions": {
+      "title": "작업 피드",
+      "hint": "예상 1시간당 HSS 변화량 순으로 정렬합니다. 변화량은 각 모듈 자체 시뮬레이션에서만 가져오며, 없으면 사용 불가로 표시합니다. 트래픽, 인용, ROI를 약속하지 않습니다.",
+      "empty": "이 크롤의 모듈 보고서에서 생성된 작업이 없습니다.",
+      "internalLink": "내부 링크 추가: {{from}} → {{to}}",
+      "delta": "HSS Δ {{value}}",
+      "deltaUnavailable": "HSS Δ 사용 불가(선언된 모델 없음)",
+      "moduleDelta": "{{module}} Δ {{value}}",
+      "effort": "예상 작업량 {{min}}–{{max}}시간",
+      "effortUnknown": "작업량 알 수 없음",
+      "scope": "URL: {{urls}} · 근거: {{evidence}}",
+      "blocked": "차단됨: 페이지를 유지하거나 먼저 데이터를 수집하세요.",
+      "conflict": {
+        "protected-by-evidence": "트래픽, 전환 또는 링크로 보호됩니다(URL: {{count}}).",
+        "needs-data": "텔레메트리가 없거나 오래되었습니다. 삭제 전에 확인하세요(URL: {{count}}).",
+        "merge-vs-expand": "카니발라이제이션 URL: 먼저 병합한 뒤 확장하세요(URL: {{count}}).",
+        "keep-vs-prune": "다른 작업이 이 URL을 유지하거나 개선합니다. 유지가 우선입니다(URL: {{count}})."
+      },
+      "dependsOn": "다른 작업 이후에 수행: {{count}}.",
+      "open": "{{tab}} 열기",
+      "more": "모듈 탭에 추가 작업이 있습니다: {{count}}."
+    },
+    "export": {
+      "copy": "HSS + 작업 복사(JSON)",
+      "copied": "복사됨",
+      "failed": "복사 실패",
+      "hint": "내보내기에는 정확한 입력값과 가중치가 포함되어 점수를 다시 계산할 수 있습니다."
     }
   },
   "scoreDropAlert": {

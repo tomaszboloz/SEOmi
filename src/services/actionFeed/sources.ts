@@ -38,7 +38,7 @@ export const tasActions = (scope: ActionScope, tas: TopicalAuthorityReport | nul
   (tas?.recommendations ?? []).map((rec) => finish(scope, {
     type: `tas:${rec.code}`, source: 'tas', urls: [...rec.urls], drillTab: 'authority',
     evidence: [{ source: 'tas', code: rec.code, params: rec.params, items: rec.items }], effort: effortOf(rec.effort),
-    moduleDelta: tas.tas !== null && Number.isFinite(rec.deltaTas) ? { module: 'tas', value: rec.deltaTas } : null,
+    moduleDelta: typeof tas?.tas === 'number' &&Number.isFinite(rec.deltaTas) ? { module: 'tas', value: rec.deltaTas } : null,
   }));
 
 /** E-E-A-T findings have no declared simulation: their delta stays unavailable. Info findings are not actions. */

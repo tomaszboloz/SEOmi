@@ -3194,7 +3194,8 @@
       "focus": "Site Focus",
       "authority": "Autorytet tematyczny",
       "aio": "Gotowość na AI",
-      "trust": "Zaufanie do encji"
+      "trust": "Zaufanie do encji",
+      "executive": "Panel zarządczy"
     },
     "groups": {
       "core": "Przegląd",
@@ -7976,6 +7977,100 @@
       },
       "expectedDelta": "Oczekiwany efekt (pkt)",
       "expectedVsMeasured": "oczekiwano {{expected}}, zmierzono {{measured}}"
+    }
+  },
+  "executive": {
+    "title": "Panel zarządczy",
+    "subtitle": "Jeden widok raportów modułów dla wybranego crawla. Liczone lokalnie z zapisanych danych: bez ponownego crawla, nic nie jest publikowane.",
+    "workflow": "Przebieg: diagnoza → wybór priorytetu → dowody modułu → What-If → brief / kopiowanie / eksport. Nic nie trafia automatycznie do CMS.",
+    "run": "Crawl: {{date}}",
+    "runUnsaved": "Crawl: jeszcze niezapisany",
+    "hss": {
+      "title": "Holistyczny wynik semantyczny (HSS)",
+      "valueAria": "HSS {{value}}",
+      "status": {
+        "complete": "Pełny",
+        "partial": "Częściowy",
+        "insufficient": "Za małe pokrycie",
+        "unavailable": "Niedostępny"
+      },
+      "coverageAria": "Zmierzony udział wag HSS",
+      "coverage": "Zmierzona waga {{pct}}% · {{count}} z {{total}} modułów",
+      "insufficient": "Zmierzone moduły mają mniej niż {{min}}% wagi, więc wynik jest wstrzymany.",
+      "renormalised": "Po renormalizacji na zmierzonych modułach: {{value}}.",
+      "partialHint": "Wynik częściowy: renormalizowany tylko na zmierzonych modułach. Brakujące moduły nie są liczone jako 0.",
+      "disclaimer": "Heurystyka SEOmi, nie metryka Google. Oddzielna od technicznego wyniku audytu. Profil {{profile}}."
+    },
+    "modules": {
+      "title": "Moduły",
+      "weight": "waga {{weight}}% (efektywna {{effective}}%)",
+      "open": "Otwórz szczegóły"
+    },
+    "module": {
+      "sfs": "Site Focus (SFS)",
+      "tas": "Autorytet tematyczny (TAS)",
+      "igos": "Przyrost informacji (IGOS)",
+      "sprs": "Semantyczny PageRank (SPRS)",
+      "eetv": "Zaufanie encji (EETV)",
+      "sija": "Intencja wyszukiwania (SIJA)",
+      "aior": "Gotowość AI (AIO-R)"
+    },
+    "componentStatus": {
+      "measured": "Zmierzony",
+      "unavailable": "Niedostępny",
+      "invalid": "Nieprawidłowa wartość",
+      "incompatible": "Inny crawl lub nieaktualny"
+    },
+    "reason": {
+      "not-provided": "Nie podano wartości.",
+      "not-run": "Moduł nie był uruchomiony dla tego crawla.",
+      "domain-aggregation-undefined": "Moduł per strona: wynik dla całej witryny nie jest jeszcze zdefiniowany, więc jest pominięty, a nie uśredniany.",
+      "sfs-no-scored-pages": "Żadna strona nie została oceniona.",
+      "tas-no-reference-map": "Zbuduj referencyjną mapę tematów, aby zmierzyć TAS.",
+      "eetv-no-signals": "Nie zaobserwowano sygnałów zaufania.",
+      "aio-unavailable": "Żadna strona nie została oceniona pod kątem gotowości AI.",
+      "aio-error": "Analiza gotowości AI nie powiodła się.",
+      "aio-cancelled": "Analiza gotowości AI została anulowana.",
+      "aio-partial": "Część stron pominięto (pokrycie częściowe).",
+      "aio-stale": "Wynik gotowości AI jest nieaktualny.",
+      "out-of-range": "Wartość jest poza zakresem 0–100.",
+      "different-run": "Wartość pochodzi z innego crawla.",
+      "what-if-removed": "Usunięto w scenariuszu What-If."
+    },
+    "whatIf": {
+      "title": "What-If (kopia tego crawla)",
+      "hint": "Zmień wartości zmierzonych modułów, aby zobaczyć przeliczony HSS. Nic nie jest zapisywane; to nie jest prognoza ruchu.",
+      "result": "HSS scenariusza {{value}} ({{delta}})",
+      "unavailable": "HSS scenariusza jest niedostępny.",
+      "reset": "Resetuj"
+    },
+    "actions": {
+      "title": "Strumień działań",
+      "hint": "Kolejność według delty HSS na szacowaną godzinę. Delta pochodzi wyłącznie z symulacji samych modułów; bez niej jest niedostępna. To nie jest obietnica ruchu, cytowań ani ROI.",
+      "empty": "Raporty modułów tego crawla nie wygenerowały działań.",
+      "internalLink": "Dodaj link wewnętrzny: {{from}} → {{to}}",
+      "delta": "Δ HSS {{value}}",
+      "deltaUnavailable": "Δ HSS niedostępna (brak zadeklarowanego modelu)",
+      "moduleDelta": "Δ {{module}} {{value}}",
+      "effort": "Szacowany nakład {{min}}–{{max}} h",
+      "effortUnknown": "Nakład nieznany",
+      "scope": "URL-e: {{urls}} · dowody: {{evidence}}",
+      "blocked": "Zablokowane: zachowaj stronę lub najpierw zbierz dane.",
+      "conflict": {
+        "protected-by-evidence": "Chronione ruchem, konwersjami lub linkami (URL-e: {{count}}).",
+        "needs-data": "Brak lub nieaktualna telemetria; sprawdź przed usunięciem (URL-e: {{count}}).",
+        "merge-vs-expand": "Kanibalizowany URL: najpierw scal, potem rozbuduj (URL-e: {{count}}).",
+        "keep-vs-prune": "Inne działanie zachowuje lub poprawia ten URL; zachowanie wygrywa (URL-e: {{count}})."
+      },
+      "dependsOn": "Wykonaj po innych działaniach: {{count}}.",
+      "open": "Otwórz: {{tab}}",
+      "more": "Kolejne działania w zakładkach modułów: {{count}}."
+    },
+    "export": {
+      "copy": "Kopiuj HSS + działania (JSON)",
+      "copied": "Skopiowano",
+      "failed": "Kopiowanie nie powiodło się",
+      "hint": "Eksport zawiera dokładne wejścia i wagi, więc wynik można przeliczyć ponownie."
     }
   },
   "scoreDropAlert": {

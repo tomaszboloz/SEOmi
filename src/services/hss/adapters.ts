@@ -23,9 +23,8 @@ export const DOMAIN_AGGREGATION_UNDEFINED = 'domain-aggregation-undefined';
 const missing = (module: HssModuleInput['module'], reason: string): HssModuleInput => ({ module, value: null, reason });
 
 const aioInput = (aio: AioReport, runId: string): HssModuleInput => {
-  if (aio.availability === 'unavailable' || aio.availability === 'error' || aio.availability === 'cancelled' || !aio.scoredCount) {
-    return missing('aior', `aio-${aio.availability}`);
-  }
+  if (aio.availability === 'unavailable' || aio.availability === 'error' || aio.availability === 'cancelled') return missing('aior', `aio-${aio.availability}`);
+  if (!aio.scoredCount) return missing('aior', 'aio-unavailable');
   const sourceRun = aio.sourceSnapshot?.crawlRunId;
   if (aio.availability === 'stale') return { module: 'aior', value: aio.score, runId: `${sourceRun ?? 'stale'}:stale`, reason: 'aio-stale' };
   return { module: 'aior', value: aio.score, runId: sourceRun ?? runId, ...(aio.availability === 'partial' ? { reason: 'aio-partial' } : {}) };

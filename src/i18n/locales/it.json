@@ -3194,7 +3194,8 @@
       "focus": "Focus del sito",
       "authority": "Autorità tematica",
       "aio": "Prontezza per l'IA",
-      "trust": "Fiducia delle entità"
+      "trust": "Fiducia delle entità",
+      "executive": "Direzione"
     },
     "groups": {
       "core": "Panoramica",
@@ -7976,6 +7977,100 @@
       },
       "expectedDelta": "Effetto atteso (punti)",
       "expectedVsMeasured": "atteso {{expected}}, misurato {{measured}}"
+    }
+  },
+  "executive": {
+    "title": "Dashboard direzionale",
+    "subtitle": "Una vista sui report dei moduli della scansione selezionata. Calcolata in locale dai dati salvati: nessuna nuova scansione, nulla viene pubblicato.",
+    "workflow": "Flusso: diagnosi → scelta della priorità → evidenze del modulo → What-If → brief / copia / esportazione. Nulla viene pubblicato in un CMS.",
+    "run": "Scansione: {{date}}",
+    "runUnsaved": "Scansione: non ancora salvata",
+    "hss": {
+      "title": "Holistic Semantic Score (HSS)",
+      "valueAria": "HSS {{value}}",
+      "status": {
+        "complete": "Completo",
+        "partial": "Parziale",
+        "insufficient": "Copertura insufficiente",
+        "unavailable": "Non disponibile"
+      },
+      "coverageAria": "Quota misurata del peso HSS",
+      "coverage": "Peso misurato {{pct}}% · {{count}} di {{total}} moduli",
+      "insufficient": "I moduli misurati pesano meno del {{min}}%, quindi il punteggio non viene mostrato.",
+      "renormalised": "Rinormalizzato sui moduli misurati: {{value}}.",
+      "partialHint": "Punteggio parziale: rinormalizzato solo sui moduli misurati. I moduli mancanti non contano come 0.",
+      "disclaimer": "Euristica SEOmi, non una metrica Google. Separata dal punteggio di audit tecnico. Profilo {{profile}}."
+    },
+    "modules": {
+      "title": "Moduli",
+      "weight": "peso {{weight}}% (effettivo {{effective}}%)",
+      "open": "Apri dettagli"
+    },
+    "module": {
+      "sfs": "Site Focus (SFS)",
+      "tas": "Autorità tematica (TAS)",
+      "igos": "Guadagno informativo (IGOS)",
+      "sprs": "PageRank semantico (SPRS)",
+      "eetv": "Fiducia delle entità (EETV)",
+      "sija": "Intento di ricerca (SIJA)",
+      "aior": "Prontezza IA (AIO-R)"
+    },
+    "componentStatus": {
+      "measured": "Misurato",
+      "unavailable": "Non disponibile",
+      "invalid": "Valore non valido",
+      "incompatible": "Altra scansione o obsoleto"
+    },
+    "reason": {
+      "not-provided": "Nessun valore fornito.",
+      "not-run": "Il modulo non è stato eseguito per questa scansione.",
+      "domain-aggregation-undefined": "Modulo per pagina: un punteggio di sito non è ancora definito, quindi viene escluso invece di essere mediato.",
+      "sfs-no-scored-pages": "Nessuna pagina è stata valutata.",
+      "tas-no-reference-map": "Crea la mappa tematica di riferimento per misurare il TAS.",
+      "eetv-no-signals": "Nessun segnale di fiducia osservato.",
+      "aio-unavailable": "Nessuna pagina è stata valutata per la prontezza IA.",
+      "aio-error": "L’analisi della prontezza IA non è riuscita.",
+      "aio-cancelled": "L’analisi della prontezza IA è stata annullata.",
+      "aio-partial": "Alcune pagine sono state saltate (copertura parziale).",
+      "aio-stale": "Il risultato della prontezza IA è obsoleto.",
+      "out-of-range": "Il valore è fuori da 0–100.",
+      "different-run": "Il valore proviene da un’altra scansione.",
+      "what-if-removed": "Rimosso nello scenario What-If."
+    },
+    "whatIf": {
+      "title": "What-If (copia di questa scansione)",
+      "hint": "Modifica i valori dei moduli misurati per vedere l’HSS ricalcolato. Nulla viene salvato; non è una previsione di traffico.",
+      "result": "HSS dello scenario {{value}} ({{delta}})",
+      "unavailable": "L’HSS dello scenario non è disponibile.",
+      "reset": "Reimposta"
+    },
+    "actions": {
+      "title": "Elenco azioni",
+      "hint": "Ordinato per delta HSS per ora stimata. I delta provengono solo dalle simulazioni dei moduli stessi; senza di esse il delta non è disponibile. Nessuna promessa di traffico, citazioni o ROI.",
+      "empty": "I report dei moduli di questa scansione non hanno prodotto azioni.",
+      "internalLink": "Aggiungi un link interno: {{from}} → {{to}}",
+      "delta": "Δ HSS {{value}}",
+      "deltaUnavailable": "Δ HSS non disponibile (nessun modello dichiarato)",
+      "moduleDelta": "Δ {{module}} {{value}}",
+      "effort": "Impegno stimato {{min}}–{{max}} h",
+      "effortUnknown": "Impegno sconosciuto",
+      "scope": "URL: {{urls}} · evidenze: {{evidence}}",
+      "blocked": "Bloccato: mantieni la pagina o raccogli prima i dati.",
+      "conflict": {
+        "protected-by-evidence": "Protetto da traffico, conversioni o link (URL: {{count}}).",
+        "needs-data": "Telemetria mancante o obsoleta; verifica prima di rimuovere (URL: {{count}}).",
+        "merge-vs-expand": "URL cannibalizzato: prima unisci, poi amplia (URL: {{count}}).",
+        "keep-vs-prune": "Un’altra azione mantiene o migliora questo URL; il mantenimento prevale (URL: {{count}})."
+      },
+      "dependsOn": "Da fare dopo altre azioni: {{count}}.",
+      "open": "Apri {{tab}}",
+      "more": "Altre azioni nelle schede dei moduli: {{count}}."
+    },
+    "export": {
+      "copy": "Copia HSS + azioni (JSON)",
+      "copied": "Copiato",
+      "failed": "Copia non riuscita",
+      "hint": "L’esportazione contiene gli input e i pesi esatti, quindi il punteggio può essere ricalcolato."
     }
   },
   "scoreDropAlert": {
