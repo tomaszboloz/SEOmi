@@ -1,6 +1,7 @@
 import type { ProfileEvidence, ProfileStatus } from './types';
 import { hostMatches } from './identifiers';
 import { defaultIdentityMatcher } from './identityMatch';
+import { registryLookupUrl } from './profileLinks';
 import { invokeTauriCommand, isTauriEnvironment } from '@/services/tauri';
 
 export interface RegistryResponse { status: number; url: string; body: string; sourceDate?: string }
@@ -90,7 +91,7 @@ export const verifyProfile = async (profile: ProfileEvidence, options: RegistryO
   const key = cacheKey(profile, options);
   const cached = cache.get(key);
   if (cached && nowMs - cached.at <= ttl) return { profile: cached.profile, stale: false };
-  const url = safeRegistryUrl(profile.url, profile.kind);
+  const url = safeRegistryUrl(registryLookupUrl(profile) ?? profile.url, profile.kind);
   if (!url || !options.fetcher) return { profile: { ...profile, status: 'unavailable', detail: 'registry-unavailable' }, stale: Boolean(cached) };
   const used = budgets.get(options) ?? 0;
   if (used >= (options.maxRequests ?? LIMITS.maxRequests)) return { profile: { ...profile, status: 'unavailable', detail: 'rate-budget' }, stale: Boolean(cached) };
@@ -100,7 +101,7 @@ export const verifyProfile = async (profile: ProfileEvidence, options: RegistryO
     const response = await options.fetcher(url.toString(), controller.signal);
     if (!safeRegistryUrl(response.url, profile.kind)) return { profile: { ...profile, status: 'unavailable', detail: 'unsafe-redirect' }, stale: false };
     if (response.body.length > (options.maxBytes ?? LIMITS.maxBytes)) return { profile: { ...profile, status: 'unavailable', detail: 'body-limit' }, stale: false };
-    const result = { ...profile, status: statusFor(profile, response, options), fetchedAt: now(), expiresAt: new Date(nowMs + ttl).toISOString(), sourceDate: response.sourceDate };
+    const result = { ...profile, status: statusFor(profile, response, options), lookupUrl: url.toString(), fetchedAt: now(), expiresAt: new Date(nowMs + ttl).toISOString(), sourceDate: response.sourceDate };
     if (!cache.has(key) && cache.size >= MAX_CACHE_ENTRIES) {
       const oldest = cache.keys().next().value;
       if (oldest !== undefined) cache.delete(oldest);

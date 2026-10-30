@@ -113,7 +113,17 @@ async fn check_link_executes_outer_transport_wrapper() {
 fn registry_url_allows_only_profile_paths_and_https_hosts() {
     assert!(super::registry_url("https://orcid.org/0000-0002-1825-0097").is_ok());
     assert!(super::registry_url("https://www.wikidata.org/entity/Q42").is_ok());
+    assert!(super::registry_url("https://pub.orcid.org/v3.0/0000-0002-1825-0097/person").is_ok());
+    assert!(super::registry_url(
+        "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q42&props=labels%7Caliases&format=json"
+    )
+    .is_ok());
     for url in [
+        "https://pub.orcid.org/v3.0/0000-0002-1825-0097/works",
+        "https://pub.orcid.org/v3.0/../person",
+        "https://www.wikidata.org/w/api.php?action=wbeditentity&ids=Q42&props=labels%7Caliases&format=json",
+        "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q42|Q1&props=labels%7Caliases&format=json",
+        "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q42&props=labels%7Caliases&format=json&x=1",
         "https://orcid.org/",
         "https://orcid.org.evil.test/0000-0002-1825-0097",
         "http://orcid.org/0000-0002-1825-0097",

@@ -7673,6 +7673,17 @@
         "uncertain": "不确定",
         "unsupported": "无规则（以英语替代）"
       }
+    },
+    "facts": {
+      "title": "事实与 Answer-First",
+      "answerComponents": "Answer-First 组成部分：与标题匹配 {{similarity}} · 开头为陈述句 {{declarative}} · 空泛开头 {{fluff}}",
+      "yes": "是",
+      "no": "否",
+      "quality": "Q {{q}}",
+      "unit": "单位 {{unit}}",
+      "negated": "否定",
+      "none": "此片段中未检测到主语-谓语-宾语事实。",
+      "heuristic": "词汇启发式，而非依存句法分析器。Q：1 = 带单位的数字，0.7 = 具名术语，0.3 = 一般内容。"
     }
   },
   "trust": {
@@ -7726,7 +7737,8 @@
       "rolePublisher": "发布者",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs 声明 {{recall}}%",
       "roleRecall": "按角色加权的 sameAs 声明：{{pct}}%（作者 50%、审阅者 25%、发布者 25%；建议权重，仅为声明信号，并非身份验证）。",
-      "declaredNote": "已声明不等于已验证：sameAs 链接只算声明。只有在获取注册表资料且其姓名或别名与作者一致后才会显示 verified；匹配只是较弱的证据，并不证明资质。短横线表示没有数据。"
+      "declaredNote": "已声明不等于已验证：sameAs 链接只算声明。只有在获取注册表资料且其姓名或别名与作者一致后才会显示 verified；匹配只是较弱的证据，并不证明资质。短横线表示没有数据。",
+      "verifyNote": "验证资料是可选的网络检查：会针对作者的每个有效 ORCID 或 Q-ID 向 ORCID 公共 API 和 Wikidata 发送请求（最多 8 个）。点击之前不会发送任何内容。"
     },
     "signals": {
       "claimEvidence": "主张证据",
@@ -7773,7 +7785,11 @@
         "missing-dates": "只有 {{pct}}% 的文章显示了修改或审核日期。",
         "no-articles": "未检测到文章页面，因此未对作者和引用层级评分。",
         "author-invalid-profile": "{{count}}位作者链接的ORCID或Wikidata档案标识符无效（{{names}}）。请检查校验码或Q-ID。",
-        "ymyl-no-scholarly-ids": "{{pages}}篇文章均未引用带DOI、PMID或PMCID的来源。YMYL主题请引用原始研究。"
+        "ymyl-no-scholarly-ids": "{{pages}}篇文章均未引用带DOI、PMID或PMCID的来源。YMYL主题请引用原始研究。",
+        "graph-dangling": "{{count}} 个 JSON-LD 引用指向本次抓取中未定义的 @id（{{ids}}）。",
+        "graph-id-conflict": "{{count}} 个 JSON-LD @id 的类型、名称或 sameAs 声明相互矛盾（{{ids}}）。每个 @id 只保留一个定义。",
+        "graph-unshared-id": "{{count}} 个实体出现在多个页面上但没有共享的 @id（{{names}}）。",
+        "graph-islands": "在 {{count}} 个页面上，JSON-LD 节点没有通过 @id 引用相连（彼此孤立）。仅作提示，不扣分。"
       }
     },
     "generator": {
@@ -7802,7 +7818,8 @@
         "invalid-organization-url": "请输入有效的发布者 URL（https://...）。",
         "invalid-page-url": "请输入有效的页面 URL（https://...）。",
         "invalid-same-as": "部分 sameAs 条目不是有效 URL，已被忽略。",
-        "conflict": "{{id}} 的现有 {{property}} 与此提案冲突。请在导出前解决。"
+        "conflict": "{{id}} 的现有 {{property}} 与此提案冲突。请在导出前解决。",
+        "medical-no-reviewer": "MedicalWebPage 没有审核人：不会生成 reviewedBy。仅在确有真实、合格的审核人时才添加；导出仍可进行。"
       },
       "preview": "生成的 JSON-LD",
       "copy": "复制 script 标签",
@@ -7840,7 +7857,25 @@
       "references": "引用的来源",
       "noReference": "该主张附近未找到引用。",
       "more": "未显示的主张：{{n}} 条",
-      "linkNote": "DOI、PMID 和 PMCID 链接会打开公共解析服务（doi.org、PubMed、PMC）。链接只说明在哪里查找该文献，并不证明文献存在或支持该主张。"
+      "linkNote": "DOI、PMID 和 PMCID 链接会打开公共解析服务（doi.org、PubMed、PMC）。链接只说明在哪里查找该文献，并不证明文献存在或支持该主张。",
+      "reach": {
+        "check": "检查来源可访问性（{{n}}）",
+        "checking": "正在检查来源…",
+        "note": "可选的网络检查：每个被引用的解析器 URL 只请求一次（最多 20 个）。可访问表示该地址有响应，不表示该文献支持此论断。",
+        "desktopOnly": "来源检查需要桌面应用。",
+        "reachable": "可访问",
+        "broken": "错误响应",
+        "no-response": "无响应",
+        "not-checked": "未检查"
+      },
+      "support": {
+        "associated": "本地检查：同一句中有可识别的来源",
+        "weak": "本地检查：关联较弱",
+        "none": "本地检查：无引用",
+        "hedged": "措辞保留",
+        "negated": "否定",
+        "note": "本地检查只读取本页面（引用位置、标识符、保留措辞、否定）。它从不读取被引用的文献，因此无法确认支持关系。"
+      }
     },
     "identity": {
       "status": {
@@ -7867,7 +7902,8 @@
         "body-limit": "响应过大，未读取",
         "transport-error": "请求失败或超时"
       },
-      "more": "未显示的资料：{{n}} 个"
+      "more": "未显示的资料：{{n}} 个",
+      "checked": "{{date}} 通过 {{source}} 检查"
     }
   },
   "executionCard": {

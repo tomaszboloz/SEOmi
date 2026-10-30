@@ -54,6 +54,15 @@ const htmlNames = (html: string): string[] => {
   return out;
 };
 
+const xmlTexts = (body: string, tag: string): string[] => [...body.matchAll(new RegExp(`<${tag}\\b[^>]*>([\\s\\S]*?)</${tag}>`, 'g'))].map((match) => decode(match[1]));
+
+/** ORCID public API person record (XML, the API default): given + family name, credit name and other names. */
+const orcidXmlNames = (body: string): string[] => {
+  const given = xmlTexts(body, 'personal-details:given-names')[0];
+  const family = xmlTexts(body, 'personal-details:family-name')[0];
+  return [...(given && family ? [`${given} ${family}`] : []), ...xmlTexts(body, 'personal-details:credit-name'), ...xmlTexts(body, 'other-name:content')];
+};
+
 /** Names a registry body claims for its subject; empty when the body names no one or several profiles. */
 export const bodyNames = (body: string): string[] => {
   const out: string[] = [];
@@ -62,7 +71,10 @@ export const bodyNames = (body: string): string[] => {
     const entities = (parsed as { entities?: object } | null)?.entities;
     if (entities && Object.keys(entities).length > 1) return [];
     jsonNames(parsed, out);
-  } catch { out.push(...htmlNames(body)); }
+  } catch {
+    const xml = orcidXmlNames(body);
+    out.push(...(xml.length ? xml : htmlNames(body)));
+  }
   return [...new Set(out.map((name) => name.trim()).filter(Boolean))];
 };
 

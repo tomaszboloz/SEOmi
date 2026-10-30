@@ -7673,6 +7673,17 @@
         "uncertain": "불확실",
         "unsupported": "규칙 없음(영어로 대체)"
       }
+    },
+    "facts": {
+      "title": "사실과 Answer-First",
+      "answerComponents": "Answer-First 구성 요소: 제목 일치 {{similarity}} · 서술문으로 시작 {{declarative}} · 군더더기 도입 {{fluff}}",
+      "yes": "예",
+      "no": "아니요",
+      "quality": "Q {{q}}",
+      "unit": "단위 {{unit}}",
+      "negated": "부정",
+      "none": "이 청크에서 주어-서술어-목적어 사실이 감지되지 않았습니다.",
+      "heuristic": "어휘 휴리스틱이며 의존 구문 분석기가 아닙니다. Q: 1 = 단위가 있는 숫자, 0.7 = 명명된 용어, 0.3 = 일반."
     }
   },
   "trust": {
@@ -7726,7 +7737,8 @@
       "rolePublisher": "발행처",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs 선언 {{recall}}%",
       "roleRecall": "역할 가중 sameAs 선언: {{pct}}% (저자 50%, 검토자 25%, 발행처 25%; 제안된 가중치이며 선언 신호일 뿐 신원 확인이 아닙니다).",
-      "declaredNote": "선언은 검증이 아닙니다. sameAs 링크는 선언으로 집계됩니다. verified는 레지스트리 프로필을 가져와 그 이름이나 별칭이 저자와 일치할 때만 표시됩니다. 일치는 약한 증거이며 자격을 증명하지 않습니다. 대시는 데이터 없음을 뜻합니다."
+      "declaredNote": "선언은 검증이 아닙니다. sameAs 링크는 선언으로 집계됩니다. verified는 레지스트리 프로필을 가져와 그 이름이나 별칭이 저자와 일치할 때만 표시됩니다. 일치는 약한 증거이며 자격을 증명하지 않습니다. 대시는 데이터 없음을 뜻합니다.",
+      "verifyNote": "프로필 확인은 선택형 네트워크 검사입니다. 저자의 유효한 ORCID 또는 Q-ID마다 ORCID 공개 API와 Wikidata에 요청을 보냅니다(최대 8개). 클릭하기 전에는 아무것도 전송되지 않습니다."
     },
     "signals": {
       "claimEvidence": "주장 근거",
@@ -7773,7 +7785,11 @@
         "missing-dates": "수정일 또는 검토일이 표시된 문서는 {{pct}}%뿐입니다.",
         "no-articles": "문서 페이지가 감지되지 않아 저자 및 인용 계층은 점수를 매기지 않았습니다.",
         "author-invalid-profile": "{{count}}명의 저자가 유효하지 않은 식별자의 ORCID 또는 Wikidata 프로필을 연결했습니다({{names}}). 체크섬 또는 Q-ID를 확인하세요.",
-        "ymyl-no-scholarly-ids": "{{pages}}개 문서 중 DOI, PMID, PMCID가 있는 출처를 인용한 문서가 없습니다. YMYL 주제에서는 1차 연구를 인용하세요."
+        "ymyl-no-scholarly-ids": "{{pages}}개 문서 중 DOI, PMID, PMCID가 있는 출처를 인용한 문서가 없습니다. YMYL 주제에서는 1차 연구를 인용하세요.",
+        "graph-dangling": "JSON-LD 참조 {{count}}개가 이번 크롤링 어디에도 정의되지 않은 @id를 가리킵니다({{ids}}).",
+        "graph-id-conflict": "JSON-LD @id 값 {{count}}개가 서로 다른 유형, 이름 또는 sameAs로 선언되어 있습니다({{ids}}). @id마다 정의를 하나만 유지하세요.",
+        "graph-unshared-id": "엔터티 {{count}}개가 공유 @id 없이 여러 페이지에 나타납니다({{names}}).",
+        "graph-islands": "{{count}}개 페이지에서 JSON-LD 노드가 @id 참조로 연결되어 있지 않습니다(분리된 섬). 보고만 하며 점수는 감점되지 않습니다."
       }
     },
     "generator": {
@@ -7802,7 +7818,8 @@
         "invalid-organization-url": "올바른 발행자 URL을 입력하세요 (https://...).",
         "invalid-page-url": "올바른 페이지 URL을 입력하세요 (https://...).",
         "invalid-same-as": "올바른 URL이 아닌 sameAs 항목은 제외했습니다.",
-        "conflict": "{{id}}의 기존 {{property}}가 제안과 충돌합니다. 내보내기 전에 해결하세요."
+        "conflict": "{{id}}의 기존 {{property}}가 제안과 충돌합니다. 내보내기 전에 해결하세요.",
+        "medical-no-reviewer": "검토자가 없는 MedicalWebPage: reviewedBy가 생성되지 않습니다. 실제 자격을 갖춘 검토자가 있을 때만 추가하세요. 내보내기는 계속 가능합니다."
       },
       "preview": "생성된 JSON-LD",
       "copy": "script 태그 복사",
@@ -7840,7 +7857,25 @@
       "references": "인용된 출처",
       "noReference": "이 주장 근처에서 인용을 찾지 못했습니다.",
       "more": "표시되지 않은 주장: {{n}}개",
-      "linkNote": "DOI, PMID, PMCID 링크는 공개 리졸버(doi.org, PubMed, PMC)를 엽니다. 링크는 문헌을 찾아볼 위치만 알려 줄 뿐, 문헌의 존재나 주장 뒷받침 여부를 확인하지 않습니다."
+      "linkNote": "DOI, PMID, PMCID 링크는 공개 리졸버(doi.org, PubMed, PMC)를 엽니다. 링크는 문헌을 찾아볼 위치만 알려 줄 뿐, 문헌의 존재나 주장 뒷받침 여부를 확인하지 않습니다.",
+      "reach": {
+        "check": "출처 접근 가능 여부 확인 ({{n}})",
+        "checking": "출처 확인 중…",
+        "note": "선택형 네트워크 검사: 인용된 각 리졸버 URL에 한 번씩 요청합니다(최대 20개). 접근 가능은 주소가 응답한다는 뜻이며, 해당 문헌이 주장을 뒷받침한다는 뜻이 아닙니다.",
+        "desktopOnly": "출처 확인은 데스크톱 앱에서만 가능합니다.",
+        "reachable": "접근 가능",
+        "broken": "오류 응답",
+        "no-response": "응답 없음",
+        "not-checked": "확인 안 됨"
+      },
+      "support": {
+        "associated": "로컬 검사: 같은 문장에 식별 가능한 출처",
+        "weak": "로컬 검사: 약한 연관",
+        "none": "로컬 검사: 인용 없음",
+        "hedged": "유보적 표현",
+        "negated": "부정",
+        "note": "로컬 검사는 이 페이지만 읽습니다(인용 위치, 식별자, 유보 표현, 부정). 인용된 문헌은 읽지 않으므로 뒷받침 여부를 확인할 수 없습니다."
+      }
     },
     "identity": {
       "status": {
@@ -7867,7 +7902,8 @@
         "body-limit": "응답이 너무 커서 읽지 않음",
         "transport-error": "요청 실패 또는 시간 초과"
       },
-      "more": "표시되지 않은 프로필: {{n}}개"
+      "more": "표시되지 않은 프로필: {{n}}개",
+      "checked": "{{date}}에 {{source}}에서 확인"
     }
   },
   "executionCard": {

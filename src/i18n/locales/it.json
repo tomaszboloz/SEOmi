@@ -7673,6 +7673,17 @@
         "uncertain": "incerto",
         "unsupported": "nessuna regola (ripiego inglese)"
       }
+    },
+    "facts": {
+      "title": "Fatti e Answer-First",
+      "answerComponents": "Componenti Answer-First: corrispondenza con il titolo {{similarity}} · frase dichiarativa iniziale {{declarative}} · apertura riempitiva {{fluff}}",
+      "yes": "sì",
+      "no": "no",
+      "quality": "Q {{q}}",
+      "unit": "unità {{unit}}",
+      "negated": "negato",
+      "none": "Nessun fatto soggetto-predicato-oggetto rilevato in questo frammento.",
+      "heuristic": "Euristica lessicale, non un parser delle dipendenze. Q: 1 = numero con unità, 0,7 = termine specifico, 0,3 = generico."
     }
   },
   "trust": {
@@ -7726,7 +7737,8 @@
       "rolePublisher": "Editore",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · dichiarazione sameAs {{recall}}%",
       "roleRecall": "Dichiarazione sameAs ponderata per ruolo: {{pct}}% (autore 50%, revisore 25%, editore 25%; pesi proposti, un segnale dichiarativo, non una verifica dell’identità).",
-      "declaredNote": "Dichiarato non significa verificato: un link sameAs conta come dichiarazione. Verified compare solo dopo aver recuperato il profilo del registro e se il suo nome o alias coincide con l’autore; una corrispondenza è una prova debole e non dimostra le qualifiche. Un trattino indica assenza di dati."
+      "declaredNote": "Dichiarato non significa verificato: un link sameAs conta come dichiarazione. Verified compare solo dopo aver recuperato il profilo del registro e se il suo nome o alias coincide con l’autore; una corrispondenza è una prova debole e non dimostra le qualifiche. Un trattino indica assenza di dati.",
+      "verifyNote": "Verifica profili è un controllo di rete facoltativo: invia richieste all'API pubblica ORCID e a Wikidata per ogni ORCID o Q-ID valido dell'autore (max 8). Nulla viene inviato finché non fai clic."
     },
     "signals": {
       "claimEvidence": "Prove delle affermazioni",
@@ -7773,7 +7785,11 @@
         "missing-dates": "Solo il {{pct}}% degli articoli mostra una data di modifica o di revisione.",
         "no-articles": "Non sono state rilevate pagine di articoli, quindi i livelli autori e citazioni non sono stati valutati.",
         "author-invalid-profile": "{{count}} autori collegano un profilo ORCID o Wikidata con identificatore non valido ({{names}}). Controlla il checksum o il Q-ID.",
-        "ymyl-no-scholarly-ids": "Nessuno dei {{pages}} articoli cita una fonte con DOI, PMID o PMCID. Su temi YMYL cita lo studio primario."
+        "ymyl-no-scholarly-ids": "Nessuno dei {{pages}} articoli cita una fonte con DOI, PMID o PMCID. Su temi YMYL cita lo studio primario.",
+        "graph-dangling": "{{count}} riferimenti JSON-LD puntano a un @id non definito in questa scansione ({{ids}}).",
+        "graph-id-conflict": "{{count}} valori @id JSON-LD sono dichiarati con tipo, nome o sameAs in conflitto ({{ids}}). Mantieni una sola definizione per @id.",
+        "graph-unshared-id": "{{count}} entità compaiono su più pagine senza un @id condiviso ({{names}}).",
+        "graph-islands": "Su {{count}} pagine i nodi JSON-LD non sono collegati da riferimenti @id (isole separate). Solo segnalato; il punteggio non viene penalizzato."
       }
     },
     "generator": {
@@ -7802,7 +7818,8 @@
         "invalid-organization-url": "Inserisci un URL dell'editore valido (https://...).",
         "invalid-page-url": "Inserisci un URL di pagina valido (https://...).",
         "invalid-same-as": "Alcune voci sameAs non sono URL validi e sono state escluse.",
-        "conflict": "Il campo {{property}} esistente per {{id}} è in conflitto con la proposta. Risolvi il conflitto prima dell’esportazione."
+        "conflict": "Il campo {{property}} esistente per {{id}} è in conflitto con la proposta. Risolvi il conflitto prima dell’esportazione.",
+        "medical-no-reviewer": "MedicalWebPage senza revisore: reviewedBy non viene generato. Aggiungi un revisore reale e qualificato solo se esiste; l'esportazione funziona comunque."
       },
       "preview": "JSON-LD generato",
       "copy": "Copia il tag script",
@@ -7840,7 +7857,25 @@
       "references": "Riferimenti citati",
       "noReference": "Nessuna citazione trovata vicino a questa affermazione.",
       "more": "Altre affermazioni non mostrate: {{n}}.",
-      "linkNote": "I link DOI, PMID e PMCID aprono il resolver pubblico (doi.org, PubMed, PMC). Un link indica dove consultare l'opera; non conferma che esista né che sostenga l'affermazione."
+      "linkNote": "I link DOI, PMID e PMCID aprono il resolver pubblico (doi.org, PubMed, PMC). Un link indica dove consultare l'opera; non conferma che esista né che sostenga l'affermazione.",
+      "reach": {
+        "check": "Verifica raggiungibilità delle fonti ({{n}})",
+        "checking": "Verifica delle fonti…",
+        "note": "Controllo di rete facoltativo: ogni URL di risoluzione citato viene interrogato una volta (max 20). Raggiungibile significa che l'indirizzo risponde, non che l'opera supporti l'affermazione.",
+        "desktopOnly": "La verifica delle fonti richiede l'app desktop.",
+        "reachable": "raggiungibile",
+        "broken": "risposta di errore",
+        "no-response": "nessuna risposta",
+        "not-checked": "non verificato"
+      },
+      "support": {
+        "associated": "controllo locale: fonte identificata nella stessa frase",
+        "weak": "controllo locale: associazione debole",
+        "none": "controllo locale: nessuna citazione",
+        "hedged": "formulazione prudente",
+        "negated": "negazione",
+        "note": "Il controllo locale legge solo questa pagina (posizione della citazione, identificatore, cautela, negazione). Non legge mai l'opera citata, quindi non può confermarne il supporto."
+      }
     },
     "identity": {
       "status": {
@@ -7867,7 +7902,8 @@
         "body-limit": "risposta troppo grande; non letta",
         "transport-error": "richiesta non riuscita o scaduta"
       },
-      "more": "Altri profili non mostrati: {{n}}."
+      "more": "Altri profili non mostrati: {{n}}.",
+      "checked": "controllato il {{date}} tramite {{source}}"
     }
   },
   "executionCard": {

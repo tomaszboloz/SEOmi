@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useTrust } from '@/hooks/useTrust';
 import { nativeRegistryFetcher, prefillFromAuthor, verifyProfile, type AuthorEntity, type ProfileEvidence, type TrustJsonLdInput } from '@/services/eeatTrust';
 import { nodesOf } from '@/services/eeatTrust/graph';
+import { observedEntityIds } from '@/services/eeatTrust/jsonLdIds';
 import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
 import { Empty } from '../CrawlViewPrimitives';
 import { TrustEntities } from './TrustEntities';
@@ -34,7 +35,7 @@ export const CrawlTrustTab = ({ pages, startUrl, run, projectId }: CrawlTrustTab
     ...(node.name ? { name: node.name } : {}),
     ...Object.fromEntries(Object.entries(node.props).map(([key, values]) => [key, values.length === 1 ? values[0] : values])),
   }))) };
-  const open = (author: AuthorEntity) => setForm(prefillFromAuthor(author, report, startUrl));
+  const open = (author: AuthorEntity) => setForm(prefillFromAuthor(author, report, startUrl, observedEntityIds(pages.flatMap(nodesOf), author.articleUrls[0] ?? startUrl)));
   const verify = async (author: AuthorEntity) => {
     const entries = await Promise.all(author.profiles.slice(0, 8).map(async (profile) => [profile.url, (await verifyProfile(profile, registryOptions)).profile] as const));
     if (activeScope.current !== scope) return;

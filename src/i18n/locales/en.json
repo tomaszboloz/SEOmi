@@ -7673,6 +7673,17 @@
         "uncertain": "uncertain",
         "unsupported": "no rules (English fallback)"
       }
+    },
+    "facts": {
+      "title": "Facts and Answer-First",
+      "answerComponents": "Answer-First components: heading match {{similarity}} · declarative lead {{declarative}} · filler opening {{fluff}}",
+      "yes": "yes",
+      "no": "no",
+      "quality": "Q {{q}}",
+      "unit": "unit {{unit}}",
+      "negated": "negated",
+      "none": "No subject-predicate-object facts detected in this chunk.",
+      "heuristic": "Lexical heuristic, not a dependency parser. Q: 1 = number with unit, 0.7 = named term, 0.3 = generic."
     }
   },
   "trust": {
@@ -7726,7 +7737,8 @@
       "rolePublisher": "Publisher",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs declaration {{recall}}%",
       "roleRecall": "Role-weighted sameAs declaration: {{pct}}% (author 50%, reviewer 25%, publisher 25%; proposed weights, a declaration signal, not identity verification).",
-      "declaredNote": "Declared is not verified: a sameAs link counts as a declaration. Verified appears only after the registry profile was fetched and its name or alias matched the author; a match is weak evidence and does not prove qualifications. A dash means no data."
+      "declaredNote": "Declared is not verified: a sameAs link counts as a declaration. Verified appears only after the registry profile was fetched and its name or alias matched the author; a match is weak evidence and does not prove qualifications. A dash means no data.",
+      "verifyNote": "Verify profiles is an opt-in network check: it sends requests to the ORCID public API and Wikidata for each valid ORCID or Q-ID of that author (max 8). Nothing is sent until you click."
     },
     "signals": {
       "claimEvidence": "Claim evidence",
@@ -7773,7 +7785,11 @@
         "missing-dates": "Only {{pct}}% of articles show a modified or review date.",
         "no-articles": "No article pages were detected, so the author and citation layers were not scored.",
         "author-invalid-profile": "{{count}} authors link an ORCID or Wikidata profile with an invalid identifier ({{names}}). Check the checksum or Q-ID.",
-        "ymyl-no-scholarly-ids": "None of the {{pages}} article pages cite a source with a DOI, PMID or PMCID. On a YMYL topic, cite the primary study."
+        "ymyl-no-scholarly-ids": "None of the {{pages}} article pages cite a source with a DOI, PMID or PMCID. On a YMYL topic, cite the primary study.",
+        "graph-dangling": "{{count}} JSON-LD references point to an @id that is not defined anywhere in this crawl ({{ids}}).",
+        "graph-id-conflict": "{{count}} JSON-LD @id values are declared with conflicting type, name or sameAs ({{ids}}). Keep one definition per @id.",
+        "graph-unshared-id": "{{count}} entities appear on several pages without a shared @id ({{names}}).",
+        "graph-islands": "On {{count}} pages the JSON-LD nodes are not connected by @id references (separate islands). Reported only; the score is not penalized."
       }
     },
     "generator": {
@@ -7802,7 +7818,8 @@
         "invalid-organization-url": "Enter a valid publisher URL (https://...).",
         "invalid-page-url": "Enter a valid page URL (https://...).",
         "invalid-same-as": "Some sameAs entries are not valid URLs and were left out.",
-        "conflict": "Existing {{property}} for {{id}} conflicts with this proposal. Resolve it before export."
+        "conflict": "Existing {{property}} for {{id}} conflicts with this proposal. Resolve it before export.",
+        "medical-no-reviewer": "MedicalWebPage without a reviewer: no reviewedBy is generated. Add a real, qualified reviewer only if one exists; the export still works."
       },
       "preview": "Generated JSON-LD",
       "copy": "Copy script tag",
@@ -7840,7 +7857,25 @@
       "references": "Cited references",
       "noReference": "No citation found near this claim.",
       "more": "{{n}} more claims not shown.",
-      "linkNote": "DOI, PMID and PMCID links open the public resolver (doi.org, PubMed, PMC). A link shows where to look the work up; it does not confirm that the work exists or supports the claim."
+      "linkNote": "DOI, PMID and PMCID links open the public resolver (doi.org, PubMed, PMC). A link shows where to look the work up; it does not confirm that the work exists or supports the claim.",
+      "reach": {
+        "check": "Check source reachability ({{n}})",
+        "checking": "Checking sources…",
+        "note": "Opt-in network check: requests each cited resolver URL once (max 20). Reachable means the address answers, not that the work supports the claim.",
+        "desktopOnly": "Source checks need the desktop app.",
+        "reachable": "reachable",
+        "broken": "error response",
+        "no-response": "no response",
+        "not-checked": "not checked"
+      },
+      "support": {
+        "associated": "local check: identified source in the same sentence",
+        "weak": "local check: weak association",
+        "none": "local check: no citation",
+        "hedged": "hedged wording",
+        "negated": "negation",
+        "note": "The local check reads only this page (citation position, identifier, hedging, negation). It never reads the cited work, so it cannot confirm support."
+      }
     },
     "identity": {
       "status": {
@@ -7867,7 +7902,8 @@
         "body-limit": "response too large; not read",
         "transport-error": "request failed or timed out"
       },
-      "more": "{{n}} more profiles not shown."
+      "more": "{{n}} more profiles not shown.",
+      "checked": "checked {{date}} via {{source}}"
     }
   },
   "executionCard": {

@@ -7673,6 +7673,17 @@
         "uncertain": "niepewne",
         "unsupported": "brak reguł (zastępczo angielskie)"
       }
+    },
+    "facts": {
+      "title": "Fakty i Answer-First",
+      "answerComponents": "Składowe Answer-First: zgodność z nagłówkiem {{similarity}} · zdanie oznajmujące na początku {{declarative}} · pusty wstęp {{fluff}}",
+      "yes": "tak",
+      "no": "nie",
+      "quality": "Q {{q}}",
+      "unit": "jednostka {{unit}}",
+      "negated": "zaprzeczenie",
+      "none": "W tym fragmencie nie wykryto faktów podmiot-orzeczenie-dopełnienie.",
+      "heuristic": "Heurystyka leksykalna, nie parser zależności. Q: 1 = liczba z jednostką, 0,7 = nazwany termin, 0,3 = ogólne."
     }
   },
   "trust": {
@@ -7726,7 +7737,8 @@
       "rolePublisher": "Wydawca",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · deklaracja sameAs {{recall}}%",
       "roleRecall": "Deklaracja sameAs ważona rolą: {{pct}}% (autor 50%, recenzent 25%, wydawca 25%; wagi proponowane, sygnał deklaracji, nie weryfikacja tożsamości).",
-      "declaredNote": "Zadeklarowane to nie zweryfikowane: link sameAs liczy się jako deklaracja. Status verified pojawia się dopiero po pobraniu profilu z rejestru i zgodności imienia lub aliasu z autorem; zgodność to słaby dowód i nie potwierdza kwalifikacji. Myślnik oznacza brak danych."
+      "declaredNote": "Zadeklarowane to nie zweryfikowane: link sameAs liczy się jako deklaracja. Status verified pojawia się dopiero po pobraniu profilu z rejestru i zgodności imienia lub aliasu z autorem; zgodność to słaby dowód i nie potwierdza kwalifikacji. Myślnik oznacza brak danych.",
+      "verifyNote": "Weryfikacja profili to sprawdzenie sieciowe na żądanie: wysyła zapytania do publicznego API ORCID i Wikidata dla każdego poprawnego ORCID lub Q-ID autora (maks. 8). Nic nie jest wysyłane, dopóki nie klikniesz."
     },
     "signals": {
       "claimEvidence": "Dowody twierdzeń",
@@ -7773,7 +7785,11 @@
         "missing-dates": "Tylko {{pct}}% artykułów pokazuje datę modyfikacji lub recenzji.",
         "no-articles": "Nie wykryto stron artykułów, więc warstwy autorów i cytowań nie zostały ocenione.",
         "author-invalid-profile": "{{count}} autorów podaje profil ORCID lub Wikidata z błędnym identyfikatorem ({{names}}). Sprawdź sumę kontrolną lub Q-ID.",
-        "ymyl-no-scholarly-ids": "Żaden z {{pages}} artykułów nie cytuje źródła z DOI, PMID ani PMCID. W tematyce YMYL cytuj badanie pierwotne."
+        "ymyl-no-scholarly-ids": "Żaden z {{pages}} artykułów nie cytuje źródła z DOI, PMID ani PMCID. W tematyce YMYL cytuj badanie pierwotne.",
+        "graph-dangling": "{{count}} odwołań JSON-LD wskazuje @id, które nie jest zdefiniowane w tym crawlu ({{ids}}).",
+        "graph-id-conflict": "{{count}} wartości @id ma sprzeczny typ, nazwę lub sameAs ({{ids}}). Zostaw jedną definicję na @id.",
+        "graph-unshared-id": "{{count}} encji występuje na kilku stronach bez wspólnego @id ({{names}}).",
+        "graph-islands": "Na {{count}} stronach węzły JSON-LD nie są połączone odwołaniami @id (osobne wyspy). Tylko informacja; wynik nie jest obniżany."
       }
     },
     "generator": {
@@ -7802,7 +7818,8 @@
         "invalid-organization-url": "Podaj poprawny adres wydawcy (https://...).",
         "invalid-page-url": "Podaj poprawny adres strony (https://...).",
         "invalid-same-as": "Niektóre wpisy sameAs nie są poprawnymi adresami i zostały pominięte.",
-        "conflict": "Istniejące pole {{property}} dla {{id}} koliduje z propozycją. Rozwiąż konflikt przed eksportem."
+        "conflict": "Istniejące pole {{property}} dla {{id}} koliduje z propozycją. Rozwiąż konflikt przed eksportem.",
+        "medical-no-reviewer": "MedicalWebPage bez recenzenta: reviewedBy nie jest generowane. Dodaj prawdziwego, wykwalifikowanego recenzenta tylko wtedy, gdy istnieje; eksport nadal działa."
       },
       "preview": "Wygenerowany JSON-LD",
       "copy": "Kopiuj znacznik script",
@@ -7840,7 +7857,25 @@
       "references": "Cytowane źródła",
       "noReference": "W pobliżu tego twierdzenia nie znaleziono przypisu.",
       "more": "Nie pokazano kolejnych twierdzeń: {{n}}.",
-      "linkNote": "Linki DOI, PMID i PMCID otwierają publiczny resolver (doi.org, PubMed, PMC). Link wskazuje, gdzie sprawdzić publikację; nie potwierdza, że istnieje ani że popiera twierdzenie."
+      "linkNote": "Linki DOI, PMID i PMCID otwierają publiczny resolver (doi.org, PubMed, PMC). Link wskazuje, gdzie sprawdzić publikację; nie potwierdza, że istnieje ani że popiera twierdzenie.",
+      "reach": {
+        "check": "Sprawdź dostępność źródeł ({{n}})",
+        "checking": "Sprawdzanie źródeł…",
+        "note": "Sprawdzenie sieciowe na żądanie: każdy adres resolvera cytowania jest odpytywany raz (maks. 20). Dostępne oznacza, że adres odpowiada, a nie że praca popiera twierdzenie.",
+        "desktopOnly": "Sprawdzanie źródeł wymaga aplikacji desktopowej.",
+        "reachable": "dostępne",
+        "broken": "odpowiedź z błędem",
+        "no-response": "brak odpowiedzi",
+        "not-checked": "niesprawdzone"
+      },
+      "support": {
+        "associated": "sprawdzenie lokalne: zidentyfikowane źródło w tym samym zdaniu",
+        "weak": "sprawdzenie lokalne: słabe powiązanie",
+        "none": "sprawdzenie lokalne: brak cytowania",
+        "hedged": "ostrożne sformułowanie",
+        "negated": "zaprzeczenie",
+        "note": "Sprawdzenie lokalne czyta tylko tę stronę (pozycja przypisu, identyfikator, sformułowania ostrożne, zaprzeczenie). Nie czyta cytowanej pracy, więc nie potwierdza poparcia."
+      }
     },
     "identity": {
       "status": {
@@ -7867,7 +7902,8 @@
         "body-limit": "odpowiedź za duża; nie odczytano",
         "transport-error": "zapytanie nie powiodło się lub przekroczyło czas"
       },
-      "more": "Nie pokazano kolejnych profili: {{n}}."
+      "more": "Nie pokazano kolejnych profili: {{n}}.",
+      "checked": "sprawdzono {{date}} przez {{source}}"
     }
   },
   "executionCard": {

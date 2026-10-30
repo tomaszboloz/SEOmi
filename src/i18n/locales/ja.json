@@ -7673,6 +7673,17 @@
         "uncertain": "不確実",
         "unsupported": "ルールなし（英語で代用）"
       }
+    },
+    "facts": {
+      "title": "事実と Answer-First",
+      "answerComponents": "Answer-First の構成要素: 見出しとの一致 {{similarity}} · 冒頭の平叙文 {{declarative}} · 前置きの埋め草 {{fluff}}",
+      "yes": "はい",
+      "no": "いいえ",
+      "quality": "Q {{q}}",
+      "unit": "単位 {{unit}}",
+      "negated": "否定",
+      "none": "このチャンクでは主語・述語・目的語の事実は検出されませんでした。",
+      "heuristic": "語彙ヒューリスティックであり、係り受け解析ではありません。Q: 1 = 単位付きの数値、0.7 = 固有の用語、0.3 = 一般的。"
     }
   },
   "trust": {
@@ -7726,7 +7737,8 @@
       "rolePublisher": "発行者",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs 宣言 {{recall}}%",
       "roleRecall": "役割加重の sameAs 宣言: {{pct}}%(著者 50%、レビュー担当者 25%、発行者 25%。提案された重みで、宣言のシグナルであり、本人確認ではありません)。",
-      "declaredNote": "宣言は検証済みではありません。sameAs リンクは宣言として数えられます。verified になるのは、レジストリのプロフィールを取得し、その名前または別名が著者と一致した場合だけです。一致は弱い証拠であり、資格を証明するものではありません。ダッシュはデータなしを意味します。"
+      "declaredNote": "宣言は検証済みではありません。sameAs リンクは宣言として数えられます。verified になるのは、レジストリのプロフィールを取得し、その名前または別名が著者と一致した場合だけです。一致は弱い証拠であり、資格を証明するものではありません。ダッシュはデータなしを意味します。",
+      "verifyNote": "プロフィールの確認はオプトインのネットワーク確認です。著者の有効な ORCID または Q-ID ごとに ORCID 公開 API と Wikidata へリクエストを送信します（最大 8 件）。クリックするまで何も送信されません。"
     },
     "signals": {
       "claimEvidence": "主張の証拠",
@@ -7773,7 +7785,11 @@
         "missing-dates": "更新日または監修日を表示している記事は{{pct}}%だけです。",
         "no-articles": "記事ページが検出されなかったため、著者と引用のレイヤーは採点されませんでした。",
         "author-invalid-profile": "{{count}}人の著者が無効な識別子のORCIDまたはWikidataプロフィールをリンクしています（{{names}}）。チェックサムまたはQ-IDを確認してください。",
-        "ymyl-no-scholarly-ids": "{{pages}}件の記事のいずれもDOI、PMID、PMCIDを持つ情報源を引用していません。YMYLの話題では一次研究を引用してください。"
+        "ymyl-no-scholarly-ids": "{{pages}}件の記事のいずれもDOI、PMID、PMCIDを持つ情報源を引用していません。YMYLの話題では一次研究を引用してください。",
+        "graph-dangling": "{{count}} 件の JSON-LD 参照が、このクロールのどこにも定義されていない @id を指しています（{{ids}}）。",
+        "graph-id-conflict": "{{count}} 件の JSON-LD @id が矛盾するタイプ、名前、または sameAs で宣言されています（{{ids}}）。@id ごとに定義は 1 つにしてください。",
+        "graph-unshared-id": "{{count}} 件のエンティティが共通の @id なしで複数のページに出現しています（{{names}}）。",
+        "graph-islands": "{{count}} ページで JSON-LD ノードが @id 参照でつながっていません（分離した島）。報告のみで、スコアは減点されません。"
       }
     },
     "generator": {
@@ -7802,7 +7818,8 @@
         "invalid-organization-url": "有効な発行者URLを入力してください（https://...）。",
         "invalid-page-url": "有効なページURLを入力してください（https://...）。",
         "invalid-same-as": "有効なURLではないsameAsの項目は除外しました。",
-        "conflict": "{{id}} の既存の {{property}} が提案と競合しています。エクスポート前に解決してください。"
+        "conflict": "{{id}} の既存の {{property}} が提案と競合しています。エクスポート前に解決してください。",
+        "medical-no-reviewer": "レビュー担当者のいない MedicalWebPage: reviewedBy は生成されません。実在する有資格のレビュー担当者がいる場合のみ追加してください。エクスポートは引き続き可能です。"
       },
       "preview": "生成されたJSON-LD",
       "copy": "scriptタグをコピー",
@@ -7840,7 +7857,25 @@
       "references": "引用された出典",
       "noReference": "この主張の近くに出典は見つかりませんでした。",
       "more": "表示されていない主張：{{n}} 件",
-      "linkNote": "DOI・PMID・PMCID のリンクは公開リゾルバー（doi.org、PubMed、PMC）を開きます。リンクは文献の参照先を示すだけで、文献の存在や主張の裏付けを確認するものではありません。"
+      "linkNote": "DOI・PMID・PMCID のリンクは公開リゾルバー（doi.org、PubMed、PMC）を開きます。リンクは文献の参照先を示すだけで、文献の存在や主張の裏付けを確認するものではありません。",
+      "reach": {
+        "check": "出典の到達性を確認 ({{n}})",
+        "checking": "出典を確認中…",
+        "note": "オプトインのネットワーク確認: 引用された各リゾルバー URL に 1 回だけリクエストします（最大 20 件）。到達可能とはアドレスが応答したという意味で、文献が主張を裏付けるという意味ではありません。",
+        "desktopOnly": "出典の確認にはデスクトップアプリが必要です。",
+        "reachable": "到達可能",
+        "broken": "エラー応答",
+        "no-response": "応答なし",
+        "not-checked": "未確認"
+      },
+      "support": {
+        "associated": "ローカル確認: 同じ文に特定可能な出典あり",
+        "weak": "ローカル確認: 弱い関連",
+        "none": "ローカル確認: 引用なし",
+        "hedged": "断定を避けた表現",
+        "negated": "否定",
+        "note": "ローカル確認はこのページだけを読みます（引用の位置、識別子、断定回避、否定）。引用文献は読まないため、裏付けを確認することはできません。"
+      }
     },
     "identity": {
       "status": {
@@ -7867,7 +7902,8 @@
         "body-limit": "応答が大きすぎるため未読",
         "transport-error": "リクエスト失敗またはタイムアウト"
       },
-      "more": "表示されていないプロフィール：{{n}} 件"
+      "more": "表示されていないプロフィール：{{n}} 件",
+      "checked": "{{date}} に {{source}} で確認"
     }
   },
   "executionCard": {
