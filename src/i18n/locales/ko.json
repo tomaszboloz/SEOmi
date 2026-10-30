@@ -6007,7 +6007,8 @@
           "good": "높은 포커스",
           "moderate": "보통 포커스",
           "weak": "낮은 포커스",
-          "critical": "심각한 포커스 부족"
+          "critical": "심각한 포커스 부족",
+          "unavailable": "사용할 수 없음"
         },
         "status": {
           "strong": "우수",
@@ -6032,7 +6033,8 @@
           "anchoredTopic": "핵심 주제는 홈페이지와 앵커 페이지({{0}}개)에서 선택되었습니다.",
           "anchorsMissing": "이번 크롤링에서 찾지 못한 앵커 페이지: {{0}}.",
           "goalTopic": "핵심 주제는 비즈니스 목표 \"{{0}}\"에 따라 선택되었습니다.",
-          "goalUnmatched": "비즈니스 목표 \"{{0}}\"와 일치하는 크롤 콘텐츠가 없어 목표 없이 주제를 선택했습니다."
+          "goalUnmatched": "비즈니스 목표 \"{{0}}\"와 일치하는 크롤 콘텐츠가 없어 목표 없이 주제를 선택했습니다.",
+          "unavailable": "이 크롤링에서 점수를 매길 수 있는 페이지가 없어 Site Focus Score가 없습니다. 0점이 아닙니다."
         },
         "rec": {
           "remove-offtopic": "주제에서 벗어난 페이지 {{0}}개는 조치 전에 검토하세요. 먼저 트래픽, 전환, 링크를 확인합니다. 이러한 근거가 없는 페이지는 관련 페이지로의 301 또는 재작성 후보입니다. 자동으로 삭제되는 것은 없습니다. 잠재 효과: +{{1}}점.",
@@ -6088,7 +6090,8 @@
             "clicks": "클릭",
             "conversions": "전환",
             "referringDomains": "참조 도메인",
-            "revenue": "수익"
+            "revenue": "수익",
+            "botHits": "검증된 Googlebot 방문(서버 로그)"
           },
           "alternative": {
             "confirm-revenue-currency": "수익 통화 확인",
@@ -6119,6 +6122,16 @@
             "missing-permission": "권한 없음",
             "unavailable": "사용 불가"
           }
+        },
+        "profile": "점수 프로필 {{0}}, 구성 {{1}}.",
+        "tHidden": "공백으로 표시하지 않은 경쟁사 용어",
+        "hiddenIntro": "이 용어는 브랜드 이름(자사 또는 경쟁사)이므로 주제 공백이 아니라 브랜드 검색입니다.",
+        "colTerm": "용어",
+        "colReason": "이유",
+        "brandReason": {
+          "own-domain": "도메인 이름",
+          "own-alias": "자사 브랜드 이름",
+          "competitor-brand": "경쟁사 브랜드"
         }
       },
       "authority": {
@@ -6943,7 +6956,9 @@
       "change": "이전 분석 대비 {{delta}}점",
       "progressAria": "Site Focus Score {{score}} / 100, {{band}}",
       "recalcBudget": "오늘 전체 재계산 {{limit}}회 중 {{remaining}}회 남았습니다.",
-      "recalcExhausted": "하루 전체 재계산 한도({{limit}}회)에 도달했습니다. 내일 다시 시도하세요."
+      "recalcExhausted": "하루 전체 재계산 한도({{limit}}회)에 도달했습니다. 내일 다시 시도하세요.",
+      "metaProfile": "점수 프로필 {{version}}(구성 {{hash}})",
+      "trendBreak": "이전 분석과 비교하지 않았습니다. 다른 점수 프로필 또는 다른 주제 설정을 사용했습니다."
     },
     "drawer": {
       "title": "Site Focus Score의 작동 방식",
@@ -7198,7 +7213,10 @@
       "empty": "추세를 보려면 전체 분석을 두 번 이상 실행하세요.",
       "aria": "분석 {{count}}회 동안의 Site Focus Score, {{from}}에서 {{to}}",
       "point": "{{date}}: {{score}}",
-      "annotations": "주요 변화"
+      "annotations": "주요 변화",
+      "profile-changed": "점수 프로필이 {{from}}에서 {{to}}(으)로 바뀌었습니다. 변경 전후 점수는 직접 비교할 수 없습니다({{delta}}점).",
+      "config-changed": "주제 설정(주제, 앵커 페이지, 목표 또는 브랜드 용어)이 바뀌었습니다. 새 보고서 버전이며 직접 비교할 수 없습니다({{delta}}점).",
+      "legacyProfile": "버전 없는 프로필"
     },
     "alert": {
       "sfs-drop": "Site Focus Score가 {{from}}에서 {{to}}(으)로 하락했습니다({{points}}점).",
@@ -7243,7 +7261,8 @@
         "clicks": "클릭",
         "conversions": "전환",
         "referringDomains": "참조 도메인",
-        "revenue": "수익"
+        "revenue": "수익",
+        "botHits": "검증된 Googlebot 방문(서버 로그)"
       },
       "unknown": "{{signal}}: 알 수 없음 ({{state}})",
       "measured": "{{signal}}: {{value}}",
@@ -7291,6 +7310,23 @@
         "too-long": "목표는 {{max}}자 이하로 입력하세요.",
         "no-words": "숫자나 기호만이 아니라 단어를 사용하세요.",
         "looks-like-url": "URL처럼 보입니다. 페이지는 앵커 페이지 입력란에 추가하세요."
+      }
+    },
+    "brand": {
+      "title": "브랜드 용어",
+      "help": "도메인 이름은 주제로 취급되지 않습니다. 자사 브랜드의 다른 이름, 주제 공백으로 표시되면 안 되는 경쟁사 브랜드, 그리고 예외(브랜드처럼 보이지만 실제 업계 용어인 단어)를 추가하세요.",
+      "aliases": "자사 브랜드의 다른 이름(한 줄에 하나)",
+      "competitors": "경쟁사 브랜드(한 줄에 하나)",
+      "exceptions": "유지할 업계 용어(한 줄에 하나)",
+      "save": "브랜드 용어 저장",
+      "needsProject": "브랜드 용어는 프로젝트별로 저장됩니다. 설정하려면 프로젝트에서 이 크롤링을 여세요.",
+      "ownBrand": "자사 브랜드로 제외됨(정규화된 단어): {{terms}}",
+      "filteredTitle": "공백에서 숨긴 경쟁사 용어",
+      "filtered": "{{term}}: {{reason}}",
+      "reason": {
+        "own-domain": "도메인 이름",
+        "own-alias": "자사 브랜드 이름",
+        "competitor-brand": "경쟁사 브랜드"
       }
     }
   },

@@ -6007,7 +6007,8 @@
           "good": "Dobre skupienie",
           "moderate": "Umiarkowane skupienie",
           "weak": "Słabe skupienie",
-          "critical": "Krytyczne skupienie"
+          "critical": "Krytyczne skupienie",
+          "unavailable": "Niedostępne"
         },
         "status": {
           "strong": "Mocna",
@@ -6032,7 +6033,8 @@
           "anchoredTopic": "Temat główny wybrano ze strony głównej i stron-kotwic (stron: {{0}}).",
           "anchorsMissing": "Strony-kotwice nieznalezione w tym crawlu: {{0}}.",
           "goalTopic": "Temat przewodni wybrano na podstawie celu biznesowego „{{0}}”.",
-          "goalUnmatched": "Cel biznesowy „{{0}}” nie pasuje do żadnej przeskanowanej treści; temat wybrano bez niego."
+          "goalUnmatched": "Cel biznesowy „{{0}}” nie pasuje do żadnej przeskanowanej treści; temat wybrano bez niego.",
+          "unavailable": "W tym crawlu nie udało się ocenić żadnej strony, więc nie ma wyniku Site Focus Score. To nie jest wynik 0."
         },
         "rec": {
           "remove-offtopic": "Zweryfikuj {{0}} stron spoza tematu przed działaniem: najpierw sprawdź ruch, konwersje i linki. Strony bez takich dowodów to kandydaci do 301 na adekwatną stronę lub przepisania. Nic nie jest usuwane automatycznie. Potencjał: +{{1}} pkt.",
@@ -6088,7 +6090,8 @@
             "clicks": "Kliknięcia",
             "conversions": "Konwersje",
             "referringDomains": "Domeny odsyłające",
-            "revenue": "Przychód"
+            "revenue": "Przychód",
+            "botHits": "Zweryfikowane wizyty Googlebota (logi serwera)"
           },
           "alternative": {
             "confirm-revenue-currency": "Potwierdź walutę przychodu",
@@ -6119,6 +6122,16 @@
             "missing-permission": "Brak uprawnień",
             "unavailable": "Niedostępne"
           }
+        },
+        "profile": "Profil oceny {{0}}, konfiguracja {{1}}.",
+        "tHidden": "Terminy konkurencji niepokazane jako luki",
+        "hiddenIntro": "Te terminy to nazwy marek (Twojej lub konkurencji), więc są wyszukiwaniami marki, a nie lukami tematycznymi.",
+        "colTerm": "Termin",
+        "colReason": "Powód",
+        "brandReason": {
+          "own-domain": "nazwa Twojej domeny",
+          "own-alias": "nazwa Twojej marki",
+          "competitor-brand": "marka konkurencji"
         }
       },
       "authority": {
@@ -6943,7 +6956,9 @@
       "change": "{{delta}} pkt od poprzedniej analizy",
       "progressAria": "Site Focus Score {{score}} na 100, {{band}}",
       "recalcBudget": "Pozostało dziś pełnych przeliczeń: {{remaining}} z {{limit}}.",
-      "recalcExhausted": "Osiągnięto dzienny limit {{limit}} pełnych przeliczeń. Spróbuj ponownie jutro."
+      "recalcExhausted": "Osiągnięto dzienny limit {{limit}} pełnych przeliczeń. Spróbuj ponownie jutro.",
+      "metaProfile": "Profil oceny {{version}} (konfiguracja {{hash}})",
+      "trendBreak": "Bez porównania z poprzednią analizą: użyto innego profilu oceny lub innych ustawień tematu."
     },
     "drawer": {
       "title": "Jak działa Site Focus Score",
@@ -7198,7 +7213,10 @@
       "empty": "Wykonaj co najmniej dwie pełne analizy, aby zobaczyć trend.",
       "aria": "Site Focus Score w {{count}} analizach, od {{from}} do {{to}}",
       "point": "{{date}}: {{score}}",
-      "annotations": "Kluczowe zmiany"
+      "annotations": "Kluczowe zmiany",
+      "profile-changed": "Profil oceny zmienił się z {{from}} na {{to}}; wyniki przed i po nie są bezpośrednio porównywalne ({{delta}} pkt).",
+      "config-changed": "Zmieniono ustawienia tematu (temat, strony-kotwice, cel lub nazwy marek); to nowa wersja raportu, nieporównywalna wprost ({{delta}} pkt).",
+      "legacyProfile": "profil bez wersji"
     },
     "alert": {
       "sfs-drop": "Site Focus Score spadł z {{from}} do {{to}} ({{points}} pkt).",
@@ -7243,7 +7261,8 @@
         "clicks": "Kliknięcia",
         "conversions": "Konwersje",
         "referringDomains": "Domeny odsyłające",
-        "revenue": "Przychód"
+        "revenue": "Przychód",
+        "botHits": "Zweryfikowane wizyty Googlebota (logi serwera)"
       },
       "unknown": "{{signal}}: nieznane ({{state}})",
       "measured": "{{signal}}: {{value}}",
@@ -7291,6 +7310,23 @@
         "too-long": "Cel może mieć najwyżej {{max}} znaków.",
         "no-words": "Użyj słów, nie samych liczb ani symboli.",
         "looks-like-url": "To wygląda na adres URL. Dodaj strony w polu stron-kotwic."
+      }
+    },
+    "brand": {
+      "title": "Nazwy marek",
+      "help": "Nazwa domeny nigdy nie jest traktowana jako temat. Dodaj inne nazwy swojej marki, marki konkurencji, które nie mogą pojawiać się jako luki tematyczne, oraz wyjątki: słowa przypominające markę, które są prawdziwymi terminami branżowymi.",
+      "aliases": "Inne nazwy Twojej marki (jedna w wierszu)",
+      "competitors": "Marki konkurencji (jedna w wierszu)",
+      "exceptions": "Terminy branżowe do zachowania (jeden w wierszu)",
+      "save": "Zapisz nazwy marek",
+      "needsProject": "Nazwy marek zapisuje się per projekt. Otwórz ten crawl z projektu, aby je ustawić.",
+      "ownBrand": "Wykluczone jako Twoja marka (słowa znormalizowane): {{terms}}",
+      "filteredTitle": "Terminy konkurencji ukryte w lukach",
+      "filtered": "{{term}}: {{reason}}",
+      "reason": {
+        "own-domain": "nazwa Twojej domeny",
+        "own-alias": "nazwa Twojej marki",
+        "competitor-brand": "marka konkurencji"
       }
     }
   },

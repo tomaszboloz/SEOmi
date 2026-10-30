@@ -19,9 +19,10 @@ export const FocusHistoryChart = ({ series }: FocusHistoryChartProps) => {
   const date = (at: string): string => new Date(at).toLocaleDateString(i18n.language);
   const indexOf = (runId: string): number => points.findIndex((point) => point.runId === runId);
   // Topic-selection modes are stored as codes; show them in the reader's language.
+  const legacy = (value: unknown): unknown => (value === 'legacy' ? t('focus.history.legacyProfile') : value);
   const modeLabels = (code: string, params: Record<string, unknown>): Record<string, unknown> => (code === 'core-mode-changed'
     ? { ...params, from: t(`focus.history.mode.${String(params.from)}`), to: t(`focus.history.mode.${String(params.to)}`) }
-    : params);
+    : code === 'profile-changed' ? { ...params, from: legacy(params.from), to: legacy(params.to) } : params);
   const first = points[0];
   const last = points[points.length - 1];
 
