@@ -16,6 +16,10 @@
 - Search intent suggests missing formats: a table, numbered steps, a calculator or product cards. A format is suggested only when at least 60% of at least 3 rendered TOP pages use it and your page does not. A calculator counts only if it has real form fields.
 - Outreach drafts use Information Gain evidence from the project's IGOS report again. This was lost in the 0.4.48 merge (#143).
 
+- Trust (#88): claim citations with a DOI, PMID or PMCID link to doi.org, PubMed and PMC. A link is only a lookup target, not proof that the work exists or supports the claim. A claim with no citation nearby says so, and an unknown count of unbacked claims shows "—" instead of 0.
+- Trust (#87): sameAs evidence is readable. ORCID and Wikidata links are built from the checksum-valid id, never from the URL a page declares, and "valid format" is labelled "not checked". When an author has no sameAs check, recall shows "—" instead of 0%.
+- AI Overview readiness (#108): languages without native-speaker review are marked "uncertain", and languages scored with the English word lists are marked "unsupported". A threshold sweep helper can recommend an alert threshold from labelled before/after pairs. It needs at least 20 labels with both outcomes and never changes the setting itself.
+
 ## Fixed
 - The ±15-word link context no longer includes text from `<script>`, `<style>`, `<noscript>`, `<template>`, `<svg>` or `<textarea>`. E-mail addresses, long digit runs and long letter/digit tokens are replaced with `[email]`, `[number]` and `[token]`.
 - SPRS is faster on large sites: link weight totals are computed once per run instead of in every iteration.
