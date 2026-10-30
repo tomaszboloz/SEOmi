@@ -9,6 +9,7 @@ const CONTEXT_WORDS: usize = 15;
 /// Text nodes inspected per block; a larger block gives no context instead of a slow scan.
 const MAX_BLOCK_TEXT_NODES: usize = 400;
 const METHOD_DOM: &str = "dom-ancestry";
+const METHOD_RENDERED: &str = "rendered-viewport";
 
 /// Where a link sits, judged from DOM ancestry only.
 /// Fold position (above/below) is NOT claimed here: it needs a render and a viewport.
@@ -97,11 +98,25 @@ pub(crate) struct LinkFacts {
     pub rel: Option<String>,
     pub is_internal: bool,
     pub source_excerpt: Option<String>,
+    /// Trust the `data-seomi-fold` mark only on pages the crawler rendered itself.
+    pub rendered: bool,
+}
+
+/// Main-content links get their fold position from the rendered viewport mark (#70).
+fn placed_zone(element: &ElementRef<'_>, rendered: bool) -> (&'static str, &'static str) {
+    let zone = dom_zone(element);
+    let mark = element.value().attr("data-seomi-fold");
+    match (zone, rendered, mark) {
+        ("main", true, Some("above")) => ("above_fold", METHOD_RENDERED),
+        ("main", true, Some("below")) => ("below_fold", METHOD_RENDERED),
+        _ => (zone, METHOD_DOM),
+    }
 }
 
 /// Builds a link with placement evidence; unchecked target fields start empty.
 pub(crate) fn build_link(facts: LinkFacts, element: &ElementRef<'_>) -> CrawledLink {
     let (context_before, context_after) = context_words(element);
+    let (zone, zone_method) = placed_zone(element, facts.rendered);
     CrawledLink {
         target_url: facts.target_url,
         anchor_text: facts.anchor_text,
@@ -113,8 +128,8 @@ pub(crate) fn build_link(facts: LinkFacts, element: &ElementRef<'_>) -> CrawledL
         target_redirect_url: None,
         target_request_error_kind: None,
         target_checked_at: None,
-        zone: Some(dom_zone(element).to_owned()),
-        zone_method: Some(METHOD_DOM.to_owned()),
+        zone: Some(zone.to_owned()),
+        zone_method: Some(zone_method.to_owned()),
         context_before,
         context_after,
         section_heading: section_heading(element),

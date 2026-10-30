@@ -134,6 +134,9 @@ mod link_section_heading_tests;
 mod link_context_redaction_tests;
 
 #[cfg(test)]
+mod link_fold_tests;
+
+#[cfg(test)]
 mod semantic_fold_tests;
 
 #[cfg(test)]

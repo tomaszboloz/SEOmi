@@ -116,6 +116,7 @@ fn build_link_records_zone_method_and_leaves_target_checks_empty() {
             rel: None,
             is_internal: true,
             source_excerpt: None,
+            rendered: false,
         },
         &el,
     );

@@ -44,6 +44,15 @@ const collectCapture = async ({ nonce, sequence, consoleErrors, failedResourceUr
         clsValue = Math.max(clsValue || 0, sessionValue);
       }
     }
+    // #70: mark each visible link above or below the first viewport so the crawler can weight it.
+    try {
+      const fold = window.innerHeight;
+      document.querySelectorAll('a[href]').forEach((anchor) => {
+        const rect = anchor.getBoundingClientRect();
+        if (!fold || rect.width <= 0 || rect.height <= 0) return;
+        anchor.setAttribute('data-seomi-fold', rect.top + window.scrollY < fold ? 'above' : 'below');
+      });
+    } catch (_) {}
     const navigation = performance.getEntriesByType('navigation')[0];
     const page = {
       page_url: location.href,
