@@ -11,8 +11,9 @@ import { NOW, OWN_HOST, ownReport, ownSite, referenceTaxonomy } from './authorit
 
 vi.mock('@/services/tauri', () => ({ invokeTauriCommand: vi.fn() }));
 vi.mock('@/services/download', () => ({ downloadBlob: vi.fn() }));
-beforeEach(() => localStorage.clear());
-afterEach(() => vi.mocked(invokeTauriCommand).mockReset());
+// Pin the clock next to the fixture date: cached maps expire after 30 days (TAXONOMY_TTL_DAYS).
+beforeEach(() => { localStorage.clear(); vi.useFakeTimers({ toFake: ['Date'] }); vi.setSystemTime(new Date(NOW)); });
+afterEach(() => { vi.mocked(invokeTauriCommand).mockReset(); vi.useRealTimers(); });
 
 const START = `https://${OWN_HOST}/`;
 const runOf = (pages = ownSite(), patch: Record<string, unknown> = {}) => ({
