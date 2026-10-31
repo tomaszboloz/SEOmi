@@ -16,6 +16,8 @@ mod erase_tests;
 #[cfg(test)]
 mod erasure_regression_tests;
 pub mod event_commands;
+#[cfg(test)]
+mod event_migration_tests;
 pub mod event_read;
 pub mod events;
 #[cfg(test)]

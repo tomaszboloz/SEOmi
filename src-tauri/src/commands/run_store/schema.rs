@@ -62,7 +62,8 @@ CREATE TABLE erasure_log (
 ";
 
 /// Append-only crawl event log (#138): one row per event, sequence owned by the
-/// native crawler. Deleting a saved run removes its events too.
+/// native crawler. WITHOUT ROWID: the composite key is the only index. Deleting a
+/// saved run removes its events too.
 const V3: &str = "
 CREATE TABLE crawl_events (
     project_id TEXT NOT NULL,
@@ -72,7 +73,7 @@ CREATE TABLE crawl_events (
     at_ms INTEGER NOT NULL,
     payload TEXT NOT NULL,
     PRIMARY KEY (project_id, run_id, seq)
-);
+) WITHOUT ROWID;
 CREATE TRIGGER crawl_runs_delete_events AFTER DELETE ON crawl_runs BEGIN
     DELETE FROM crawl_events WHERE project_id = OLD.project_id AND run_id = OLD.run_id;
 END;
