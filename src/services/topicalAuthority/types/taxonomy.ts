@@ -16,6 +16,12 @@ export interface RefSubtopic {
   /** Questions from competitor headings, Suggest phrases and, when the provider returned it, the real People Also Ask block. */
   questions: string[];
   /** Provenance: competitor domains whose headings gave this sub-topic, and whether Google Suggest matched it (Suggest is not PAA). */
+  /** Other phrasings that merged into this node (competitor headings, Suggest, PAA), without the node label. */
+  aliases?: string[];
+  /** Evidence confidence 0-1: share of evidence kinds (headings, Suggest, PAA) present. Not a probability. */
+  confidence?: number;
+  /** Best (lowest) position 1..20 of a matching heading within its page's H2/H3 list; absent when only beyond TOP 20 or from Suggest/PAA. */
+  rank?: number;
   sources?: { domains: string[]; suggest: boolean; paa?: boolean };
 }
 

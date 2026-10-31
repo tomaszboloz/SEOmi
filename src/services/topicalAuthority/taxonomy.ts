@@ -19,6 +19,10 @@ export interface TaxonomyInput {
 }
 
 const MAX_SUBTOPICS = 60;
+const MAX_ALIASES = 5;
+/** Share of evidence kinds (competitor headings, Suggest, PAA) that back a node: 0, 1/3, 2/3 or 1. */
+const confidenceOf = (group: { domains: Set<string>; suggest: boolean; paa: boolean }): number =>
+  Math.round(((group.domains.size ? 1 : 0) + (group.suggest ? 1 : 0) + (group.paa ? 1 : 0)) / 3 * 1000) / 1000;
 const COMMON_FROM = 0.1;
 const MAX_COMMON = 800;
 const GENERAL = 'general';
@@ -74,6 +78,9 @@ export const buildTaxonomy = (input: TaxonomyInput): ReferenceTaxonomy | null =>
       entities: entitiesOf(row.group, input.language),
       questions: [...row.group.questions],
       sources: { domains: [...row.group.domains].sort(), suggest: row.group.suggest, paa: row.group.paa },
+      aliases: [...row.group.aliases].sort().slice(0, MAX_ALIASES),
+      confidence: confidenceOf(row.group),
+      rank: row.group.bestRank,
     };
   });
   const pillars: RefPillar[] = [...new Set(anchors)].map((id) => {

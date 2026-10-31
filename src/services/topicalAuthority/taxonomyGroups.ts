@@ -12,24 +12,26 @@ export const MAX_QUESTIONS = 5;
 const BOILERPLATE_SHARE = 0.3;
 const ENTITY_SHARE = 0.5;
 
-interface Candidate { domain: string; label: string; keys: Set<string>; question: boolean; page: FocusPage }
-export interface Group { label: string; keys: Set<string>; domains: Set<string>; questions: Set<string>; pages: FocusPage[]; suggest: boolean; paa: boolean }
+interface Candidate { domain: string; label: string; keys: Set<string>; question: boolean; page: FocusPage; rank: number }
+/** Heading offset counts only inside the first TOP_HEADINGS headings of a page (#57 GEM-57-03). */
+export const TOP_HEADINGS = 20;
+export interface Group { label: string; keys: Set<string>; domains: Set<string>; questions: Set<string>; pages: FocusPage[]; suggest: boolean; paa: boolean; aliases: Set<string>; bestRank?: number }
 
 export const tidy = (text: string): string => text.replace(/\s+/g, ' ').trim();
 const isQuestion = (text: string): boolean => /[?？]\s*$/.test(text.trim());
 const unquestion = (text: string): string => tidy(text).replace(/[?？]\s*$/, '');
-const emptyGroup = (label: string, keys: Set<string>): Group => ({ label, keys, domains: new Set(), questions: new Set(), pages: [], suggest: false, paa: false });
+const emptyGroup = (label: string, keys: Set<string>): Group => ({ label, keys, domains: new Set(), questions: new Set(), pages: [], suggest: false, paa: false, aliases: new Set() });
 
 const candidatesOf = (competitor: CompetitorPages, language: string): Candidate[] => {
   const seen = new Map<string, number>();
   const live = competitor.pages.filter((page) => page.heading_texts);
   live.forEach((page) => new Set([...(page.heading_texts?.h2 ?? []), ...(page.heading_texts?.h3 ?? [])].map((text) => tidy(text).toLowerCase())).forEach((text) => seen.set(text, (seen.get(text) ?? 0) + 1)));
   const limit = Math.max(2, live.length * BOILERPLATE_SHARE);
-  return live.flatMap((page) => [...(page.heading_texts?.h2 ?? []), ...(page.heading_texts?.h3 ?? [])].flatMap((raw) => {
+  return live.flatMap((page) => [...(page.heading_texts?.h2 ?? []), ...(page.heading_texts?.h3 ?? [])].flatMap((raw, index) => {
     const label = tidy(raw);
     const keys = unigramKeys(label, language);
     if (!keys.size || keys.size > MAX_KEYS || seen.get(label.toLowerCase())! > limit) return [];
-    return [{ domain: competitor.domain, label, keys, question: isQuestion(label), page }];
+    return [{ domain: competitor.domain, label, keys, question: isQuestion(label), page, rank: index + 1 }];
   }));
 };
 
@@ -44,6 +46,9 @@ export const headingGroups = (competitors: CompetitorPages[], language: string):
     }
     group.domains.add(candidate.domain);
     group.pages.push(candidate.page);
+    if (candidate.rank <= TOP_HEADINGS) group.bestRank = Math.min(group.bestRank ?? candidate.rank, candidate.rank);
+    const alias = unquestion(candidate.label);
+    if (alias.toLowerCase() !== group.label.toLowerCase()) group.aliases.add(alias);
     if (candidate.question && group.questions.size < MAX_QUESTIONS) group.questions.add(candidate.label);
   });
   return groups;
@@ -64,6 +69,7 @@ export const addPhrases = (groups: Group[], phrases: string[], language: string,
       groups.push(group);
     }
     group[kind] = true;
+    if (unquestion(phrase).toLowerCase() !== group.label.toLowerCase()) group.aliases.add(unquestion(phrase));
     if (asQuestion && group.questions.size < MAX_QUESTIONS) group.questions.add(tidy(phrase));
   });
   return groups;
