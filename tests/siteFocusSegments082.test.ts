@@ -36,6 +36,7 @@ describe('segment input validation (#82 GEM-82-05)', () => {
     const parsed = parseSegmentInput('Tech | /electronics\nbad line\nWear | /fashion | dress | silk\n');
     expect(parsed).toEqual([{ label: 'Tech', pathPrefix: '/electronics' }, { label: 'Wear', pathPrefix: '/fashion', topic: 'dress | silk' }]);
     expect(formatSegmentInput(parsed)).toBe('Tech | /electronics\nWear | /fashion | dress | silk');
+    expect(formatSegmentInput(undefined)).toBe('');
   });
 });
 

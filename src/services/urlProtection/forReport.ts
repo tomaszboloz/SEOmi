@@ -13,8 +13,8 @@ const BRIDGE_MIN_COUNT = 2;
  * may a measured low-value page be offered as a semantic bridge instead of a pruning review. SEOmi
  * adaptation; the threshold is part of decision D-PRI (#83) and is not a calibrated value.
  */
-export const relatedToCore = (page: Pick<PageFocus, 'keywordsFound'>): boolean =>
-  page.keywordsFound.filter((keyword) => keyword.count >= BRIDGE_MIN_COUNT).length >= BRIDGE_MIN_CORE_TERMS;
+export const relatedToCore = (page: Partial<Pick<PageFocus, 'keywordsFound'>>): boolean =>
+  (page.keywordsFound ?? []).filter((keyword) => keyword.count >= BRIDGE_MIN_COUNT).length >= BRIDGE_MIN_CORE_TERMS;
 const NONE = { state: 'unavailable', value: null } as const;
 const keyOf = (url: string): string => url.replace(/\/+$/, '');
 

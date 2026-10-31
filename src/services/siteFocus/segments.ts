@@ -49,7 +49,7 @@ export const parseSegmentInput = (text: string): FocusSegmentInput[] => cleanSeg
   return { label, pathPrefix: pathPrefix?.trim(), topic: topic.join('|') };
 }));
 
-export const formatSegmentInput = (segments: FocusSegmentInput[]): string =>
+export const formatSegmentInput = (segments: readonly FocusSegmentInput[] = []): string =>
   segments.map((segment) => [segment.label, segment.pathPrefix, segment.topic].filter(Boolean).join(' | ')).join('\n');
 
 const inSegment = (item: Prepared, parts: string[]): boolean => {

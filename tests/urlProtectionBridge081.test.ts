@@ -28,6 +28,7 @@ describe('semantic bridge needs a real thread to the Core (#81 GEM-81-06)', () =
     expect(relatedToCore(found(2, 2, 5))).toBe(true);
     expect(relatedToCore(found(2, 2, 1, 1, 0))).toBe(false);
     expect(relatedToCore(found())).toBe(false);
+    expect(relatedToCore({})).toBe(false);
   });
 
   it('offers a bridge for a measured low-value page that already uses Core terms, pruning review otherwise', () => {
