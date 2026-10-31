@@ -8385,6 +8385,10 @@
     "trust": {
       "title": "Calo del punteggio di fiducia",
       "body": "Il punteggio di fiducia E-E-A-T è sceso da {{from}} a {{to}} ({{points}} punti)."
+    },
+    "igos": {
+      "title": "Calo dell'IGOS",
+      "body": "Il punteggio di guadagno informativo di «{{phrase}}» è sceso da {{from}} a {{to}} ({{points}} punti) con le stesse pagine TOP e lo stesso modello."
     }
   },
   "sprsUi": {

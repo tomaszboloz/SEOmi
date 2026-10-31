@@ -8385,6 +8385,10 @@
     "trust": {
       "title": "Bajó la puntuación de confianza",
       "body": "La puntuación de confianza E-E-A-T bajó de {{from}} a {{to}} ({{points}} puntos)."
+    },
+    "igos": {
+      "title": "Bajó el IGOS",
+      "body": "La puntuación de ganancia de información de «{{phrase}}» bajó de {{from}} a {{to}} ({{points}} puntos) con las mismas páginas TOP y el mismo modelo."
     }
   },
   "sprsUi": {

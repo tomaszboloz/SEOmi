@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { loadEmbeddingSession } from '@/components/Keywords/embeddingClustering/useEmbeddingClustering';
+import { monitorIgosDrop } from '@/services/igos/alert';
 import { recordIgosRun, type IgosHistoryEntry } from '@/services/igos/history';
 import { buildPhraseIgosWithSettings } from '@/services/igos/phraseIgosProvider';
 import type { IgosReport } from '@/services/igos/report';
@@ -22,7 +23,9 @@ export const usePhraseIgos = (corpus: TopTenCorpus | undefined, context: PhraseI
     setState(EMPTY);
     if (corpus) {
       void buildPhraseIgosWithSettings(corpus, loadEmbeddingSession(projectId).settings, { language: language ?? undefined })
-        .then((report) => { if (current) setState({ report, history: report ? recordIgosRun(projectId, phrase, report) : [] }); })
+        .then((report) => { const history = report ? recordIgosRun(projectId, phrase, report) : [];
+          if (current) setState({ report, history });
+          void monitorIgosDrop(projectId, phrase, history).catch(() => undefined); })
         .catch(() => { if (current) setState(EMPTY); });
     }
     return () => { current = false; };

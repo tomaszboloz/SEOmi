@@ -8385,6 +8385,10 @@
     "trust": {
       "title": "Spadł wynik zaufania",
       "body": "Wynik zaufania E-E-A-T spadł z {{from}} do {{to}} ({{points}} pkt)."
+    },
+    "igos": {
+      "title": "Spadł wynik IGOS",
+      "body": "Wynik zysku informacyjnego dla „{{phrase}}” spadł z {{from}} do {{to}} ({{points}} pkt) przy tych samych stronach TOP i modelu."
     }
   },
   "sprsUi": {
