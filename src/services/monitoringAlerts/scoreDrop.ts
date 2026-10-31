@@ -3,7 +3,7 @@ import { AIO_ALERT_CALIBRATION_VERSION } from './aioCalibration';
 import { alertFingerprint, defaultMonitoringAlertSettings } from './policy';
 import type { MonitoringAlert, MonitoringAlertSettings } from './types';
 
-export type ScoreDropKind = 'aio' | 'trust';
+export type ScoreDropKind = 'aio' | 'trust' | 'igos';
 
 const round1 = (value: number): number => Math.round(value * 10) / 10;
 
@@ -13,6 +13,8 @@ export const evaluateScoreDropAlert = (
   next: { score: number | null },
   sourceId: string,
   settings: MonitoringAlertSettings = defaultMonitoringAlertSettings(),
+  /** Phrase shown in the IGOS alert body. */
+  phrase = '',
 ): MonitoringAlert | null => {
   if (!previous || typeof previous.score !== 'number' || typeof next.score !== 'number' || !Number.isFinite(previous.score) || !Number.isFinite(next.score)) return null;
   const difference = previous.score - next.score;
@@ -27,7 +29,7 @@ export const evaluateScoreDropAlert = (
     type,
     sourceId,
     title: i18n.t(`scoreDropAlert.${kind}.title`),
-    body: i18n.t(`scoreDropAlert.${kind}.body`, { from: previous.score, to: next.score, points }),
+    body: i18n.t(`scoreDropAlert.${kind}.body`, { from: previous.score, to: next.score, points, phrase }),
     occurredAt: new Date().toISOString(),
     partial: false,
     evidence,

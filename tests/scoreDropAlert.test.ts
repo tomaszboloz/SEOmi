@@ -51,3 +51,10 @@ describe('score drop alerts (AIO readiness and trust)', () => {
     expect((await monitorScoreDrop('p1', 'trust', { score: 80 }, { score: null }, 'r3')).alert).toBeNull();
   });
 });
+
+it('builds an IGOS drop alert that names the phrase', () => {
+  const alert = evaluateScoreDropAlert('igos', { score: 60 }, { score: 40 }, 'igos-1', undefined, 'seo tools');
+  expect(alert?.type).toBe('focus');
+  expect(alert?.evidence).toMatchObject({ kind: 'igos', from: 60, to: 40, points: 20 });
+  expect(evaluateScoreDropAlert('igos', { score: 60 }, { score: 59 }, 'igos-2')).toBeNull();
+});

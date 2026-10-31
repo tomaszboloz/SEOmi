@@ -8385,6 +8385,10 @@
     "trust": {
       "title": "信任分下降",
       "body": "E-E-A-T信任分从{{from}}降至{{to}}（{{points}}分）。"
+    },
+    "igos": {
+      "title": "IGOS 下降",
+      "body": "在相同的 TOP 页面和模型下，“{{phrase}}”的信息增益分从 {{from}} 降至 {{to}}（{{points}} 分）。"
     }
   },
   "sprsUi": {

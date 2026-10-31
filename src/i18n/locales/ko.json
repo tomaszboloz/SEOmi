@@ -8385,6 +8385,10 @@
     "trust": {
       "title": "신뢰 점수 하락",
       "body": "E-E-A-T 신뢰 점수가 {{from}}에서 {{to}}(으)로 떨어졌습니다({{points}}점)."
+    },
+    "igos": {
+      "title": "IGOS 하락",
+      "body": "동일한 TOP 페이지와 모델에서 \"{{phrase}}\"의 정보 이득 점수가 {{from}}에서 {{to}}(으)로 떨어졌습니다({{points}}점)."
     }
   },
   "sprsUi": {

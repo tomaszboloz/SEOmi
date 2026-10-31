@@ -8385,6 +8385,10 @@
     "trust": {
       "title": "Vertrauenswert gesunken",
       "body": "Der E-E-A-T-Vertrauenswert fiel von {{from}} auf {{to}} ({{points}} Punkte)."
+    },
+    "igos": {
+      "title": "IGOS gesunken",
+      "body": "Der Informationsgewinn-Wert für „{{phrase}}“ fiel von {{from}} auf {{to}} ({{points}} Punkte) bei gleichen TOP-Seiten und gleichem Modell."
     }
   },
   "sprsUi": {
