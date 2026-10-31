@@ -9000,5 +9000,26 @@
       "no-rows": "파일에 숫자 수익 값이 있는 방문 페이지가 없습니다.",
       "storage-failed": "로컬 저장소를 업데이트하지 못해 가져오기가 저장되지 않았습니다."
     }
+  },
+  "entityParity": {
+    "title": "언어 버전 간 엔터티 (Wikidata)",
+    "intro": "각 언어 버전의 주제 레이블을 언어 독립적인 Wikidata ID와 매칭합니다. 누락된 버전은 검토할 알림이며 자동 오류가 아닙니다.",
+    "match": "주제 {{count}}개를 Wikidata와 매칭",
+    "running": "Wikidata와 매칭 중…",
+    "failed": "주제 {{count}}개에 대해 Wikidata 응답이 없었습니다. 누락으로 계산하지 않습니다.",
+    "noGaps": "매칭된 모든 엔터티에 각 언어 버전의 페이지가 있습니다.",
+    "gapsTitle": "일부 언어 버전에 없는 엔터티",
+    "gap": "{{label}}: {{present}}에 있음, {{missing}}에 없음",
+    "needsReview": "검색 일치, 검토 필요",
+    "correctTitle": "엔터티 매칭 검토 및 수정",
+    "entity": "엔터티",
+    "correctLabel": "{{topic}} ({{language}})의 Wikidata ID. 엔터티가 없으면 none 입력",
+    "confidence": {
+      "manual": "수동",
+      "exact": "정확한 레이블",
+      "search": "검색 추정",
+      "none": "미매칭",
+      "error": "조회 실패"
+    }
   }
 }

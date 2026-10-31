@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SprsPanel } from '@/components/Charts/SprsPanel';
 import { HreflangParityPanel } from '@/components/Charts/HreflangParityPanel';
+import { EntityParityPanel } from '@/components/Charts/EntityParityPanel';
 import { DecayRadarPanel } from '@/components/Charts/DecayRadarPanel';
 import { TemplateGovernorPanel } from '@/components/Results/TemplateGovernorPanel';
 import { CausalImpactPanel } from '@/components/Results/CausalImpactPanel';
@@ -13,7 +14,8 @@ import { SprsWhatIf } from '@/components/Charts/SprsWhatIf';
 import { computeSprs } from '@/services/semanticGraph/sprs';
 import { buildSprsInput } from './sprsAdapter';
 import { useGraphSnapshot } from './useGraphSnapshot';
-import { buildParityReport } from './parityAdapter';
+import { buildParityReport, languageTopics } from './parityAdapter';
+import { useEntityLinks } from './useEntityLinks';
 import { buildTemplateEvents, subtopicsFromAuthorityReport, subtopicsFromGraph } from './templateAdapter';
 import { useDecayHistory } from './useDecayHistory';
 import { useParityExceptions } from './useParityExceptions';
@@ -40,6 +42,8 @@ export const SignalsWorkspace = ({ projectId = null, pages, graph, subtopicsByUr
   const sprs = useMemo(() => computeSprs(sprsInput.nodes, sprsInput.edges), [sprsInput]);
   const parityExceptions = useParityExceptions(projectId);
   const parity = useMemo(() => buildParityReport(pages, graph, parityExceptions.exceptions), [pages, graph, parityExceptions.exceptions]);
+  const topics = useMemo(() => languageTopics(pages, graph), [pages, graph]);
+  const entities = useEntityLinks(projectId, topics);
   const authoritySubtopics = useMemo(() => subtopicsFromAuthorityReport(authorityReport), [authorityReport]);
   const subtopicsByUrl = useMemo(() => ({ ...authoritySubtopics, ...subtopicsFromGraph(graph), ...providedSubtopics }), [authoritySubtopics, graph, providedSubtopics]);
   const templates = useMemo(() => buildTemplateEvents(pages, { subtopicsByUrl }), [pages, subtopicsByUrl]);
@@ -48,6 +52,7 @@ export const SignalsWorkspace = ({ projectId = null, pages, graph, subtopicsByUr
     <SprsPanel report={sprs} />
     <SprsWhatIf nodes={sprsInput.nodes} edges={sprsInput.edges} />
     <HreflangParityPanel report={parity} exceptions={parityExceptions.handlers} />
+    {topics.length > 0 && new Set(topics.map((topic) => topic.language)).size > 1 && <EntityParityPanel links={entities.links} gaps={entities.gaps} pending={entities.pending} running={entities.running} onMatch={() => void entities.match()} onCorrect={projectId ? entities.correct : undefined} />}
     <TemplateGovernorPanel events={templates} />
     <DecayRadarPanel evaluation={decay.evaluation} snapshotCount={decay.snapshotCount} />
     <CausalImpactPanel result={causalImpact} />

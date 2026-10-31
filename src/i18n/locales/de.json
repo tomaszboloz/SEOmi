@@ -9000,5 +9000,26 @@
       "no-rows": "Die Datei enthält keine Landingpage mit numerischem Umsatz.",
       "storage-failed": "Der lokale Speicher konnte nicht aktualisiert werden; der Import wurde nicht gespeichert."
     }
+  },
+  "entityParity": {
+    "title": "Entitäten über Sprachversionen (Wikidata)",
+    "intro": "Themenlabels jeder Sprachversion werden sprachunabhängigen Wikidata-IDs zugeordnet. Eine fehlende Version ist ein Hinweis zur Prüfung, kein automatischer Fehler.",
+    "match": "{{count}} Themen mit Wikidata abgleichen",
+    "running": "Abgleich mit Wikidata…",
+    "failed": "Wikidata hat für {{count}} Themen nicht geantwortet; sie zählen nicht als fehlend.",
+    "noGaps": "Jede zugeordnete Entität hat in jeder Sprachversion eine Seite.",
+    "gapsTitle": "Entitäten, die in einigen Sprachversionen fehlen",
+    "gap": "{{label}}: vorhanden in {{present}}, fehlt in {{missing}}",
+    "needsReview": "Suchtreffer, prüfen",
+    "correctTitle": "Entitätszuordnungen prüfen und korrigieren",
+    "entity": "Entität",
+    "correctLabel": "Wikidata-ID für {{topic}} ({{language}}); none eingeben, wenn es keine Entität gibt",
+    "confidence": {
+      "manual": "manuell",
+      "exact": "exaktes Label",
+      "search": "Suchvermutung",
+      "none": "nicht zugeordnet",
+      "error": "Abfrage fehlgeschlagen"
+    }
   }
 }

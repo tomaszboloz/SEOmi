@@ -9000,5 +9000,26 @@
       "no-rows": "Le fichier ne contient aucune page de destination avec un revenu numérique.",
       "storage-failed": "Le stockage local n’a pas pu être mis à jour ; l’import n’a pas été enregistré."
     }
+  },
+  "entityParity": {
+    "title": "Entités entre versions linguistiques (Wikidata)",
+    "intro": "Les libellés de thèmes de chaque version sont associés à des identifiants Wikidata indépendants de la langue. Une version absente est une alerte à examiner, pas une erreur automatique.",
+    "match": "Associer {{count}} thèmes à Wikidata",
+    "running": "Association avec Wikidata…",
+    "failed": "Wikidata n’a pas répondu pour {{count}} thèmes ; ils ne sont pas comptés comme manquants.",
+    "noGaps": "Chaque entité associée a une page dans chaque version linguistique.",
+    "gapsTitle": "Entités absentes de certaines versions linguistiques",
+    "gap": "{{label}} : présent en {{present}}, absent en {{missing}}",
+    "needsReview": "correspondance de recherche, à vérifier",
+    "correctTitle": "Vérifier et corriger les associations d’entités",
+    "entity": "Entité",
+    "correctLabel": "ID Wikidata pour {{topic}} ({{language}}) ; saisissez none s’il n’a pas d’entité",
+    "confidence": {
+      "manual": "manuel",
+      "exact": "libellé exact",
+      "search": "supposition de recherche",
+      "none": "non associé",
+      "error": "recherche échouée"
+    }
   }
 }

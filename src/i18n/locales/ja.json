@@ -9000,5 +9000,26 @@
       "no-rows": "数値の収益を持つランディングページがファイルにありません。",
       "storage-failed": "ローカルストレージを更新できず、インポートは保存されませんでした。"
     }
+  },
+  "entityParity": {
+    "title": "言語バージョン間のエンティティ (Wikidata)",
+    "intro": "各言語バージョンのトピックラベルを言語に依存しない Wikidata ID に照合します。欠けているバージョンは確認用のアラートであり、自動的なエラーではありません。",
+    "match": "{{count}} 件のトピックを Wikidata と照合",
+    "running": "Wikidata と照合中…",
+    "failed": "{{count}} 件のトピックで Wikidata から応答がありませんでした。欠落としては数えません。",
+    "noGaps": "照合されたすべてのエンティティに、各言語バージョンのページがあります。",
+    "gapsTitle": "一部の言語バージョンに欠けているエンティティ",
+    "gap": "{{label}}: {{present}} にあり、{{missing}} にありません",
+    "needsReview": "検索一致、要確認",
+    "correctTitle": "エンティティの照合を確認・修正",
+    "entity": "エンティティ",
+    "correctLabel": "{{topic}} ({{language}}) の Wikidata ID。エンティティがない場合は none と入力",
+    "confidence": {
+      "manual": "手動",
+      "exact": "ラベル完全一致",
+      "search": "検索推定",
+      "none": "未照合",
+      "error": "検索失敗"
+    }
   }
 }

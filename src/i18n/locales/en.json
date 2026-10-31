@@ -9000,5 +9000,26 @@
       "no-rows": "The file has no landing page with a numeric revenue value.",
       "storage-failed": "Local storage could not be updated; the import was not saved."
     }
+  },
+  "entityParity": {
+    "title": "Entities across language versions (Wikidata)",
+    "intro": "Topic labels of each language version are matched to language-independent Wikidata IDs. A missing version is an alert to review, not an automatic error.",
+    "match": "Match {{count}} topics with Wikidata",
+    "running": "Matching with Wikidata…",
+    "failed": "Wikidata did not answer for {{count}} topics; they are not counted as missing.",
+    "noGaps": "Every matched entity has a page in each language version.",
+    "gapsTitle": "Entities missing in some language versions",
+    "gap": "{{label}}: present in {{present}}, missing in {{missing}}",
+    "needsReview": "search match, review",
+    "correctTitle": "Review and correct entity matches",
+    "entity": "Entity",
+    "correctLabel": "Wikidata ID for {{topic}} ({{language}}); type none if it has no entity",
+    "confidence": {
+      "manual": "manual",
+      "exact": "exact label",
+      "search": "search guess",
+      "none": "not matched",
+      "error": "lookup failed"
+    }
   }
 }

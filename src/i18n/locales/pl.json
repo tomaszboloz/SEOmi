@@ -9000,5 +9000,26 @@
       "no-rows": "Plik nie zawiera strony docelowej z liczbową wartością przychodu.",
       "storage-failed": "Nie udało się zapisać w pamięci lokalnej; import nie został zapisany."
     }
+  },
+  "entityParity": {
+    "title": "Encje w wersjach językowych (Wikidata)",
+    "intro": "Etykiety tematów każdej wersji językowej są dopasowywane do niezależnych od języka identyfikatorów Wikidata. Brak wersji to alert do przeglądu, a nie automatyczny błąd.",
+    "match": "Dopasuj {{count}} tematów do Wikidata",
+    "running": "Dopasowywanie do Wikidata…",
+    "failed": "Wikidata nie odpowiedziała dla {{count}} tematów; nie są liczone jako brakujące.",
+    "noGaps": "Każda dopasowana encja ma stronę w każdej wersji językowej.",
+    "gapsTitle": "Encje brakujące w części wersji językowych",
+    "gap": "{{label}}: jest w {{present}}, brak w {{missing}}",
+    "needsReview": "dopasowanie z wyszukiwania, sprawdź",
+    "correctTitle": "Przejrzyj i popraw dopasowania encji",
+    "entity": "Encja",
+    "correctLabel": "ID Wikidata dla {{topic}} ({{language}}); wpisz none, jeśli nie ma encji",
+    "confidence": {
+      "manual": "ręcznie",
+      "exact": "dokładna etykieta",
+      "search": "z wyszukiwania",
+      "none": "niedopasowane",
+      "error": "błąd wyszukiwania"
+    }
   }
 }

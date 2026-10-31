@@ -9000,5 +9000,26 @@
       "no-rows": "Il file non contiene pagine di destinazione con un valore numerico di entrate.",
       "storage-failed": "Impossibile aggiornare l’archiviazione locale; l’importazione non è stata salvata."
     }
+  },
+  "entityParity": {
+    "title": "Entità tra versioni linguistiche (Wikidata)",
+    "intro": "Le etichette dei temi di ogni versione vengono associate a ID Wikidata indipendenti dalla lingua. Una versione mancante è un avviso da verificare, non un errore automatico.",
+    "match": "Associa {{count}} temi a Wikidata",
+    "running": "Associazione con Wikidata…",
+    "failed": "Wikidata non ha risposto per {{count}} temi; non sono conteggiati come mancanti.",
+    "noGaps": "Ogni entità associata ha una pagina in ogni versione linguistica.",
+    "gapsTitle": "Entità mancanti in alcune versioni linguistiche",
+    "gap": "{{label}}: presente in {{present}}, assente in {{missing}}",
+    "needsReview": "corrispondenza di ricerca, da verificare",
+    "correctTitle": "Verifica e correggi le associazioni di entità",
+    "entity": "Entità",
+    "correctLabel": "ID Wikidata per {{topic}} ({{language}}); scrivi none se non ha un’entità",
+    "confidence": {
+      "manual": "manuale",
+      "exact": "etichetta esatta",
+      "search": "ipotesi di ricerca",
+      "none": "non associato",
+      "error": "ricerca non riuscita"
+    }
   }
 }

@@ -9000,5 +9000,26 @@
       "no-rows": "文件中没有带数值收入的着陆页。",
       "storage-failed": "无法更新本地存储；导入未保存。"
     }
+  },
+  "entityParity": {
+    "title": "各语言版本中的实体（Wikidata）",
+    "intro": "将每个语言版本的主题标签匹配到与语言无关的 Wikidata ID。缺失的版本是需要审核的提醒，而不是自动判定的错误。",
+    "match": "将 {{count}} 个主题与 Wikidata 匹配",
+    "running": "正在与 Wikidata 匹配…",
+    "failed": "Wikidata 未对 {{count}} 个主题作出响应；这些主题不计为缺失。",
+    "noGaps": "每个已匹配的实体在每个语言版本中都有页面。",
+    "gapsTitle": "部分语言版本中缺失的实体",
+    "gap": "{{label}}：存在于 {{present}}，缺失于 {{missing}}",
+    "needsReview": "搜索匹配，需审核",
+    "correctTitle": "审核并修正实体匹配",
+    "entity": "实体",
+    "correctLabel": "{{topic}}（{{language}}）的 Wikidata ID；如无实体请输入 none",
+    "confidence": {
+      "manual": "手动",
+      "exact": "标签完全匹配",
+      "search": "搜索推测",
+      "none": "未匹配",
+      "error": "查询失败"
+    }
   }
 }
