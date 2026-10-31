@@ -1,4 +1,5 @@
 import { mentionStance, type MentionStance } from './mentionStance';
+import { mentionsInSense, type AliasSense } from './aliasSense';
 
 export interface SourceParagraph { sourceUrl: string; offset: number; text: string; linked: boolean }
 
@@ -30,13 +31,13 @@ const hasTerm = (text: string, term: string): boolean =>
   new RegExp(`(?<![\\p{L}\\p{N}])${escape(term.trim())}(?![\\p{L}\\p{N}])`, 'iu').test(text);
 
 /** Brand (any alias) and core entity in the same real paragraph. Co-occurrence is not endorsement. */
-export const findCoCitations = (paragraphs: SourceParagraph[], brandAliases: string[], coreEntity: string): CoCitationReport => {
+export const findCoCitations = (paragraphs: SourceParagraph[], brandAliases: string[], coreEntity: string, senses: AliasSense[] = []): CoCitationReport => {
   const aliases = brandAliases.filter((a) => a.trim());
   const report: CoCitationReport = { linked: [], unlinked: [], inspected: paragraphs.length, note: paragraphs.length ? 'ready' : 'no-source-text' };
   if (!aliases.length || !coreEntity.trim()) return report;
   paragraphs.forEach((p) => {
-    if (!hasTerm(p.text, coreEntity) || !aliases.some((a) => hasTerm(p.text, a))) return;
-    const stance = mentionStance(p.text, aliases);
+    if (!hasTerm(p.text, coreEntity) || !aliases.some((a) => mentionsInSense(p.text, a, senses))) return;
+    const stance = mentionStance(p.text, aliases, senses);
     const hit: CoCitation = { sourceUrl: p.sourceUrl, offset: p.offset, linked: p.linked, polarity: stance === 'neutral' ? 'neutral' : 'unclear', stance, excerpt: p.text.trim().slice(0, EXCERPT) };
     (p.linked ? report.linked : report.unlinked).push(hit);
   });
