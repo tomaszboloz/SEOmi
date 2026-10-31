@@ -6270,6 +6270,14 @@
           "fix-linking": "Napraw linkowanie: {{0}} stron osieroconych, {{1}} linków do stron poza tematem",
           "deepen-shallow": "Pogłęb {{0}} płytkich podtematów",
           "refresh-stale": "Odśwież {{0}} stron nieaktualizowanych od ponad roku"
+        },
+        "paaUsed": "Użyto {{0}} pytań People Also Ask z SERP.",
+        "paaMissing": "Brak źródła People Also Ask: pytania pochodzą tylko z nagłówków konkurencji i Google Suggest.",
+        "cdesPartial": "Częściowy: dla części z {{1}} pokrytych podtematów nie dało się zmierzyć: {{0}}; CDES liczy tylko zmierzone składniki.",
+        "depthPart": {
+          "entities": "encje",
+          "questions": "pytania użytkowników (PAA)",
+          "gain": "przyrost informacji"
         }
       },
       "aio": {
@@ -7542,7 +7550,13 @@
       "silcNote": "{{orphans}} stron osieroconych, {{weak}} słabych anchorów, {{bleed}} linków do stron poza tematem",
       "cvffNote": "{{stale}} nieaktualnych stron, {{groups}} grup kanibalizacji",
       "unavailable": "brak danych",
-      "multiplier": "Mnożnik focusu ×{{value}} z SFS {{sfs}}"
+      "multiplier": "Mnożnik focusu ×{{value}} z SFS {{sfs}}",
+      "cdesPartial": "Częściowy: dla części z {{rows}} pokrytych podtematów nie dało się zmierzyć: {{parts}}; CDES liczy tylko zmierzone składniki.",
+      "depthPart": {
+        "entities": "encje",
+        "questions": "pytania użytkowników (PAA)",
+        "gain": "przyrost informacji"
+      }
     },
     "warning": {
       "empty-authority": "Pusty autorytet: witryna dotyka {{tcr}}% tematów, ale średnia głębokość to tylko {{depth}}/100. Pogłębiaj istniejące strony twardymi danymi i encjami, zanim dodasz nowe.",
@@ -7574,7 +7588,10 @@
         "no-competitors": "W rankingach nie znaleziono domen konkurencyjnych.",
         "no-pages": "Nie udało się przeskanować stron konkurencji (robots.txt, blokady lub limity czasu).",
         "no-taxonomy": "Strony konkurencji mają zbyt mało wspólnych nagłówków, by zbudować wiarygodną mapę. Spróbuj później lub z większą liczbą konkurentów."
-      }
+      },
+      "withPaa": "Uwzględnij prawdziwe People Also Ask (zaawansowany SERP DataForSEO, płatny osobno)",
+      "paaUsed": "Użyto {{count}} pytań People Also Ask z SERP.",
+      "paaMissing": "Brak źródła People Also Ask: pytania pochodzą tylko z nagłówków konkurencji i Google Suggest."
     },
     "coverage": {
       "title": "Mapa pokrycia tematu",
@@ -7598,6 +7615,15 @@
         "critical": "luka krytyczna",
         "high": "luka wysoka",
         "medium": "luka średnia"
+      },
+      "pillarFilter": "Filtruj według filaru",
+      "allPillars": "Wszystkie filary",
+      "urlFilter": "Filtruj według URL",
+      "sortLabel": "Sortuj podtematy",
+      "sort": {
+        "importance": "Ważność rynkowa",
+        "similarity": "Dopasowanie najlepszej strony",
+        "label": "Nazwa (A–Z)"
       }
     },
     "drill": {
@@ -7641,6 +7667,20 @@
       "basis": {
         "intent": "ta sama intencja",
         "subtopic": "ten sam podtemat"
+      },
+      "gsc": {
+        "unavailable": "Search Console: brak zapisanych danych zapytanie/strona dla projektu, więc wybór opiera się tylko na treści.",
+        "noOverlap": "Search Console: te adresy URL nie zbierają wyświetleń na te same zapytania.",
+        "agrees": "Search Console potwierdza: {{leader}} ma najwięcej kliknięć na wspólnych zapytaniach.",
+        "conflict": "Konflikt do przeglądu: Search Console daje najwięcej kliknięć {{leader}}, a podobieństwo treści wskazuje zachowanie {{canonical}}.",
+        "query": "„{{query}}”: {{pages}}",
+        "page": "{{url}} {{clicks}} kliknięć / {{impressions}} wyświetleń",
+        "truncated": "Wiersze Search Console mogą być obcięte; części zapytań może brakować."
+      },
+      "unique": {
+        "title": "Unikalna treść do zachowania przy scalaniu:",
+        "terms": "{{url}}: {{terms}}",
+        "none": "{{url}}: brak terminów występujących tylko na tej stronie"
       }
     },
     "draft": {
@@ -7696,7 +7736,8 @@
       "cleanup": "Porządki: SFS wzrósł o {{delta}}",
       "architecture": "Architektura: linkowanie i kanibalizacja poprawione o {{delta}}",
       "expansion": "Ekspansja: pokrycie tematu wzrosło o {{delta}}",
-      "regression": "Spadek: TAS zmienił się o {{delta}}"
+      "regression": "Spadek: TAS zmienił się o {{delta}}",
+      "incomparable": "Zmienił się profil oceny (nowa mapa referencyjna lub wzór TAS): TAS przed i po tym punkcie nie jest bezpośrednio porównywalny."
     }
   },
   "authorityMonitoring": {
@@ -9153,5 +9194,27 @@
       "no-rows": "Plik nie zawiera strony docelowej z liczbową wartością przychodu.",
       "storage-failed": "Nie udało się zapisać w pamięci lokalnej; import nie został zapisany."
     }
+  },
+  "entityParity": {
+    "title": "Encje w wersjach językowych (Wikidata)",
+    "intro": "Etykiety tematów każdej wersji językowej są dopasowywane do niezależnych od języka identyfikatorów Wikidata. Brak wersji to alert do przeglądu, a nie automatyczny błąd.",
+    "match": "Dopasuj {{count}} tematów do Wikidata",
+    "running": "Dopasowywanie do Wikidata…",
+    "failed": "Wikidata nie odpowiedziała dla {{count}} tematów; nie są liczone jako brakujące.",
+    "noGaps": "Każda dopasowana encja ma stronę w każdej wersji językowej.",
+    "gapsTitle": "Encje brakujące w części wersji językowych",
+    "gap": "{{label}}: jest w {{present}}, brak w {{missing}}",
+    "needsReview": "dopasowanie z wyszukiwania, sprawdź",
+    "correctTitle": "Przejrzyj i popraw dopasowania encji",
+    "entity": "Encja",
+    "correctLabel": "ID Wikidata dla {{topic}} ({{language}}); wpisz none, jeśli nie ma encji",
+    "confidence": {
+      "manual": "ręcznie",
+      "exact": "dokładna etykieta",
+      "search": "z wyszukiwania",
+      "none": "niedopasowane",
+      "error": "błąd wyszukiwania"
+    },
+    "correctPlaceholder": "Q123 / none"
   }
 }

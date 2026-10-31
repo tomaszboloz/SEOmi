@@ -2,15 +2,18 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HelpTip } from '@/components/Help/HelpTip';
 import type { FocusPage } from '@/services/siteFocus';
-import { checkDraftOverlap, type DraftOverlap, type TopicalAuthorityReport } from '@/services/topicalAuthority';
+import { checkDraftOverlap, type DraftOverlap, type GscQueryPages, type TopicalAuthorityReport } from '@/services/topicalAuthority';
 import { BriefCardButton } from '@/components/Charts/BriefCardButton';
 import { AddTaskButton } from '@/components/Charts/OptimizationTaskTracker';
 import { host } from './authorityText';
+import { CannibalGroupEvidence } from './CannibalGroupEvidence';
 
-export interface CannibalizationPanelProps { report: TopicalAuthorityReport; pages: FocusPage[]; startUrl: string; language?: string; projectId?: string | null; baselineScore?: number | null }
+export interface CannibalizationPanelProps { report: TopicalAuthorityReport; pages: FocusPage[]; startUrl: string; language?: string; projectId?: string | null; baselineScore?: number | null;
+  /** Latest saved Search Console query/page rows of the project; absent means GSC evidence is unavailable. */
+  gsc?: GscQueryPages | null }
 
 /** Cannibalization groups with a consolidation plan, plus a pre-publish check for a draft. */
-export const CannibalizationPanel = ({ report, pages, startUrl, language, projectId, baselineScore }: CannibalizationPanelProps) => {
+export const CannibalizationPanel = ({ report, pages, startUrl, language, projectId, baselineScore, gsc }: CannibalizationPanelProps) => {
   const { t } = useTranslation();
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
@@ -30,6 +33,7 @@ export const CannibalizationPanel = ({ report, pages, startUrl, language, projec
               <ul className="mt-1 list-disc ps-5 text-slate-400">
                 {group.edges.map((edge) => <li key={`${edge.from}|${edge.to}`} className="break-all">{t('authority.cannibal.edge', { from: host(edge.from), to: host(edge.to), similarity: edge.similarity, basis: t(`authority.cannibal.basis.${edge.basis}`) })}</li>)}
               </ul>
+              <CannibalGroupEvidence group={group} pages={pages} language={language} gsc={gsc} />
               <p className="mt-1 text-slate-400">{t('authority.cannibal.steps')}</p>
               {projectId && group.urls.filter((url) => url !== group.canonical).map((url) => <AddTaskButton key={`task:${url}`} projectId={projectId} task={{ kind: 'redirect-301', module: 'tas', url, targetUrl: group.canonical, baselineScore: baselineScore ?? null }} />)}
               <BriefCardButton input={{ origin: 'tas', title: host(group.canonical), sourceUrl: group.canonical, links: { donorUrls: group.urls.filter((url) => url !== group.canonical), targetPillarUrl: group.canonical } }} />

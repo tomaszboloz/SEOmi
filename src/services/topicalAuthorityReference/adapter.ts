@@ -15,9 +15,9 @@ export const createSuggestionFetcher = (env: { geo: string; language: string; fe
   };
 
 /** Single place that wires stores and Tauri commands into the pure reference runner. */
-export const createReferenceDeps = (): ReferenceDeps => {
+export const createReferenceDeps = (options: { withQuestions?: boolean } = {}): ReferenceDeps => {
   const tools = useToolsStore.getState();
-  const { fetchSerp, crawlSite } = createBenchmarkDeps();
+  const { fetchSerp, crawlSite } = createBenchmarkDeps(options);
   return {
     fetchSerp, crawlSite,
     fetchSuggestions: createSuggestionFetcher({ geo: tools.keywordCountry || 'US', language: tools.keywordLanguage || 'en', fetch: fetchFreeSuggestions as SuggestionFetcher }),

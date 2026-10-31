@@ -6270,6 +6270,14 @@
           "fix-linking": "修复内部链接：{{0}} 个孤立页面，{{1}} 条指向无关页面的链接",
           "deepen-shallow": "深化 {{0}} 个覆盖较浅的子主题",
           "refresh-stale": "更新 {{0}} 个超过一年未更新的页面"
+        },
+        "paaUsed": "已使用 SERP 中的 {{0}} 个 People Also Ask 问题。",
+        "paaMissing": "没有 People Also Ask 来源：问题仅来自竞争对手的标题和 Google 搜索建议。",
+        "cdesPartial": "部分结果：在 {{1}} 个已覆盖子主题中，部分无法测量 {{0}}；CDES 只使用已测量的部分。",
+        "depthPart": {
+          "entities": "实体",
+          "questions": "用户问题（PAA）",
+          "gain": "信息增益"
         }
       },
       "aio": {
@@ -7542,7 +7550,13 @@
       "silcNote": "{{orphans}} 个孤立页面，{{weak}} 个弱锚文本，{{bleed}} 条指向无关页面的链接",
       "cvffNote": "{{stale}} 个过时页面，{{groups}} 个内部竞争组",
       "unavailable": "无法衡量",
-      "multiplier": "来自 SFS {{sfs}} 的聚焦系数 ×{{value}}"
+      "multiplier": "来自 SFS {{sfs}} 的聚焦系数 ×{{value}}",
+      "cdesPartial": "部分结果：在 {{rows}} 个已覆盖子主题中，部分无法测量 {{parts}}；CDES 只使用已测量的部分。",
+      "depthPart": {
+        "entities": "实体",
+        "questions": "用户问题（PAA）",
+        "gain": "信息增益"
+      }
     },
     "warning": {
       "empty-authority": "空洞权威：网站涉及 {{tcr}}% 的主题，但平均深度仅 {{depth}}/100。发布新内容前，请先用数据和实体深化现有页面。",
@@ -7574,7 +7588,10 @@
         "no-competitors": "排名中未找到竞争域名。",
         "no-pages": "无法抓取任何竞争对手页面（robots.txt、拦截或超时）。",
         "no-taxonomy": "竞争对手页面共有的标题太少，无法形成可靠图谱。请稍后重试或增加竞争对手。"
-      }
+      },
+      "withPaa": "包含真实的“相关问题”(People Also Ask)（DataForSEO 高级 SERP，单独计费）",
+      "paaUsed": "已使用 SERP 中的 {{count}} 个 People Also Ask 问题。",
+      "paaMissing": "没有 People Also Ask 来源：问题仅来自竞争对手的标题和 Google 搜索建议。"
     },
     "coverage": {
       "title": "主题覆盖图谱",
@@ -7598,6 +7615,15 @@
         "critical": "关键缺口",
         "high": "较大缺口",
         "medium": "中等缺口"
+      },
+      "pillarFilter": "按支柱筛选",
+      "allPillars": "所有支柱",
+      "urlFilter": "按 URL 筛选",
+      "sortLabel": "子主题排序",
+      "sort": {
+        "importance": "市场重要性",
+        "similarity": "最佳页面匹配度",
+        "label": "名称（A–Z）"
       }
     },
     "drill": {
@@ -7641,6 +7667,20 @@
       "basis": {
         "intent": "相同意图",
         "subtopic": "相同子主题"
+      },
+      "gsc": {
+        "unavailable": "Search Console：此项目没有已保存的查询/页面数据，因此仅根据内容进行选择。",
+        "noOverlap": "Search Console：这些 URL 没有在相同查询中获得展示。",
+        "agrees": "Search Console 一致：{{leader}} 在共同查询中获得最多点击。",
+        "conflict": "需要审核的冲突：Search Console 中 {{leader}} 点击最多，而内容相似度建议保留 {{canonical}}。",
+        "query": "“{{query}}”：{{pages}}",
+        "page": "{{url}} 点击 {{clicks}} / 展示 {{impressions}}",
+        "truncated": "Search Console 行可能被截断，部分查询可能缺失。"
+      },
+      "unique": {
+        "title": "合并时需要保留的独有内容：",
+        "terms": "{{url}}：{{terms}}",
+        "none": "{{url}}：没有仅出现在此页面的术语"
       }
     },
     "draft": {
@@ -7696,7 +7736,8 @@
       "cleanup": "清理：SFS 上升 {{delta}}",
       "architecture": "架构：链接与内部竞争改善 {{delta}}",
       "expansion": "扩展：主题覆盖率上升 {{delta}}",
-      "regression": "退步：TAS 变化 {{delta}}"
+      "regression": "退步：TAS 变化 {{delta}}",
+      "incomparable": "评分配置已更改（新的参考地图或 TAS 公式）：此点前后的 TAS 无法直接比较。"
     }
   },
   "authorityMonitoring": {
@@ -9153,5 +9194,27 @@
       "no-rows": "文件中没有带数值收入的着陆页。",
       "storage-failed": "无法更新本地存储；导入未保存。"
     }
+  },
+  "entityParity": {
+    "title": "各语言版本中的实体（Wikidata）",
+    "intro": "将每个语言版本的主题标签匹配到与语言无关的 Wikidata ID。缺失的版本是需要审核的提醒，而不是自动判定的错误。",
+    "match": "将 {{count}} 个主题与 Wikidata 匹配",
+    "running": "正在与 Wikidata 匹配…",
+    "failed": "Wikidata 未对 {{count}} 个主题作出响应；这些主题不计为缺失。",
+    "noGaps": "每个已匹配的实体在每个语言版本中都有页面。",
+    "gapsTitle": "部分语言版本中缺失的实体",
+    "gap": "{{label}}：存在于 {{present}}，缺失于 {{missing}}",
+    "needsReview": "搜索匹配，需审核",
+    "correctTitle": "审核并修正实体匹配",
+    "entity": "实体",
+    "correctLabel": "{{topic}}（{{language}}）的 Wikidata ID；如无实体请输入 none",
+    "confidence": {
+      "manual": "手动",
+      "exact": "标签完全匹配",
+      "search": "搜索推测",
+      "none": "未匹配",
+      "error": "查询失败"
+    },
+    "correctPlaceholder": "Q123 / none"
   }
 }

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useSiteFocus } from '@/hooks/useSiteFocus';
 import { useTopicalAuthority, type ReferenceRunner } from '@/hooks/useTopicalAuthority';
 import { buildSiteFocusReport, type FocusPage } from '@/services/siteFocus';
+import { readGscSnapshots } from '@/services/gscTracker/read';
 import { isSelectedCompletedCrawl } from '@/services/optimizationTasks/crawlEvidence';
 import { projectFocusOptions } from '@/services/siteFocusMonitoring/focusOptions';
 import { useFocusConfigRevision } from '@/hooks/useFocusConfigRevision';
@@ -15,6 +16,7 @@ import { AuthorityPillars } from './AuthorityPillars';
 import { AuthorityRecommendations } from './AuthorityRecommendations';
 import { CannibalizationPanel } from './CannibalizationPanel';
 import { CoverageMap } from './CoverageMap';
+import { DEFAULT_VIEW, type CoverageView } from './coverageView';
 import { ReferenceMapPanel } from './ReferenceMapPanel';
 import { SubtopicDrilldown } from './SubtopicDrilldown';
 
@@ -36,6 +38,10 @@ export const CrawlAuthorityTab = ({ pages, startUrl, run, projectId, runner }: C
   const sfs = focus.report ?? local;
   const authority = useTopicalAuthority({ pages, startUrl, sfs, run, projectId, runner });
   const [selected, setSelected] = useState<string | undefined>();
+  const [view, setView] = useState<CoverageView>(DEFAULT_VIEW);
+  const [scope, setScope] = useState(projectId);
+  // Selection and filters belong to one project: switching project starts clean, re-renders keep them.
+  if (scope !== projectId) { setScope(projectId); setSelected(undefined); setView(DEFAULT_VIEW); }
   const { report } = authority;
   if (!report) return <Empty>{t('authority.empty')}</Empty>;
   const row = selected ? report.coverage.find((item) => item.subtopicId === selected) : undefined;
@@ -44,12 +50,12 @@ export const CrawlAuthorityTab = ({ pages, startUrl, run, projectId, runner }: C
   return (
     <div className="space-y-4">
       <AuthorityHero report={report} />
-      <ReferenceMapPanel taxonomy={authority.taxonomy} state={authority.state} onBuild={() => void authority.build()} onCancel={authority.cancel} onClear={authority.clear} />
+      <ReferenceMapPanel taxonomy={authority.taxonomy} state={authority.state} onBuild={(withQuestions) => void authority.build({ withQuestions })} onCancel={authority.cancel} onClear={authority.clear} />
       <AuthorityPillars report={report} />
       {report.taxonomy && (row ? (
         <SubtopicDrilldown report={report} row={row} onBack={() => setSelected(undefined)} />
-      ) : <CoverageMap report={report} onSelect={setSelected} />)}
-      <CannibalizationPanel report={report} pages={pages as FocusPage[]} startUrl={startUrl} language={sfs?.model.language || undefined} projectId={projectId} baselineScore={taskBaseline} />
+      ) : <CoverageMap report={report} onSelect={setSelected} view={view} onViewChange={setView} />)}
+      <CannibalizationPanel report={report} pages={pages as FocusPage[]} startUrl={startUrl} language={sfs?.model.language || undefined} projectId={projectId} baselineScore={taskBaseline} gsc={projectId ? readGscSnapshots(projectId)[0] ?? null : null} />
       <AuthorityRecommendations report={report} />
       <AuthorityBenchmark benchmark={authority.benchmark} />
       <AuthorityHistoryChart entries={authority.history} />

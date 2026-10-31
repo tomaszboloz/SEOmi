@@ -6270,6 +6270,14 @@
           "fix-linking": "내부 링크 수정: 고아 페이지 {{0}}개, 주제 밖 링크 {{1}}개",
           "deepen-shallow": "얕은 하위 주제 {{0}}개 보강",
           "refresh-stale": "1년 넘게 수정되지 않은 페이지 {{0}}개 갱신"
+        },
+        "paaUsed": "SERP의 People Also Ask 질문 {{0}}개를 사용했습니다.",
+        "paaMissing": "People Also Ask 소스 없음: 질문은 경쟁사 제목과 Google 자동완성에서만 가져옵니다.",
+        "cdesPartial": "부분 결과: 다루어진 하위 주제 {{1}}개 중 일부에서 {{0}}을(를) 측정할 수 없었습니다. CDES는 측정된 요소만 사용합니다.",
+        "depthPart": {
+          "entities": "엔터티",
+          "questions": "사용자 질문(PAA)",
+          "gain": "정보 이득"
         }
       },
       "aio": {
@@ -7542,7 +7550,13 @@
       "silcNote": "고아 페이지 {{orphans}}개, 약한 앵커 {{weak}}개, 주제 밖 페이지로의 링크 {{bleed}}개",
       "cvffNote": "오래된 페이지 {{stale}}개, 카니발라이제이션 그룹 {{groups}}개",
       "unavailable": "측정 불가",
-      "multiplier": "SFS {{sfs}}에 따른 포커스 배수 ×{{value}}"
+      "multiplier": "SFS {{sfs}}에 따른 포커스 배수 ×{{value}}",
+      "cdesPartial": "부분 결과: 다루어진 하위 주제 {{rows}}개 중 일부에서 {{parts}}을(를) 측정할 수 없었습니다. CDES는 측정된 요소만 사용합니다.",
+      "depthPart": {
+        "entities": "엔터티",
+        "questions": "사용자 질문(PAA)",
+        "gain": "정보 이득"
+      }
     },
     "warning": {
       "empty-authority": "빈 권위: 주제의 {{tcr}}%를 다루지만 평균 깊이는 {{depth}}/100에 불과합니다. 새 글보다 기존 페이지를 데이터와 엔티티로 보강하세요.",
@@ -7574,7 +7588,10 @@
         "no-competitors": "순위에서 경쟁 도메인을 찾지 못했습니다.",
         "no-pages": "경쟁사 페이지를 크롤링하지 못했습니다(robots.txt, 차단 또는 시간 초과).",
         "no-taxonomy": "경쟁사 페이지의 공통 제목이 너무 적어 신뢰할 지도를 만들 수 없습니다. 나중에 또는 경쟁사를 늘려 다시 시도하세요."
-      }
+      },
+      "withPaa": "실제 '관련 질문'(People Also Ask) 포함 (DataForSEO 고급 SERP, 별도 과금)",
+      "paaUsed": "SERP의 People Also Ask 질문 {{count}}개를 사용했습니다.",
+      "paaMissing": "People Also Ask 소스 없음: 질문은 경쟁사 제목과 Google 자동완성에서만 가져옵니다."
     },
     "coverage": {
       "title": "주제 커버리지 지도",
@@ -7598,6 +7615,15 @@
         "critical": "치명적 공백",
         "high": "큰 공백",
         "medium": "중간 공백"
+      },
+      "pillarFilter": "필러별 필터",
+      "allPillars": "모든 필러",
+      "urlFilter": "URL별 필터",
+      "sortLabel": "하위 주제 정렬",
+      "sort": {
+        "importance": "시장 중요도",
+        "similarity": "최적 페이지 일치도",
+        "label": "이름순"
       }
     },
     "drill": {
@@ -7641,6 +7667,20 @@
       "basis": {
         "intent": "동일한 의도",
         "subtopic": "동일한 하위 주제"
+      },
+      "gsc": {
+        "unavailable": "Search Console: 이 프로젝트에 저장된 쿼리/페이지 데이터가 없어 콘텐츠만으로 선택했습니다.",
+        "noOverlap": "Search Console: 이 URL들은 같은 쿼리에서 노출되지 않습니다.",
+        "agrees": "Search Console 일치: 공통 쿼리에서 {{leader}}이(가) 가장 많은 클릭을 받습니다.",
+        "conflict": "검토 필요한 충돌: Search Console에서는 {{leader}}의 클릭이 가장 많지만 콘텐츠 유사도는 {{canonical}} 유지를 제안합니다.",
+        "query": "'{{query}}': {{pages}}",
+        "page": "{{url}} 클릭 {{clicks}} / 노출 {{impressions}}",
+        "truncated": "Search Console 행이 잘렸을 수 있어 일부 쿼리가 빠질 수 있습니다."
+      },
+      "unique": {
+        "title": "통합 시 유지할 고유 콘텐츠:",
+        "terms": "{{url}}: {{terms}}",
+        "none": "{{url}}: 이 페이지에만 있는 용어가 없습니다"
       }
     },
     "draft": {
@@ -7696,7 +7736,8 @@
       "cleanup": "정리: SFS가 {{delta}} 상승",
       "architecture": "구조: 링크와 카니발라이제이션이 {{delta}} 개선",
       "expansion": "확장: 주제 커버리지가 {{delta}} 상승",
-      "regression": "하락: TAS가 {{delta}} 변동"
+      "regression": "하락: TAS가 {{delta}} 변동",
+      "incomparable": "점수 프로필이 변경되었습니다(새 참조 맵 또는 TAS 공식). 이 시점 전후의 TAS는 직접 비교할 수 없습니다."
     }
   },
   "authorityMonitoring": {
@@ -9153,5 +9194,27 @@
       "no-rows": "파일에 숫자 수익 값이 있는 방문 페이지가 없습니다.",
       "storage-failed": "로컬 저장소를 업데이트하지 못해 가져오기가 저장되지 않았습니다."
     }
+  },
+  "entityParity": {
+    "title": "언어 버전 간 엔터티 (Wikidata)",
+    "intro": "각 언어 버전의 주제 레이블을 언어 독립적인 Wikidata ID와 매칭합니다. 누락된 버전은 검토할 알림이며 자동 오류가 아닙니다.",
+    "match": "주제 {{count}}개를 Wikidata와 매칭",
+    "running": "Wikidata와 매칭 중…",
+    "failed": "주제 {{count}}개에 대해 Wikidata 응답이 없었습니다. 누락으로 계산하지 않습니다.",
+    "noGaps": "매칭된 모든 엔터티에 각 언어 버전의 페이지가 있습니다.",
+    "gapsTitle": "일부 언어 버전에 없는 엔터티",
+    "gap": "{{label}}: {{present}}에 있음, {{missing}}에 없음",
+    "needsReview": "검색 일치, 검토 필요",
+    "correctTitle": "엔터티 매칭 검토 및 수정",
+    "entity": "엔터티",
+    "correctLabel": "{{topic}} ({{language}})의 Wikidata ID. 엔터티가 없으면 none 입력",
+    "confidence": {
+      "manual": "수동",
+      "exact": "정확한 레이블",
+      "search": "검색 추정",
+      "none": "미매칭",
+      "error": "조회 실패"
+    },
+    "correctPlaceholder": "Q123 / none"
   }
 }

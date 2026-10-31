@@ -14,6 +14,7 @@ fn allowed_path(path: &str) -> bool {
             | "/v3/backlinks/backlinks/live"
             | "/v3/backlinks/domain_intersection/live"
             | "/v3/serp/google/organic/live/regular"
+            | "/v3/serp/google/organic/live/advanced"
             | "/v3/keywords_data/google_ads/search_volume/live"
             | "/v3/keywords_data/google_ads/keywords_for_keywords/live"
             | "/v3/dataforseo_labs/google/domain_rank_overview/live"
@@ -103,6 +104,8 @@ mod tests {
     #[test]
     fn only_explicit_dataforseo_endpoints_are_allowed() {
         assert!(allowed_path("/v3/serp/google/organic/live/regular"));
+        assert!(allowed_path("/v3/serp/google/organic/live/advanced"));
+        assert!(!allowed_path("/v3/serp/google/organic/task_post"));
         assert!(allowed_path(
             "/v3/keywords_data/google_ads/keywords_for_keywords/live"
         ));

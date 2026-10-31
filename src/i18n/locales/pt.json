@@ -6270,6 +6270,14 @@
           "fix-linking": "Corrija os links internos: {{0}} páginas órfãs, {{1}} links para páginas fora do tema",
           "deepen-shallow": "Aprofunde {{0}} subtópicos rasos",
           "refresh-stale": "Atualize {{0}} páginas sem alteração há mais de um ano"
+        },
+        "paaUsed": "Foram usadas {{0}} perguntas People Also Ask da SERP.",
+        "paaMissing": "Sem fonte de People Also Ask: as perguntas vêm apenas dos títulos dos concorrentes e do Google Suggest.",
+        "cdesPartial": "Parcial: não foi possível medir {{0}} em alguns dos {{1}} subtópicos cobertos; o CDES usa apenas as partes medidas.",
+        "depthPart": {
+          "entities": "entidades",
+          "questions": "perguntas dos usuários (PAA)",
+          "gain": "ganho de informação"
         }
       },
       "aio": {
@@ -7542,7 +7550,13 @@
       "silcNote": "{{orphans}} páginas órfãs, {{weak}} âncoras fracas, {{bleed}} links para páginas fora do tema",
       "cvffNote": "{{stale}} páginas desatualizadas, {{groups}} grupos de canibalização",
       "unavailable": "não mensurável",
-      "multiplier": "Multiplicador de foco ×{{value}} do SFS {{sfs}}"
+      "multiplier": "Multiplicador de foco ×{{value}} do SFS {{sfs}}",
+      "cdesPartial": "Parcial: não foi possível medir {{parts}} em alguns dos {{rows}} subtópicos cobertos; o CDES usa apenas as partes medidas.",
+      "depthPart": {
+        "entities": "entidades",
+        "questions": "perguntas dos usuários (PAA)",
+        "gain": "ganho de informação"
+      }
     },
     "warning": {
       "empty-authority": "Autoridade vazia: o site toca {{tcr}}% dos temas, mas a profundidade média é só {{depth}}/100. Aprofunde as páginas atuais com dados e entidades antes de publicar mais.",
@@ -7574,7 +7588,10 @@
         "no-competitors": "Nenhum domínio concorrente foi encontrado nos rankings.",
         "no-pages": "Nenhuma página de concorrentes pôde ser rastreada (robots.txt, bloqueios ou tempo esgotado).",
         "no-taxonomy": "As páginas dos concorrentes compartilham poucos títulos para formar um mapa confiável. Tente depois ou com mais concorrentes."
-      }
+      },
+      "withPaa": "Incluir People Also Ask reais (SERP avançada da DataForSEO, cobrada à parte)",
+      "paaUsed": "Foram usadas {{count}} perguntas People Also Ask da SERP.",
+      "paaMissing": "Sem fonte de People Also Ask: as perguntas vêm apenas dos títulos dos concorrentes e do Google Suggest."
     },
     "coverage": {
       "title": "Mapa de cobertura do tema",
@@ -7598,6 +7615,15 @@
         "critical": "lacuna crítica",
         "high": "lacuna alta",
         "medium": "lacuna média"
+      },
+      "pillarFilter": "Filtrar por pilar",
+      "allPillars": "Todos os pilares",
+      "urlFilter": "Filtrar por URL",
+      "sortLabel": "Ordenar subtópicos",
+      "sort": {
+        "importance": "Importância de mercado",
+        "similarity": "Melhor correspondência de página",
+        "label": "Nome (A–Z)"
       }
     },
     "drill": {
@@ -7641,6 +7667,20 @@
       "basis": {
         "intent": "mesma intenção",
         "subtopic": "mesmo subtópico"
+      },
+      "gsc": {
+        "unavailable": "Search Console: não há dados de consulta/página salvos para este projeto, então a escolha se baseia apenas no conteúdo.",
+        "noOverlap": "Search Console: essas URLs não recebem impressões para as mesmas consultas.",
+        "agrees": "Search Console confirma: {{leader}} recebe mais cliques nas consultas compartilhadas.",
+        "conflict": "Conflito para revisar: o Search Console dá mais cliques a {{leader}}, a semelhança de conteúdo sugere manter {{canonical}}.",
+        "query": "“{{query}}”: {{pages}}",
+        "page": "{{url}} {{clicks}} cliques / {{impressions}} impressões",
+        "truncated": "As linhas do Search Console podem estar truncadas; podem faltar consultas."
+      },
+      "unique": {
+        "title": "Conteúdo exclusivo a manter na fusão:",
+        "terms": "{{url}}: {{terms}}",
+        "none": "{{url}}: nenhum termo exclusivo desta página"
       }
     },
     "draft": {
@@ -7696,7 +7736,8 @@
       "cleanup": "Limpeza: o SFS subiu {{delta}}",
       "architecture": "Arquitetura: links e canibalização melhoraram {{delta}}",
       "expansion": "Expansão: a cobertura do tema subiu {{delta}}",
-      "regression": "Regressão: o TAS mudou {{delta}}"
+      "regression": "Regressão: o TAS mudou {{delta}}",
+      "incomparable": "O perfil de pontuação mudou (novo mapa de referência ou fórmula TAS): o TAS antes e depois deste ponto não é diretamente comparável."
     }
   },
   "authorityMonitoring": {
@@ -9153,5 +9194,27 @@
       "no-rows": "O arquivo não tem página de destino com valor numérico de receita.",
       "storage-failed": "Não foi possível atualizar o armazenamento local; a importação não foi salva."
     }
+  },
+  "entityParity": {
+    "title": "Entidades entre versões de idioma (Wikidata)",
+    "intro": "Os rótulos de tópicos de cada versão são associados a IDs do Wikidata independentes do idioma. Uma versão ausente é um alerta para revisão, não um erro automático.",
+    "match": "Associar {{count}} tópicos ao Wikidata",
+    "running": "Associando ao Wikidata…",
+    "failed": "O Wikidata não respondeu para {{count}} tópicos; eles não são contados como ausentes.",
+    "noGaps": "Cada entidade associada tem uma página em cada versão de idioma.",
+    "gapsTitle": "Entidades ausentes em algumas versões de idioma",
+    "gap": "{{label}}: presente em {{present}}, ausente em {{missing}}",
+    "needsReview": "correspondência de busca, revisar",
+    "correctTitle": "Revisar e corrigir associações de entidades",
+    "entity": "Entidade",
+    "correctLabel": "ID do Wikidata para {{topic}} ({{language}}); digite none se não houver entidade",
+    "confidence": {
+      "manual": "manual",
+      "exact": "rótulo exato",
+      "search": "palpite da busca",
+      "none": "não associado",
+      "error": "busca falhou"
+    },
+    "correctPlaceholder": "Q123 / none"
   }
 }

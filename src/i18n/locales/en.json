@@ -6270,6 +6270,14 @@
           "fix-linking": "Fix internal linking: {{0}} orphan pages, {{1}} links to off-topic pages",
           "deepen-shallow": "Deepen {{0}} shallow sub-topics",
           "refresh-stale": "Refresh {{0}} pages not updated for over a year"
+        },
+        "paaUsed": "{{0}} People Also Ask questions from the SERP were used.",
+        "paaMissing": "No People Also Ask source: questions come only from competitor headings and Google Suggest.",
+        "cdesPartial": "Partial: {{0}} could not be measured for some of the {{1}} covered sub-topics; CDES uses only the measured parts.",
+        "depthPart": {
+          "entities": "entities",
+          "questions": "user questions (PAA)",
+          "gain": "information gain"
         }
       },
       "aio": {
@@ -7542,7 +7550,13 @@
       "silcNote": "{{orphans}} orphan pages, {{weak}} weak anchors, {{bleed}} links to off-topic pages",
       "cvffNote": "{{stale}} stale pages, {{groups}} cannibalization groups",
       "unavailable": "not measurable",
-      "multiplier": "Focus multiplier ×{{value}} from SFS {{sfs}}"
+      "multiplier": "Focus multiplier ×{{value}} from SFS {{sfs}}",
+      "cdesPartial": "Partial: {{parts}} could not be measured for some of the {{rows}} covered sub-topics; CDES uses only the measured parts.",
+      "depthPart": {
+        "entities": "entities",
+        "questions": "user questions (PAA)",
+        "gain": "information gain"
+      }
     },
     "warning": {
       "empty-authority": "Empty authority: the site touches {{tcr}}% of the topics but their average depth is only {{depth}}/100. Deepen existing pages with hard data and entities before publishing more.",
@@ -7574,7 +7588,10 @@
         "no-competitors": "No competing domains were found in the rankings.",
         "no-pages": "No competitor pages could be crawled (robots.txt, blocking or timeouts).",
         "no-taxonomy": "The competitor pages share too few headings to form a reliable map. Try again later or with more competitors."
-      }
+      },
+      "withPaa": "Include real People Also Ask (DataForSEO advanced SERP, billed separately)",
+      "paaUsed": "{{count}} People Also Ask questions from the SERP were used.",
+      "paaMissing": "No People Also Ask source: questions come only from competitor headings and Google Suggest."
     },
     "coverage": {
       "title": "Topic coverage map",
@@ -7598,6 +7615,15 @@
         "critical": "critical gap",
         "high": "high gap",
         "medium": "medium gap"
+      },
+      "pillarFilter": "Filter by pillar",
+      "allPillars": "All pillars",
+      "urlFilter": "Filter by URL",
+      "sortLabel": "Sort sub-topics",
+      "sort": {
+        "importance": "Market importance",
+        "similarity": "Best page match",
+        "label": "Name (A–Z)"
       }
     },
     "drill": {
@@ -7641,6 +7667,20 @@
       "basis": {
         "intent": "same intent",
         "subtopic": "same sub-topic"
+      },
+      "gsc": {
+        "unavailable": "Search Console: no saved query/page data for this project, so the choice is based on content only.",
+        "noOverlap": "Search Console: these URLs do not receive impressions for the same queries.",
+        "agrees": "Search Console agrees: {{leader}} gets the most clicks on the shared queries.",
+        "conflict": "Conflict to review: Search Console gives the most clicks to {{leader}}, content similarity suggests keeping {{canonical}}.",
+        "query": "“{{query}}”: {{pages}}",
+        "page": "{{url}} {{clicks}} clicks / {{impressions}} impressions",
+        "truncated": "Search Console rows may be truncated; queries can be missing."
+      },
+      "unique": {
+        "title": "Unique content to keep when merging:",
+        "terms": "{{url}}: {{terms}}",
+        "none": "{{url}}: no terms found only on this page"
       }
     },
     "draft": {
@@ -7696,7 +7736,8 @@
       "cleanup": "Cleanup: SFS rose by {{delta}}",
       "architecture": "Architecture: linking and cannibalization improved by {{delta}}",
       "expansion": "Expansion: topic coverage rose by {{delta}}",
-      "regression": "Regression: TAS changed by {{delta}}"
+      "regression": "Regression: TAS changed by {{delta}}",
+      "incomparable": "Scoring profile changed (new reference map or TAS formula): TAS before and after this point is not directly comparable."
     }
   },
   "authorityMonitoring": {
@@ -9153,5 +9194,27 @@
       "no-rows": "The file has no landing page with a numeric revenue value.",
       "storage-failed": "Local storage could not be updated; the import was not saved."
     }
+  },
+  "entityParity": {
+    "title": "Entities across language versions (Wikidata)",
+    "intro": "Topic labels of each language version are matched to language-independent Wikidata IDs. A missing version is an alert to review, not an automatic error.",
+    "match": "Match {{count}} topics with Wikidata",
+    "running": "Matching with Wikidata…",
+    "failed": "Wikidata did not answer for {{count}} topics; they are not counted as missing.",
+    "noGaps": "Every matched entity has a page in each language version.",
+    "gapsTitle": "Entities missing in some language versions",
+    "gap": "{{label}}: present in {{present}}, missing in {{missing}}",
+    "needsReview": "search match, review",
+    "correctTitle": "Review and correct entity matches",
+    "entity": "Entity",
+    "correctLabel": "Wikidata ID for {{topic}} ({{language}}); type none if it has no entity",
+    "confidence": {
+      "manual": "manual",
+      "exact": "exact label",
+      "search": "search guess",
+      "none": "not matched",
+      "error": "lookup failed"
+    },
+    "correctPlaceholder": "Q123 / none"
   }
 }

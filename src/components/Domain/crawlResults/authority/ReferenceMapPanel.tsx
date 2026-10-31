@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ReferenceState } from '@/hooks/useTopicalAuthority';
 import type { ReferenceTaxonomy } from '@/services/topicalAuthority';
@@ -5,7 +6,8 @@ import type { ReferenceTaxonomy } from '@/services/topicalAuthority';
 export interface ReferenceMapPanelProps {
   taxonomy: ReferenceTaxonomy | null;
   state: ReferenceState;
-  onBuild: () => void;
+  /** `withQuestions`: user opted in to the real People Also Ask block (separately billed DataForSEO advanced SERP). */
+  onBuild: (withQuestions: boolean) => void;
   onCancel: () => void;
   onClear: () => void;
 }
@@ -14,6 +16,7 @@ export interface ReferenceMapPanelProps {
 export const ReferenceMapPanel = ({ taxonomy, state, onBuild, onCancel, onClear }: ReferenceMapPanelProps) => {
   const { t, i18n } = useTranslation();
   const { running, progress, failure, error } = state;
+  const [withQuestions, setWithQuestions] = useState(false);
   return (
     <section aria-labelledby="authority-ref-title" className="space-y-3 rounded-xl border border-slate-800 bg-slate-950/40 p-4">
       <header className="flex flex-wrap items-center justify-between gap-2">
@@ -22,13 +25,18 @@ export const ReferenceMapPanel = ({ taxonomy, state, onBuild, onCancel, onClear 
           {running ? (
             <button type="button" onClick={onCancel} className="rounded-lg border border-slate-600 px-3 py-1 text-xs text-slate-200">{t('authority.reference.cancel')}</button>
           ) : (
-            <button type="button" onClick={onBuild} className="rounded-lg border border-emerald-500/40 px-3 py-1 text-xs text-emerald-200">{taxonomy ? t('authority.reference.rebuild') : t('authority.reference.build')}</button>
+            <button type="button" onClick={() => onBuild(withQuestions)} className="rounded-lg border border-emerald-500/40 px-3 py-1 text-xs text-emerald-200">{taxonomy ? t('authority.reference.rebuild') : t('authority.reference.build')}</button>
           )}
           {taxonomy && !running && <button type="button" onClick={onClear} className="rounded-lg border border-slate-600 px-3 py-1 text-xs text-slate-300">{t('authority.reference.clear')}</button>}
         </div>
       </header>
+      <label className="flex items-center gap-2 text-xs text-slate-300">
+        <input type="checkbox" checked={withQuestions} disabled={running} onChange={(event) => setWithQuestions(event.target.checked)} />
+        {t('authority.reference.withPaa')}
+      </label>
       {taxonomy ? (
-        <p className="text-xs text-slate-300">{t('authority.reference.info', { subtopics: taxonomy.subtopics.length, pillars: taxonomy.pillars.length, competitors: taxonomy.competitors.length, source: taxonomy.source || '—', date: new Date(taxonomy.builtAt).toLocaleDateString(i18n.language) })}</p>
+        <p className="text-xs text-slate-300">{t('authority.reference.info', { subtopics: taxonomy.subtopics.length, pillars: taxonomy.pillars.length, competitors: taxonomy.competitors.length, source: taxonomy.source || '—', date: new Date(taxonomy.builtAt).toLocaleDateString(i18n.language) })}{' '}
+          {taxonomy.paaCount ? t('authority.reference.paaUsed', { count: taxonomy.paaCount }) : t('authority.reference.paaMissing')}</p>
       ) : !running && !failure && !error && <p className="text-xs text-slate-400">{t('authority.reference.intro')}</p>}
       {running && <p role="status" className="text-xs text-slate-300">{t(`authority.reference.progress.${progress?.phase ?? 'serp'}`, { done: progress?.done ?? 0, total: progress?.total ?? 0, domain: progress?.phase === 'crawl' ? progress.domain : '' })}</p>}
       {error && <p role="alert" className="text-xs text-red-300">{t('authority.reference.error', { error })}</p>}

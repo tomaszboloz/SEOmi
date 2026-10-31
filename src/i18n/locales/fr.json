@@ -6270,6 +6270,14 @@
           "fix-linking": "Corrigez le maillage : {{0}} pages orphelines, {{1}} liens vers des pages hors sujet",
           "deepen-shallow": "Approfondissez {{0}} sous-thèmes superficiels",
           "refresh-stale": "Actualisez {{0}} pages inchangées depuis plus d’un an"
+        },
+        "paaUsed": "{{0}} questions « Autres questions posées » de la SERP ont été utilisées.",
+        "paaMissing": "Aucune source « Autres questions posées » : les questions viennent seulement des titres des concurrents et de Google Suggest.",
+        "cdesPartial": "Partiel : {{0}} n’a pas pu être mesuré pour certains des {{1}} sous-thèmes couverts ; le CDES n’utilise que les parties mesurées.",
+        "depthPart": {
+          "entities": "entités",
+          "questions": "questions des utilisateurs (PAA)",
+          "gain": "gain d’information"
         }
       },
       "aio": {
@@ -7542,7 +7550,13 @@
       "silcNote": "{{orphans}} pages orphelines, {{weak}} ancres faibles, {{bleed}} liens vers des pages hors sujet",
       "cvffNote": "{{stale}} pages obsolètes, {{groups}} groupes de cannibalisation",
       "unavailable": "non mesurable",
-      "multiplier": "Multiplicateur de focus ×{{value}} issu du SFS {{sfs}}"
+      "multiplier": "Multiplicateur de focus ×{{value}} issu du SFS {{sfs}}",
+      "cdesPartial": "Partiel : {{parts}} n’a pas pu être mesuré pour certains des {{rows}} sous-thèmes couverts ; le CDES n’utilise que les parties mesurées.",
+      "depthPart": {
+        "entities": "entités",
+        "questions": "questions des utilisateurs (PAA)",
+        "gain": "gain d’information"
+      }
     },
     "warning": {
       "empty-authority": "Autorité creuse : le site touche {{tcr}}% des sujets mais la profondeur moyenne n’est que de {{depth}}/100. Approfondissez les pages existantes avant d’en publier de nouvelles.",
@@ -7574,7 +7588,10 @@
         "no-competitors": "Aucun domaine concurrent trouvé dans les classements.",
         "no-pages": "Aucune page concurrente n’a pu être explorée (robots.txt, blocages ou délais dépassés).",
         "no-taxonomy": "Les pages concurrentes partagent trop peu de titres pour former une carte fiable. Réessayez plus tard ou avec plus de concurrents."
-      }
+      },
+      "withPaa": "Inclure les vrais « Autres questions posées » (SERP avancée DataForSEO, facturée à part)",
+      "paaUsed": "{{count}} questions « Autres questions posées » de la SERP ont été utilisées.",
+      "paaMissing": "Aucune source « Autres questions posées » : les questions viennent seulement des titres des concurrents et de Google Suggest."
     },
     "coverage": {
       "title": "Carte de couverture du sujet",
@@ -7598,6 +7615,15 @@
         "critical": "lacune critique",
         "high": "lacune élevée",
         "medium": "lacune moyenne"
+      },
+      "pillarFilter": "Filtrer par pilier",
+      "allPillars": "Tous les piliers",
+      "urlFilter": "Filtrer par URL",
+      "sortLabel": "Trier les sous-thèmes",
+      "sort": {
+        "importance": "Importance marché",
+        "similarity": "Meilleure correspondance de page",
+        "label": "Nom (A–Z)"
       }
     },
     "drill": {
@@ -7641,6 +7667,20 @@
       "basis": {
         "intent": "même intention",
         "subtopic": "même sous-thème"
+      },
+      "gsc": {
+        "unavailable": "Search Console : aucune donnée requête/page enregistrée pour ce projet, le choix repose donc uniquement sur le contenu.",
+        "noOverlap": "Search Console : ces URL ne reçoivent pas d’impressions sur les mêmes requêtes.",
+        "agrees": "Search Console confirme : {{leader}} reçoit le plus de clics sur les requêtes communes.",
+        "conflict": "Conflit à examiner : Search Console attribue le plus de clics à {{leader}}, la similarité de contenu suggère de garder {{canonical}}.",
+        "query": "« {{query}} » : {{pages}}",
+        "page": "{{url}} {{clicks}} clics / {{impressions}} impressions",
+        "truncated": "Les lignes Search Console peuvent être tronquées ; des requêtes peuvent manquer."
+      },
+      "unique": {
+        "title": "Contenu unique à conserver lors de la fusion :",
+        "terms": "{{url}} : {{terms}}",
+        "none": "{{url}} : aucun terme présent uniquement sur cette page"
       }
     },
     "draft": {
@@ -7696,7 +7736,8 @@
       "cleanup": "Nettoyage : le SFS a gagné {{delta}}",
       "architecture": "Architecture : maillage et cannibalisation améliorés de {{delta}}",
       "expansion": "Expansion : la couverture du sujet a gagné {{delta}}",
-      "regression": "Régression : le TAS a varié de {{delta}}"
+      "regression": "Régression : le TAS a varié de {{delta}}",
+      "incomparable": "Le profil de notation a changé (nouvelle carte de référence ou formule TAS) : le TAS avant et après ce point n’est pas directement comparable."
     }
   },
   "authorityMonitoring": {
@@ -9153,5 +9194,27 @@
       "no-rows": "Le fichier ne contient aucune page de destination avec un revenu numérique.",
       "storage-failed": "Le stockage local n’a pas pu être mis à jour ; l’import n’a pas été enregistré."
     }
+  },
+  "entityParity": {
+    "title": "Entités entre versions linguistiques (Wikidata)",
+    "intro": "Les libellés de thèmes de chaque version sont associés à des identifiants Wikidata indépendants de la langue. Une version absente est une alerte à examiner, pas une erreur automatique.",
+    "match": "Associer {{count}} thèmes à Wikidata",
+    "running": "Association avec Wikidata…",
+    "failed": "Wikidata n’a pas répondu pour {{count}} thèmes ; ils ne sont pas comptés comme manquants.",
+    "noGaps": "Chaque entité associée a une page dans chaque version linguistique.",
+    "gapsTitle": "Entités absentes de certaines versions linguistiques",
+    "gap": "{{label}} : présent en {{present}}, absent en {{missing}}",
+    "needsReview": "correspondance de recherche, à vérifier",
+    "correctTitle": "Vérifier et corriger les associations d’entités",
+    "entity": "Entité",
+    "correctLabel": "ID Wikidata pour {{topic}} ({{language}}) ; saisissez none s’il n’a pas d’entité",
+    "confidence": {
+      "manual": "manuel",
+      "exact": "libellé exact",
+      "search": "supposition de recherche",
+      "none": "non associé",
+      "error": "recherche échouée"
+    },
+    "correctPlaceholder": "Q123 / none"
   }
 }

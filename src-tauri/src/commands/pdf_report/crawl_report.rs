@@ -3,6 +3,7 @@
 mod agg;
 mod aio_inspector;
 mod aio_tables;
+mod authority_notes;
 mod authority_tables;
 mod cover;
 mod coverage;
@@ -45,48 +46,8 @@ mod trust_profile;
 mod trust_tables;
 
 #[cfg(test)]
-#[path = "crawl_report/coverage100_tests.rs"]
-mod coverage100_tests;
-#[cfg(test)]
-mod fixture;
-#[cfg(test)]
-mod fixture_run;
-#[cfg(test)]
-mod tests;
-#[cfg(test)]
-mod tests_agg;
-#[cfg(test)]
-mod tests_aio;
-#[cfg(test)]
-mod tests_aio_inspector;
-#[cfg(test)]
-mod tests_authority;
-#[cfg(test)]
-mod tests_data;
-#[cfg(test)]
-mod tests_focus;
-#[cfg(test)]
-mod tests_focus_brand;
-#[cfg(test)]
-mod tests_focus_more;
-#[cfg(test)]
-mod tests_focus_protection;
-#[cfg(test)]
-mod tests_focus_segments;
-#[cfg(test)]
-mod tests_focus_visual;
-#[cfg(test)]
-mod tests_link_zones;
-#[cfg(test)]
-mod tests_more;
-#[cfg(test)]
-mod tests_offpage;
-#[cfg(test)]
-mod tests_offpage_edges;
-#[cfg(test)]
-mod tests_sections;
-#[cfg(test)]
-mod tests_trust;
+#[path = "crawl_report/test_suite.rs"]
+mod test_suite;
 
 use super::audit_report::ctx::{field, pretty_time};
 use super::layout::doc::{Chrome, Doc, CONTENT_W, MARGIN};

@@ -6270,6 +6270,14 @@
           "fix-linking": "Correggi i link interni: {{0}} pagine orfane, {{1}} link verso pagine fuori tema",
           "deepen-shallow": "Approfondisci {{0}} sotto-temi superficiali",
           "refresh-stale": "Aggiorna {{0}} pagine ferme da oltre un anno"
+        },
+        "paaUsed": "Sono state usate {{0}} domande People Also Ask dalla SERP.",
+        "paaMissing": "Nessuna fonte People Also Ask: le domande provengono solo dai titoli dei concorrenti e da Google Suggest.",
+        "cdesPartial": "Parziale: {{0}} non è stato misurabile per alcuni dei {{1}} sottoargomenti coperti; il CDES usa solo le parti misurate.",
+        "depthPart": {
+          "entities": "entità",
+          "questions": "domande degli utenti (PAA)",
+          "gain": "guadagno informativo"
         }
       },
       "aio": {
@@ -7542,7 +7550,13 @@
       "silcNote": "{{orphans}} pagine orfane, {{weak}} anchor deboli, {{bleed}} link verso pagine fuori tema",
       "cvffNote": "{{stale}} pagine obsolete, {{groups}} gruppi di cannibalizzazione",
       "unavailable": "non misurabile",
-      "multiplier": "Moltiplicatore di focus ×{{value}} da SFS {{sfs}}"
+      "multiplier": "Moltiplicatore di focus ×{{value}} da SFS {{sfs}}",
+      "cdesPartial": "Parziale: {{parts}} non è stato misurabile per alcuni dei {{rows}} sottoargomenti coperti; il CDES usa solo le parti misurate.",
+      "depthPart": {
+        "entities": "entità",
+        "questions": "domande degli utenti (PAA)",
+        "gain": "guadagno informativo"
+      }
     },
     "warning": {
       "empty-authority": "Autorità vuota: il sito tocca il {{tcr}}% dei temi ma la profondità media è solo {{depth}}/100. Approfondisci le pagine esistenti con dati ed entità prima di pubblicarne altre.",
@@ -7574,7 +7588,10 @@
         "no-competitors": "Nessun dominio concorrente trovato nei posizionamenti.",
         "no-pages": "Nessuna pagina dei concorrenti è stata scansionata (robots.txt, blocchi o timeout).",
         "no-taxonomy": "Le pagine dei concorrenti condividono troppi pochi titoli per una mappa affidabile. Riprova più tardi o con più concorrenti."
-      }
+      },
+      "withPaa": "Includi le vere People Also Ask (SERP avanzata DataForSEO, fatturata a parte)",
+      "paaUsed": "Sono state usate {{count}} domande People Also Ask dalla SERP.",
+      "paaMissing": "Nessuna fonte People Also Ask: le domande provengono solo dai titoli dei concorrenti e da Google Suggest."
     },
     "coverage": {
       "title": "Mappa di copertura del tema",
@@ -7598,6 +7615,15 @@
         "critical": "lacuna critica",
         "high": "lacuna alta",
         "medium": "lacuna media"
+      },
+      "pillarFilter": "Filtra per pilastro",
+      "allPillars": "Tutti i pilastri",
+      "urlFilter": "Filtra per URL",
+      "sortLabel": "Ordina i sottoargomenti",
+      "sort": {
+        "importance": "Importanza di mercato",
+        "similarity": "Migliore corrispondenza di pagina",
+        "label": "Nome (A–Z)"
       }
     },
     "drill": {
@@ -7641,6 +7667,20 @@
       "basis": {
         "intent": "stessa intenzione",
         "subtopic": "stesso sottotema"
+      },
+      "gsc": {
+        "unavailable": "Search Console: nessun dato query/pagina salvato per questo progetto, quindi la scelta si basa solo sul contenuto.",
+        "noOverlap": "Search Console: questi URL non ricevono impressioni per le stesse query.",
+        "agrees": "Search Console conferma: {{leader}} riceve più clic sulle query condivise.",
+        "conflict": "Conflitto da verificare: Search Console dà più clic a {{leader}}, la somiglianza dei contenuti suggerisce di mantenere {{canonical}}.",
+        "query": "«{{query}}»: {{pages}}",
+        "page": "{{url}} {{clicks}} clic / {{impressions}} impressioni",
+        "truncated": "Le righe di Search Console potrebbero essere troncate; alcune query possono mancare."
+      },
+      "unique": {
+        "title": "Contenuti unici da conservare durante l’unione:",
+        "terms": "{{url}}: {{terms}}",
+        "none": "{{url}}: nessun termine presente solo in questa pagina"
       }
     },
     "draft": {
@@ -7696,7 +7736,8 @@
       "cleanup": "Pulizia: l’SFS è salito di {{delta}}",
       "architecture": "Architettura: link e cannibalizzazione migliorati di {{delta}}",
       "expansion": "Espansione: la copertura del tema è salita di {{delta}}",
-      "regression": "Regressione: il TAS è variato di {{delta}}"
+      "regression": "Regressione: il TAS è variato di {{delta}}",
+      "incomparable": "Il profilo di punteggio è cambiato (nuova mappa di riferimento o formula TAS): il TAS prima e dopo questo punto non è direttamente confrontabile."
     }
   },
   "authorityMonitoring": {
@@ -9153,5 +9194,27 @@
       "no-rows": "Il file non contiene pagine di destinazione con un valore numerico di entrate.",
       "storage-failed": "Impossibile aggiornare l’archiviazione locale; l’importazione non è stata salvata."
     }
+  },
+  "entityParity": {
+    "title": "Entità tra versioni linguistiche (Wikidata)",
+    "intro": "Le etichette dei temi di ogni versione vengono associate a ID Wikidata indipendenti dalla lingua. Una versione mancante è un avviso da verificare, non un errore automatico.",
+    "match": "Associa {{count}} temi a Wikidata",
+    "running": "Associazione con Wikidata…",
+    "failed": "Wikidata non ha risposto per {{count}} temi; non sono conteggiati come mancanti.",
+    "noGaps": "Ogni entità associata ha una pagina in ogni versione linguistica.",
+    "gapsTitle": "Entità mancanti in alcune versioni linguistiche",
+    "gap": "{{label}}: presente in {{present}}, assente in {{missing}}",
+    "needsReview": "corrispondenza di ricerca, da verificare",
+    "correctTitle": "Verifica e correggi le associazioni di entità",
+    "entity": "Entità",
+    "correctLabel": "ID Wikidata per {{topic}} ({{language}}); scrivi none se non ha un’entità",
+    "confidence": {
+      "manual": "manuale",
+      "exact": "etichetta esatta",
+      "search": "ipotesi di ricerca",
+      "none": "non associato",
+      "error": "ricerca non riuscita"
+    },
+    "correctPlaceholder": "Q123 / none"
   }
 }

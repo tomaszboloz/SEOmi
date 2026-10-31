@@ -6270,6 +6270,14 @@
           "fix-linking": "内部リンクを修正：孤立ページ{{0}}件、テーマ外ページへのリンク{{1}}件",
           "deepen-shallow": "浅いサブトピック{{0}}件を深める",
           "refresh-stale": "1年以上更新されていない{{0}}ページを更新"
+        },
+        "paaUsed": "SERP の PAA 質問を {{0}} 件使用しました。",
+        "paaMissing": "PAA のソースがありません。質問は競合の見出しと Google サジェストのみから取得しています。",
+        "cdesPartial": "部分的: カバー済みサブトピック {{1}} 件の一部で {{0}} を測定できませんでした。CDES は測定できた要素のみを使用します。",
+        "depthPart": {
+          "entities": "エンティティ",
+          "questions": "ユーザーの質問 (PAA)",
+          "gain": "情報利得"
         }
       },
       "aio": {
@@ -7542,7 +7550,13 @@
       "silcNote": "孤立ページ{{orphans}}件、弱いアンカー{{weak}}件、テーマ外ページへのリンク{{bleed}}件",
       "cvffNote": "古いページ{{stale}}件、カニバリゼーショングループ{{groups}}件",
       "unavailable": "測定不可",
-      "multiplier": "SFS {{sfs}}によるフォーカス係数 ×{{value}}"
+      "multiplier": "SFS {{sfs}}によるフォーカス係数 ×{{value}}",
+      "cdesPartial": "部分的: カバー済みサブトピック {{rows}} 件の一部で {{parts}} を測定できませんでした。CDES は測定できた要素のみを使用します。",
+      "depthPart": {
+        "entities": "エンティティ",
+        "questions": "ユーザーの質問 (PAA)",
+        "gain": "情報利得"
+      }
     },
     "warning": {
       "empty-authority": "空虚なオーソリティ：トピックの{{tcr}}%に触れていますが平均の深さは{{depth}}/100しかありません。新規公開の前に既存ページを事実とエンティティで深めてください。",
@@ -7574,7 +7588,10 @@
         "no-competitors": "順位に競合ドメインが見つかりませんでした。",
         "no-pages": "競合ページをクロールできませんでした（robots.txt、ブロック、タイムアウト）。",
         "no-taxonomy": "競合ページの共通見出しが少なく、信頼できるマップを作れません。時間をおくか競合を増やして再試行してください。"
-      }
+      },
+      "withPaa": "実際の「他の人はこちらも質問」(PAA) を含める（DataForSEO 高度 SERP、別料金）",
+      "paaUsed": "SERP の PAA 質問を {{count}} 件使用しました。",
+      "paaMissing": "PAA のソースがありません。質問は競合の見出しと Google サジェストのみから取得しています。"
     },
     "coverage": {
       "title": "トピックカバレッジマップ",
@@ -7598,6 +7615,15 @@
         "critical": "重大な欠落",
         "high": "大きな欠落",
         "medium": "中程度の欠落"
+      },
+      "pillarFilter": "ピラーで絞り込む",
+      "allPillars": "すべてのピラー",
+      "urlFilter": "URL で絞り込む",
+      "sortLabel": "サブトピックを並べ替え",
+      "sort": {
+        "importance": "市場での重要度",
+        "similarity": "最適ページの一致度",
+        "label": "名前順"
       }
     },
     "drill": {
@@ -7641,6 +7667,20 @@
       "basis": {
         "intent": "同じ検索意図",
         "subtopic": "同じサブトピック"
+      },
+      "gsc": {
+        "unavailable": "Search Console: このプロジェクトには保存済みのクエリ/ページデータがないため、コンテンツのみで判断しています。",
+        "noOverlap": "Search Console: これらの URL は同じクエリで表示されていません。",
+        "agrees": "Search Console も一致: 共通クエリで最もクリックされているのは {{leader}} です。",
+        "conflict": "確認が必要な競合: Search Console では {{leader}} のクリックが最多ですが、内容の類似度では {{canonical}} の維持が推奨されます。",
+        "query": "「{{query}}」: {{pages}}",
+        "page": "{{url}} クリック {{clicks}} / 表示 {{impressions}}",
+        "truncated": "Search Console の行は切り詰められている可能性があり、一部のクエリが欠けていることがあります。"
+      },
+      "unique": {
+        "title": "統合時に残すべき固有のコンテンツ:",
+        "terms": "{{url}}: {{terms}}",
+        "none": "{{url}}: このページだけにある用語はありません"
       }
     },
     "draft": {
@@ -7696,7 +7736,8 @@
       "cleanup": "整理：SFSが{{delta}}上昇",
       "architecture": "アーキテクチャ：リンクとカニバリゼーションが{{delta}}改善",
       "expansion": "拡張：トピックカバレッジが{{delta}}上昇",
-      "regression": "悪化：TASが{{delta}}変化"
+      "regression": "悪化：TASが{{delta}}変化",
+      "incomparable": "スコアリングプロファイルが変更されました（新しい参照マップまたは TAS 式）。この時点の前後の TAS は直接比較できません。"
     }
   },
   "authorityMonitoring": {
@@ -9153,5 +9194,27 @@
       "no-rows": "数値の収益を持つランディングページがファイルにありません。",
       "storage-failed": "ローカルストレージを更新できず、インポートは保存されませんでした。"
     }
+  },
+  "entityParity": {
+    "title": "言語バージョン間のエンティティ (Wikidata)",
+    "intro": "各言語バージョンのトピックラベルを言語に依存しない Wikidata ID に照合します。欠けているバージョンは確認用のアラートであり、自動的なエラーではありません。",
+    "match": "{{count}} 件のトピックを Wikidata と照合",
+    "running": "Wikidata と照合中…",
+    "failed": "{{count}} 件のトピックで Wikidata から応答がありませんでした。欠落としては数えません。",
+    "noGaps": "照合されたすべてのエンティティに、各言語バージョンのページがあります。",
+    "gapsTitle": "一部の言語バージョンに欠けているエンティティ",
+    "gap": "{{label}}: {{present}} にあり、{{missing}} にありません",
+    "needsReview": "検索一致、要確認",
+    "correctTitle": "エンティティの照合を確認・修正",
+    "entity": "エンティティ",
+    "correctLabel": "{{topic}} ({{language}}) の Wikidata ID。エンティティがない場合は none と入力",
+    "confidence": {
+      "manual": "手動",
+      "exact": "ラベル完全一致",
+      "search": "検索推定",
+      "none": "未照合",
+      "error": "検索失敗"
+    },
+    "correctPlaceholder": "Q123 / none"
   }
 }

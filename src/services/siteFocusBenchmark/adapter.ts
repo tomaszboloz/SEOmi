@@ -34,7 +34,9 @@ export interface SerpEnv {
   credentials: { login: string; password: string };
   country: string;
   language: string;
-  dataForSeo: (login: string, password: string) => Pick<DataForSEOClient, 'getSerpCompetitors'>;
+  dataForSeo: (login: string, password: string) => Pick<DataForSEOClient, 'getSerpCompetitors'> & Partial<Pick<DataForSEOClient, 'getSerpWithQuestions'>>;
+  /** Opt-in: ask DataForSEO for the advanced SERP so the real People Also Ask block is kept (separately billed). */
+  withQuestions?: boolean;
   freeSerp: typeof fetchFreeSerp;
   now?: () => string;
 }
@@ -51,11 +53,14 @@ export const createSerpFetcher = (env: SerpEnv): NonNullable<BenchmarkDeps['fetc
   const { login, password } = env.credentials;
   if (login.trim() && password.trim()) {
     const language = dataForSeoLanguage(env.country, env.language);
-    const rows = await env.dataForSeo(login, password).getSerpCompetitors(keyword, dataForSeoLocation(env.country), language);
+    const client = env.dataForSeo(login, password);
+    const location = dataForSeoLocation(env.country);
+    const advanced = env.withQuestions && client.getSerpWithQuestions ? await client.getSerpWithQuestions(keyword, location, language) : null;
+    const rows = advanced ? advanced.organic : await client.getSerpCompetitors(keyword, location, language);
     const evidence = evidenceFromLive(keyword, rows.map((row) => row.url), {
       countryCode: env.country || null, languageCode: language || null, requestedDepth: DATAFORSEO_SERP_DEPTH, retrievedAt: (env.now ?? nowIso)(),
     });
-    return { source: 'dataforseo', hits: dataForSeoHits(rows), evidence };
+    return { source: 'dataforseo', hits: dataForSeoHits(rows), evidence, ...(advanced ? { questions: advanced.questions } : {}) };
   }
   const outcome = await env.freeSerp({ feed: 'bing-serp', geo: env.country, language: env.language, keyword });
   if (outcome.status !== 'ok' || !outcome.result) throw new Error(outcome.response.error ?? outcome.status);
@@ -93,7 +98,7 @@ const listenProgress = async (handler: (progress: CrawlProgress) => void): Promi
 };
 
 /** The single place that wires stores and Tauri commands into the pure orchestrator. */
-export const createBenchmarkDeps = (): BenchmarkDeps => {
+export const createBenchmarkDeps = (options: { withQuestions?: boolean } = {}): BenchmarkDeps => {
   const tools = useToolsStore.getState();
   return {
     fetchSerp: createSerpFetcher({
@@ -102,6 +107,7 @@ export const createBenchmarkDeps = (): BenchmarkDeps => {
       language: tools.keywordLanguage || 'en',
       dataForSeo: (login, password) => new DataForSEOClient(login, password),
       freeSerp: fetchFreeSerp,
+      withQuestions: options.withQuestions,
     }),
     crawlSite: createCrawler({ invoke: invokeTauriCommand, listen: listenProgress, newRunId: () => createId('benchmark') }),
   };
