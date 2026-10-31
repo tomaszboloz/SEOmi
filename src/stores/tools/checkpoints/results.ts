@@ -1,5 +1,6 @@
 import { SiteCrawlResult } from '@/types';
 import type { InterruptedCrawl } from '../contracts';
+import type { CrawlResumeBase } from '@/services/crawlEvents/replay';
 import { crawlHealthScore, CRAWL_SCORE_VERSION } from '@/services/crawlHealthScore';
 
 export const checkpointUrl = (value: string): string => {
@@ -12,7 +13,7 @@ export const checkpointUrl = (value: string): string => {
   }
 };
 
-export const buildCrawlCheckpoint = (result: SiteCrawlResult): Pick<InterruptedCrawl, 'completedUrls' | 'frontierUrls'> => {
+export const buildCrawlCheckpoint = (result: Pick<SiteCrawlResult, 'pages'> & Partial<Pick<SiteCrawlResult, 'sitemap_urls'>>): Pick<InterruptedCrawl, 'completedUrls' | 'frontierUrls'> => {
   const completed = new Set(
     result.pages
       .flatMap((page) => [page.url, page.final_url])
@@ -32,7 +33,7 @@ export const buildCrawlCheckpoint = (result: SiteCrawlResult): Pick<InterruptedC
   };
 };
 
-export const mergeCrawlResults = (base: SiteCrawlResult, fresh: SiteCrawlResult): SiteCrawlResult => {
+export const mergeCrawlResults = (base: CrawlResumeBase, fresh: SiteCrawlResult): SiteCrawlResult => {
   const pagesByUrl = new Map<string, SiteCrawlResult['pages'][number]>();
   for (const page of base.pages) pagesByUrl.set(checkpointUrl(page.final_url || page.url), page);
   for (const page of fresh.pages) pagesByUrl.set(checkpointUrl(page.final_url || page.url), page);

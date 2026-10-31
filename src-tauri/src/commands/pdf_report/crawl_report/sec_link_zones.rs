@@ -23,6 +23,11 @@ fn zone_index(link: &serde_json::Value) -> usize {
         .unwrap_or(ZONES.len() - 1)
 }
 
+/// Localisation key of the zone recorded on `link` (unknown when absent).
+pub fn zone_label(link: &serde_json::Value) -> &'static str {
+    ZONES[zone_index(link)].2
+}
+
 pub fn link_zones(c: &Crawl) -> Table {
     let mut counts = [(0usize, 0usize); ZONES.len()];
     let mut total = 0usize;

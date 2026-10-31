@@ -22,6 +22,9 @@ pub struct SiteCrawlResult {
     pub warning_count: usize,
     pub notice_count: usize,
     pub pages: Vec<CrawledPageSummary>,
+    /// First error of the native crawl event log (#138); absent when the log was written or not used.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub event_log_error: Option<String>,
     pub duration_ms: u64,
     pub cancelled: bool,
     pub timed_out: bool,

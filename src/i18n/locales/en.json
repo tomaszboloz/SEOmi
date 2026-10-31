@@ -456,7 +456,9 @@
       "backlinkNoProfile": "DataForSEO returned no backlink profile for this target.",
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
-      "crawlerNoPages": "Crawler returned no pages for this target."
+      "crawlerNoPages": "Crawler returned no pages for this target.",
+      "crawlLogRecoveryFailed": "The crawl event log could not be read, so pages finished before the restart were not recovered: {{reason}}",
+      "crawlEventLogWriteFailed": "The crawl finished, but its restart log could not be written ({{reason}}). If the app had closed mid-crawl, progress could not have been recovered."
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",
@@ -2651,7 +2653,9 @@
       "path-key-collision": "duplicate path key",
       "url-key-collision": "duplicate URL key"
     },
-    "pageLimitUnlimited": "No limit"
+    "pageLimitUnlimited": "No limit",
+    "interruptedRecovered": "{{pages}} pages finished before the app closed were recovered from the crawl log and are kept when you resume.",
+    "interruptedRecoveredInvalid": "{{count}} logged pages could not be read and will be crawled again."
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -5952,7 +5956,9 @@
         "zoneNav": "Navigation / breadcrumb",
         "zoneFooter": "Sidebar / footer",
         "zoneUnknown": "Unknown (older run)",
-        "zoneNeutral": "neutral (1)"
+        "zoneNeutral": "neutral (1)",
+        "tLinkContext": "Internal link context",
+        "linkContextIntro": "Anchor in brackets with up to 15 words on each side, as recorded by the crawler. Older runs have no context. Rows shown:"
       },
       "cols": {
         "colItem": "Item",
@@ -6028,7 +6034,9 @@
         "colResult": "Result",
         "colZone": "Zone",
         "colShare": "Share",
-        "colWeight": "SPRS weight"
+        "colWeight": "SPRS weight",
+        "colContext": "Context (±15 words)",
+        "colSection": "Section heading"
       },
       "focus": {
         "title": "Site Focus",

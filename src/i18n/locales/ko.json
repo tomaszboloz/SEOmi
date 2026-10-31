@@ -456,7 +456,9 @@
       "backlinkNoProfile": "DataForSEO returned no backlink profile for this target.",
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
-      "crawlerNoPages": "Crawler returned no pages for this target."
+      "crawlerNoPages": "Crawler returned no pages for this target.",
+      "crawlLogRecoveryFailed": "크롤 이벤트 로그를 읽을 수 없어 재시작 전에 완료된 페이지를 복구하지 못했습니다: {{reason}}",
+      "crawlEventLogWriteFailed": "크롤은 완료되었지만 재개용 로그를 쓰지 못했습니다({{reason}}). 도중에 앱이 종료되었다면 진행 상황을 복구할 수 없었습니다."
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",
@@ -2651,7 +2653,9 @@
       "path-key-collision": "중복 경로 키",
       "url-key-collision": "중복 URL 키"
     },
-    "pageLimitUnlimited": "제한 없음"
+    "pageLimitUnlimited": "제한 없음",
+    "interruptedRecovered": "앱 종료 전에 완료된 {{pages}}개 페이지를 크롤 로그에서 복구했으며 재개 시 유지됩니다.",
+    "interruptedRecoveredInvalid": "기록된 {{count}}개 페이지를 읽을 수 없어 다시 크롤합니다."
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -5952,7 +5956,9 @@
         "zoneNav": "내비게이션 / 이동 경로",
         "zoneFooter": "사이드바 / 푸터",
         "zoneUnknown": "알 수 없음(이전 크롤)",
-        "zoneNeutral": "중립 (1)"
+        "zoneNeutral": "중립 (1)",
+        "tLinkContext": "내부 링크 문맥",
+        "linkContextIntro": "크롤러가 기록한 대로 대괄호 안의 앵커와 양쪽 최대 15단어. 이전 실행에는 문맥이 없습니다. 표시된 행:"
       },
       "cols": {
         "colItem": "항목",
@@ -6028,7 +6034,9 @@
         "colResult": "결과",
         "colZone": "영역",
         "colShare": "비율",
-        "colWeight": "SPRS 가중치"
+        "colWeight": "SPRS 가중치",
+        "colContext": "문맥(±15단어)",
+        "colSection": "섹션 제목"
       },
       "focus": {
         "title": "사이트 포커스",

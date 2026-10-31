@@ -66,7 +66,8 @@ export const computeSprs = (nodes: PageRankNode[], edges: SprsEdge[], initialRan
   const kept = usable(edges);
   const similarityWeighting = applySimilarityWeights(kept, SPRS_PROFILE.similarityFloor);
   const rank = calculatePageRank(nodes, similarityWeighting.edges, { tolerance: SPRS_PROFILE.tolerance, maxIterations: SPRS_PROFILE.maxIterations, initialRank });
-  const max = Math.max(...rank.scores.map((row) => row.score));
+  // A reduce, not Math.max(...spread): spreading 100k+ scores overflows the call stack (#71 GEM-71-10).
+  const max = rank.scores.reduce((best, row) => Math.max(best, row.score), 0);
   const uniform = 1 / nodes.length;
   const out = new Map<string, { total: number; leaking: number; count: number }>();
   const incoming = new Map<string, Set<string>>();

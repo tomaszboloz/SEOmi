@@ -5,6 +5,7 @@ use super::{
     models::{CrawlConfig, SiteCrawlResult},
 };
 
+mod dom_structure;
 mod frontier;
 mod loop_runner;
 mod page_assembler;
@@ -53,6 +54,8 @@ mod summary;
 mod template_signature;
 
 use pipeline::run_crawl_pipeline;
+
+mod event_log;
 use setup::CrawlSetup;
 
 #[allow(clippy::too_many_arguments)]
@@ -66,10 +69,20 @@ pub async fn crawl_site_with_control<R: Runtime>(
     project_id: Option<String>,
     config: Option<CrawlConfig>,
 ) -> Result<SiteCrawlResult, String> {
+    let project = project_id.clone().filter(|id| !id.trim().is_empty());
     let setup = CrawlSetup::init(
         start_url, max_pages, user_agent, run_id, project_id, config, control,
     )?;
-    run_crawl_pipeline(&app, control, &setup).await
+    let mut log_error = None;
+    if let Some(project) = project {
+        log_error = event_log::start(&app, control, &setup, &project).err();
+    }
+    let outcome = run_crawl_pipeline(&app, control, &setup).await;
+    let finish_error = event_log::finish(control, &setup.run_id, &outcome);
+    outcome.map(|mut result| {
+        result.event_log_error = log_error.or(finish_error);
+        result
+    })
 }
 
 #[cfg(test)]

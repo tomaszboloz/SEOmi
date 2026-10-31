@@ -456,7 +456,9 @@
       "backlinkNoProfile": "DataForSEO returned no backlink profile for this target.",
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
-      "crawlerNoPages": "Crawler returned no pages for this target."
+      "crawlerNoPages": "Crawler returned no pages for this target.",
+      "crawlLogRecoveryFailed": "تعذرت قراءة سجل أحداث الزحف، لذلك لم تُستعد الصفحات المكتملة قبل إعادة التشغيل: {{reason}}",
+      "crawlEventLogWriteFailed": "اكتمل الزحف، لكن تعذرت كتابة سجل الاستئناف الخاص به ({{reason}}). لو أُغلق التطبيق أثناء الزحف لما أمكن استعادة التقدم."
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",
@@ -2651,7 +2653,9 @@
       "path-key-collision": "مفتاح مسار مكرر",
       "url-key-collision": "مفتاح URL مكرر"
     },
-    "pageLimitUnlimited": "بدون حد"
+    "pageLimitUnlimited": "بدون حد",
+    "interruptedRecovered": "استُعيدت من سجل الزحف {{pages}} صفحة اكتملت قبل إغلاق التطبيق، وستُحفظ عند الاستئناف.",
+    "interruptedRecoveredInvalid": "تعذرت قراءة {{count}} صفحة مسجلة وسيُعاد زحفها."
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -5952,7 +5956,9 @@
         "zoneNav": "التنقل / مسار التنقل",
         "zoneFooter": "الشريط الجانبي / التذييل",
         "zoneUnknown": "غير معروفة (زحف أقدم)",
-        "zoneNeutral": "محايد (1)"
+        "zoneNeutral": "محايد (1)",
+        "tLinkContext": "سياق الروابط الداخلية",
+        "linkContextIntro": "النص الرابط بين قوسين مع ما يصل إلى 15 كلمة على كل جانب كما سجلها الزاحف. التشغيلات الأقدم بلا سياق. الصفوف المعروضة:"
       },
       "cols": {
         "colItem": "العنصر",
@@ -6028,7 +6034,9 @@
         "colResult": "النتيجة",
         "colZone": "المنطقة",
         "colShare": "الحصة",
-        "colWeight": "وزن SPRS"
+        "colWeight": "وزن SPRS",
+        "colContext": "السياق (±15 كلمة)",
+        "colSection": "عنوان القسم"
       },
       "focus": {
         "title": "تركيز الموقع",

@@ -456,7 +456,9 @@
       "backlinkNoProfile": "DataForSEO returned no backlink profile for this target.",
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
-      "crawlerNoPages": "Crawler returned no pages for this target."
+      "crawlerNoPages": "Crawler returned no pages for this target.",
+      "crawlLogRecoveryFailed": "No se pudo leer el registro de eventos del rastreo, así que no se recuperaron las páginas terminadas antes del reinicio: {{reason}}",
+      "crawlEventLogWriteFailed": "El rastreo terminó, pero no se pudo escribir su registro de reanudación ({{reason}}). Si la app se hubiera cerrado a mitad, el progreso no se habría podido recuperar."
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",
@@ -2651,7 +2653,9 @@
       "path-key-collision": "clave de ruta duplicada",
       "url-key-collision": "clave URL duplicada"
     },
-    "pageLimitUnlimited": "Sin límite"
+    "pageLimitUnlimited": "Sin límite",
+    "interruptedRecovered": "Se recuperaron del registro del rastreo {{pages}} páginas terminadas antes de cerrar la app; se conservan al reanudar.",
+    "interruptedRecoveredInvalid": "No se pudieron leer {{count}} páginas registradas; se rastrearán de nuevo."
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -5952,7 +5956,9 @@
         "zoneNav": "Navegación / migas de pan",
         "zoneFooter": "Barra lateral / pie",
         "zoneUnknown": "Desconocida (rastreo antiguo)",
-        "zoneNeutral": "neutro (1)"
+        "zoneNeutral": "neutro (1)",
+        "tLinkContext": "Contexto de enlaces internos",
+        "linkContextIntro": "Ancla entre corchetes con hasta 15 palabras a cada lado, tal como las registró el rastreador. Las ejecuciones antiguas no tienen contexto. Filas mostradas:"
       },
       "cols": {
         "colItem": "Elemento",
@@ -6028,7 +6034,9 @@
         "colResult": "Resultado",
         "colZone": "Zona",
         "colShare": "Proporción",
-        "colWeight": "Peso SPRS"
+        "colWeight": "Peso SPRS",
+        "colContext": "Contexto (±15 palabras)",
+        "colSection": "Encabezado de sección"
       },
       "focus": {
         "title": "Enfoque del sitio",

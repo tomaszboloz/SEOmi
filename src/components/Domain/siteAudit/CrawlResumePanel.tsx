@@ -28,6 +28,14 @@ return (<section
                     "",
                 })}
               </p>
+              {interruptedCrawl.recoveredRunId && (
+                <p className="mt-1 text-xs leading-5 text-amber-100">
+                  {t("siteAudit.interruptedRecovered", { pages: (interruptedCrawl.recoveredPages ?? 0).toLocaleString(appLocale()) })}
+                  {interruptedCrawl.recoveredInvalidPages
+                    ? ` ${t("siteAudit.interruptedRecoveredInvalid", { count: interruptedCrawl.recoveredInvalidPages })}`
+                    : ""}
+                </p>
+              )}
             </div>
             <div className="flex shrink-0 gap-2">
               <button

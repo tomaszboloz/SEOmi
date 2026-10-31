@@ -456,7 +456,9 @@
       "backlinkNoProfile": "DataForSEO returned no backlink profile for this target.",
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
-      "crawlerNoPages": "Crawler returned no pages for this target."
+      "crawlerNoPages": "Crawler returned no pages for this target.",
+      "crawlLogRecoveryFailed": "Impossibile leggere il registro eventi della scansione, quindi le pagine completate prima del riavvio non sono state recuperate: {{reason}}",
+      "crawlEventLogWriteFailed": "La scansione è terminata, ma non è stato possibile scrivere il registro di ripresa ({{reason}}). Se l'app si fosse chiusa a metà, l'avanzamento non sarebbe stato recuperabile."
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",
@@ -2651,7 +2653,9 @@
       "path-key-collision": "chiave percorso duplicata",
       "url-key-collision": "chiave URL duplicata"
     },
-    "pageLimitUnlimited": "Nessun limite"
+    "pageLimitUnlimited": "Nessun limite",
+    "interruptedRecovered": "{{pages}} pagine completate prima della chiusura dell'app sono state recuperate dal registro della scansione e vengono mantenute alla ripresa.",
+    "interruptedRecoveredInvalid": "Impossibile leggere {{count}} pagine registrate; verranno scansionate di nuovo."
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -5952,7 +5956,9 @@
         "zoneNav": "Navigazione / breadcrumb",
         "zoneFooter": "Barra laterale / footer",
         "zoneUnknown": "Sconosciuta (scansione precedente)",
-        "zoneNeutral": "neutro (1)"
+        "zoneNeutral": "neutro (1)",
+        "tLinkContext": "Contesto dei link interni",
+        "linkContextIntro": "Anchor tra parentesi con fino a 15 parole per lato, come registrate dal crawler. Le esecuzioni precedenti non hanno contesto. Righe mostrate:"
       },
       "cols": {
         "colItem": "Elemento",
@@ -6028,7 +6034,9 @@
         "colResult": "Esito",
         "colZone": "Zona",
         "colShare": "Quota",
-        "colWeight": "Peso SPRS"
+        "colWeight": "Peso SPRS",
+        "colContext": "Contesto (±15 parole)",
+        "colSection": "Titolo della sezione"
       },
       "focus": {
         "title": "Focus del sito",

@@ -456,7 +456,9 @@
       "backlinkNoProfile": "DataForSEO returned no backlink profile for this target.",
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
-      "crawlerNoPages": "Crawler returned no pages for this target."
+      "crawlerNoPages": "Crawler returned no pages for this target.",
+      "crawlLogRecoveryFailed": "Не удалось прочитать журнал событий краулинга, поэтому страницы, обработанные до перезапуска, не восстановлены: {{reason}}",
+      "crawlEventLogWriteFailed": "Краулинг завершён, но журнал для возобновления записать не удалось ({{reason}}). Если бы приложение закрылось в процессе, прогресс не удалось бы восстановить."
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",
@@ -2651,7 +2653,9 @@
       "path-key-collision": "дублирующийся ключ пути",
       "url-key-collision": "дублирующийся ключ URL"
     },
-    "pageLimitUnlimited": "Без ограничений"
+    "pageLimitUnlimited": "Без ограничений",
+    "interruptedRecovered": "{{pages}} страниц, обработанных до закрытия приложения, восстановлены из журнала краулинга и сохранятся при возобновлении.",
+    "interruptedRecoveredInvalid": "Не удалось прочитать {{count}} записанных страниц; они будут обработаны заново."
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -5952,7 +5956,9 @@
         "zoneNav": "Навигация / хлебные крошки",
         "zoneFooter": "Боковая панель / подвал",
         "zoneUnknown": "Неизвестно (старый обход)",
-        "zoneNeutral": "нейтральный (1)"
+        "zoneNeutral": "нейтральный (1)",
+        "tLinkContext": "Контекст внутренних ссылок",
+        "linkContextIntro": "Анкор в скобках и до 15 слов с каждой стороны, как их записал краулер. В старых запусках контекста нет. Показано строк:"
       },
       "cols": {
         "colItem": "Элемент",
@@ -6028,7 +6034,9 @@
         "colResult": "Результат",
         "colZone": "Зона",
         "colShare": "Доля",
-        "colWeight": "Вес SPRS"
+        "colWeight": "Вес SPRS",
+        "colContext": "Контекст (±15 слов)",
+        "colSection": "Заголовок раздела"
       },
       "focus": {
         "title": "Тематический фокус сайта",

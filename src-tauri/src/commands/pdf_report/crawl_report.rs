@@ -27,6 +27,7 @@ mod sec_dupes;
 mod sec_extra;
 mod sec_focus;
 mod sec_http;
+mod sec_link_context;
 mod sec_link_zones;
 mod sec_links;
 mod sec_media;

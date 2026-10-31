@@ -72,3 +72,5 @@ pub const COL_RESULT: &str = "crawl.cols.colResult";
 pub const COL_ZONE: &str = "crawl.cols.colZone";
 pub const COL_SHARE: &str = "crawl.cols.colShare";
 pub const COL_WEIGHT: &str = "crawl.cols.colWeight";
+pub const COL_CONTEXT: &str = "crawl.cols.colContext";
+pub const COL_SECTION: &str = "crawl.cols.colSection";

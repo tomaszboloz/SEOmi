@@ -456,7 +456,9 @@
       "backlinkNoProfile": "DataForSEO returned no backlink profile for this target.",
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
-      "crawlerNoPages": "Crawler returned no pages for this target."
+      "crawlerNoPages": "Crawler returned no pages for this target.",
+      "crawlLogRecoveryFailed": "Le journal d'événements du crawl n'a pas pu être lu ; les pages terminées avant le redémarrage n'ont pas été récupérées : {{reason}}",
+      "crawlEventLogWriteFailed": "Le crawl est terminé, mais son journal de reprise n'a pas pu être écrit ({{reason}}). Si l'app s'était fermée en cours de crawl, la progression n'aurait pas pu être récupérée."
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",
@@ -2651,7 +2653,9 @@
       "path-key-collision": "clé de chemin dupliquée",
       "url-key-collision": "clé URL dupliquée"
     },
-    "pageLimitUnlimited": "Sans limite"
+    "pageLimitUnlimited": "Sans limite",
+    "interruptedRecovered": "{{pages}} pages terminées avant la fermeture de l'app ont été récupérées depuis le journal du crawl et sont conservées à la reprise.",
+    "interruptedRecoveredInvalid": "{{count}} pages journalisées n'ont pas pu être lues et seront recrawlées."
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -5952,7 +5956,9 @@
         "zoneNav": "Navigation / fil d'Ariane",
         "zoneFooter": "Barre latérale / pied de page",
         "zoneUnknown": "Inconnue (ancien crawl)",
-        "zoneNeutral": "neutre (1)"
+        "zoneNeutral": "neutre (1)",
+        "tLinkContext": "Contexte des liens internes",
+        "linkContextIntro": "Ancre entre crochets avec jusqu'à 15 mots de chaque côté, tels qu'enregistrés par le crawler. Les anciens runs n'ont pas de contexte. Lignes affichées :"
       },
       "cols": {
         "colItem": "Élément",
@@ -6028,7 +6034,9 @@
         "colResult": "Résultat",
         "colZone": "Zone",
         "colShare": "Part",
-        "colWeight": "Poids SPRS"
+        "colWeight": "Poids SPRS",
+        "colContext": "Contexte (±15 mots)",
+        "colSection": "Titre de section"
       },
       "focus": {
         "title": "Site Focus",

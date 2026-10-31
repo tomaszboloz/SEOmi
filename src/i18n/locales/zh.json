@@ -456,7 +456,9 @@
       "backlinkNoProfile": "DataForSEO returned no backlink profile for this target.",
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
-      "crawlerNoPages": "Crawler returned no pages for this target."
+      "crawlerNoPages": "Crawler returned no pages for this target.",
+      "crawlLogRecoveryFailed": "无法读取抓取事件日志，因此未恢复重启前已完成的页面：{{reason}}",
+      "crawlEventLogWriteFailed": "抓取已完成，但无法写入其恢复日志（{{reason}}）。如果应用在抓取中途关闭，进度将无法恢复。"
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",
@@ -2651,7 +2653,9 @@
       "path-key-collision": "路径键重复",
       "url-key-collision": "URL 键重复"
     },
-    "pageLimitUnlimited": "不限制"
+    "pageLimitUnlimited": "不限制",
+    "interruptedRecovered": "已从抓取日志恢复应用关闭前完成的 {{pages}} 个页面，继续时会保留。",
+    "interruptedRecoveredInvalid": "有 {{count}} 个已记录页面无法读取，将重新抓取。"
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -5952,7 +5956,9 @@
         "zoneNav": "导航 / 面包屑",
         "zoneFooter": "侧边栏 / 页脚",
         "zoneUnknown": "未知（旧抓取）",
-        "zoneNeutral": "中性 (1)"
+        "zoneNeutral": "中性 (1)",
+        "tLinkContext": "内部链接上下文",
+        "linkContextIntro": "方括号内为锚文本，两侧各最多 15 个词，由爬虫记录。旧的运行没有上下文。显示行数："
       },
       "cols": {
         "colItem": "项目",
@@ -6028,7 +6034,9 @@
         "colResult": "结果",
         "colZone": "区域",
         "colShare": "占比",
-        "colWeight": "SPRS 权重"
+        "colWeight": "SPRS 权重",
+        "colContext": "上下文（±15 词）",
+        "colSection": "章节标题"
       },
       "focus": {
         "title": "站点聚焦度",

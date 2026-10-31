@@ -29,8 +29,9 @@ export const beginToolRequest = (kind: string): string => {
 
 export const isLatestToolRequest = (kind: string, token: string): boolean => toolRequestTokens.get(kind) === token;
 
-export const formatCrawlPersistenceNotice = (saveResult: { prunedRuns: number; compactedRuns?: number }, retainedRuns: number): string | null => {
+export const formatCrawlPersistenceNotice = (saveResult: { prunedRuns: number; compactedRuns?: number }, retainedRuns: number, eventLogError?: string): string | null => {
   const messages: string[] = [];
+  if (eventLogError) messages.push(i18n.t('runtimeErrors.tools.crawlEventLogWriteFailed', { reason: eventLogError }));
   if (saveResult.prunedRuns > 0) {
     messages.push(i18n.t('runtimeErrors.tools.quotaLimit', { retained: retainedRuns, removed: saveResult.prunedRuns }));
   }

@@ -456,7 +456,9 @@
       "backlinkNoProfile": "DataForSEO nie zwróciło profilu linków dla tego celu.",
       "backlinkLoad": "Połącz DataForSEO w Ustawieniach, aby wczytać więcej linków.",
       "backlinkAnchorLoad": "Połącz DataForSEO w Ustawieniach, aby wczytać więcej anchorów.",
-      "crawlerNoPages": "Crawler nie zwrócił stron dla tego celu."
+      "crawlerNoPages": "Crawler nie zwrócił stron dla tego celu.",
+      "crawlLogRecoveryFailed": "Nie udało się odczytać dziennika zdarzeń crawla, więc strony ukończone przed restartem nie zostały odzyskane: {{reason}}",
+      "crawlEventLogWriteFailed": "Crawl się zakończył, ale nie udało się zapisać jego dziennika do wznowienia ({{reason}}). Gdyby aplikacja zamknęła się w trakcie, postępu nie dałoby się odzyskać."
     },
     "semanticAudit": {
       "actionUnmapped": "Sprawdź topical plan i przypisz crawlowany URL albo potwierdź, że temat jest jeszcze planowany.",
@@ -2651,7 +2653,9 @@
       "path-key-collision": "zduplikowany klucz ścieżki",
       "url-key-collision": "zduplikowany klucz URL"
     },
-    "pageLimitUnlimited": "Bez limitu"
+    "pageLimitUnlimited": "Bez limitu",
+    "interruptedRecovered": "Odzyskano z dziennika crawla {{pages}} stron ukończonych przed zamknięciem aplikacji; wznowienie je zachowa.",
+    "interruptedRecoveredInvalid": "Nie udało się odczytać {{count}} zapisanych stron; zostaną pobrane ponownie."
   },
   "mcp": {
     "badge": "Workflowy agentów AI",
@@ -5952,7 +5956,9 @@
         "zoneNav": "Nawigacja / okruszki",
         "zoneFooter": "Pasek boczny / stopka",
         "zoneUnknown": "Nieznana (starszy przebieg)",
-        "zoneNeutral": "neutralna (1)"
+        "zoneNeutral": "neutralna (1)",
+        "tLinkContext": "Kontekst linków wewnętrznych",
+        "linkContextIntro": "Anchor w nawiasach z maksymalnie 15 słowami z każdej strony, tak jak zapisał je crawler. Starsze runy nie mają kontekstu. Pokazane wiersze:"
       },
       "cols": {
         "colItem": "Element",
@@ -6028,7 +6034,9 @@
         "colResult": "Wynik",
         "colZone": "Strefa",
         "colShare": "Udział",
-        "colWeight": "Waga SPRS"
+        "colWeight": "Waga SPRS",
+        "colContext": "Kontekst (±15 słów)",
+        "colSection": "Nagłówek sekcji"
       },
       "focus": {
         "title": "Site Focus",

@@ -50,7 +50,9 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
       resumeCompletedUrls: undefined,
       resumeFrontierUrls: undefined,
     };
+    const runId = createId('crawl');
     const interruptedCrawl: InterruptedCrawl = {
+      runId,
       url: targetUrl,
       limit: Math.max(1, Math.min(MAX_CRAWL_LIMIT, Math.floor(maxLimit))),
       config: persistedCrawlConfig,
@@ -59,7 +61,6 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
       updatedAt: new Date().toISOString(),
     };
 
-    const runId = createId('crawl');
     const isCurrentCrawlRun = () => activeProjectId() === projectIdAtStart && get().activeCrawlRunId === runId;
     if (projectIdAtStart) activeCrawlRuns.set(projectIdAtStart, runId);
     let unlisten: (() => void) | undefined;
@@ -104,7 +105,7 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
             removeStorage(crawlResultKey(projectId));
             removeStorage(crawlRunsKey(projectId));
           }
-          if (activeProjectId() === projectId && activeCrawlRuns.get(projectId) === runId) set({ crawlRuns: retainedRuns, crawlPersistenceError: null, crawlPersistenceNotice: formatCrawlPersistenceNotice(saveResult, retainedRuns.length), crawlPersistenceCompacted: Boolean(saveResult.compactedRuns) });
+          if (activeProjectId() === projectId && activeCrawlRuns.get(projectId) === runId) set({ crawlRuns: retainedRuns, crawlPersistenceError: null, crawlPersistenceNotice: formatCrawlPersistenceNotice(saveResult, retainedRuns.length, freshCrawlResult.event_log_error), crawlPersistenceCompacted: Boolean(saveResult.compactedRuns) });
         } catch (error) {
           if (activeProjectId() === projectId && activeCrawlRuns.get(projectId) === runId) set({ crawlPersistenceError: isStorageQuotaError(error) ? formatCrawlRuntimeError(error) : error instanceof Error ? error.message : i18n.t('runtimeErrors.tools.crawlHistorySaveFailed') });
         }
