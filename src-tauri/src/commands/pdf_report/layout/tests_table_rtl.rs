@@ -34,3 +34,25 @@ fn arabic_tables_render_with_mirrored_columns() {
     doc.table(&columns, &rows);
     assert!(doc.page_count() >= 1);
 }
+
+fn plain() -> super::text::Style {
+    super::text::Style::new(8.0, super::color::TEXT, false)
+}
+
+#[test]
+fn latin_cell_text_starts_at_the_left_padding() {
+    let mut doc = Doc::new(chrome());
+    doc.cell_text(50.0, 100.0, 40.0, plain(), "abc");
+    let mut expected = Doc::new(chrome());
+    expected.text(50.0 + super::table::PAD_X, 40.0, plain(), "abc");
+    assert_eq!(doc.cur, expected.cur);
+}
+
+#[test]
+fn arabic_cell_text_ends_at_the_right_padding() {
+    let mut doc = arabic_doc();
+    doc.cell_text(50.0, 100.0, 40.0, plain(), "abc");
+    let mut expected = arabic_doc();
+    expected.text_right(150.0 - super::table::PAD_X, 40.0, plain(), "abc");
+    assert_eq!(doc.cur, expected.cur);
+}
