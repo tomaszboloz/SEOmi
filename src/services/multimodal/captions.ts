@@ -29,7 +29,14 @@ export const parseTimecode = (value: string): number | null => {
   return ((Number(hours) * 60 + Number(minutes)) * 60 + Number(seconds)) * 1000 + Number(millis);
 };
 
-const stripMarkup = (text: string): string => text.replace(/<[^>]*>/gu, '').replace(/&amp;/gu, '&').replace(/&lt;/gu, '<').replace(/&gt;/gu, '>').replace(/\s+/gu, ' ').trim();
+const ENTITIES: Record<string, string> = { '&amp;': '&', '&lt;': '<', '&gt;': '>' };
+
+/** Decode once (no double unescape), strip tags until stable, then drop any stray angle bracket. */
+const stripMarkup = (text: string): string => {
+  let out = text.replace(/&(?:amp|lt|gt);/gu, (entity) => ENTITIES[entity]);
+  for (let previous = ''; previous !== out;) { previous = out; out = out.replace(/<[^<>]*>/gu, ''); }
+  return out.replace(/[<>]/gu, '').replace(/\s+/gu, ' ').trim();
+};
 
 export interface CaptionSource { url: string; text: string; language: string | null; analyzedAt: string }
 

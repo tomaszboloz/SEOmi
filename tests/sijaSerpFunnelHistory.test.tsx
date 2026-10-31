@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import i18n from '@/i18n';
 import { parseFeatures } from '@/services/sija/features';
@@ -73,7 +73,7 @@ describe('SIJA history (#69 GEM-69-08)', () => {
     expect(screen.getByText(/TOP intent: How-to \(1 of 1 rendered pages\)\. Your page matches it/)).toBeTruthy();
     expect(screen.getByText('Rendered TOP pages (1)')).toBeTruthy();
     expect(loadSijaHistory('p1', 'kawa')).toHaveLength(2);
-    expect(phraseInsightsFor('https://shop.example/')?.sija).toMatchObject({ serpIntent: 'how-to', match: 'match' });
+    await waitFor(() => expect(phraseInsightsFor('https://shop.example/')?.sija).toMatchObject({ serpIntent: 'how-to', match: 'match' }));
     spy.mockRestore();
   });
 });
