@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { expect, it } from 'vitest';
-import { computeSprs, simulateWhatIfRun } from '@/services/semanticGraph/sprs';
+import { computeSprs, simulateWhatIfRun, sprsTolerance } from '@/services/semanticGraph/sprs';
 
 /** GEM-71-10: a sparse 20k-page / 200k-link graph stays well within interactive limits. */
 it('solves a large sparse graph and a warm-started What-If', () => {
@@ -17,3 +17,9 @@ it('solves a large sparse graph and a warm-started What-If', () => {
   expect(run.issues).toEqual([]);
   expect(cold).toBeLessThan(15_000);
 }, 60_000);
+
+it('sprsTolerance keeps 1e-6 up to 10k pages and tightens above', () => {
+  expect(sprsTolerance(0)).toBe(1e-6);
+  expect(sprsTolerance(10_000)).toBe(1e-6);
+  expect(sprsTolerance(100_000)).toBeCloseTo(1e-7, 12);
+});

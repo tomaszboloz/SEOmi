@@ -28,11 +28,15 @@ pub struct Doc {
     pub(super) cur: String,
     pages: Vec<String>,
     chrome: Chrome,
+    /// Right-to-left report language: tables mirror column order and alignment.
+    pub(super) rtl: bool,
 }
 
 impl Doc {
     pub fn new(chrome: Chrome) -> Self {
+        let rtl = chrome.title.chars().any(FontSet::is_arabic_character);
         let mut doc = Self {
+            rtl,
             fonts: FontSet::new(),
             y: TOP,
             cur: String::new(),
