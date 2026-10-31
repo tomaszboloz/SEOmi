@@ -2,7 +2,7 @@ use super::color::{Rgb, BRAND, PANEL, RULE, ZEBRA};
 use super::doc::{Doc, CONTENT_W, MARGIN, TOP};
 use super::text::Style;
 
-const PAD_X: f32 = 5.0;
+pub(super) const PAD_X: f32 = 5.0;
 const PAD_Y: f32 = 3.5;
 const HEAD_H: f32 = 17.0;
 const HEAD: Style = Style::new(8.0, super::color::TEXT, true);
@@ -85,10 +85,11 @@ impl Doc {
 
     fn table_header(&mut self, columns: &[Column], widths: &[f32]) {
         self.rect(MARGIN, self.y, CONTENT_W, HEAD_H, PANEL);
-        let mut x = MARGIN;
+        let mut offset = 0.0;
         for (column, width) in columns.iter().zip(widths) {
-            self.text(x + PAD_X, self.y + 11.5, HEAD, &column.title);
-            x += width;
+            let left = self.column_left(offset, *width);
+            self.cell_text(left, *width, self.y + 11.5, HEAD, &column.title);
+            offset += width;
         }
         self.hline(MARGIN, MARGIN + CONTENT_W, self.y + HEAD_H, BRAND, 1.0);
         self.y += HEAD_H + 0.8;
@@ -126,8 +127,9 @@ impl Doc {
         if index % 2 == 1 {
             self.rect(MARGIN, self.y, CONTENT_W, height, ZEBRA);
         }
-        let mut x = MARGIN;
+        let mut offset = 0.0;
         for ((cell, cell_lines), width) in row.iter().zip(lines).zip(widths) {
+            let x = self.column_left(offset, *width);
             if let Some(fill) = cell.fill {
                 self.rect(x, self.y, *width, height, fill);
             }
@@ -138,9 +140,9 @@ impl Doc {
                 .enumerate()
             {
                 let baseline = self.y + PAD_Y + offset as f32 * lead + cell.style.size + 1.0;
-                self.text(x + PAD_X, baseline, cell.style, line);
+                self.cell_text(x, *width, baseline, cell.style, line);
             }
-            x += width;
+            offset += width;
         }
         self.hline(MARGIN, MARGIN + CONTENT_W, self.y + height, RULE, 0.4);
         self.y += height;
