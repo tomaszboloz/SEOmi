@@ -9020,6 +9020,7 @@
       "search": "تخمين بحث",
       "none": "غير مطابق",
       "error": "فشل البحث"
-    }
+    },
+    "correctPlaceholder": "Q123 / none"
   }
 }

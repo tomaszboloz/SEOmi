@@ -9020,6 +9020,7 @@
       "search": "搜索推测",
       "none": "未匹配",
       "error": "查询失败"
-    }
+    },
+    "correctPlaceholder": "Q123 / none"
   }
 }

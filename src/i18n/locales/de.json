@@ -9020,6 +9020,7 @@
       "search": "Suchvermutung",
       "none": "nicht zugeordnet",
       "error": "Abfrage fehlgeschlagen"
-    }
+    },
+    "correctPlaceholder": "Q123 / none"
   }
 }

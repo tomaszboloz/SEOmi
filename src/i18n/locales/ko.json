@@ -9020,6 +9020,7 @@
       "search": "검색 추정",
       "none": "미매칭",
       "error": "조회 실패"
-    }
+    },
+    "correctPlaceholder": "Q123 / none"
   }
 }

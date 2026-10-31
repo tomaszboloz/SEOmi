@@ -9020,6 +9020,7 @@
       "search": "z wyszukiwania",
       "none": "niedopasowane",
       "error": "błąd wyszukiwania"
-    }
+    },
+    "correctPlaceholder": "Q123 / none"
   }
 }

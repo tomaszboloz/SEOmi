@@ -1,10 +1,10 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import i18n from '@/i18n';
 import { CrawlAuthorityTab } from '@/components/Domain/crawlResults/authority/CrawlAuthorityTab';
 import { readAuthorityHistory, readTaxonomy, readTopicalBenchmark, writeTaxonomy } from '@/services/topicalAuthorityMonitoring';
 import type { ReferenceOutcome } from '@/services/topicalAuthorityReference';
-import { COMPETITORS, OWN_HOST, ownSite, referenceTaxonomy } from './authorityFixtures';
+import { COMPETITORS, NOW, OWN_HOST, ownSite, referenceTaxonomy } from './authorityFixtures';
 import { createCrawlResultFixture, createCrawlRunFixture } from './fixtures/crawl';
 
 vi.mock('@/services/desktopNotifications/delivery', () => ({ sendProjectNotification: vi.fn().mockResolvedValue(false) }));
@@ -16,6 +16,9 @@ const defaultTaxonomy = referenceTaxonomy(pages)!;
 const okOutcome = (): ReferenceOutcome => ({ status: 'ok', taxonomy: structuredClone(defaultTaxonomy), competitors: COMPETITORS });
 
 beforeEach(async () => { localStorage.clear(); await i18n.changeLanguage('en'); });
+// Fixture maps are built at NOW; pin the clock so the 30-day map TTL does not expire them as the calendar moves on.
+beforeEach(() => { vi.useFakeTimers({ toFake: ['Date'] }); vi.setSystemTime(new Date(NOW)); });
+afterEach(() => { vi.useRealTimers(); });
 
 describe('Authority tab', () => {
   it('shows the partial analysis and an honest empty state without a reference map', () => {

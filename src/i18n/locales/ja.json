@@ -9020,6 +9020,7 @@
       "search": "検索推定",
       "none": "未照合",
       "error": "検索失敗"
-    }
+    },
+    "correctPlaceholder": "Q123 / none"
   }
 }

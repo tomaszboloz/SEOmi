@@ -12,6 +12,9 @@ import { NOW, OWN_HOST, ownReport, ownSite, referenceTaxonomy } from './authorit
 vi.mock('@/services/tauri', () => ({ invokeTauriCommand: vi.fn() }));
 vi.mock('@/services/download', () => ({ downloadBlob: vi.fn() }));
 beforeEach(() => localStorage.clear());
+// Fixture maps are built at NOW; pin the clock so the 30-day map TTL does not expire them as the calendar moves on.
+beforeEach(() => { vi.useFakeTimers({ toFake: ['Date'] }); vi.setSystemTime(new Date(NOW)); });
+afterEach(() => { vi.useRealTimers(); });
 afterEach(() => vi.mocked(invokeTauriCommand).mockReset());
 
 const START = `https://${OWN_HOST}/`;

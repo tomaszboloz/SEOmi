@@ -43,7 +43,7 @@ export const EntityParityPanel = ({ links, gaps, pending, running, onMatch, onCo
             {link.qid ? <a className="underline" href={wikidataUrl(link.qid)} target="_blank" rel="noopener noreferrer">{link.qid}</a> : '—'}{' '}
             <span className="text-slate-500">{t(`entityParity.confidence.${link.confidence}`)}</span>
             <input className="ms-1 w-24 border border-slate-600 bg-transparent px-1" defaultValue={link.confidence === 'manual' ? link.qid ?? 'none' : ''}
-              aria-label={t('entityParity.correctLabel', { topic: link.label, language: link.language })} placeholder="Q123 / none"
+              aria-label={t('entityParity.correctLabel', { topic: link.label, language: link.language })} placeholder={t('entityParity.correctPlaceholder')}
               onBlur={(event) => onCorrect(link, event.currentTarget.value)} />
           </td>
         </tr>)}</tbody>

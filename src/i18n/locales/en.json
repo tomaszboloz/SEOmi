@@ -9020,6 +9020,7 @@
       "search": "search guess",
       "none": "not matched",
       "error": "lookup failed"
-    }
+    },
+    "correctPlaceholder": "Q123 / none"
   }
 }
