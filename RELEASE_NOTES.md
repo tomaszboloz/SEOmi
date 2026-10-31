@@ -21,7 +21,7 @@
 
 ## Removed
 
-- `docs/SEMANTIC_SUITE_STATUS.md` is no longer tracked (`docs/` is ignored).
+- `docs/SEMANTIC_SUITE_STATUS.md` is no longer tracked (`docs/` is ignored), together with its test.
 
 # SEOmi 0.8.0 — release notes
 
