@@ -35,13 +35,14 @@ test('audit and backlink registries expose schemas and invoke supplied dependenc
   registerAuditTools(auditRegistry, async (...args) => { auditCalls.push(['audit', args]); return { kind: 'audit' }; }, async (...args) => { auditCalls.push(['crawl', args]); return { kind: 'crawl' }; });
   assertSchemas(auditRegistry.tools, {
     seomi_audit_url: ['url', 'timeout_ms', 'scope_host', 'allow_subdomains', 'scope_path', 'include_patterns', 'exclude_patterns', 'include_link_details'],
-    seomi_crawl_site: ['start_url', 'max_pages', 'max_depth', 'timeout_ms', 'scope_host', 'allow_subdomains', 'scope_path', 'include_patterns', 'exclude_patterns'],
+    seomi_crawl_site: ['start_url', 'max_pages', 'max_depth', 'timeout_ms', 'scope_host', 'allow_subdomains', 'scope_path', 'include_patterns', 'exclude_patterns', 'include_link_details'],
   });
   assert.deepEqual(await run(auditRegistry.tools.get('seomi_audit_url'), { url: 'https://example.test', timeout_ms: 1200, allow_subdomains: true, include_patterns: [], exclude_patterns: [], include_link_details: true }), { kind: 'audit' });
-  assert.deepEqual(await run(auditRegistry.tools.get('seomi_crawl_site'), { start_url: 'https://example.test', max_pages: 2, max_depth: 1, timeout_ms: 1200, allow_subdomains: false, include_patterns: [], exclude_patterns: [] }), { kind: 'crawl' });
+  assert.deepEqual(await run(auditRegistry.tools.get('seomi_crawl_site'), { start_url: 'https://example.test', max_pages: 2, max_depth: 1, timeout_ms: 1200, allow_subdomains: false, include_patterns: [], exclude_patterns: [], include_link_details: true }), { kind: 'crawl' });
   assert.equal(auditCalls.length, 2);
   assert.equal(auditCalls[0][1][1], 1200);
   assert.equal(auditCalls[0][1][2].includeLinkDetails, true);
+  assert.equal(auditCalls[1][1][4].includeLinkDetails, true);
 
   const backlinkCalls = [];
   const backlinkRegistry = registry();

@@ -8385,6 +8385,10 @@
     "trust": {
       "title": "Score de confiance en baisse",
       "body": "Le score de confiance E-E-A-T est passé de {{from}} à {{to}} ({{points}} points)."
+    },
+    "igos": {
+      "title": "IGOS en baisse",
+      "body": "Le score de gain d'information de « {{phrase}} » est passé de {{from}} à {{to}} ({{points}} points) avec les mêmes pages TOP et le même modèle."
     }
   },
   "sprsUi": {

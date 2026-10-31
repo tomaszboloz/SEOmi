@@ -54,9 +54,10 @@ export function registerAuditTools(
       scope_path: z.string().trim().max(2048).optional(),
       include_patterns: z.array(z.string().max(200)).max(20).default([]),
       exclude_patterns: z.array(z.string().max(200)).max(20).default([]),
+      include_link_details: z.boolean().default(false),
     },
     annotations: READ_ONLY_HINTS,
-  }, async ({ start_url, max_pages, max_depth, timeout_ms, scope_host, allow_subdomains, scope_path, include_patterns, exclude_patterns }) => {
+  }, async ({ start_url, max_pages, max_depth, timeout_ms, scope_host, allow_subdomains, scope_path, include_patterns, exclude_patterns, include_link_details }) => {
     try {
       return textResult(await crawl(start_url, timeout_ms, max_pages, max_depth, {
         scopeHost: scope_host,
@@ -64,6 +65,7 @@ export function registerAuditTools(
         scopePath: scope_path,
         includePatterns: include_patterns,
         excludePatterns: exclude_patterns,
+        includeLinkDetails: include_link_details,
       }) as unknown as Json);
     } catch (error) {
       return textResult({ error: error instanceof Error ? error.message : String(error) }, true);

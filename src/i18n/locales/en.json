@@ -8385,6 +8385,10 @@
     "trust": {
       "title": "Trust score dropped",
       "body": "The E-E-A-T trust score fell from {{from}} to {{to}} ({{points}} points)."
+    },
+    "igos": {
+      "title": "IGOS dropped",
+      "body": "The information gain score of \"{{phrase}}\" fell from {{from}} to {{to}} ({{points}} points) on the same TOP pages and model."
     }
   },
   "sprsUi": {

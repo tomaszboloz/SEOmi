@@ -19,7 +19,10 @@ export const SPRS_PROFILE = {
   leakShare: 0.5,
   /** Weight of a link whose zone is unknown or unweighted (`main` without render); counted, never hidden. */
   unweightedZoneWeight: 1,
+  /** Upper bound of the convergence tolerance; large graphs use a tighter one (#71). */
   tolerance: 1e-6,
+  /** Tolerance never exceeds this share of the uniform score 1/n, so scores stay meaningful on big graphs. */
+  toleranceUniformShare: 0.01,
   maxIterations: 150,
 } as const;
 
@@ -61,11 +64,15 @@ export const knownSimilarity = (edge: SprsEdge): number | undefined =>
 /** Self-links are dropped (reason: they pass no authority to other pages). */
 const usable = (edges: SprsEdge[]): SprsEdge[] => edges.filter((edge) => !isSelf(edge));
 
+/** min(1e-6, 1% of 1/n): unchanged below 10k pages, scales down above. */
+export const sprsTolerance = (nodeCount: number): number =>
+  Math.min(SPRS_PROFILE.tolerance, SPRS_PROFILE.toleranceUniformShare / Math.max(nodeCount, 1));
+
 export const computeSprs = (nodes: PageRankNode[], edges: SprsEdge[], initialRank?: ReadonlyMap<string, number>): SprsReport => {
   if (!nodes.length) return EMPTY;
   const kept = usable(edges);
   const similarityWeighting = applySimilarityWeights(kept, SPRS_PROFILE.similarityFloor);
-  const rank = calculatePageRank(nodes, similarityWeighting.edges, { tolerance: SPRS_PROFILE.tolerance, maxIterations: SPRS_PROFILE.maxIterations, initialRank });
+  const rank = calculatePageRank(nodes, similarityWeighting.edges, { tolerance: sprsTolerance(nodes.length), maxIterations: SPRS_PROFILE.maxIterations, initialRank });
   // A reduce, not Math.max(...spread): spreading 100k+ scores overflows the call stack (#71 GEM-71-10).
   const max = rank.scores.reduce((best, row) => Math.max(best, row.score), 0);
   const uniform = 1 / nodes.length;

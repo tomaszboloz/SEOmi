@@ -6,7 +6,7 @@ use ttf_parser::GlyphId;
 mod font_bidi;
 
 impl FontSet {
-    pub(super) fn is_arabic_character(character: char) -> bool {
+    pub(in crate::commands::pdf_report) fn is_arabic_character(character: char) -> bool {
         matches!(u32::from(character), 0x600..=0x6ff | 0x750..=0x77f | 0x8a0..=0x8ff | 0xfb50..=0xfdff | 0xfe70..=0xfeff)
     }
 
