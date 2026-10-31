@@ -27,3 +27,13 @@ it('counts links between classified stages and skips the rest', () => {
   expect(report.transitions.MOFU.TOFU).toBe(1);
   expect(report).toMatchObject({ classifiedPages: 2, unclassifiedPages: 1, skippedLinks: 1 });
 });
+
+it('treats a missing title as empty heading text', () => {
+  const noTitle = { ...page('https://a.test/', 't', { ...none, tables: 1 }), title: null };
+  expect(featuresFromCrawlPage(noTitle)).toMatchObject({ headingText: '', headings: 4 });
+});
+
+it('reports zero links for a page without semantic_links', () => {
+  const { semantic_links: _omitted, ...bare } = page('https://a.test/how', 'How to bake', { ...none, ordered_lists: 1 });
+  expect(funnelTransitions([bare])).toMatchObject({ classifiedPages: 1, unclassifiedPages: 0, skippedLinks: 0 });
+});
