@@ -1,5 +1,6 @@
 //! "AI Overviews & RAG readiness" section: score card, KPIs and the weakest pages/passages.
 
+use super::aio_inspector::inspector_table;
 use super::aio_tables::{pages_table, passages_table, percent};
 use super::data::{list, num};
 use super::focus_text::{arg, coded};
@@ -90,6 +91,9 @@ impl Doc {
         self.data_table(&pages_table(aio));
         if !list(aio, "passages").is_empty() {
             self.data_table(&passages_table(aio));
+        }
+        if let Some(table) = inspector_table(aio) {
+            self.data_table(&table);
         }
     }
 }

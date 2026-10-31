@@ -5,3 +5,5 @@ export { HSS_PROFILE, type HssProfile } from './profile';
 export { comparableHss, simulateHss, type HssWhatIf } from './whatIf';
 export { HSS_MODULES } from './types';
 export type { HssComponent, HssComponentStatus, HssModule, HssModuleInput, HssReport, HssStatus } from './types';
+export { HSS_HISTORY_LIMIT, hssSnapshot, loadHssHistory, recordHssRun, type HssSnapshot, type HssSnapshotValue } from './history';
+export { hssTrend, type HssTrend } from './trend';

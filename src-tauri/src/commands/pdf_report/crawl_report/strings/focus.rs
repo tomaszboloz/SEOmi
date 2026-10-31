@@ -65,6 +65,10 @@ keys! {
     HIDDEN_INTRO => "crawl.focus.hiddenIntro",
     COL_TERM => "crawl.focus.colTerm",
     COL_REASON => "crawl.focus.colReason",
+    T_SEGMENTS => "crawl.focus.tSegments",
+    SEGMENTS_INTRO => "crawl.focus.segmentsIntro",
+    COL_SEGMENT => "crawl.focus.colSegment",
+    COL_CORE => "crawl.focus.colCore",
 }
 
 pub const BAND: &str = "crawl.focus.band";

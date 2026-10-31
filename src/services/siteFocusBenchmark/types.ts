@@ -5,7 +5,8 @@ import type { SerpEvidence, SerpEvidenceSummary } from '@/services/serpSnapshot'
 
 export interface SerpHit { rank: number; url: string; domain: string }
 /** `evidence` keeps the full SERP provenance (#85/#86); absent for custom fetchers. */
-export interface SerpResponse { source: string; hits: SerpHit[]; evidence?: SerpEvidence }
+/** `questions` holds real People Also Ask questions; only present when the provider returned the PAA block. */
+export interface SerpResponse { source: string; hits: SerpHit[]; evidence?: SerpEvidence; questions?: string[] }
 
 export interface CrawlRequest { url: string; maxPages: number; signal?: AbortSignal; onPages?: (done: number) => void }
 export interface CrawlResponse { pages: FocusPage[]; cancelled?: boolean }

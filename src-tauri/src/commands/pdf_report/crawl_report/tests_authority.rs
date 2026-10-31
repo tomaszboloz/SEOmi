@@ -1,7 +1,8 @@
 use super::fixture::synthetic;
 use super::sec_authority::present;
 use super::strings::authority::{
-    self as a, ALL, LEVEL, LEVELS, QUADRANT, QUADRANTS, REC, RECS, WARNING, WARNINGS,
+    self as a, ALL, DEPTH_PART, DEPTH_PARTS, LEVEL, LEVELS, QUADRANT, QUADRANTS, REC, RECS,
+    WARNING, WARNINGS,
 };
 use super::tests::text_of;
 use crate::commands::pdf_report::labels::default_keys;
@@ -76,6 +77,7 @@ fn every_authority_label_key_exists_in_english() {
         (QUADRANT, QUADRANTS.to_vec()),
         (WARNING, WARNINGS.to_vec()),
         (LEVEL, LEVELS.to_vec()),
+        (DEPTH_PART, DEPTH_PARTS.to_vec()),
         (REC, RECS.iter().map(|(code, _)| *code).collect()),
     ];
     for (prefix, codes) in coded {
@@ -87,4 +89,22 @@ fn every_authority_label_key_exists_in_english() {
         .collect();
     assert!(missing.is_empty(), "missing in en.json: {missing:?}");
     assert_eq!(a::T_BENCH, "crawl.authority.tBench");
+}
+
+#[test]
+fn notes_state_the_paa_source_and_partial_depth_like_the_ui() {
+    let mut value = authority();
+    value["reference"]["paa"] = json!(7);
+    value["depth_inputs"] =
+        json!({"status": "partial", "rows": 5, "missing": ["questions", "gain"]});
+    let text = text_of(&with_authority(value.clone()));
+    assert!(text.contains("7 People Also Ask questions from the SERP were used."));
+    assert!(text.contains(
+        "user questions (PAA), information gain could not be measured for some of the 5"
+    ));
+    value["reference"]["paa"] = json!(0);
+    value["depth_inputs"] = json!({"status": "complete", "rows": 5, "missing": []});
+    let text = text_of(&with_authority(value));
+    assert!(text.contains("No People Also Ask source"));
+    assert!(!text.contains("could not be measured"));
 }

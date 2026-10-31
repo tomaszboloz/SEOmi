@@ -456,7 +456,9 @@
       "backlinkNoProfile": "DataForSEO returned no backlink profile for this target.",
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
-      "crawlerNoPages": "Crawler returned no pages for this target."
+      "crawlerNoPages": "Crawler returned no pages for this target.",
+      "crawlLogRecoveryFailed": "无法读取抓取事件日志，因此未恢复重启前已完成的页面：{{reason}}",
+      "crawlEventLogWriteFailed": "抓取已完成，但无法写入其恢复日志（{{reason}}）。如果应用在抓取中途关闭，进度将无法恢复。"
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",
@@ -2651,7 +2653,9 @@
       "path-key-collision": "路径键重复",
       "url-key-collision": "URL 键重复"
     },
-    "pageLimitUnlimited": "不限制"
+    "pageLimitUnlimited": "不限制",
+    "interruptedRecovered": "已从抓取日志恢复应用关闭前完成的 {{pages}} 个页面，继续时会保留。",
+    "interruptedRecoveredInvalid": "有 {{count}} 个已记录页面无法读取，将重新抓取。"
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -5683,6 +5687,81 @@
         "resource": "不安全的资源：{{0}}",
         "response": "服务器响应：HTTP {{1}}，耗时 {{0}} ms",
         "hop": "重定向跳转：来自 {{1}} 的 HTTP {{0}}"
+      },
+      "phrase": {
+        "igosTitle": "“{{0}}”的信息增益（IGOS）",
+        "sijaTitle": "“{{0}}”的搜索意图（SIJA）",
+        "score": "得分",
+        "baseline": "比较的 TOP 页面",
+        "ofTotal": "{{1}} 个中的 {{0}} 个",
+        "components": "组成部分（NEFR / EDSI / FHEM / SDD）",
+        "coverage": "基线覆盖率",
+        "zones": "段落区域",
+        "novel": "切题的新实体",
+        "vectors": "向量（提供方 / 模型，运行）",
+        "limits": "局限",
+        "pageIntent": "页面意图",
+        "serpIntent": "TOP 意图（多数已渲染页面）",
+        "match": "意图匹配",
+        "matchValue": {
+          "match": "匹配",
+          "mismatch": "不匹配",
+          "unknown": "未知"
+        },
+        "ssas": "SSAS（与 TOP 的结构对比）",
+        "funnel": "已渲染 TOP 页面的漏斗阶段",
+        "funnelValue": "已渲染 {{1}} 个中的 {{0}} 个：TOFU {{2}} · MOFU {{3}} · BOFU {{4}}",
+        "gaps": "缺少的格式",
+        "none": "无",
+        "echoAdvice": "用自己的话、数据或经验改写 {{0}} 个回声段落。",
+        "driftAdvice": "将 {{0}} 个偏题段落拉回主题或删除；偏题文字不会提高 IGOS。",
+        "method": "SEOmi 启发式指标，不是 Google 指标。不复制竞争对手文本。",
+        "methodLabel": "方法",
+        "noScore": "无分数",
+        "evidenceAdvice": "请添加带单位或来源的具体数据；未检测到任何数据。",
+        "inconclusive": "SSAS 无法判定：仅有 {{0}} 个真实 TOP 页面，至少需要 3 个。",
+        "component": {
+          "nefr": "新实体",
+          "edsi": "证据密度",
+          "fhem": "经验标记",
+          "sdd": "子主题分布"
+        },
+        "zone": {
+          "echo": "回声",
+          "gain": "增益",
+          "drift": "偏移",
+          "neutral": "中性"
+        },
+        "limit": {
+          "no-comparable-documents": "没有可比较的竞品文档。",
+          "too-few-documents": "竞品文档太少，无法建立可靠基准。",
+          "some-documents-missing": "部分竞品页面无法获取。",
+          "no-target-chunks": "页面没有可分析的段落。",
+          "off-topic-below-quota": "切题段落太少。",
+          "local-lexical-embeddings": "相似度使用本地词汇向量而非语义模型计算，区域为近似值。",
+          "heuristic-entities": "实体来自首字母大写的短语和主谓宾事实，而不是训练好的实体模型。",
+          "semantic-provider-unavailable": "项目的语义嵌入提供方不可用，已改用本地词汇向量。"
+        },
+        "intent": {
+          "definitional": "定义",
+          "how-to": "操作指南",
+          "troubleshooting": "故障排除",
+          "comparison": "对比",
+          "curated-list": "精选列表",
+          "tool": "工具或计算器",
+          "transactional": "交易",
+          "local": "本地"
+        },
+        "gap": {
+          "table": "添加对比表：{{1}} 个排名靠前页面中有 {{0}} 个包含。",
+          "ordered-list": "添加编号步骤：{{1}} 个排名靠前页面中有 {{0}} 个使用编号列表。",
+          "calculator": "考虑提供可用的计算器或工具：{{1}} 个排名靠前页面中有 {{0}} 个带有真实表单控件的工具。",
+          "product-cards": "展示产品或优惠：{{1}} 个排名靠前页面中有 {{0}} 个显示产品或价格卡片。",
+          "cta": "添加明确的行动号召：{{1}} 个 TOP 页面中有 {{0}} 个包含（纯信息页面可忽略）。"
+        },
+        "mismatchAdvice": "该页面的意图与多数 TOP 页面不同：请检查它是否满足同一需求。",
+        "missingBasics": "缺少的基础内容",
+        "basicsAdvice": "先补齐缺少的 {{0}} 个基础主题：覆盖率低于一半时得分会被扣减，新事实不能替代基础内容。"
       }
     },
     "crawl": {
@@ -5877,7 +5956,9 @@
         "zoneNav": "导航 / 面包屑",
         "zoneFooter": "侧边栏 / 页脚",
         "zoneUnknown": "未知（旧抓取）",
-        "zoneNeutral": "中性 (1)"
+        "zoneNeutral": "中性 (1)",
+        "tLinkContext": "内部链接上下文",
+        "linkContextIntro": "方括号内为锚文本，两侧各最多 15 个词，由爬虫记录。旧的运行没有上下文。显示行数："
       },
       "cols": {
         "colItem": "项目",
@@ -5953,7 +6034,9 @@
         "colResult": "结果",
         "colZone": "区域",
         "colShare": "占比",
-        "colWeight": "SPRS 权重"
+        "colWeight": "SPRS 权重",
+        "colContext": "上下文（±15 词）",
+        "colSection": "章节标题"
       },
       "focus": {
         "title": "站点聚焦度",
@@ -6134,7 +6217,11 @@
           "own-domain": "您的域名",
           "own-alias": "您的品牌名称",
           "competitor-brand": "竞争对手品牌"
-        }
+        },
+        "tSegments": "分段得分",
+        "segmentsIntro": "为此项目定义的分段，每个分段按其自身核心主题评分。短横线表示该前缀下没有已评分页面。",
+        "colSegment": "分段",
+        "colCore": "核心主题"
       },
       "authority": {
         "title": "主题权威度",
@@ -6183,6 +6270,14 @@
           "fix-linking": "修复内部链接：{{0}} 个孤立页面，{{1}} 条指向无关页面的链接",
           "deepen-shallow": "深化 {{0}} 个覆盖较浅的子主题",
           "refresh-stale": "更新 {{0}} 个超过一年未更新的页面"
+        },
+        "paaUsed": "已使用 SERP 中的 {{0}} 个 People Also Ask 问题。",
+        "paaMissing": "没有 People Also Ask 来源：问题仅来自竞争对手的标题和 Google 搜索建议。",
+        "cdesPartial": "部分结果：在 {{1}} 个已覆盖子主题中，部分无法测量 {{0}}；CDES 只使用已测量的部分。",
+        "depthPart": {
+          "entities": "实体",
+          "questions": "用户问题（PAA）",
+          "gain": "信息增益"
         }
       },
       "aio": {
@@ -6232,7 +6327,16 @@
         "profilePersisted": "此配置与已保存的抓取一致。",
         "profileLegacy": "此抓取没有保存的配置。结果已按显示的配置重新计算，不能与历史结果比较。",
         "profileMismatch": "已保存的配置不同。结果已按显示的配置重新计算，不能与历史结果比较。",
-        "historicalProfile": "已保存的配置: {{0}} / {{1}}."
+        "historicalProfile": "已保存的配置: {{0}} / {{1}}.",
+        "tInspector": "段落检查器",
+        "inspectorIntro": "最弱段落的评分组成、在章节文本中的位置（UTF-16 字符）以及最先检测到的主语-谓语-宾语事实。事实来自词汇启发式，而非依存句法分析器。",
+        "colPosition": "位置",
+        "colAnswer": "答案先行",
+        "colFactsFound": "检测到的事实",
+        "position": "字符 {{0}}–{{1}}",
+        "notApplicable": "不适用",
+        "negated": "{{0}}（否定）",
+        "noFactsFound": "未检测到事实"
       },
       "trust": {
         "title": "实体信任度（E-E-A-T）",
@@ -6319,7 +6423,8 @@
         "colClaim": "主张",
         "colEvidence": "证据",
         "colRelation": "关系",
-        "colChecked": "手动检查"
+        "colChecked": "手动检查",
+        "scoring": "评分子配置 {{0}}（参考权重，未校准）"
       },
       "offPage": {
         "title": "站外分析",
@@ -7330,6 +7435,17 @@
         "own-alias": "您的品牌名称",
         "competitor-brand": "竞争对手品牌"
       }
+    },
+    "segments": {
+      "title": "具有自身主题的分段",
+      "inputLabel": "分段（每行一个：名称 | /路径前缀 | 可选主题）",
+      "placeholder": "商店 | /shop | 胰岛素泵",
+      "save": "保存分段",
+      "help": "适用于多主题网站：每个分段都按其自身的核心主题评分（你输入的主题，或其页面承载最多的主题）。整站的 Site Focus Score 不会改变。最多 {{max}} 个分段。",
+      "dropped": "有 {{count}} 行无效，未保存。格式：名称 | /路径前缀 | 可选主题。",
+      "needsProject": "分段按项目保存。请从项目中打开此抓取以进行设置。",
+      "item": "{{label}}（{{prefix}}）：{{score}}，{{band}}。核心主题：{{core}}。已评分页面：{{scored}}/{{pages}}。",
+      "unavailable": "{{label}}（{{prefix}}）：此前缀下没有已评分页面，因此没有分数（不是 0）。"
     }
   },
   "focusBenchmark": {
@@ -7434,7 +7550,13 @@
       "silcNote": "{{orphans}} 个孤立页面，{{weak}} 个弱锚文本，{{bleed}} 条指向无关页面的链接",
       "cvffNote": "{{stale}} 个过时页面，{{groups}} 个内部竞争组",
       "unavailable": "无法衡量",
-      "multiplier": "来自 SFS {{sfs}} 的聚焦系数 ×{{value}}"
+      "multiplier": "来自 SFS {{sfs}} 的聚焦系数 ×{{value}}",
+      "cdesPartial": "部分结果：在 {{rows}} 个已覆盖子主题中，部分无法测量 {{parts}}；CDES 只使用已测量的部分。",
+      "depthPart": {
+        "entities": "实体",
+        "questions": "用户问题（PAA）",
+        "gain": "信息增益"
+      }
     },
     "warning": {
       "empty-authority": "空洞权威：网站涉及 {{tcr}}% 的主题，但平均深度仅 {{depth}}/100。发布新内容前，请先用数据和实体深化现有页面。",
@@ -7466,7 +7588,10 @@
         "no-competitors": "排名中未找到竞争域名。",
         "no-pages": "无法抓取任何竞争对手页面（robots.txt、拦截或超时）。",
         "no-taxonomy": "竞争对手页面共有的标题太少，无法形成可靠图谱。请稍后重试或增加竞争对手。"
-      }
+      },
+      "withPaa": "包含真实的“相关问题”(People Also Ask)（DataForSEO 高级 SERP，单独计费）",
+      "paaUsed": "已使用 SERP 中的 {{count}} 个 People Also Ask 问题。",
+      "paaMissing": "没有 People Also Ask 来源：问题仅来自竞争对手的标题和 Google 搜索建议。"
     },
     "coverage": {
       "title": "主题覆盖图谱",
@@ -7490,6 +7615,15 @@
         "critical": "关键缺口",
         "high": "较大缺口",
         "medium": "中等缺口"
+      },
+      "pillarFilter": "按支柱筛选",
+      "allPillars": "所有支柱",
+      "urlFilter": "按 URL 筛选",
+      "sortLabel": "子主题排序",
+      "sort": {
+        "importance": "市场重要性",
+        "similarity": "最佳页面匹配度",
+        "label": "名称（A–Z）"
       }
     },
     "drill": {
@@ -7533,6 +7667,20 @@
       "basis": {
         "intent": "相同意图",
         "subtopic": "相同子主题"
+      },
+      "gsc": {
+        "unavailable": "Search Console：此项目没有已保存的查询/页面数据，因此仅根据内容进行选择。",
+        "noOverlap": "Search Console：这些 URL 没有在相同查询中获得展示。",
+        "agrees": "Search Console 一致：{{leader}} 在共同查询中获得最多点击。",
+        "conflict": "需要审核的冲突：Search Console 中 {{leader}} 点击最多，而内容相似度建议保留 {{canonical}}。",
+        "query": "“{{query}}”：{{pages}}",
+        "page": "{{url}} 点击 {{clicks}} / 展示 {{impressions}}",
+        "truncated": "Search Console 行可能被截断，部分查询可能缺失。"
+      },
+      "unique": {
+        "title": "合并时需要保留的独有内容：",
+        "terms": "{{url}}：{{terms}}",
+        "none": "{{url}}：没有仅出现在此页面的术语"
       }
     },
     "draft": {
@@ -7588,7 +7736,8 @@
       "cleanup": "清理：SFS 上升 {{delta}}",
       "architecture": "架构：链接与内部竞争改善 {{delta}}",
       "expansion": "扩展：主题覆盖率上升 {{delta}}",
-      "regression": "退步：TAS 变化 {{delta}}"
+      "regression": "退步：TAS 变化 {{delta}}",
+      "incomparable": "评分配置已更改（新的参考地图或 TAS 公式）：此点前后的 TAS 无法直接比较。"
     }
   },
   "authorityMonitoring": {
@@ -7727,6 +7876,20 @@
       "negated": "否定",
       "none": "此片段中未检测到主语-谓语-宾语事实。",
       "heuristic": "词汇启发式，而非依存句法分析器。Q：1 = 带单位的数字，0.7 = 具名术语，0.3 = 一般内容。"
+    },
+    "calibration": {
+      "title": "警报阈值校准（标签）",
+      "intro": "复制本项目抓取得到的得分对表格，手动将每行标记为 \"alert\" 或 \"no-alert\"，然后粘贴回来。只有在两类人工标签合计至少 {{min}} 个时才会建议阈值；此处绝不会更改警报设置。",
+      "copy": "复制标注表（{{count}} 对）",
+      "copied": "已复制",
+      "failed": "复制失败",
+      "paste": "已标注表格（CSV）",
+      "check": "检查标签",
+      "counts": "已标注对：{{labelled}}（警报 {{alert}}，无警报 {{noAlert}}）；未标注：{{unlabelled}}。",
+      "errors": "因数据无效而忽略的行：{{lines}}。",
+      "recommended": "这些标签与 {{threshold}} 分的下降阈值最吻合。这只是建议：如果同意，请自行更改警报设置。",
+      "insufficient-labels": "标签尚不足：至少需要 {{min}} 个才会建议阈值。",
+      "single-class": "所有标签取值相同；请同时标注有警报和无警报的情况以比较阈值。"
     }
   },
   "trust": {
@@ -7947,6 +8110,10 @@
       },
       "more": "未显示的资料：{{n}} 个",
       "checked": "{{date}} 通过 {{source}} 检查"
+    },
+    "scoring": {
+      "label": "使用基于主张佐证的参考评分（实验性）",
+      "hint": "应用信任规范中的参考权重：按角色加权的 sameAs 召回率、断开的图孤岛惩罚、带主张佐证的来源质量以及 YMYL 分级。权重尚未校准，分数只与使用相同配置的运行进行比较。"
     }
   },
   "executionCard": {
@@ -8150,6 +8317,43 @@
       "copied": "已复制",
       "failed": "复制失败",
       "hint": "导出包含确切的输入和权重，因此可以重新计算分数。"
+    },
+    "card": {
+      "title": "执行卡",
+      "diagnosis": "诊断与原因",
+      "location": "位置",
+      "artifact": "前/后产出物",
+      "deployment": "部署与验证",
+      "noUrl": "没有单一页面 URL（全站发现）。",
+      "kind": {
+        "link": "从第一个 URL 向第二个 URL 添加链接。带 <a> 的现成句子在“链接”工作区中。",
+        "entities": "需要添加到此页面的实体。前/后段落在模块标签页中。",
+        "removal": "删除或合并。301/410 规则仅在 URL 保护检查后由部署产出物生成。",
+        "module": "前/后产出物在模块标签页中准备。"
+      },
+      "noTask": {
+        "blocked": "被防护规则或冲突阻止，因此不计划任务。",
+        "removal": "删除在部署产出物中计划，不在这里计划。",
+        "no-url": "没有页面 URL，请在模块标签页中修复。",
+        "in-module": "请在模块标签页中逐页修复。"
+      },
+      "openModule": "在 {{tab}} 中打开产出物"
+    },
+    "trend": {
+      "first": "没有使用此 HSS 配置的早期已保存运行：暂无趋势。",
+      "notComparable": "无法与上一次运行比较（其中一次未测量）。",
+      "up": "较上次运行（{{date}}）上升 {{value}}",
+      "down": "较上次运行（{{date}}）下降 {{value}}",
+      "flat": "与上次运行（{{date}}）相比无变化"
+    },
+    "review": {
+      "group": "审核决定",
+      "decision": {
+        "accepted": "接受",
+        "deferred": "推迟",
+        "rejected": "拒绝"
+      },
+      "current": "决定：{{decision}}（{{date}}）· 历史记录 {{count}} 条"
     }
   },
   "surgical": {
@@ -8230,7 +8434,21 @@
     "lostEntities": "消失实体",
     "intent": "意图：{{from}} 变为 {{to}}",
     "format": "形式：{{from}} 变为 {{to}}",
-    "incompatible": "{{fields}} 不同，这不是市场变化。"
+    "incompatible": "{{fields}} 不同，这不是市场变化。",
+    "labels": {
+      "video": "视频",
+      "forum": "论坛",
+      "product": "产品页",
+      "category": "分类页",
+      "guide": "指南",
+      "listicle": "排行/列表",
+      "news": "新闻",
+      "tool": "工具",
+      "encyclopedia": "百科",
+      "homepage": "首页",
+      "transactional": "交易型",
+      "informational": "信息型"
+    }
   },
   "sijaUi": {
     "title": "搜索意图 (SIJA)",
@@ -8542,8 +8760,10 @@
     "rec": {
       "rewrite-echo": "偏移量 {{offset}} 处的段落重复了竞品内容：请用自己的话改写。",
       "add-evidence": "请添加带单位或来源的具体数据；未检测到任何数据。",
-      "refocus-drift": "偏移量 {{offset}} 处的段落偏离主题：请重新聚焦或删除。"
-    }
+      "refocus-drift": "偏移量 {{offset}} 处的段落偏离主题：请重新聚焦或删除。",
+      "add-basics": "先补齐缺少的 {{count}} 个基础主题：覆盖率低于一半时得分会被扣减，新事实不能替代基础内容。"
+    },
+    "missingBasics": "多数 TOP 页面涵盖而本页缺少的基础内容：{{list}}"
   },
   "logIntelUi": {
     "title": "日志分析",
@@ -8558,7 +8778,7 @@
     "complete": "导入完成。",
     "storageFailed": "无法更新本地存储。更改仅保留在内存中，已保存的日志可能未变。",
     "tooLarge": "文件超过500 MB限制。",
-    "invalidFile": "请选择 .log 或 .txt 文件。",
+    "invalidFile": "请选择 .log、.txt 或轮转后的 .gz 访问日志。",
     "resumeRequired": "导入其他文件前请恢复未完成的文件或清除日志。",
     "importFailed": "无法读取文件或计算哈希。请重试。",
     "resume": "选择相同文件即可继续，且不会重复计算行数。",
@@ -8618,7 +8838,10 @@
         "too-many-prefixes": "文件包含超过 5,000 个范围。",
         "storageFailed": "无法更新本地存储；范围未保存。"
       }
-    }
+    },
+    "gzipTooLarge": "解压后的日志超过 2 GB 上限。",
+    "gzipCorrupt": ".gz 文件已损坏或不是 gzip。",
+    "gzipUnsupported": "此系统无法解压 .gz 文件；请先解压。"
   },
   "altCheckUi": {
     "column": "ALT 质量",
@@ -8777,6 +9000,11 @@
         "unavailable": "不可用"
       },
       "privacy": "每个项目在本地保存最近 10 次已完成的分析。绝不保存页面全文或向量。"
+    },
+    "stance": {
+      "negated": "否定提及；不是推荐",
+      "critical": "品牌附近有批评性措辞；不是推荐",
+      "quoted": "引用或转述的观点；不是来源本身的推荐"
     }
   },
   "experimentsUi": {
@@ -8940,7 +9168,14 @@
     "absolute": "对点击的累计效应：{{value}}（95% 区间 {{lower}} 至 {{upper}}）。",
     "relative": "相对效应：{{value}}（95% 区间 {{lower}} 至 {{upper}}）。",
     "probability": "效应为此符号的概率：{{value}}（正态近似，不是贝叶斯后验）。",
-    "caveat": "经对照调整的估计并不能证明因果关系。其他变更、Google 更新或同样影响对照的变化都可能使其产生偏差。不推断 ROI。"
+    "caveat": "经对照调整的估计并不能证明因果关系。其他变更、Google 更新或同样影响对照的变化都可能使其产生偏差。不推断 ROI。",
+    "backtest": {
+      "passed": "回测通过：前期内 {{runs}} 次伪干预均未发现效应。",
+      "failed": "回测未通过：前期内 {{runs}} 次伪干预中有 {{fp}} 次发现了并不存在的效应。不要信任此估计。",
+      "not-estimable": "无法回测：前期太短，无法进行伪干预。"
+    },
+    "familySignificant": "对同时显示的 {{family}} 个实验校正后仍显著（Holm，p = {{p}}）。",
+    "familyNotSignificant": "对同时显示的 {{family}} 个实验校正后不显著（Holm，p = {{p}}）。"
   },
   "revenueImportUi": {
     "title": "收入（可选的 GA4 导出）",
@@ -8959,5 +9194,27 @@
       "no-rows": "文件中没有带数值收入的着陆页。",
       "storage-failed": "无法更新本地存储；导入未保存。"
     }
+  },
+  "entityParity": {
+    "title": "各语言版本中的实体（Wikidata）",
+    "intro": "将每个语言版本的主题标签匹配到与语言无关的 Wikidata ID。缺失的版本是需要审核的提醒，而不是自动判定的错误。",
+    "match": "将 {{count}} 个主题与 Wikidata 匹配",
+    "running": "正在与 Wikidata 匹配…",
+    "failed": "Wikidata 未对 {{count}} 个主题作出响应；这些主题不计为缺失。",
+    "noGaps": "每个已匹配的实体在每个语言版本中都有页面。",
+    "gapsTitle": "部分语言版本中缺失的实体",
+    "gap": "{{label}}：存在于 {{present}}，缺失于 {{missing}}",
+    "needsReview": "搜索匹配，需审核",
+    "correctTitle": "审核并修正实体匹配",
+    "entity": "实体",
+    "correctLabel": "{{topic}}（{{language}}）的 Wikidata ID；如无实体请输入 none",
+    "confidence": {
+      "manual": "手动",
+      "exact": "标签完全匹配",
+      "search": "搜索推测",
+      "none": "未匹配",
+      "error": "查询失败"
+    },
+    "correctPlaceholder": "Q123 / none"
   }
 }

@@ -1,7 +1,7 @@
 import { DATAFORSEO_LOCATION_CATALOG } from '@/services/dataforseoCatalog';
 import { DataForSEOCore } from './dataforseo/dataforseoCore';
 import { getBacklinksSummary, getBacklinkAnchorsPage, getBacklinksPage, getBacklinkGapPage, getBacklinkProfile } from './dataforseo/dataforseoBacklinks';
-import { getSerpCompetitors } from './dataforseo/dataforseoSerp';
+import { getSerpCompetitors, getSerpWithQuestions } from './dataforseo/dataforseoSerp';
 import { getKeywordIdeas } from './dataforseo/dataforseoKeywords';
 import { getDomainOverview } from './dataforseo/dataforseoDomain';
 import { BacklinkAnchorDistribution, BacklinkItem, BacklinkProfileData, BacklinkGapOpportunity, DataForSEOBacklinkSummary, DataForSEOSerpItem, DomainOverviewData, KeywordIdea } from '@/types';
@@ -25,6 +25,10 @@ export class DataForSEOClient extends DataForSEOCore {
     return getSerpCompetitors(this, keyword, locationCode, languageCode, allowPartial);
   }
   
+  async getSerpWithQuestions(keyword: string, locationCode = 2840, languageCode = 'en'): Promise<{ organic: DataForSEOSerpItem[]; questions: string[] }> {
+    return getSerpWithQuestions(this, keyword, locationCode, languageCode);
+  }
+
   async getKeywordIdeas(keyword: string, locationCode: number, languageCode = 'en'): Promise<KeywordIdea[]> {
     return getKeywordIdeas(this, keyword, locationCode, languageCode);
   }

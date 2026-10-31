@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import i18n from '@/i18n';
 import { parseFeatures } from '@/services/sija/features';
@@ -10,6 +10,7 @@ import { TargetPhraseIntentSection } from '@/components/Results/targetPhraseAudi
 import type { PageFeatures } from '@/services/sija/types';
 import type { TopTenContentGapReport } from '@/services/targetPhraseAudit/types';
 import * as rendered from '@/services/tauri/rendered';
+import { phraseInsightsFor } from '@/services/export/phraseInsights';
 
 const f = (over: Partial<PageFeatures> = {}): PageFeatures => ({ tables: 0, orderedLists: 0, unorderedLists: 0, formInputs: 0, calculators: 0, productCards: 0, localSignals: 0, words: 500, headings: 4, headingText: '', ...over });
 const SHOP = '<main><h1>Buy coffee</h1><div class="product"><span>12 €</span> <a href="/cart">Add to cart</a></div></main>';
@@ -66,12 +67,13 @@ describe('SIJA history (#69 GEM-69-08)', () => {
     const rows = [{ rank: 1, url: 'https://a.test/', finalUrl: null, availability: 'available' }];
     const top = { phrase: 'kawa', rows, corpus: { target: { url: 'https://me.test/', text: 't', wordCount: 1 }, pages: [], requested: 1 } } as unknown as TopTenContentGapReport;
     const spy = vi.spyOn(rendered, 'renderCrawlPage').mockResolvedValue({ html: HOW_TO, httpStatus: 200 } as rendered.RenderedPageSnapshot);
-    render(<TargetPhraseIntentSection report={top} projectId="p1" />);
+    render(<TargetPhraseIntentSection report={top} projectId="p1" auditUrl="https://shop.example/" />);
     fireEvent.click(screen.getByRole('button', { name: 'Analyse search intent' }));
     expect(await screen.findByText(/Previous run 2026-10-29T10:00:00Z: How-to/)).toBeTruthy();
     expect(screen.getByText(/TOP intent: How-to \(1 of 1 rendered pages\)\. Your page matches it/)).toBeTruthy();
     expect(screen.getByText('Rendered TOP pages (1)')).toBeTruthy();
     expect(loadSijaHistory('p1', 'kawa')).toHaveLength(2);
+    await waitFor(() => expect(phraseInsightsFor('https://shop.example/')?.sija).toMatchObject({ serpIntent: 'how-to', match: 'match' }));
     spy.mockRestore();
   });
 });

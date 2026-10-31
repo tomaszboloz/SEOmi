@@ -3,6 +3,7 @@ import { describeSource } from '@/services/semanticSource/similarity';
 import type { EmbeddingSet } from '@/services/semanticSource/types';
 import { cannibalizationIndex, findCannibalization, type SimilarityUsage } from './cannibal';
 import { buildContext, eligiblePages, type AuthorityContext, type AuthorityPage } from './context';
+import { depthInputs } from './depth';
 import { contentDepth, mapCoverage, pillarCoverage, topicCoverageRatio } from './coverage';
 import { measureFreshness } from './freshness';
 import { buildAuthorityRecommendations } from './recommend';
@@ -68,7 +69,7 @@ export const buildAuthorityReport = (pages: FocusPage[], startUrl: string, sfs: 
     pillars, unavailable: aggregate.unavailable, cannibalizationIndex: index, coverage,
     pillarCoverage: taxonomy ? pillarCoverage(coverage, taxonomy) : [], silo, cannibalization, freshness,
     recommendations: buildAuthorityRecommendations({ coverage, pillars, sfs: sfs.score, silo, cannibalization, cannibalizationIndex: index, freshness, pillarLabels: labels }),
-    warnings, templateDuplicates: duplicates, taxonomy, pageCount: context.pages.length, generatedAt: now, version: TAS_VERSION,
+    warnings, templateDuplicates: duplicates, taxonomy, depthInputs: depthInputs(coverage), pageCount: context.pages.length, generatedAt: now, version: TAS_VERSION,
     similaritySource: describeSource(sfs.flags.fallbackMode === 'lexical', usage.pairs, options.embeddings, false),
   };
 };

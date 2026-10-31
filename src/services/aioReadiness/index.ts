@@ -13,4 +13,5 @@ export { buildRewritePrompt, rewritePassage, type RewriteOptions, type RewriteOu
 export { checkRewritePreservation, compareRewrite, extractPreservationTokens, passageRevision, profileRewrite, type PreservationCheck, type PreservationTokens, type RewriteComparison, type RewriteProfile, type RewriteProfileOptions } from './rewriteReview';
 export { readAioHistory, recordAioSnapshot, makeAioSnapshot, aioHistoryKey, validAioProject, AIO_HISTORY_LIMIT, type AioSnapshot } from './history';
 export { summarizeAio, crawlAioSummary, AIO_PDF_PAGES, AIO_PDF_PASSAGES, type AioPdfSummary } from './summary';
+export { pdfPassage, AIO_PDF_FACTS, type AioPdfPassage } from './summaryPassage';
 export { comparableRewrites, makeRewriteEntry, readRewriteHistory, recordRewrite, rewriteHistoryKey, REWRITE_HISTORY_LIMIT, type RewriteHistoryEntry } from './rewriteHistory';

@@ -456,7 +456,9 @@
       "backlinkNoProfile": "DataForSEO returned no backlink profile for this target.",
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
-      "crawlerNoPages": "Crawler returned no pages for this target."
+      "crawlerNoPages": "Crawler returned no pages for this target.",
+      "crawlLogRecoveryFailed": "Le journal d'événements du crawl n'a pas pu être lu ; les pages terminées avant le redémarrage n'ont pas été récupérées : {{reason}}",
+      "crawlEventLogWriteFailed": "Le crawl est terminé, mais son journal de reprise n'a pas pu être écrit ({{reason}}). Si l'app s'était fermée en cours de crawl, la progression n'aurait pas pu être récupérée."
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",
@@ -2651,7 +2653,9 @@
       "path-key-collision": "clé de chemin dupliquée",
       "url-key-collision": "clé URL dupliquée"
     },
-    "pageLimitUnlimited": "Sans limite"
+    "pageLimitUnlimited": "Sans limite",
+    "interruptedRecovered": "{{pages}} pages terminées avant la fermeture de l'app ont été récupérées depuis le journal du crawl et sont conservées à la reprise.",
+    "interruptedRecoveredInvalid": "{{count}} pages journalisées n'ont pas pu être lues et seront recrawlées."
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -5683,6 +5687,81 @@
         "resource": "Ressource non sécurisée : {{0}}",
         "response": "Réponse du serveur : HTTP {{1}} en {{0}} ms",
         "hop": "Saut de redirection : HTTP {{0}} depuis {{1}}"
+      },
+      "phrase": {
+        "igosTitle": "Gain d’information (IGOS) pour « {{0}} »",
+        "sijaTitle": "Intention de recherche (SIJA) pour « {{0}} »",
+        "score": "Score",
+        "baseline": "Pages TOP comparées",
+        "ofTotal": "{{0}} sur {{1}}",
+        "components": "Composantes (NEFR / EDSI / FHEM / SDD)",
+        "coverage": "Couverture de la base",
+        "zones": "Zones de paragraphes",
+        "novel": "Nouvelles entités dans le sujet",
+        "vectors": "Vecteurs (fournisseur / modèle, exécution)",
+        "limits": "Limites",
+        "pageIntent": "Intention de la page",
+        "serpIntent": "Intention TOP (majorité des pages rendues)",
+        "match": "Concordance d’intention",
+        "matchValue": {
+          "match": "Concorde",
+          "mismatch": "Ne concorde pas",
+          "unknown": "Inconnue"
+        },
+        "ssas": "SSAS (structure vs TOP)",
+        "funnel": "Étapes de l’entonnoir parmi les pages TOP rendues",
+        "funnelValue": "{{0}} sur {{1}} rendues : TOFU {{2}} · MOFU {{3}} · BOFU {{4}}",
+        "gaps": "Formats manquants",
+        "none": "Aucun",
+        "echoAdvice": "Réécrivez les {{0}} paragraphes écho avec vos mots, vos données ou votre expérience.",
+        "driftAdvice": "Recentrez ou supprimez les {{0}} paragraphes de dérive ; un texte hors sujet n’augmente pas l’IGOS.",
+        "method": "Heuristique SEOmi, pas une métrique Google. Le texte des concurrents n’est pas reproduit.",
+        "methodLabel": "Méthode",
+        "noScore": "Pas de score",
+        "evidenceAdvice": "Ajoutez des données concrètes avec unités ou sources ; aucune détectée.",
+        "inconclusive": "SSAS non concluant : {{0}} pages TOP réelles disponibles, 3 minimum requises.",
+        "component": {
+          "nefr": "Nouvelles entités",
+          "edsi": "Densité de preuves",
+          "fhem": "Marqueurs d'expérience",
+          "sdd": "Répartition des sous-thèmes"
+        },
+        "zone": {
+          "echo": "Écho",
+          "gain": "Gain",
+          "drift": "Dérive",
+          "neutral": "Neutre"
+        },
+        "limit": {
+          "no-comparable-documents": "Aucun document concurrent comparable.",
+          "too-few-documents": "Trop peu de documents concurrents pour une base fiable.",
+          "some-documents-missing": "Certaines pages concurrentes n'ont pas pu être récupérées.",
+          "no-target-chunks": "La page n'a aucun paragraphe analysable.",
+          "off-topic-below-quota": "Trop peu de paragraphes sur le sujet.",
+          "local-lexical-embeddings": "La similarité utilise des vecteurs lexicaux locaux, pas un modèle sémantique ; les zones sont approximatives.",
+          "heuristic-entities": "Les entités proviennent d'expressions en majuscules et de faits sujet-prédicat-objet, pas d'un modèle d'entités entraîné.",
+          "semantic-provider-unavailable": "Le fournisseur sémantique d'embeddings du projet était indisponible ; des vecteurs lexicaux locaux ont été utilisés."
+        },
+        "intent": {
+          "definitional": "Définition",
+          "how-to": "Tutoriel",
+          "troubleshooting": "Dépannage",
+          "comparison": "Comparatif",
+          "curated-list": "Sélection",
+          "tool": "Outil ou calculateur",
+          "transactional": "Transactionnelle",
+          "local": "Locale"
+        },
+        "gap": {
+          "table": "Ajoutez un tableau comparatif : {{0}} pages du TOP sur {{1}} en ont un.",
+          "ordered-list": "Ajoutez des étapes numérotées : {{0}} pages du TOP sur {{1}} utilisent une liste numérotée.",
+          "calculator": "Envisagez un calculateur ou outil fonctionnel : {{0}} pages du TOP sur {{1}} en ont un avec de vrais champs de formulaire.",
+          "product-cards": "Montrez des produits ou offres : {{0}} pages du TOP sur {{1}} affichent des fiches produit ou prix.",
+          "cta": "Ajoutez un appel à l'action clair : {{0}} pages TOP sur {{1}} en ont un (à ignorer pour les pages purement informatives)."
+        },
+        "mismatchAdvice": "La page relève d’une autre intention que la plupart des pages TOP : vérifiez qu’elle répond au même besoin.",
+        "missingBasics": "Fondamentaux manquants",
+        "basicsAdvice": "Couvrez d’abord les {{0}} sujets de base manquants : sous la moitié de couverture le score est pénalisé, et des faits nouveaux ne remplacent pas les bases."
       }
     },
     "crawl": {
@@ -5877,7 +5956,9 @@
         "zoneNav": "Navigation / fil d'Ariane",
         "zoneFooter": "Barre latérale / pied de page",
         "zoneUnknown": "Inconnue (ancien crawl)",
-        "zoneNeutral": "neutre (1)"
+        "zoneNeutral": "neutre (1)",
+        "tLinkContext": "Contexte des liens internes",
+        "linkContextIntro": "Ancre entre crochets avec jusqu'à 15 mots de chaque côté, tels qu'enregistrés par le crawler. Les anciens runs n'ont pas de contexte. Lignes affichées :"
       },
       "cols": {
         "colItem": "Élément",
@@ -5953,7 +6034,9 @@
         "colResult": "Résultat",
         "colZone": "Zone",
         "colShare": "Part",
-        "colWeight": "Poids SPRS"
+        "colWeight": "Poids SPRS",
+        "colContext": "Contexte (±15 mots)",
+        "colSection": "Titre de section"
       },
       "focus": {
         "title": "Site Focus",
@@ -6134,7 +6217,11 @@
           "own-domain": "votre nom de domaine",
           "own-alias": "votre nom de marque",
           "competitor-brand": "marque concurrente"
-        }
+        },
+        "tSegments": "Scores des segments",
+        "segmentsIntro": "Segments définis pour ce projet, chacun évalué par rapport à son propre thème central. Un tiret signifie qu’aucune page sous le préfixe n’a été évaluée.",
+        "colSegment": "Segment",
+        "colCore": "Thème central"
       },
       "authority": {
         "title": "Autorité thématique",
@@ -6183,6 +6270,14 @@
           "fix-linking": "Corrigez le maillage : {{0}} pages orphelines, {{1}} liens vers des pages hors sujet",
           "deepen-shallow": "Approfondissez {{0}} sous-thèmes superficiels",
           "refresh-stale": "Actualisez {{0}} pages inchangées depuis plus d’un an"
+        },
+        "paaUsed": "{{0}} questions « Autres questions posées » de la SERP ont été utilisées.",
+        "paaMissing": "Aucune source « Autres questions posées » : les questions viennent seulement des titres des concurrents et de Google Suggest.",
+        "cdesPartial": "Partiel : {{0}} n’a pas pu être mesuré pour certains des {{1}} sous-thèmes couverts ; le CDES n’utilise que les parties mesurées.",
+        "depthPart": {
+          "entities": "entités",
+          "questions": "questions des utilisateurs (PAA)",
+          "gain": "gain d’information"
         }
       },
       "aio": {
@@ -6232,7 +6327,16 @@
         "profilePersisted": "Le profil correspond à celui de l’exploration enregistrée.",
         "profileLegacy": "Cette exploration n’a pas de profil enregistré. Les résultats ont été recalculés avec le profil affiché et ne sont pas comparables aux résultats historiques.",
         "profileMismatch": "Le profil enregistré est différent. Les résultats ont été recalculés avec le profil affiché et ne sont pas comparables aux résultats historiques.",
-        "historicalProfile": "Profil enregistré: {{0}} / {{1}}."
+        "historicalProfile": "Profil enregistré: {{0}} / {{1}}.",
+        "tInspector": "Inspecteur de passages",
+        "inspectorIntro": "Composantes du score des passages les plus faibles, leur position dans le texte de la section (caractères UTF-16) et les premiers faits sujet-prédicat-objet détectés. Les faits proviennent d'une heuristique lexicale, pas d'un analyseur de dépendances.",
+        "colPosition": "Position",
+        "colAnswer": "Réponse d'abord",
+        "colFactsFound": "Faits détectés",
+        "position": "caractères {{0}}–{{1}}",
+        "notApplicable": "s.o.",
+        "negated": "{{0}} (nié)",
+        "noFactsFound": "Aucun fait détecté"
       },
       "trust": {
         "title": "Confiance des entités (E-E-A-T)",
@@ -6319,7 +6423,8 @@
         "colClaim": "Affirmation",
         "colEvidence": "Preuve",
         "colRelation": "Relation",
-        "colChecked": "Vérifié manuellement"
+        "colChecked": "Vérifié manuellement",
+        "scoring": "Sous-profil de score {{0}} (pondérations de référence, non calibrées)"
       },
       "offPage": {
         "title": "Analyse off-page",
@@ -7330,6 +7435,17 @@
         "own-alias": "votre nom de marque",
         "competitor-brand": "une marque concurrente"
       }
+    },
+    "segments": {
+      "title": "Segments avec leur propre thème",
+      "inputLabel": "Segments (un par ligne : Nom | /préfixe-de-chemin | thème facultatif)",
+      "placeholder": "Boutique | /boutique | pompes à insuline",
+      "save": "Enregistrer les segments",
+      "help": "Pour les sites multithématiques : chaque segment est évalué par rapport à son propre thème central (le thème saisi ou celui que ses pages portent le plus). Le Site Focus Score du site entier ne change pas. Jusqu’à {{max}} segments.",
+      "dropped": "{{count}} ligne(s) non valide(s) n’ont pas été enregistrée(s). Format : Nom | /préfixe-de-chemin | thème facultatif.",
+      "needsProject": "Les segments sont enregistrés par projet. Ouvrez ce crawl depuis un projet pour les définir.",
+      "item": "{{label}} ({{prefix}}) : {{score}}, {{band}}. Thème central : {{core}}. Pages évaluées : {{scored}} sur {{pages}}.",
+      "unavailable": "{{label}} ({{prefix}}) : aucune page évaluée sous ce préfixe, donc aucun score (ce n’est pas 0)."
     }
   },
   "focusBenchmark": {
@@ -7434,7 +7550,13 @@
       "silcNote": "{{orphans}} pages orphelines, {{weak}} ancres faibles, {{bleed}} liens vers des pages hors sujet",
       "cvffNote": "{{stale}} pages obsolètes, {{groups}} groupes de cannibalisation",
       "unavailable": "non mesurable",
-      "multiplier": "Multiplicateur de focus ×{{value}} issu du SFS {{sfs}}"
+      "multiplier": "Multiplicateur de focus ×{{value}} issu du SFS {{sfs}}",
+      "cdesPartial": "Partiel : {{parts}} n’a pas pu être mesuré pour certains des {{rows}} sous-thèmes couverts ; le CDES n’utilise que les parties mesurées.",
+      "depthPart": {
+        "entities": "entités",
+        "questions": "questions des utilisateurs (PAA)",
+        "gain": "gain d’information"
+      }
     },
     "warning": {
       "empty-authority": "Autorité creuse : le site touche {{tcr}}% des sujets mais la profondeur moyenne n’est que de {{depth}}/100. Approfondissez les pages existantes avant d’en publier de nouvelles.",
@@ -7466,7 +7588,10 @@
         "no-competitors": "Aucun domaine concurrent trouvé dans les classements.",
         "no-pages": "Aucune page concurrente n’a pu être explorée (robots.txt, blocages ou délais dépassés).",
         "no-taxonomy": "Les pages concurrentes partagent trop peu de titres pour former une carte fiable. Réessayez plus tard ou avec plus de concurrents."
-      }
+      },
+      "withPaa": "Inclure les vrais « Autres questions posées » (SERP avancée DataForSEO, facturée à part)",
+      "paaUsed": "{{count}} questions « Autres questions posées » de la SERP ont été utilisées.",
+      "paaMissing": "Aucune source « Autres questions posées » : les questions viennent seulement des titres des concurrents et de Google Suggest."
     },
     "coverage": {
       "title": "Carte de couverture du sujet",
@@ -7490,6 +7615,15 @@
         "critical": "lacune critique",
         "high": "lacune élevée",
         "medium": "lacune moyenne"
+      },
+      "pillarFilter": "Filtrer par pilier",
+      "allPillars": "Tous les piliers",
+      "urlFilter": "Filtrer par URL",
+      "sortLabel": "Trier les sous-thèmes",
+      "sort": {
+        "importance": "Importance marché",
+        "similarity": "Meilleure correspondance de page",
+        "label": "Nom (A–Z)"
       }
     },
     "drill": {
@@ -7533,6 +7667,20 @@
       "basis": {
         "intent": "même intention",
         "subtopic": "même sous-thème"
+      },
+      "gsc": {
+        "unavailable": "Search Console : aucune donnée requête/page enregistrée pour ce projet, le choix repose donc uniquement sur le contenu.",
+        "noOverlap": "Search Console : ces URL ne reçoivent pas d’impressions sur les mêmes requêtes.",
+        "agrees": "Search Console confirme : {{leader}} reçoit le plus de clics sur les requêtes communes.",
+        "conflict": "Conflit à examiner : Search Console attribue le plus de clics à {{leader}}, la similarité de contenu suggère de garder {{canonical}}.",
+        "query": "« {{query}} » : {{pages}}",
+        "page": "{{url}} {{clicks}} clics / {{impressions}} impressions",
+        "truncated": "Les lignes Search Console peuvent être tronquées ; des requêtes peuvent manquer."
+      },
+      "unique": {
+        "title": "Contenu unique à conserver lors de la fusion :",
+        "terms": "{{url}} : {{terms}}",
+        "none": "{{url}} : aucun terme présent uniquement sur cette page"
       }
     },
     "draft": {
@@ -7588,7 +7736,8 @@
       "cleanup": "Nettoyage : le SFS a gagné {{delta}}",
       "architecture": "Architecture : maillage et cannibalisation améliorés de {{delta}}",
       "expansion": "Expansion : la couverture du sujet a gagné {{delta}}",
-      "regression": "Régression : le TAS a varié de {{delta}}"
+      "regression": "Régression : le TAS a varié de {{delta}}",
+      "incomparable": "Le profil de notation a changé (nouvelle carte de référence ou formule TAS) : le TAS avant et après ce point n’est pas directement comparable."
     }
   },
   "authorityMonitoring": {
@@ -7727,6 +7876,20 @@
       "negated": "négation",
       "none": "Aucun fait sujet-prédicat-objet détecté dans ce fragment.",
       "heuristic": "Heuristique lexicale, pas un analyseur de dépendances. Q : 1 = nombre avec unité, 0,7 = terme nommé, 0,3 = générique."
+    },
+    "calibration": {
+      "title": "Calibrage du seuil d'alerte (étiquettes)",
+      "intro": "Copiez la feuille des paires de scores issues des explorations de ce projet, marquez chaque ligne « alert » ou « no-alert » à la main, puis recollez-la. Un seuil n'est suggéré qu'à partir d'au moins {{min}} étiquettes humaines des deux types ; le réglage d'alerte n'est jamais modifié ici.",
+      "copy": "Copier la feuille d'étiquetage ({{count}} paires)",
+      "copied": "Copié",
+      "failed": "Échec de la copie",
+      "paste": "Feuille étiquetée (CSV)",
+      "check": "Vérifier les étiquettes",
+      "counts": "Paires étiquetées : {{labelled}} (alerte {{alert}}, sans alerte {{noAlert}}) ; sans étiquette : {{unlabelled}}.",
+      "errors": "Lignes ignorées pour données invalides : {{lines}}.",
+      "recommended": "Ces étiquettes correspondent le mieux à un seuil de baisse de {{threshold}} points. Ce n'est qu'un conseil : modifiez vous-même le réglage d'alerte si vous êtes d'accord.",
+      "insufficient-labels": "Pas encore assez d'étiquettes : il en faut au moins {{min}} avant de suggérer un seuil.",
+      "single-class": "Toutes les étiquettes ont la même valeur ; étiquetez des cas avec et sans alerte pour comparer les seuils."
     }
   },
   "trust": {
@@ -7947,6 +8110,10 @@
       },
       "more": "Profils supplémentaires non affichés : {{n}}.",
       "checked": "vérifié le {{date}} via {{source}}"
+    },
+    "scoring": {
+      "label": "Utiliser le score de référence fondé sur les affirmations (expérimental)",
+      "hint": "Applique les pondérations de référence de la spécification de confiance : rappel sameAs pondéré par rôle, pénalité pour îlots de graphe déconnectés, qualité des sources avec appui des affirmations et paliers YMYL. Les pondérations ne sont pas encore calibrées ; les scores ne sont comparés qu’aux analyses utilisant le même profil."
     }
   },
   "executionCard": {
@@ -8150,6 +8317,43 @@
       "copied": "Copié",
       "failed": "Échec de la copie",
       "hint": "L’export contient les entrées et pondérations exactes, le score peut donc être recalculé."
+    },
+    "card": {
+      "title": "Fiche d'exécution",
+      "diagnosis": "Diagnostic et raison",
+      "location": "Emplacement",
+      "artifact": "Artefact avant/après",
+      "deployment": "Déploiement et vérification",
+      "noUrl": "Aucune URL de page unique (constat à l'échelle du site).",
+      "kind": {
+        "link": "Lien à ajouter de la première URL vers la seconde. La phrase prête avec <a> se trouve dans l'espace Liens.",
+        "entities": "Entités à ajouter à cette page. Le paragraphe avant/après se trouve dans l'onglet du module.",
+        "removal": "Suppression ou fusion. Les règles 301/410 viennent uniquement des Artefacts de déploiement, après le contrôle de protection de l'URL.",
+        "module": "L'artefact avant/après est préparé dans l'onglet du module."
+      },
+      "noTask": {
+        "blocked": "Bloqué par un garde-fou ou un conflit : aucune tâche n'est planifiée.",
+        "removal": "Les suppressions se planifient dans les Artefacts de déploiement, jamais ici.",
+        "no-url": "Pas d'URL de page : corrigez dans l'onglet du module.",
+        "in-module": "Corrigez page par page dans l'onglet du module."
+      },
+      "openModule": "Ouvrir l'artefact dans {{tab}}"
+    },
+    "trend": {
+      "first": "Aucune exécution antérieure enregistrée avec ce profil HSS : pas encore de tendance.",
+      "notComparable": "Non comparable avec l’exécution précédente (non mesuré dans l’une d’elles).",
+      "up": "En hausse de {{value}} par rapport à l’exécution précédente ({{date}})",
+      "down": "En baisse de {{value}} par rapport à l’exécution précédente ({{date}})",
+      "flat": "Aucun changement par rapport à l’exécution précédente ({{date}})"
+    },
+    "review": {
+      "group": "Décision de revue",
+      "decision": {
+        "accepted": "Accepter",
+        "deferred": "Reporter",
+        "rejected": "Rejeter"
+      },
+      "current": "Décision : {{decision}} ({{date}}) · {{count}} dans l’historique"
     }
   },
   "surgical": {
@@ -8230,7 +8434,21 @@
     "lostEntities": "Entités perdues",
     "intent": "Intention : {{from}} vers {{to}}",
     "format": "Format : {{from}} vers {{to}}",
-    "incompatible": "Différent : {{fields}}. Ce n'est pas un changement de marché."
+    "incompatible": "Différent : {{fields}}. Ce n'est pas un changement de marché.",
+    "labels": {
+      "video": "vidéo",
+      "forum": "forum",
+      "product": "page produit",
+      "category": "page catégorie",
+      "guide": "guide",
+      "listicle": "classement/liste",
+      "news": "actualités",
+      "tool": "outil",
+      "encyclopedia": "encyclopédie",
+      "homepage": "page d’accueil",
+      "transactional": "transactionnelle",
+      "informational": "informationnelle"
+    }
   },
   "sijaUi": {
     "title": "Intention de recherche (SIJA)",
@@ -8542,8 +8760,10 @@
     "rec": {
       "rewrite-echo": "Le paragraphe au décalage {{offset}} répète un passage concurrent : réécrivez-le avec vos mots.",
       "add-evidence": "Ajoutez des données concrètes avec unités ou sources ; aucune détectée.",
-      "refocus-drift": "Le paragraphe au décalage {{offset}} dérive du sujet : recentrez-le ou supprimez-le."
-    }
+      "refocus-drift": "Le paragraphe au décalage {{offset}} dérive du sujet : recentrez-le ou supprimez-le.",
+      "add-basics": "Couvrez d’abord les {{count}} sujets de base manquants : sous la moitié de couverture le score est pénalisé, et des faits nouveaux ne remplacent pas les bases."
+    },
+    "missingBasics": "Fondamentaux couverts par la plupart des pages TOP mais absents de cette page : {{list}}"
   },
   "logIntelUi": {
     "title": "Analyse des journaux",
@@ -8558,7 +8778,7 @@
     "complete": "Importation terminée.",
     "storageFailed": "Impossible de mettre à jour le stockage local. Les modifications restent en mémoire ; les journaux enregistrés peuvent rester inchangés.",
     "tooLarge": "Le fichier dépasse la limite de 500 Mo.",
-    "invalidFile": "Choisissez un fichier .log ou .txt.",
+    "invalidFile": "Choisissez un journal d’accès .log, .txt ou .gz issu d’une rotation.",
     "resumeRequired": "Reprenez le fichier incomplet ou effacez les journaux avant d’en importer un autre.",
     "importFailed": "Impossible de lire le fichier ou de calculer son empreinte. Réessayez.",
     "resume": "Sélectionnez le même fichier pour reprendre sans compter deux fois les lignes.",
@@ -8618,7 +8838,10 @@
         "too-many-prefixes": "Le fichier contient plus de 5 000 plages.",
         "storageFailed": "Le stockage local n’a pas pu être mis à jour ; les plages n’ont pas été enregistrées."
       }
-    }
+    },
+    "gzipTooLarge": "Le journal décompressé dépasse la limite de 2 Go.",
+    "gzipCorrupt": "Le fichier .gz est endommagé ou n’est pas au format gzip.",
+    "gzipUnsupported": "Ce système ne peut pas décompresser les fichiers .gz ; décompressez-le d’abord."
   },
   "altCheckUi": {
     "column": "Qualité de l'ALT",
@@ -8777,6 +9000,11 @@
         "unavailable": "Indisponible"
       },
       "privacy": "Les 10 dernières analyses terminées sont conservées localement par projet. Le texte intégral des pages et les vecteurs ne sont jamais enregistrés."
+    },
+    "stance": {
+      "negated": "Mention négative ; pas une recommandation",
+      "critical": "Termes critiques près de la marque ; pas une recommandation",
+      "quoted": "Opinion citée ou attribuée ; pas une recommandation de la source elle-même"
     }
   },
   "experimentsUi": {
@@ -8940,7 +9168,14 @@
     "absolute": "Effet cumulé sur les clics : {{value}} (intervalle à 95 % de {{lower}} à {{upper}}).",
     "relative": "Effet relatif : {{value}} (intervalle à 95 % de {{lower}} à {{upper}}).",
     "probability": "Probabilité que l’effet ait ce signe : {{value}} (approximation normale, pas une loi a posteriori bayésienne).",
-    "caveat": "Une estimation ajustée sur le témoin ne prouve pas la causalité. D’autres changements, des mises à jour Google ou une variation touchant aussi le témoin peuvent la biaiser. Aucun ROI n’est déduit."
+    "caveat": "Une estimation ajustée sur le témoin ne prouve pas la causalité. D’autres changements, des mises à jour Google ou une variation touchant aussi le témoin peuvent la biaiser. Aucun ROI n’est déduit.",
+    "backtest": {
+      "passed": "Backtest réussi : {{runs}} pseudo-interventions dans la période antérieure n’ont trouvé aucun effet.",
+      "failed": "Backtest échoué : {{fp}} sur {{runs}} pseudo-interventions dans la période antérieure ont trouvé un effet inexistant. Ne vous fiez pas à cette estimation.",
+      "not-estimable": "Backtest impossible : la période antérieure est trop courte pour des pseudo-interventions."
+    },
+    "familySignificant": "Toujours significatif après ajustement pour {{family}} expériences affichées ensemble (Holm, p = {{p}}).",
+    "familyNotSignificant": "Non significatif après ajustement pour {{family}} expériences affichées ensemble (Holm, p = {{p}})."
   },
   "revenueImportUi": {
     "title": "Revenus (export GA4 facultatif)",
@@ -8959,5 +9194,27 @@
       "no-rows": "Le fichier ne contient aucune page de destination avec un revenu numérique.",
       "storage-failed": "Le stockage local n’a pas pu être mis à jour ; l’import n’a pas été enregistré."
     }
+  },
+  "entityParity": {
+    "title": "Entités entre versions linguistiques (Wikidata)",
+    "intro": "Les libellés de thèmes de chaque version sont associés à des identifiants Wikidata indépendants de la langue. Une version absente est une alerte à examiner, pas une erreur automatique.",
+    "match": "Associer {{count}} thèmes à Wikidata",
+    "running": "Association avec Wikidata…",
+    "failed": "Wikidata n’a pas répondu pour {{count}} thèmes ; ils ne sont pas comptés comme manquants.",
+    "noGaps": "Chaque entité associée a une page dans chaque version linguistique.",
+    "gapsTitle": "Entités absentes de certaines versions linguistiques",
+    "gap": "{{label}} : présent en {{present}}, absent en {{missing}}",
+    "needsReview": "correspondance de recherche, à vérifier",
+    "correctTitle": "Vérifier et corriger les associations d’entités",
+    "entity": "Entité",
+    "correctLabel": "ID Wikidata pour {{topic}} ({{language}}) ; saisissez none s’il n’a pas d’entité",
+    "confidence": {
+      "manual": "manuel",
+      "exact": "libellé exact",
+      "search": "supposition de recherche",
+      "none": "non associé",
+      "error": "recherche échouée"
+    },
+    "correctPlaceholder": "Q123 / none"
   }
 }

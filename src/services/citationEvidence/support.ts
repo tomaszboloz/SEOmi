@@ -1,5 +1,6 @@
 import type { ClaimCitation } from './claims';
 import { citationReferenceUrl } from './links';
+import { HEDGE, NEGATION } from './stance';
 
 /**
  * Local, deterministic claim support check (#88). It reads only the page text: where the citation sits,
@@ -9,8 +10,6 @@ import { citationReferenceUrl } from './links';
 export type LocalSupportLevel = 'associated' | 'weak' | 'none';
 export interface LocalSupport { level: LocalSupportLevel; hedged: boolean; negated: boolean }
 
-const HEDGE = /\b(?:may|might|could|suggests?|possibly|likely|appears?|może|mogą|prawdopodobnie|sugeruj[eą]|wydaje się)\b/iu;
-const NEGATION = /(?:^|[^\p{L}])(?:not|no|never|without|nie|bez|brak)(?=$|[^\p{L}])/iu;
 const IDENTIFIED = new Set(['doi', 'pmid', 'pmcid', 'url']);
 
 export const localSupportCheck = (claim: Pick<ClaimCitation, 'claim' | 'relation' | 'references'>): LocalSupport => {

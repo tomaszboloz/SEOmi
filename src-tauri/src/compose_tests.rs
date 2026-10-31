@@ -5,7 +5,7 @@ use tauri::test::mock_builder;
 
 #[tokio::test]
 async fn composed_handlers_reject_invalid_input_before_any_network_or_cli_work() {
-    let fixture = StorageApp::new(super::compose(mock_builder()));
+    let fixture = StorageApp::new(crate::compose(mock_builder()));
     let view = tauri::WebviewWindowBuilder::new(&fixture.app, "main", Default::default())
         .build()
         .unwrap();

@@ -1,7 +1,7 @@
 {
   "name": "seomi",
   "private": true,
-  "version": "0.7.0",
+  "version": "0.8.0",
   "type": "module",
   "scripts": {
     "predev": "node scripts/sync-app-version.mjs",
@@ -22,6 +22,7 @@
     "test:coverage:target": "node scripts/run-frontend-coverage.mjs --coverage.thresholds.statements=98 --coverage.thresholds.lines=98 --coverage.thresholds.branches=98 --coverage.thresholds.functions=98",
     "test:coverage:mcp": "node scripts/run-mcp-coverage.mjs",
     "check:loc": "node scripts/check-max-loc.mjs",
+    "bench:sprs": "SPRS_BENCH=1 vitest run tests/sprsBenchmark.test.ts",
     "embeddings": "node scripts/embeddings.mts"
   },
   "dependencies": {

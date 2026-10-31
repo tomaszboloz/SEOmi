@@ -1,7 +1,7 @@
 import type { CrawledLink, CrawledPageSummary } from '@/types';
 import { scholarlyIds, scholarlyKey } from './citationIds';
 import { extractCitationReferences, mapClaimsToCitations, type CitationSource } from '@/services/citationEvidence/claims';
-import { claimBackedPageScore, classifySource, pageQuality, pageRBacked, Q_TARGET_DEFAULT, Q_TARGET_YMYL, type SourceClass } from './citationQuality';
+import { claimBackedPageScore, classifySource, firmClaims, pageQuality, pageRBacked, Q_TARGET_DEFAULT, Q_TARGET_YMYL, type SourceClass } from './citationQuality';
 import type { CitationDetail, ScoringProfile } from './types';
 
 /** Time-tested seed hosts: public institutions, scholarly publishers and standards bodies. */
@@ -48,7 +48,7 @@ export const analyzeCitations = (pages: CrawledPageSummary[], articleUrls: Set<s
       classes.set(scholarlyKey(scholarlyIds(target)) ?? target, classifySource(target, isTrustedHost(hostOf(target)), Boolean(link && isDeadLink(link))));
     }
     detail.pageQuality?.push(pageQuality(url, [...classes.values()], claims));
-    detail.claimCount = (detail.claimCount ?? 0) + claims.length;
+    detail.claimCount = (detail.claimCount ?? 0) + firmClaims(claims).length;
     if (targets.size) detail.pagesWithAnyExternal += 1;
     if (trusted.length) detail.pagesWithTrusted += 1;
     const linked = [...targets].map((target) => scholarlyKey(scholarlyIds(target))).filter((key): key is string => Boolean(key));

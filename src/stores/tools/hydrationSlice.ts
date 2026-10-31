@@ -18,7 +18,8 @@ import { beginToolRequest, isLatestToolRequest, formatCrawlPersistenceNotice, fo
 import { readProjectResearch, loadDomainComparisonTargets, loadDomainComparisonHistory, loadLatestDomainComparison, loadDomainOverview, loadBacklinkProfile, loadBacklinkProfileHistory, loadBacklinkGapReport } from './researchPersistence';
 import { gscClientIdKey, gscClientSecretKey, gscPropertyKey, DEFAULT_GSC_FILTERS, readGscFilters, loadProjectQuery, loadKeywordQuery, loadKeywordCountry, loadKeywordLanguage, loadDomainCountry, loadDomainLanguage, loadBacklinkGapSettings } from './projectPreferences';
 import { rememberedGscData } from './gscLastResult';
-import { normalizeInterruptedCrawl, newestInterruptedCrawl, readInterruptedCrawl, DEFAULT_CRAWL_CONFIG, loadCrawlRequestProfiles } from './crawlPersistence';
+import { normalizeInterruptedCrawl, newestInterruptedCrawl, readInterruptedCrawl, DEFAULT_CRAWL_CONFIG, loadCrawlRequestProfiles, activeCrawlRuns } from './crawlPersistence';
+import { attachCrawlLog } from '@/services/crawlEvents';
 import { loadSavedKeywords, loadTrackedRanks, defaultRankTrackingDraft, loadRankTrackingDraft, migrateLegacyToolData } from './keywordPersistence';
 export const createHydrationSlice = (set: ToolsSet, _get: ToolsGet, services: ToolsServices): Pick<ToolsState, "setMcpClientTab" | "hydrateProject"> => ({
 setMcpClientTab: (tab) => set({ mcpClientTab: tab }),
@@ -119,6 +120,11 @@ hydrateProject: async (projectId) => {
       } catch {
         // Keep the local compatibility copy when the native checkpoint is not
         // available while upgrading from an older release.
+      }
+      try {
+        hydratedInterruptedCrawl = await attachCrawlLog(projectId, hydratedInterruptedCrawl, (runId) => activeCrawlRuns.get(projectId) === runId);
+      } catch (error) {
+        persistenceNotice = i18n.t('runtimeErrors.tools.crawlLogRecoveryFailed', { reason: error instanceof Error ? error.message : String(error) });
       }
     }
     if (!isCurrentHydration()) return;

@@ -3,6 +3,7 @@ import type { PublicAuditOptions, PublicAuditResult } from './auditTypes.js';
 import { assertScope, validatePublicScopeOptions } from './auditScope.js';
 import { canonicalHref, firstMeta } from './htmlAttrs.js';
 import { extract, extractPublicLinks, extractSemanticSignals } from './auditSemantic.js';
+import { extractLinkDetails } from './linkDetails.js';
 
 const MAX_BODY_BYTES = 5 * 1024 * 1024;
 
@@ -29,6 +30,9 @@ export const auditPublicUrl = async (value: string, timeoutMs: number, options: 
     const isHtml = !contentType || contentType.includes('text/html') || contentType.includes('application/xhtml+xml');
     const meta = (name: string) => firstMeta(body, name);
     const discovered = extractPublicLinks(body, target.url);
+    const details = options.includeLinkDetails
+      ? isHtml ? extractLinkDetails(body, target.url) : { links: [], truncated: false }
+      : null;
     const semantic = bodyTruncated || !isHtml ? { terms: [], links: [], source: 'unavailable' as const } : extractSemanticSignals(body, target.url);
     return {
       requested_url: value,
@@ -46,6 +50,7 @@ export const auditPublicUrl = async (value: string, timeoutMs: number, options: 
       security_headers: Object.fromEntries(['strict-transport-security', 'content-security-policy', 'x-frame-options', 'x-content-type-options', 'referrer-policy', 'permissions-policy'].map((header) => [header, response.headers.get(header)])),
       discovered_links: discovered.links,
       discovered_links_truncated: discovered.truncated,
+      ...(details && { link_details: details.links, link_details_truncated: details.truncated || bodyTruncated }),
       semantic_terms: semantic.terms,
       semantic_links: semantic.links,
       semantic_content_source: semantic.source,

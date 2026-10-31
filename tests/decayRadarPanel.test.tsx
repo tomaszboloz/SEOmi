@@ -26,6 +26,13 @@ describe('DecayRadarPanel', () => {
     const { container } = render(<DecayRadarPanel evaluation={{ verdict: 'stable', comparison: sparse, dedupeKey: null, reasons: [] }} />);
     expect(container.querySelectorAll('li').length).toBe(1);
   });
+  it('localizes known format and intent codes and keeps unknown ones as recorded', async () => {
+    const coded = { ...ready, intentChange: { from: 'informational', to: 'transactional' }, formatChange: { from: 'guide', to: 'legacy-code' } };
+    await i18n.changeLanguage('pl');
+    const { container } = render(<DecayRadarPanel evaluation={{ verdict: 'alert', comparison: coded, dedupeKey: 'k', reasons: ['intent'] }} />);
+    expect(container.textContent).toContain('Intencja: informacyjna na transakcyjna');
+    expect(container.textContent).toContain('Format: poradnik na legacy-code');
+  });
   it('explains incompatibility', () => {
     const bad = { ...ready, status: 'incompatible' as const, incompatible: ['model' as const] };
     const { container } = render(<DecayRadarPanel evaluation={{ verdict: 'incompatible', comparison: bad, dedupeKey: null, reasons: [] }} />);

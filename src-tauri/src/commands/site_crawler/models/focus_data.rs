@@ -57,9 +57,22 @@ pub struct CrawledPageFocus {
     /// Which signal triggered `is_js_shell_suspected`; absent when not a shell.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub js_shell_reason: Option<super::JsShellReason>,
+    /// Main-content structure counts for SIJA (#69/#70); absent when not assessed.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub dom_structure: Option<DomStructure>,
     /// Text/title/links parsed from the shell's embedded JSON payload.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub spa_payload: Option<super::SpaPayload>,
+}
+
+/// Tables, lists and user-editable form controls outside nav/header/footer/aside.
+#[derive(Debug, Serialize, Deserialize, Clone, Copy, Default, PartialEq, Eq)]
+pub struct DomStructure {
+    pub tables: u32,
+    pub ordered_lists: u32,
+    pub unordered_lists: u32,
+    /// `input` (not hidden/submit), `select` and `textarea` inside a `form`, as SIJA counts them.
+    pub interactive_inputs: u32,
 }
 
 /// One heading-delimited section of main content (AI Overviews / RAG chunking).

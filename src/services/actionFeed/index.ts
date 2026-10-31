@@ -39,3 +39,4 @@ export { actionId, dedupeActions } from './identity';
 export { arbitrateActions } from './arbitrate';
 export { actionRatio, hssDeltaFor, rankActions } from './rank';
 export type { ActionConflict, ActionConflictKind, ActionDrillTab, ActionEffort, ActionEvidence, ActionSource, ExecutiveAction, ModuleDelta } from './types';
+export { ACTION_DECISIONS, actionSubject, currentDecisions, decisionHistory, DECISION_HISTORY_LIMIT, readDecisionLog, recordDecision, type ActionDecision, type ActionDecisionKind } from './decisions';

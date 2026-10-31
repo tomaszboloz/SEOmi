@@ -13,6 +13,7 @@ export const focusTopicKey = keyOf('manual_topic');
 export const focusAnchorsKey = keyOf('anchor_urls');
 export const focusGoalKey = keyOf('business_goal');
 export const focusBrandKey = keyOf('brand_policy');
+export const focusSegmentsKey = keyOf('segments');
 export const focusBudgetKey = keyOf('recompute_budget');
 export const focusSeenKey = keyOf('first_seen');
 export const focusScheduleKey = keyOf('schedule');

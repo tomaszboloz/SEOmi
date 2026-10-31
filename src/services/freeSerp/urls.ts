@@ -1,8 +1,9 @@
-import { normalizeFreeRequest, type PublicFeed, type PublicFeedRequest } from './contracts';
+import { normalizeFreeRequest, PUBLIC_FEEDS, type PublicFeed, type PublicFeedRequest } from './contracts';
 
 const GOOGLE_HOST = 'trends.google.com';
 const BING_HOST = 'www.bing.com';
 const GOOGLE_SUGGESTIONS_HOST = 'suggestqueries.google.com';
+const WIKIDATA_HOST = 'www.wikidata.org';
 
 export const googleTrendsFeedUrl = (geo = 'PL'): string => {
   const request = normalizeFreeRequest({ feed: 'google-trends', geo, keyword: '', language: 'en' });
@@ -21,10 +22,19 @@ export const googleSuggestionsFeedUrl = (keyword: string, geo = 'PL', language =
   return `https://${GOOGLE_SUGGESTIONS_HOST}/complete/search?${query.toString()}`;
 };
 
+/** Wikidata label search (language-independent entity IDs); same query order as the native builder. */
+export const wikidataEntitiesFeedUrl = (keyword: string, geo = 'PL', language = 'en'): string => {
+  const request = normalizeFreeRequest({ feed: 'wikidata-entities', geo, keyword, language });
+  const primary = request.language.split('-')[0];
+  const query = new URLSearchParams({ action: 'wbsearchentities', format: 'json', type: 'item', limit: '5', language: primary, uselang: primary, search: request.keyword });
+  return `https://${WIKIDATA_HOST}/w/api.php?${query.toString()}`;
+};
+
 export const publicFeedUrl = (request: PublicFeedRequest): string => {
   const normalized = normalizeFreeRequest(request);
   if (normalized.feed === 'google-trends') return googleTrendsFeedUrl(normalized.geo);
   if (normalized.feed === 'google-suggestions') return googleSuggestionsFeedUrl(normalized.keyword, normalized.geo, normalized.language);
+  if (normalized.feed === 'wikidata-entities') return wikidataEntitiesFeedUrl(normalized.keyword, normalized.geo, normalized.language);
   return bingSerpFeedUrl(normalized.keyword, normalized.geo, normalized.language);
 };
 
@@ -36,4 +46,4 @@ export const assertPublicFeedUrl = (value: string, request: PublicFeedRequest): 
   }
 };
 
-export const assertPublicFeedKind = (feed: string): feed is PublicFeed => ['google-trends', 'bing-serp', 'google-suggestions'].includes(feed);
+export const assertPublicFeedKind = (feed: string): feed is PublicFeed => (PUBLIC_FEEDS as string[]).includes(feed);

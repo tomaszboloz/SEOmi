@@ -5,6 +5,7 @@ import { addIntervention, listInterventions, removeIntervention } from '@/servic
 import { evaluateIntervention } from '@/services/experiments/evaluate';
 import { readGscSnapshots } from '@/services/gscTracker/read';
 import { causalImpactFor } from '@/services/experiments/causalSeries';
+import { holmAdjust, twoSidedP } from '@/services/experiments/causalPolicy';
 import { InterventionForm } from './experiments/InterventionForm';
 import { ExperimentCard } from './experiments/ExperimentCard';
 
@@ -14,6 +15,8 @@ const ProjectExperiments = ({ projectId, pages }: { projectId: string; pages: Cr
   const [removeFailed, setRemoveFailed] = useState(false);
   const snapshots = readGscSnapshots(projectId);
   const urls = [...new Set(pages.map(page => page.url))];
+  const causal = entries.map(intervention => causalImpactFor(intervention, snapshots, pages[0]?.url));
+  const families = holmAdjust(causal.map(setup => twoSidedP(setup.estimate)));
   return <>
     <p>{t('experimentsUi.capacity', { count: 200 })}</p>
     <InterventionForm urls={urls} onAdd={input => {
@@ -22,8 +25,8 @@ const ProjectExperiments = ({ projectId, pages }: { projectId: string; pages: Cr
       return saved !== null;
     }} />
     {!entries.length && <p>{t('experimentsUi.empty')}</p>}
-    {entries.map(intervention => <ExperimentCard key={intervention.id} intervention={intervention}
-      evaluation={evaluateIntervention(intervention, snapshots)} causal={causalImpactFor(intervention, snapshots, pages[0]?.url)} onRemove={() => {
+    {entries.map((intervention, index) => <ExperimentCard key={intervention.id} intervention={intervention}
+      evaluation={evaluateIntervention(intervention, snapshots)} causal={{ ...causal[index], family: families[index] }} onRemove={() => {
         const removed = removeIntervention(projectId, intervention.id);
         setRemoveFailed(!removed);
         if (removed) setEntries(listInterventions(projectId));

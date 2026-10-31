@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { setPhraseIgos } from '@/services/export/phraseInsights';
 import { useTranslation } from 'react-i18next';
 import type { PageAuditData } from '@/types';
 import { TargetPhraseEvidenceSection } from './TargetPhraseEvidenceSection';
@@ -12,6 +13,8 @@ export const TargetPhraseAuditPanel: React.FC<{ audit: PageAuditData }> = ({ aud
   const { t } = useTranslation();
   const session = useTargetPhraseAuditSession(audit);
   const igos = usePhraseIgos(session.report?.corpus, { projectId: session.activeProjectId, phrase: session.report?.phrase ?? '', language: session.report?.languageCode });
+  const phrase = session.report?.phrase ?? '';
+  useEffect(() => { setPhraseIgos(audit.final_url, phrase, igos.report); }, [audit.final_url, phrase, igos.report]);
   return (
     <section className="space-y-4 rounded-2xl border border-slate-800 bg-slate-950/25 p-1">
       <header className="rounded-xl border border-slate-800 bg-slate-900/60 px-5 py-4">
@@ -40,7 +43,7 @@ export const TargetPhraseAuditPanel: React.FC<{ audit: PageAuditData }> = ({ aud
         onAudit={() => { void session.auditTopTen(); }}
       />
       {session.report && <IgosPanel report={igos.report} history={igos.history} />}
-      {session.report && <TargetPhraseIntentSection report={session.report} projectId={session.activeProjectId} />}
+      {session.report && <TargetPhraseIntentSection report={session.report} projectId={session.activeProjectId} auditUrl={audit.final_url} />}
     </section>
   );
 };

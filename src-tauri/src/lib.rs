@@ -1,14 +1,6 @@
 pub mod commands;
 #[cfg(test)]
-mod compose_arg_more_tests;
-#[cfg(test)]
-mod compose_arg_tests;
-#[cfg(test)]
-mod compose_command_tests;
-#[cfg(test)]
-mod compose_gap_tests;
-#[cfg(test)]
-mod compose_tests;
+mod compose_suite;
 pub mod models;
 pub mod services;
 mod startup;
@@ -75,6 +67,9 @@ pub(crate) fn compose<R: tauri::Runtime>(builder: Builder<R>) -> Builder<R> {
                 commands::run_store::erase_commands::store_forget_subject,
                 commands::run_store::erase_commands::store_erase_project,
                 commands::run_store::erase_commands::store_erasure_log,
+                commands::run_store::event_commands::store_load_crawl_events,
+                commands::run_store::event_commands::store_list_open_crawl_event_runs,
+                commands::run_store::event_commands::store_close_interrupted_crawl_events,
                 commands::seo_audit::inspect_url,
                 commands::seo_audit::cancel_inspect_url,
                 commands::http_client::check_link,

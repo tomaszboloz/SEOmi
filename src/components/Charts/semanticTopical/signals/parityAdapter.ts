@@ -3,6 +3,7 @@ import type { SemanticMap } from '@/services/semanticGraph/types';
 import { compareParity, type LanguageCoverage, type ParityReport } from '@/services/hreflangParity/parity';
 import { buildClusters, normalizeUrl } from '@/services/hreflangParity/cluster';
 import { parityTopicKey, type ParityExceptions } from '@/services/hreflangParity/exceptions';
+import type { LanguageTopic } from '@/services/entityIds';
 
 const primary = (code: string): string => code.trim().toLowerCase().split('-')[0];
 const langOf = (p: CrawledPageSummary): string => primary(p.document_language ?? '');
@@ -30,7 +31,8 @@ const clusterLanguages = (pages: CrawledPageSummary[]) => {
  * hreflang clusters are compared (Decision (default chosen by agent): without any hreflang annotation the
  * comparison falls back to document language and says so). The reference language is the one with most pages.
  */
-export const buildParityReport = (pages: CrawledPageSummary[], graph: SemanticMap, exceptions: ParityExceptions = {}): ParityReport => {
+/** Words per (language, topic cluster) for the pages in scope, plus the cluster labels and hreflang graph. */
+export const languageCoverage = (pages: CrawledPageSummary[], graph: SemanticMap) => {
   const clusterOf = new Map(graph.nodes.map((n) => [n.page.url, n.clusterId]));
   const topicLabels = new Map(graph.nodes.filter((n) => n.clusterLabel).map((n) => [n.clusterId, n.clusterLabel]));
   const { clusters, byUrl } = clusterLanguages(pages);
@@ -46,6 +48,20 @@ export const buildParityReport = (pages: CrawledPageSummary[], graph: SemanticMa
     row.set(topic, (row.get(topic) ?? 0) + p.word_count);
     coverage.set(lang, row);
   });
+  return { coverage, counts, topicLabels, clusters, scoped };
+};
+
+/** Labelled topics of every language version, the input of the Wikidata entity matching (#99). */
+export const languageTopics = (pages: CrawledPageSummary[], graph: SemanticMap): LanguageTopic[] => {
+  const { coverage, topicLabels } = languageCoverage(pages, graph);
+  return [...coverage].flatMap(([language, row]) => [...row.keys()].flatMap((topic) => {
+    const label = topicLabels.get(topic);
+    return label ? [{ language, topic, label }] : [];
+  })).sort((a, b) => (a.language + a.topic < b.language + b.topic ? -1 : 1));
+};
+
+export const buildParityReport = (pages: CrawledPageSummary[], graph: SemanticMap, exceptions: ParityExceptions = {}): ParityReport => {
+  const { coverage, counts, topicLabels, clusters, scoped } = languageCoverage(pages, graph);
   const referenceLanguage = [...counts.entries()].sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1))[0]?.[0] ?? '';
   const topics = new Set([...coverage.values()].flatMap((row) => [...row.keys()]));
   const localExceptions = new Map(Object.entries(exceptions).map(([language, byTopic]) =>

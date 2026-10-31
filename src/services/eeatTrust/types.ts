@@ -98,6 +98,7 @@ export interface CitationDetail {
   unbackedHighStakesClaims?: number;
   /** Per-page source quality sums and claim backing; absent in reports stored before claim-backed-v1. */
   pageQuality?: PageCitationQuality[];
+  /** Firm high-stakes claims (hedged hypotheses and negations excluded, #88 GEM-88-04). */
   claimCount?: number;
   /** Mean per-page R_backed 0-1. */
   rBacked?: number;

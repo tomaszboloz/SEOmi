@@ -456,7 +456,9 @@
       "backlinkNoProfile": "DataForSEO returned no backlink profile for this target.",
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
-      "crawlerNoPages": "Crawler returned no pages for this target."
+      "crawlerNoPages": "Crawler returned no pages for this target.",
+      "crawlLogRecoveryFailed": "크롤 이벤트 로그를 읽을 수 없어 재시작 전에 완료된 페이지를 복구하지 못했습니다: {{reason}}",
+      "crawlEventLogWriteFailed": "크롤은 완료되었지만 재개용 로그를 쓰지 못했습니다({{reason}}). 도중에 앱이 종료되었다면 진행 상황을 복구할 수 없었습니다."
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",
@@ -2651,7 +2653,9 @@
       "path-key-collision": "중복 경로 키",
       "url-key-collision": "중복 URL 키"
     },
-    "pageLimitUnlimited": "제한 없음"
+    "pageLimitUnlimited": "제한 없음",
+    "interruptedRecovered": "앱 종료 전에 완료된 {{pages}}개 페이지를 크롤 로그에서 복구했으며 재개 시 유지됩니다.",
+    "interruptedRecoveredInvalid": "기록된 {{count}}개 페이지를 읽을 수 없어 다시 크롤합니다."
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -5683,6 +5687,81 @@
         "resource": "안전하지 않은 리소스: {{0}}",
         "response": "서버 응답: HTTP {{1}}, {{0}} ms 소요",
         "hop": "리디렉션 홉: {{1}}에서 HTTP {{0}}"
+      },
+      "phrase": {
+        "igosTitle": "\"{{0}}\"의 정보 이득(IGOS)",
+        "sijaTitle": "\"{{0}}\"의 검색 의도(SIJA)",
+        "score": "점수",
+        "baseline": "비교한 TOP 페이지",
+        "ofTotal": "{{1}}개 중 {{0}}개",
+        "components": "구성 요소(NEFR / EDSI / FHEM / SDD)",
+        "coverage": "기준선 커버리지",
+        "zones": "단락 구역",
+        "novel": "주제 내 새 엔터티",
+        "vectors": "벡터(제공자 / 모델, 실행)",
+        "limits": "제한 사항",
+        "pageIntent": "페이지 의도",
+        "serpIntent": "TOP 의도(렌더링된 페이지 다수)",
+        "match": "의도 일치",
+        "matchValue": {
+          "match": "일치",
+          "mismatch": "불일치",
+          "unknown": "알 수 없음"
+        },
+        "ssas": "SSAS(TOP 대비 구조)",
+        "funnel": "렌더링된 TOP 페이지의 퍼널 단계",
+        "funnelValue": "{{1}}개 중 {{0}}개 렌더링: TOFU {{2}} · MOFU {{3}} · BOFU {{4}}",
+        "gaps": "누락된 형식",
+        "none": "없음",
+        "echoAdvice": "에코 단락 {{0}}개를 자체 데이터나 경험을 담아 직접 다시 쓰세요.",
+        "driftAdvice": "드리프트 단락 {{0}}개를 주제에 맞추거나 삭제하세요. 주제를 벗어난 글은 IGOS를 높이지 않습니다.",
+        "method": "SEOmi 휴리스틱이며 Google 지표가 아닙니다. 경쟁사 텍스트는 복제하지 않습니다.",
+        "methodLabel": "방법",
+        "noScore": "점수 없음",
+        "evidenceAdvice": "단위나 출처가 있는 구체적 데이터를 추가하세요. 감지된 것이 없습니다.",
+        "inconclusive": "SSAS 판단 불가: 실제 상위 페이지가 {{0}}개이며 최소 3개가 필요합니다.",
+        "component": {
+          "nefr": "새 엔터티",
+          "edsi": "근거 밀도",
+          "fhem": "경험 표지",
+          "sdd": "하위 주제 분포"
+        },
+        "zone": {
+          "echo": "에코",
+          "gain": "이득",
+          "drift": "이탈",
+          "neutral": "중립"
+        },
+        "limit": {
+          "no-comparable-documents": "비교 가능한 경쟁 문서가 없습니다.",
+          "too-few-documents": "신뢰할 만한 기준에는 경쟁 문서가 너무 적습니다.",
+          "some-documents-missing": "일부 경쟁 페이지를 가져오지 못했습니다.",
+          "no-target-chunks": "분석할 수 있는 문단이 없습니다.",
+          "off-topic-below-quota": "주제에 맞는 문단이 너무 적습니다.",
+          "local-lexical-embeddings": "유사도는 의미 모델이 아닌 로컬 어휘 벡터로 계산되므로 영역은 근사치입니다.",
+          "heuristic-entities": "엔터티는 대문자 구문과 주어-서술어-목적어 사실에서 추출하며, 학습된 엔터티 모델이 아닙니다.",
+          "semantic-provider-unavailable": "프로젝트의 의미 임베딩 제공자를 사용할 수 없어 로컬 어휘 벡터를 사용했습니다."
+        },
+        "intent": {
+          "definitional": "정의",
+          "how-to": "방법 안내",
+          "troubleshooting": "문제 해결",
+          "comparison": "비교",
+          "curated-list": "추천 목록",
+          "tool": "도구·계산기",
+          "transactional": "거래",
+          "local": "지역"
+        },
+        "gap": {
+          "table": "비교표 추가: 상위 {{1}}개 페이지 중 {{0}}개에 있습니다.",
+          "ordered-list": "번호 단계 추가: 상위 {{1}}개 페이지 중 {{0}}개가 번호 목록을 사용합니다.",
+          "calculator": "작동하는 계산기나 도구 고려: 상위 {{1}}개 페이지 중 {{0}}개에 실제 양식 필드가 있는 도구가 있습니다.",
+          "product-cards": "제품이나 혜택 표시: 상위 {{1}}개 페이지 중 {{0}}개가 제품 또는 가격 카드를 보여 줍니다.",
+          "cta": "명확한 행동 유도를 추가하세요: TOP 페이지 {{1}}개 중 {{0}}개에 있습니다(순수 정보 페이지는 제외)."
+        },
+        "mismatchAdvice": "이 페이지는 대부분의 TOP 페이지와 다른 의도로 보입니다. 같은 요구에 답하는지 확인하세요.",
+        "missingBasics": "누락된 기본 항목",
+        "basicsAdvice": "먼저 누락된 기본 주제 {{0}}개를 다루세요. 커버리지가 절반 미만이면 점수가 감점되며, 새로운 사실이 기본을 대신하지 않습니다."
       }
     },
     "crawl": {
@@ -5877,7 +5956,9 @@
         "zoneNav": "내비게이션 / 이동 경로",
         "zoneFooter": "사이드바 / 푸터",
         "zoneUnknown": "알 수 없음(이전 크롤)",
-        "zoneNeutral": "중립 (1)"
+        "zoneNeutral": "중립 (1)",
+        "tLinkContext": "내부 링크 문맥",
+        "linkContextIntro": "크롤러가 기록한 대로 대괄호 안의 앵커와 양쪽 최대 15단어. 이전 실행에는 문맥이 없습니다. 표시된 행:"
       },
       "cols": {
         "colItem": "항목",
@@ -5953,7 +6034,9 @@
         "colResult": "결과",
         "colZone": "영역",
         "colShare": "비율",
-        "colWeight": "SPRS 가중치"
+        "colWeight": "SPRS 가중치",
+        "colContext": "문맥(±15단어)",
+        "colSection": "섹션 제목"
       },
       "focus": {
         "title": "사이트 포커스",
@@ -6134,7 +6217,11 @@
           "own-domain": "도메인 이름",
           "own-alias": "자사 브랜드 이름",
           "competitor-brand": "경쟁사 브랜드"
-        }
+        },
+        "tSegments": "세그먼트 점수",
+        "segmentsIntro": "이 프로젝트에 정의한 세그먼트이며, 각각 자체 핵심 주제를 기준으로 평가됩니다. 대시는 접두사 아래 평가된 페이지가 없음을 뜻합니다.",
+        "colSegment": "세그먼트",
+        "colCore": "핵심 주제"
       },
       "authority": {
         "title": "주제 권위도",
@@ -6183,6 +6270,14 @@
           "fix-linking": "내부 링크 수정: 고아 페이지 {{0}}개, 주제 밖 링크 {{1}}개",
           "deepen-shallow": "얕은 하위 주제 {{0}}개 보강",
           "refresh-stale": "1년 넘게 수정되지 않은 페이지 {{0}}개 갱신"
+        },
+        "paaUsed": "SERP의 People Also Ask 질문 {{0}}개를 사용했습니다.",
+        "paaMissing": "People Also Ask 소스 없음: 질문은 경쟁사 제목과 Google 자동완성에서만 가져옵니다.",
+        "cdesPartial": "부분 결과: 다루어진 하위 주제 {{1}}개 중 일부에서 {{0}}을(를) 측정할 수 없었습니다. CDES는 측정된 요소만 사용합니다.",
+        "depthPart": {
+          "entities": "엔터티",
+          "questions": "사용자 질문(PAA)",
+          "gain": "정보 이득"
         }
       },
       "aio": {
@@ -6232,7 +6327,16 @@
         "profilePersisted": "저장된 크롤링의 프로필과 일치합니다.",
         "profileLegacy": "이 크롤링에는 저장된 프로필이 없습니다. 표시된 프로필로 다시 계산한 결과이므로 과거 결과와 비교할 수 없습니다.",
         "profileMismatch": "저장된 프로필이 다릅니다. 표시된 프로필로 다시 계산한 결과이므로 과거 결과와 비교할 수 없습니다.",
-        "historicalProfile": "저장된 프로필: {{0}} / {{1}}."
+        "historicalProfile": "저장된 프로필: {{0}} / {{1}}.",
+        "tInspector": "구절 검사기",
+        "inspectorIntro": "가장 약한 구절의 점수 구성 요소, 섹션 텍스트 내 위치(UTF-16 문자), 처음 감지된 주어-술어-목적어 사실입니다. 사실은 의존 구문 분석기가 아닌 어휘 휴리스틱으로 추출됩니다.",
+        "colPosition": "위치",
+        "colAnswer": "답변 우선",
+        "colFactsFound": "감지된 사실",
+        "position": "문자 {{0}}–{{1}}",
+        "notApplicable": "해당 없음",
+        "negated": "{{0}} (부정)",
+        "noFactsFound": "감지된 사실 없음"
       },
       "trust": {
         "title": "엔터티 신뢰도 (E-E-A-T)",
@@ -6319,7 +6423,8 @@
         "colClaim": "주장",
         "colEvidence": "근거",
         "colRelation": "관계",
-        "colChecked": "수동 확인"
+        "colChecked": "수동 확인",
+        "scoring": "점수 하위 프로필 {{0}}(참조 가중치, 미보정)"
       },
       "offPage": {
         "title": "오프페이지 분석",
@@ -7330,6 +7435,17 @@
         "own-alias": "자사 브랜드 이름",
         "competitor-brand": "경쟁사 브랜드"
       }
+    },
+    "segments": {
+      "title": "자체 주제가 있는 세그먼트",
+      "inputLabel": "세그먼트(한 줄에 하나: 이름 | /경로-접두사 | 선택 주제)",
+      "placeholder": "쇼핑 | /shop | 인슐린 펌프",
+      "save": "세그먼트 저장",
+      "help": "다중 주제 사이트용: 각 세그먼트는 자체 핵심 주제(입력한 주제 또는 해당 페이지가 가장 많이 다루는 주제)를 기준으로 평가됩니다. 사이트 전체 Site Focus Score는 바뀌지 않습니다. 최대 {{max}}개 세그먼트.",
+      "dropped": "유효하지 않은 줄 {{count}}개는 저장되지 않았습니다. 형식: 이름 | /경로-접두사 | 선택 주제.",
+      "needsProject": "세그먼트는 프로젝트별로 저장됩니다. 설정하려면 프로젝트에서 이 크롤을 여세요.",
+      "item": "{{label}} ({{prefix}}): {{score}}, {{band}}. 핵심 주제: {{core}}. 평가된 페이지: {{pages}}개 중 {{scored}}개.",
+      "unavailable": "{{label}} ({{prefix}}): 이 접두사 아래 평가된 페이지가 없어 점수가 없습니다(0이 아님)."
     }
   },
   "focusBenchmark": {
@@ -7434,7 +7550,13 @@
       "silcNote": "고아 페이지 {{orphans}}개, 약한 앵커 {{weak}}개, 주제 밖 페이지로의 링크 {{bleed}}개",
       "cvffNote": "오래된 페이지 {{stale}}개, 카니발라이제이션 그룹 {{groups}}개",
       "unavailable": "측정 불가",
-      "multiplier": "SFS {{sfs}}에 따른 포커스 배수 ×{{value}}"
+      "multiplier": "SFS {{sfs}}에 따른 포커스 배수 ×{{value}}",
+      "cdesPartial": "부분 결과: 다루어진 하위 주제 {{rows}}개 중 일부에서 {{parts}}을(를) 측정할 수 없었습니다. CDES는 측정된 요소만 사용합니다.",
+      "depthPart": {
+        "entities": "엔터티",
+        "questions": "사용자 질문(PAA)",
+        "gain": "정보 이득"
+      }
     },
     "warning": {
       "empty-authority": "빈 권위: 주제의 {{tcr}}%를 다루지만 평균 깊이는 {{depth}}/100에 불과합니다. 새 글보다 기존 페이지를 데이터와 엔티티로 보강하세요.",
@@ -7466,7 +7588,10 @@
         "no-competitors": "순위에서 경쟁 도메인을 찾지 못했습니다.",
         "no-pages": "경쟁사 페이지를 크롤링하지 못했습니다(robots.txt, 차단 또는 시간 초과).",
         "no-taxonomy": "경쟁사 페이지의 공통 제목이 너무 적어 신뢰할 지도를 만들 수 없습니다. 나중에 또는 경쟁사를 늘려 다시 시도하세요."
-      }
+      },
+      "withPaa": "실제 '관련 질문'(People Also Ask) 포함 (DataForSEO 고급 SERP, 별도 과금)",
+      "paaUsed": "SERP의 People Also Ask 질문 {{count}}개를 사용했습니다.",
+      "paaMissing": "People Also Ask 소스 없음: 질문은 경쟁사 제목과 Google 자동완성에서만 가져옵니다."
     },
     "coverage": {
       "title": "주제 커버리지 지도",
@@ -7490,6 +7615,15 @@
         "critical": "치명적 공백",
         "high": "큰 공백",
         "medium": "중간 공백"
+      },
+      "pillarFilter": "필러별 필터",
+      "allPillars": "모든 필러",
+      "urlFilter": "URL별 필터",
+      "sortLabel": "하위 주제 정렬",
+      "sort": {
+        "importance": "시장 중요도",
+        "similarity": "최적 페이지 일치도",
+        "label": "이름순"
       }
     },
     "drill": {
@@ -7533,6 +7667,20 @@
       "basis": {
         "intent": "동일한 의도",
         "subtopic": "동일한 하위 주제"
+      },
+      "gsc": {
+        "unavailable": "Search Console: 이 프로젝트에 저장된 쿼리/페이지 데이터가 없어 콘텐츠만으로 선택했습니다.",
+        "noOverlap": "Search Console: 이 URL들은 같은 쿼리에서 노출되지 않습니다.",
+        "agrees": "Search Console 일치: 공통 쿼리에서 {{leader}}이(가) 가장 많은 클릭을 받습니다.",
+        "conflict": "검토 필요한 충돌: Search Console에서는 {{leader}}의 클릭이 가장 많지만 콘텐츠 유사도는 {{canonical}} 유지를 제안합니다.",
+        "query": "'{{query}}': {{pages}}",
+        "page": "{{url}} 클릭 {{clicks}} / 노출 {{impressions}}",
+        "truncated": "Search Console 행이 잘렸을 수 있어 일부 쿼리가 빠질 수 있습니다."
+      },
+      "unique": {
+        "title": "통합 시 유지할 고유 콘텐츠:",
+        "terms": "{{url}}: {{terms}}",
+        "none": "{{url}}: 이 페이지에만 있는 용어가 없습니다"
       }
     },
     "draft": {
@@ -7588,7 +7736,8 @@
       "cleanup": "정리: SFS가 {{delta}} 상승",
       "architecture": "구조: 링크와 카니발라이제이션이 {{delta}} 개선",
       "expansion": "확장: 주제 커버리지가 {{delta}} 상승",
-      "regression": "하락: TAS가 {{delta}} 변동"
+      "regression": "하락: TAS가 {{delta}} 변동",
+      "incomparable": "점수 프로필이 변경되었습니다(새 참조 맵 또는 TAS 공식). 이 시점 전후의 TAS는 직접 비교할 수 없습니다."
     }
   },
   "authorityMonitoring": {
@@ -7727,6 +7876,20 @@
       "negated": "부정",
       "none": "이 청크에서 주어-서술어-목적어 사실이 감지되지 않았습니다.",
       "heuristic": "어휘 휴리스틱이며 의존 구문 분석기가 아닙니다. Q: 1 = 단위가 있는 숫자, 0.7 = 명명된 용어, 0.3 = 일반."
+    },
+    "calibration": {
+      "title": "알림 임계값 보정(라벨)",
+      "intro": "이 프로젝트 크롤링의 점수 쌍 시트를 복사하고 각 행을 직접 \"alert\" 또는 \"no-alert\"로 표시한 뒤 다시 붙여 넣으세요. 두 종류를 합해 사람이 붙인 라벨이 {{min}}개 이상일 때만 임계값을 제안하며, 여기서 알림 설정은 절대 바뀌지 않습니다.",
+      "copy": "라벨링 시트 복사({{count}}쌍)",
+      "copied": "복사됨",
+      "failed": "복사 실패",
+      "paste": "라벨링된 시트(CSV)",
+      "check": "라벨 확인",
+      "counts": "라벨링된 쌍: {{labelled}}(알림 {{alert}}, 알림 없음 {{noAlert}}), 라벨 없음: {{unlabelled}}.",
+      "errors": "잘못된 데이터로 무시된 행: {{lines}}.",
+      "recommended": "이 라벨에는 {{threshold}}점 하락 임계값이 가장 잘 맞습니다. 제안일 뿐이므로 동의하면 알림 설정을 직접 변경하세요.",
+      "insufficient-labels": "아직 라벨이 부족합니다. 임계값을 제안하려면 최소 {{min}}개가 필요합니다.",
+      "single-class": "모든 라벨 값이 같습니다. 임계값을 비교하려면 알림 있음과 없음 사례를 모두 라벨링하세요."
     }
   },
   "trust": {
@@ -7947,6 +8110,10 @@
       },
       "more": "표시되지 않은 프로필: {{n}}개",
       "checked": "{{date}}에 {{source}}에서 확인"
+    },
+    "scoring": {
+      "label": "주장 근거 기반 참조 점수 사용(실험적)",
+      "hint": "신뢰 사양의 참조 가중치를 적용합니다: 역할별 가중 sameAs 재현율, 분리된 그래프 섬에 대한 감점, 주장 근거를 포함한 출처 품질, YMYL 단계. 가중치는 아직 보정되지 않았으며 점수는 같은 프로필을 사용한 실행과만 비교됩니다."
     }
   },
   "executionCard": {
@@ -8150,6 +8317,43 @@
       "copied": "복사됨",
       "failed": "복사 실패",
       "hint": "내보내기에는 정확한 입력값과 가중치가 포함되어 점수를 다시 계산할 수 있습니다."
+    },
+    "card": {
+      "title": "실행 카드",
+      "diagnosis": "진단 및 이유",
+      "location": "위치",
+      "artifact": "변경 전/후 산출물",
+      "deployment": "배포 및 검증",
+      "noUrl": "단일 페이지 URL이 없습니다(사이트 전체 결과).",
+      "kind": {
+        "link": "첫 번째 URL에서 두 번째 URL로 링크를 추가합니다. <a>가 포함된 문장은 링크 작업 공간에 있습니다.",
+        "entities": "이 페이지에 추가할 엔터티입니다. 변경 전/후 단락은 모듈 탭에 있습니다.",
+        "removal": "삭제 또는 병합입니다. 301/410 규칙은 URL 보호 검사 후 배포 산출물에서만 만들어집니다.",
+        "module": "변경 전/후 산출물은 모듈 탭에서 준비됩니다."
+      },
+      "noTask": {
+        "blocked": "가드레일 또는 충돌로 차단되어 작업을 계획하지 않습니다.",
+        "removal": "삭제는 배포 산출물에서 계획하며 여기서는 계획하지 않습니다.",
+        "no-url": "페이지 URL이 없으므로 모듈 탭에서 수정하세요.",
+        "in-module": "모듈 탭에서 페이지별로 수정하세요."
+      },
+      "openModule": "{{tab}}에서 산출물 열기"
+    },
+    "trend": {
+      "first": "이 HSS 프로필로 저장된 이전 실행이 없어 아직 추세가 없습니다.",
+      "notComparable": "이전 실행과 비교할 수 없습니다(둘 중 하나에서 측정되지 않음).",
+      "up": "이전 실행({{date}}) 대비 {{value}} 상승",
+      "down": "이전 실행({{date}}) 대비 {{value}} 하락",
+      "flat": "이전 실행({{date}}) 대비 변화 없음"
+    },
+    "review": {
+      "group": "검토 결정",
+      "decision": {
+        "accepted": "수락",
+        "deferred": "보류",
+        "rejected": "거부"
+      },
+      "current": "결정: {{decision}} ({{date}}) · 기록 {{count}}건"
     }
   },
   "surgical": {
@@ -8230,7 +8434,21 @@
     "lostEntities": "사라진 엔티티",
     "intent": "의도: {{from}} → {{to}}",
     "format": "형식: {{from}} → {{to}}",
-    "incompatible": "{{fields}}이(가) 다릅니다. 시장 변화가 아닙니다."
+    "incompatible": "{{fields}}이(가) 다릅니다. 시장 변화가 아닙니다.",
+    "labels": {
+      "video": "동영상",
+      "forum": "포럼",
+      "product": "제품 페이지",
+      "category": "카테고리 페이지",
+      "guide": "가이드",
+      "listicle": "순위/목록",
+      "news": "뉴스",
+      "tool": "도구",
+      "encyclopedia": "백과사전",
+      "homepage": "홈페이지",
+      "transactional": "거래형",
+      "informational": "정보형"
+    }
   },
   "sijaUi": {
     "title": "검색 의도 (SIJA)",
@@ -8542,8 +8760,10 @@
     "rec": {
       "rewrite-echo": "오프셋 {{offset}}의 문단이 경쟁 구절을 반복합니다. 자신의 말로 다시 쓰세요.",
       "add-evidence": "단위나 출처가 있는 구체적 데이터를 추가하세요. 감지된 것이 없습니다.",
-      "refocus-drift": "오프셋 {{offset}}의 문단이 주제에서 벗어납니다. 다시 집중하거나 삭제하세요."
-    }
+      "refocus-drift": "오프셋 {{offset}}의 문단이 주제에서 벗어납니다. 다시 집중하거나 삭제하세요.",
+      "add-basics": "먼저 누락된 기본 주제 {{count}}개를 다루세요. 커버리지가 절반 미만이면 점수가 감점되며, 새로운 사실이 기본을 대신하지 않습니다."
+    },
+    "missingBasics": "대부분의 TOP 페이지가 다루지만 이 페이지에는 없는 기본 항목: {{list}}"
   },
   "logIntelUi": {
     "title": "로그 분석",
@@ -8558,7 +8778,7 @@
     "complete": "가져오기 완료.",
     "storageFailed": "로컬 저장소를 업데이트할 수 없습니다. 변경 사항은 메모리에만 남으며 저장된 로그는 그대로일 수 있습니다.",
     "tooLarge": "파일이 500 MB 제한을 초과합니다.",
-    "invalidFile": ".log 또는 .txt 파일을 선택하세요.",
+    "invalidFile": ".log, .txt 또는 회전된 .gz 액세스 로그를 선택하세요.",
     "resumeRequired": "다른 파일을 가져오기 전에 미완료 파일을 재개하거나 로그를 지우세요.",
     "importFailed": "파일을 읽거나 해시를 계산할 수 없습니다. 다시 시도하세요.",
     "resume": "같은 파일을 선택하면 행을 중복 계산하지 않고 재개합니다.",
@@ -8618,7 +8838,10 @@
         "too-many-prefixes": "파일에 범위가 5,000개를 초과합니다.",
         "storageFailed": "로컬 저장소를 업데이트하지 못해 범위가 저장되지 않았습니다."
       }
-    }
+    },
+    "gzipTooLarge": "압축을 푼 로그가 2GB 한도를 초과합니다.",
+    "gzipCorrupt": ".gz 파일이 손상되었거나 gzip이 아닙니다.",
+    "gzipUnsupported": "이 시스템은 .gz 파일을 풀 수 없습니다. 먼저 압축을 푸세요."
   },
   "altCheckUi": {
     "column": "ALT 품질",
@@ -8777,6 +9000,11 @@
         "unavailable": "사용 불가"
       },
       "privacy": "최근 완료된 분석 10개를 프로젝트별로 로컬에 저장합니다. 페이지 전체 텍스트와 벡터는 저장하지 않습니다."
+    },
+    "stance": {
+      "negated": "부정된 언급입니다. 추천이 아닙니다",
+      "critical": "브랜드 근처에 비판적 표현이 있습니다. 추천이 아닙니다",
+      "quoted": "인용되거나 타인의 의견입니다. 출처 자체의 추천이 아닙니다"
     }
   },
   "experimentsUi": {
@@ -8940,7 +9168,14 @@
     "absolute": "클릭에 대한 누적 효과: {{value}}(95% 구간 {{lower}}~{{upper}}).",
     "relative": "상대 효과: {{value}}(95% 구간 {{lower}}~{{upper}}).",
     "probability": "효과가 이 부호일 확률: {{value}}(정규 근사이며 베이즈 사후확률이 아님).",
-    "caveat": "대조로 보정한 추정은 인과관계의 증거가 아닙니다. 다른 변경, Google 업데이트, 대조에도 영향을 주는 변화로 편향될 수 있습니다. ROI는 추론하지 않습니다."
+    "caveat": "대조로 보정한 추정은 인과관계의 증거가 아닙니다. 다른 변경, Google 업데이트, 대조에도 영향을 주는 변화로 편향될 수 있습니다. ROI는 추론하지 않습니다.",
+    "backtest": {
+      "passed": "백테스트 통과: 사전 기간의 가상 개입 {{runs}}건에서 효과가 없었습니다.",
+      "failed": "백테스트 실패: 사전 기간의 가상 개입 {{runs}}건 중 {{fp}}건에서 없는 효과가 나타났습니다. 이 추정을 신뢰하지 마세요.",
+      "not-estimable": "백테스트 불가: 사전 기간이 가상 개입에 너무 짧습니다."
+    },
+    "familySignificant": "함께 표시된 실험 {{family}}건에 대해 보정한 뒤에도 유의합니다 (Holm, p = {{p}}).",
+    "familyNotSignificant": "함께 표시된 실험 {{family}}건에 대해 보정하면 유의하지 않습니다 (Holm, p = {{p}})."
   },
   "revenueImportUi": {
     "title": "수익(선택 사항인 GA4 내보내기)",
@@ -8959,5 +9194,27 @@
       "no-rows": "파일에 숫자 수익 값이 있는 방문 페이지가 없습니다.",
       "storage-failed": "로컬 저장소를 업데이트하지 못해 가져오기가 저장되지 않았습니다."
     }
+  },
+  "entityParity": {
+    "title": "언어 버전 간 엔터티 (Wikidata)",
+    "intro": "각 언어 버전의 주제 레이블을 언어 독립적인 Wikidata ID와 매칭합니다. 누락된 버전은 검토할 알림이며 자동 오류가 아닙니다.",
+    "match": "주제 {{count}}개를 Wikidata와 매칭",
+    "running": "Wikidata와 매칭 중…",
+    "failed": "주제 {{count}}개에 대해 Wikidata 응답이 없었습니다. 누락으로 계산하지 않습니다.",
+    "noGaps": "매칭된 모든 엔터티에 각 언어 버전의 페이지가 있습니다.",
+    "gapsTitle": "일부 언어 버전에 없는 엔터티",
+    "gap": "{{label}}: {{present}}에 있음, {{missing}}에 없음",
+    "needsReview": "검색 일치, 검토 필요",
+    "correctTitle": "엔터티 매칭 검토 및 수정",
+    "entity": "엔터티",
+    "correctLabel": "{{topic}} ({{language}})의 Wikidata ID. 엔터티가 없으면 none 입력",
+    "confidence": {
+      "manual": "수동",
+      "exact": "정확한 레이블",
+      "search": "검색 추정",
+      "none": "미매칭",
+      "error": "조회 실패"
+    },
+    "correctPlaceholder": "Q123 / none"
   }
 }

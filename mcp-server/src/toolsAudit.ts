@@ -14,7 +14,7 @@ export function registerAuditTools(
 ): void {
   server.registerTool('seomi_audit_url', {
     title: 'Audit a public URL',
-    description: 'Fetch and audit one public URL. Returns HTTP status, redirects, metadata, Open Graph tags, headings, and security headers. Private network targets are blocked.',
+    description: 'Fetch and audit one public URL. Returns HTTP status, redirects, metadata, Open Graph tags, headings, and security headers. With include_link_details, each link also carries anchor, rel, DOM zone and up to 15 words of context on each side. Private network targets are blocked.',
     inputSchema: {
       url: z.string().url().max(MAX_AUDIT_URL_LENGTH),
       timeout_ms: z.number().int().min(1000).max(30000).default(15000),
@@ -23,9 +23,10 @@ export function registerAuditTools(
       scope_path: z.string().trim().max(2048).optional(),
       include_patterns: z.array(z.string().max(200)).max(20).default([]),
       exclude_patterns: z.array(z.string().max(200)).max(20).default([]),
+      include_link_details: z.boolean().default(false),
     },
     annotations: READ_ONLY_HINTS,
-  }, async ({ url, timeout_ms, scope_host, allow_subdomains, scope_path, include_patterns, exclude_patterns }) => {
+  }, async ({ url, timeout_ms, scope_host, allow_subdomains, scope_path, include_patterns, exclude_patterns, include_link_details }) => {
     try {
       return textResult(await audit(url, timeout_ms, {
         scopeHost: scope_host,
@@ -33,6 +34,7 @@ export function registerAuditTools(
         scopePath: scope_path,
         includePatterns: include_patterns,
         excludePatterns: exclude_patterns,
+        includeLinkDetails: include_link_details,
       }) as unknown as Json);
     } catch (error) {
       return textResult({ error: error instanceof Error ? error.message : String(error) }, true);

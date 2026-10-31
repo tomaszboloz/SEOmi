@@ -456,7 +456,9 @@
       "backlinkNoProfile": "DataForSEO returned no backlink profile for this target.",
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
-      "crawlerNoPages": "Crawler returned no pages for this target."
+      "crawlerNoPages": "Crawler returned no pages for this target.",
+      "crawlLogRecoveryFailed": "クロールのイベントログを読み取れなかったため、再起動前に完了したページは復元されませんでした: {{reason}}",
+      "crawlEventLogWriteFailed": "クロールは完了しましたが、再開用ログを書き込めませんでした（{{reason}}）。途中でアプリが終了していた場合、進捗は復元できませんでした。"
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",
@@ -2651,7 +2653,9 @@
       "path-key-collision": "パスキーが重複",
       "url-key-collision": "URLキーが重複"
     },
-    "pageLimitUnlimited": "無制限"
+    "pageLimitUnlimited": "無制限",
+    "interruptedRecovered": "アプリ終了前に完了した {{pages}} ページをクロールログから復元しました。再開時に保持されます。",
+    "interruptedRecoveredInvalid": "記録された {{count}} ページを読み取れなかったため、再度クロールします。"
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -5683,6 +5687,81 @@
         "resource": "安全でないリソース: {{0}}",
         "response": "サーバー応答: HTTP {{1}}（{{0}} ms）",
         "hop": "リダイレクトのホップ: {{1}}からHTTP {{0}}"
+      },
+      "phrase": {
+        "igosTitle": "「{{0}}」の情報利得（IGOS）",
+        "sijaTitle": "「{{0}}」の検索意図（SIJA）",
+        "score": "スコア",
+        "baseline": "比較したTOPページ",
+        "ofTotal": "{{1}} 件中 {{0}} 件",
+        "components": "構成要素（NEFR / EDSI / FHEM / SDD）",
+        "coverage": "ベースラインの網羅率",
+        "zones": "段落ゾーン",
+        "novel": "トピック内の新しいエンティティ",
+        "vectors": "ベクトル（プロバイダー / モデル、実行）",
+        "limits": "制約",
+        "pageIntent": "ページの意図",
+        "serpIntent": "TOPの意図（レンダリング済みページの多数）",
+        "match": "意図の一致",
+        "matchValue": {
+          "match": "一致",
+          "mismatch": "不一致",
+          "unknown": "不明"
+        },
+        "ssas": "SSAS（TOPとの構造比較）",
+        "funnel": "レンダリング済みTOPページのファネル段階",
+        "funnelValue": "{{1}} 件中 {{0}} 件をレンダリング: TOFU {{2}} · MOFU {{3}} · BOFU {{4}}",
+        "gaps": "不足している形式",
+        "none": "なし",
+        "echoAdvice": "エコー段落（{{0}} 件）を独自のデータや経験を使って自分の言葉で書き直してください。",
+        "driftAdvice": "ドリフト段落（{{0}} 件）をトピックに戻すか削除してください。トピック外の文章はIGOSを上げません。",
+        "method": "SEOmiのヒューリスティックであり、Googleの指標ではありません。競合の文章は転載しません。",
+        "methodLabel": "手法",
+        "noScore": "スコアなし",
+        "evidenceAdvice": "単位や出典つきの具体的なデータを追加してください。検出されませんでした。",
+        "inconclusive": "SSAS は判定不能です。実際の上位ページが {{0}} 件で、最低 3 件必要です。",
+        "component": {
+          "nefr": "新規エンティティ",
+          "edsi": "根拠の密度",
+          "fhem": "経験マーカー",
+          "sdd": "サブトピックの分布"
+        },
+        "zone": {
+          "echo": "エコー",
+          "gain": "ゲイン",
+          "drift": "ドリフト",
+          "neutral": "ニュートラル"
+        },
+        "limit": {
+          "no-comparable-documents": "比較可能な競合文書がありません。",
+          "too-few-documents": "信頼できる基準には競合文書が少なすぎます。",
+          "some-documents-missing": "取得できなかった競合ページがあります。",
+          "no-target-chunks": "ページに分析可能な段落がありません。",
+          "off-topic-below-quota": "トピック内の段落が少なすぎます。",
+          "local-lexical-embeddings": "類似度はセマンティックモデルではなくローカルの語彙ベクトルで計算されるため、ゾーンは近似値です。",
+          "heuristic-entities": "エンティティは大文字で始まる語句と主語・述語・目的語の事実から抽出しており、学習済みのエンティティモデルではありません。",
+          "semantic-provider-unavailable": "プロジェクトのセマンティック埋め込みプロバイダーが利用できなかったため、ローカルの語彙ベクトルを使用しました。"
+        },
+        "intent": {
+          "definitional": "定義",
+          "how-to": "手順",
+          "troubleshooting": "トラブルシューティング",
+          "comparison": "比較",
+          "curated-list": "厳選リスト",
+          "tool": "ツール・計算機",
+          "transactional": "取引",
+          "local": "ローカル"
+        },
+        "gap": {
+          "table": "比較表を追加: 上位 {{1}} ページ中 {{0}} ページにあります。",
+          "ordered-list": "番号付き手順を追加: 上位 {{1}} ページ中 {{0}} ページが番号付きリストを使っています。",
+          "calculator": "実際に動く計算ツールを検討: 上位 {{1}} ページ中 {{0}} ページに実際のフォーム要素付きのものがあります。",
+          "product-cards": "商品やオファーを表示: 上位 {{1}} ページ中 {{0}} ページが商品・価格カードを表示しています。",
+          "cta": "明確な行動喚起を追加してください: TOP ページ {{1}} 件中 {{0}} 件にあります（純粋な情報ページでは不要です）。"
+        },
+        "mismatchAdvice": "このページは多くのTOPページと異なる意図に見えます。同じニーズに応えているか確認してください。",
+        "missingBasics": "不足している基本事項",
+        "basicsAdvice": "まず不足している基本トピック（{{0}} 件）を扱ってください。網羅率が半分未満だとスコアが減点され、新しい事実は基本を代替しません。"
       }
     },
     "crawl": {
@@ -5877,7 +5956,9 @@
         "zoneNav": "ナビゲーション / パンくず",
         "zoneFooter": "サイドバー / フッター",
         "zoneUnknown": "不明（旧クロール）",
-        "zoneNeutral": "中立 (1)"
+        "zoneNeutral": "中立 (1)",
+        "tLinkContext": "内部リンクの文脈",
+        "linkContextIntro": "クローラーが記録したアンカー（角括弧内）と前後最大15語。古い実行には文脈がありません。表示行数:"
       },
       "cols": {
         "colItem": "項目",
@@ -5953,7 +6034,9 @@
         "colResult": "結果",
         "colZone": "ゾーン",
         "colShare": "割合",
-        "colWeight": "SPRS の重み"
+        "colWeight": "SPRS の重み",
+        "colContext": "文脈（±15語）",
+        "colSection": "セクション見出し"
       },
       "focus": {
         "title": "サイトフォーカス",
@@ -6134,7 +6217,11 @@
           "own-domain": "ドメイン名",
           "own-alias": "自社ブランド名",
           "competitor-brand": "競合ブランド"
-        }
+        },
+        "tSegments": "セグメントのスコア",
+        "segmentsIntro": "このプロジェクトで定義したセグメント。各セグメントは独自のコアトピックに対して評価されます。ダッシュは接頭辞の下に評価済みページがないことを示します。",
+        "colSegment": "セグメント",
+        "colCore": "コアトピック"
       },
       "authority": {
         "title": "トピカルオーソリティ",
@@ -6183,6 +6270,14 @@
           "fix-linking": "内部リンクを修正：孤立ページ{{0}}件、テーマ外ページへのリンク{{1}}件",
           "deepen-shallow": "浅いサブトピック{{0}}件を深める",
           "refresh-stale": "1年以上更新されていない{{0}}ページを更新"
+        },
+        "paaUsed": "SERP の PAA 質問を {{0}} 件使用しました。",
+        "paaMissing": "PAA のソースがありません。質問は競合の見出しと Google サジェストのみから取得しています。",
+        "cdesPartial": "部分的: カバー済みサブトピック {{1}} 件の一部で {{0}} を測定できませんでした。CDES は測定できた要素のみを使用します。",
+        "depthPart": {
+          "entities": "エンティティ",
+          "questions": "ユーザーの質問 (PAA)",
+          "gain": "情報利得"
         }
       },
       "aio": {
@@ -6232,7 +6327,16 @@
         "profilePersisted": "保存されたクロールのプロファイルと一致しています。",
         "profileLegacy": "このクロールには保存されたプロファイルがありません。表示中のプロファイルで再計算した結果のため、過去の結果とは比較できません。",
         "profileMismatch": "保存されたプロファイルが異なります。表示中のプロファイルで再計算した結果のため、過去の結果とは比較できません。",
-        "historicalProfile": "保存されたプロファイル: {{0}} / {{1}}."
+        "historicalProfile": "保存されたプロファイル: {{0}} / {{1}}.",
+        "tInspector": "パッセージ検査",
+        "inspectorIntro": "最も弱いパッセージのスコア構成要素、セクション本文内の位置（UTF-16 文字）、最初に検出された主語・述語・目的語の事実。事実は語彙ヒューリスティックによるもので、依存構造解析ではありません。",
+        "colPosition": "位置",
+        "colAnswer": "回答ファースト",
+        "colFactsFound": "検出された事実",
+        "position": "文字 {{0}}–{{1}}",
+        "notApplicable": "対象外",
+        "negated": "{{0}}（否定）",
+        "noFactsFound": "事実は検出されませんでした"
       },
       "trust": {
         "title": "エンティティの信頼性（E-E-A-T）",
@@ -6319,7 +6423,8 @@
         "colClaim": "主張",
         "colEvidence": "証拠",
         "colRelation": "関係",
-        "colChecked": "手動確認"
+        "colChecked": "手動確認",
+        "scoring": "スコアのサブプロファイル {{0}}（参照ウェイト、未調整）"
       },
       "offPage": {
         "title": "オフページ分析",
@@ -7330,6 +7435,17 @@
         "own-alias": "自社ブランド名",
         "competitor-brand": "競合ブランド"
       }
+    },
+    "segments": {
+      "title": "独自トピックを持つセグメント",
+      "inputLabel": "セグメント（1行に1つ: 名前 | /パス接頭辞 | 任意のトピック）",
+      "placeholder": "ショップ | /shop | インスリンポンプ",
+      "save": "セグメントを保存",
+      "help": "複数トピックのサイト向け: 各セグメントは独自のコアトピック（入力したトピック、またはそのページが最も多く扱うトピック）に対して評価されます。サイト全体の Site Focus Score は変わりません。最大 {{max}} セグメント。",
+      "dropped": "無効な行が {{count}} 件あり、保存されませんでした。形式: 名前 | /パス接頭辞 | 任意のトピック。",
+      "needsProject": "セグメントはプロジェクトごとに保存されます。設定するには、このクロールをプロジェクトから開いてください。",
+      "item": "{{label}}（{{prefix}}）: {{score}}、{{band}}。コアトピック: {{core}}。評価済みページ: {{pages}} 中 {{scored}}。",
+      "unavailable": "{{label}}（{{prefix}}）: この接頭辞の下に評価済みページがないため、スコアはありません（0 ではありません）。"
     }
   },
   "focusBenchmark": {
@@ -7434,7 +7550,13 @@
       "silcNote": "孤立ページ{{orphans}}件、弱いアンカー{{weak}}件、テーマ外ページへのリンク{{bleed}}件",
       "cvffNote": "古いページ{{stale}}件、カニバリゼーショングループ{{groups}}件",
       "unavailable": "測定不可",
-      "multiplier": "SFS {{sfs}}によるフォーカス係数 ×{{value}}"
+      "multiplier": "SFS {{sfs}}によるフォーカス係数 ×{{value}}",
+      "cdesPartial": "部分的: カバー済みサブトピック {{rows}} 件の一部で {{parts}} を測定できませんでした。CDES は測定できた要素のみを使用します。",
+      "depthPart": {
+        "entities": "エンティティ",
+        "questions": "ユーザーの質問 (PAA)",
+        "gain": "情報利得"
+      }
     },
     "warning": {
       "empty-authority": "空虚なオーソリティ：トピックの{{tcr}}%に触れていますが平均の深さは{{depth}}/100しかありません。新規公開の前に既存ページを事実とエンティティで深めてください。",
@@ -7466,7 +7588,10 @@
         "no-competitors": "順位に競合ドメインが見つかりませんでした。",
         "no-pages": "競合ページをクロールできませんでした（robots.txt、ブロック、タイムアウト）。",
         "no-taxonomy": "競合ページの共通見出しが少なく、信頼できるマップを作れません。時間をおくか競合を増やして再試行してください。"
-      }
+      },
+      "withPaa": "実際の「他の人はこちらも質問」(PAA) を含める（DataForSEO 高度 SERP、別料金）",
+      "paaUsed": "SERP の PAA 質問を {{count}} 件使用しました。",
+      "paaMissing": "PAA のソースがありません。質問は競合の見出しと Google サジェストのみから取得しています。"
     },
     "coverage": {
       "title": "トピックカバレッジマップ",
@@ -7490,6 +7615,15 @@
         "critical": "重大な欠落",
         "high": "大きな欠落",
         "medium": "中程度の欠落"
+      },
+      "pillarFilter": "ピラーで絞り込む",
+      "allPillars": "すべてのピラー",
+      "urlFilter": "URL で絞り込む",
+      "sortLabel": "サブトピックを並べ替え",
+      "sort": {
+        "importance": "市場での重要度",
+        "similarity": "最適ページの一致度",
+        "label": "名前順"
       }
     },
     "drill": {
@@ -7533,6 +7667,20 @@
       "basis": {
         "intent": "同じ検索意図",
         "subtopic": "同じサブトピック"
+      },
+      "gsc": {
+        "unavailable": "Search Console: このプロジェクトには保存済みのクエリ/ページデータがないため、コンテンツのみで判断しています。",
+        "noOverlap": "Search Console: これらの URL は同じクエリで表示されていません。",
+        "agrees": "Search Console も一致: 共通クエリで最もクリックされているのは {{leader}} です。",
+        "conflict": "確認が必要な競合: Search Console では {{leader}} のクリックが最多ですが、内容の類似度では {{canonical}} の維持が推奨されます。",
+        "query": "「{{query}}」: {{pages}}",
+        "page": "{{url}} クリック {{clicks}} / 表示 {{impressions}}",
+        "truncated": "Search Console の行は切り詰められている可能性があり、一部のクエリが欠けていることがあります。"
+      },
+      "unique": {
+        "title": "統合時に残すべき固有のコンテンツ:",
+        "terms": "{{url}}: {{terms}}",
+        "none": "{{url}}: このページだけにある用語はありません"
       }
     },
     "draft": {
@@ -7588,7 +7736,8 @@
       "cleanup": "整理：SFSが{{delta}}上昇",
       "architecture": "アーキテクチャ：リンクとカニバリゼーションが{{delta}}改善",
       "expansion": "拡張：トピックカバレッジが{{delta}}上昇",
-      "regression": "悪化：TASが{{delta}}変化"
+      "regression": "悪化：TASが{{delta}}変化",
+      "incomparable": "スコアリングプロファイルが変更されました（新しい参照マップまたは TAS 式）。この時点の前後の TAS は直接比較できません。"
     }
   },
   "authorityMonitoring": {
@@ -7727,6 +7876,20 @@
       "negated": "否定",
       "none": "このチャンクでは主語・述語・目的語の事実は検出されませんでした。",
       "heuristic": "語彙ヒューリスティックであり、係り受け解析ではありません。Q: 1 = 単位付きの数値、0.7 = 固有の用語、0.3 = 一般的。"
+    },
+    "calibration": {
+      "title": "アラートしきい値の調整（ラベル）",
+      "intro": "このプロジェクトのクロールから得たスコアのペア表をコピーし、各行に手作業で \"alert\" または \"no-alert\" を記入して貼り戻してください。しきい値は両方の種類の人手ラベルが {{min}} 件以上ある場合にのみ提案され、アラート設定はここでは変更されません。",
+      "copy": "ラベル付け用シートをコピー（{{count}} ペア）",
+      "copied": "コピーしました",
+      "failed": "コピーに失敗しました",
+      "paste": "ラベル付きシート（CSV）",
+      "check": "ラベルを確認",
+      "counts": "ラベル付きペア: {{labelled}}（アラート {{alert}}、アラートなし {{noAlert}}）、未ラベル: {{unlabelled}}。",
+      "errors": "無効なデータのため無視した行: {{lines}}。",
+      "recommended": "これらのラベルには {{threshold}} ポイントの低下しきい値が最も適合します。これは提案にすぎません。同意する場合はアラート設定をご自身で変更してください。",
+      "insufficient-labels": "ラベルがまだ足りません。しきい値を提案するには少なくとも {{min}} 件必要です。",
+      "single-class": "すべてのラベルが同じ値です。しきい値を比較するには、アラートありとなしの両方のケースにラベルを付けてください。"
     }
   },
   "trust": {
@@ -7947,6 +8110,10 @@
       },
       "more": "表示されていないプロフィール：{{n}} 件",
       "checked": "{{date}} に {{source}} で確認"
+    },
+    "scoring": {
+      "label": "主張の裏付けに基づく参照スコアを使う（試験的）",
+      "hint": "信頼性仕様の参照ウェイトを適用します：役割で重み付けした sameAs の再現率、切り離されたグラフの島へのペナルティ、主張の裏付けを含む出典品質、YMYL の段階。ウェイトはまだ調整されておらず、スコアは同じプロファイルの実行とのみ比較されます。"
     }
   },
   "executionCard": {
@@ -8150,6 +8317,43 @@
       "copied": "コピーしました",
       "failed": "コピーに失敗しました",
       "hint": "エクスポートには正確な入力と重みが含まれるため、スコアを再計算できます。"
+    },
+    "card": {
+      "title": "実行カード",
+      "diagnosis": "診断と理由",
+      "location": "場所",
+      "artifact": "変更前/変更後の成果物",
+      "deployment": "実装と検証",
+      "noUrl": "単一のページ URL はありません（サイト全体の所見）。",
+      "kind": {
+        "link": "最初の URL から 2 番目の URL へリンクを追加します。<a> 付きの文はリンクのワークスペースにあります。",
+        "entities": "このページに追加するエンティティです。変更前/変更後の段落はモジュールのタブにあります。",
+        "removal": "削除または統合です。301/410 ルールは URL 保護チェックの後、デプロイ成果物でのみ作成されます。",
+        "module": "変更前/変更後の成果物はモジュールのタブで作成されます。"
+      },
+      "noTask": {
+        "blocked": "ガードレールまたは競合でブロックされているため、タスクは計画されません。",
+        "removal": "削除はデプロイ成果物で計画し、ここでは計画しません。",
+        "no-url": "ページ URL がないため、モジュールのタブで修正してください。",
+        "in-module": "モジュールのタブでページごとに修正してください。"
+      },
+      "openModule": "{{tab}} で成果物を開く"
+    },
+    "trend": {
+      "first": "このHSSプロファイルで保存された以前の実行がないため、傾向はまだありません。",
+      "notComparable": "前回の実行と比較できません（どちらかで未測定）。",
+      "up": "前回の実行（{{date}}）から {{value}} 上昇",
+      "down": "前回の実行（{{date}}）から {{value}} 低下",
+      "flat": "前回の実行（{{date}}）から変化なし"
+    },
+    "review": {
+      "group": "レビューの判断",
+      "decision": {
+        "accepted": "承認",
+        "deferred": "保留",
+        "rejected": "却下"
+      },
+      "current": "判断: {{decision}}（{{date}}）· 履歴 {{count}} 件"
     }
   },
   "surgical": {
@@ -8230,7 +8434,21 @@
     "lostEntities": "失われたエンティティ",
     "intent": "意図: {{from}} から {{to}}",
     "format": "形式: {{from}} から {{to}}",
-    "incompatible": "{{fields}} が異なります。市場の変化ではありません。"
+    "incompatible": "{{fields}} が異なります。市場の変化ではありません。",
+    "labels": {
+      "video": "動画",
+      "forum": "フォーラム",
+      "product": "商品ページ",
+      "category": "カテゴリページ",
+      "guide": "ガイド",
+      "listicle": "ランキング/リスト",
+      "news": "ニュース",
+      "tool": "ツール",
+      "encyclopedia": "百科事典",
+      "homepage": "トップページ",
+      "transactional": "取引型",
+      "informational": "情報型"
+    }
   },
   "sijaUi": {
     "title": "検索意図 (SIJA)",
@@ -8542,8 +8760,10 @@
     "rec": {
       "rewrite-echo": "オフセット {{offset}} の段落は競合の記述と重複しています。自分の言葉で書き直してください。",
       "add-evidence": "単位や出典つきの具体的なデータを追加してください。検出されませんでした。",
-      "refocus-drift": "オフセット {{offset}} の段落はトピックから外れています。焦点を戻すか削除してください。"
-    }
+      "refocus-drift": "オフセット {{offset}} の段落はトピックから外れています。焦点を戻すか削除してください。",
+      "add-basics": "まず不足している基本トピック（{{count}} 件）を扱ってください。網羅率が半分未満だとスコアが減点され、新しい事実は基本を代替しません。"
+    },
+    "missingBasics": "多くのTOPページが扱っているのにこのページにない基本事項: {{list}}"
   },
   "logIntelUi": {
     "title": "ログ分析",
@@ -8558,7 +8778,7 @@
     "complete": "インポート完了。",
     "storageFailed": "ローカルストレージを更新できませんでした。変更はメモリ内のみで、保存済みログは変わっていない可能性があります。",
     "tooLarge": "ファイルが500 MBの上限を超えています。",
-    "invalidFile": ".log または .txt ファイルを選択してください。",
+    "invalidFile": ".log、.txt、またはローテーションされた .gz のアクセスログを選択してください。",
     "resumeRequired": "別のファイルをインポートする前に未完了のファイルを再開するかログを消去してください。",
     "importFailed": "ファイルの読み取りまたはハッシュ計算に失敗しました。再試行してください。",
     "resume": "同じファイルを選択すると行を二重計上せず再開できます。",
@@ -8618,7 +8838,10 @@
         "too-many-prefixes": "ファイルに 5,000 件を超える範囲があります。",
         "storageFailed": "ローカルストレージを更新できず、範囲は保存されませんでした。"
       }
-    }
+    },
+    "gzipTooLarge": "展開後のログが 2 GB の上限を超えています。",
+    "gzipCorrupt": ".gz ファイルが破損しているか、gzip ではありません。",
+    "gzipUnsupported": "このシステムでは .gz を展開できません。先に展開してください。"
   },
   "altCheckUi": {
     "column": "ALTの品質",
@@ -8777,6 +9000,11 @@
         "unavailable": "取得不可"
       },
       "privacy": "完了した直近10件の分析をプロジェクトごとにローカル保存します。ページ全文とベクトルは保存しません。"
+    },
+    "stance": {
+      "negated": "否定的な言及です。推奨ではありません",
+      "critical": "ブランドの近くに批判的な表現があります。推奨ではありません",
+      "quoted": "引用または他者の意見です。ソース自身の推奨ではありません"
     }
   },
   "experimentsUi": {
@@ -8940,7 +9168,14 @@
     "absolute": "クリック数への累積効果：{{value}}（95% 区間 {{lower}}～{{upper}}）。",
     "relative": "相対効果：{{value}}（95% 区間 {{lower}}～{{upper}}）。",
     "probability": "効果がこの符号である確率：{{value}}（正規近似であり、ベイズ事後確率ではありません）。",
-    "caveat": "コントロールで調整した推定は因果関係の証明ではありません。他の変更、Google のアップデート、コントロールにも及ぶ変動によって偏ることがあります。ROI は推定しません。"
+    "caveat": "コントロールで調整した推定は因果関係の証明ではありません。他の変更、Google のアップデート、コントロールにも及ぶ変動によって偏ることがあります。ROI は推定しません。",
+    "backtest": {
+      "passed": "バックテスト合格: 事前期間内の {{runs}} 件の疑似介入で効果は見つかりませんでした。",
+      "failed": "バックテスト不合格: 事前期間内の {{runs}} 件中 {{fp}} 件の疑似介入で、存在しない効果が検出されました。この推定は信頼しないでください。",
+      "not-estimable": "バックテスト不可: 事前期間が疑似介入には短すぎます。"
+    },
+    "familySignificant": "同時に表示した {{family}} 件の実験で補正後も有意です (Holm, p = {{p}})。",
+    "familyNotSignificant": "同時に表示した {{family}} 件の実験で補正後は有意ではありません (Holm, p = {{p}})。"
   },
   "revenueImportUi": {
     "title": "収益（任意の GA4 エクスポート）",
@@ -8959,5 +9194,27 @@
       "no-rows": "数値の収益を持つランディングページがファイルにありません。",
       "storage-failed": "ローカルストレージを更新できず、インポートは保存されませんでした。"
     }
+  },
+  "entityParity": {
+    "title": "言語バージョン間のエンティティ (Wikidata)",
+    "intro": "各言語バージョンのトピックラベルを言語に依存しない Wikidata ID に照合します。欠けているバージョンは確認用のアラートであり、自動的なエラーではありません。",
+    "match": "{{count}} 件のトピックを Wikidata と照合",
+    "running": "Wikidata と照合中…",
+    "failed": "{{count}} 件のトピックで Wikidata から応答がありませんでした。欠落としては数えません。",
+    "noGaps": "照合されたすべてのエンティティに、各言語バージョンのページがあります。",
+    "gapsTitle": "一部の言語バージョンに欠けているエンティティ",
+    "gap": "{{label}}: {{present}} にあり、{{missing}} にありません",
+    "needsReview": "検索一致、要確認",
+    "correctTitle": "エンティティの照合を確認・修正",
+    "entity": "エンティティ",
+    "correctLabel": "{{topic}} ({{language}}) の Wikidata ID。エンティティがない場合は none と入力",
+    "confidence": {
+      "manual": "手動",
+      "exact": "ラベル完全一致",
+      "search": "検索推定",
+      "none": "未照合",
+      "error": "検索失敗"
+    },
+    "correctPlaceholder": "Q123 / none"
   }
 }

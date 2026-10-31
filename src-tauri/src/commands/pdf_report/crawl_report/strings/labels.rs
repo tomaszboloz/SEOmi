@@ -94,3 +94,5 @@ pub const ZONE_NAV: &str = "crawl.labels.zoneNav";
 pub const ZONE_FOOTER: &str = "crawl.labels.zoneFooter";
 pub const ZONE_UNKNOWN: &str = "crawl.labels.zoneUnknown";
 pub const ZONE_NEUTRAL: &str = "crawl.labels.zoneNeutral";
+pub const T_LINK_CONTEXT: &str = "crawl.labels.tLinkContext";
+pub const LINK_CONTEXT_INTRO: &str = "crawl.labels.linkContextIntro";

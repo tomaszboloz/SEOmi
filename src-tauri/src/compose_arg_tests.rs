@@ -5,7 +5,7 @@ use tauri::test::mock_builder;
 
 #[test]
 fn composed_commands_reject_payloads_missing_required_arguments() {
-    let fixture = StorageApp::new(super::compose(mock_builder()));
+    let fixture = StorageApp::new(crate::compose(mock_builder()));
     let view = tauri::WebviewWindowBuilder::new(&fixture.app, "main", Default::default())
         .build()
         .unwrap();

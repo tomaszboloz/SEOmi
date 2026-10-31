@@ -1,8 +1,8 @@
 use super::data::Crawl;
 use super::tables::Table;
 use super::{
-    sec_dupes, sec_extra, sec_http, sec_link_zones, sec_links, sec_media, sec_meta, sec_nav,
-    sec_redirects, sec_robots, sec_schema,
+    sec_dupes, sec_extra, sec_http, sec_link_context, sec_link_zones, sec_links, sec_media,
+    sec_meta, sec_nav, sec_redirects, sec_robots, sec_schema,
 };
 use serde_json::Value;
 
@@ -28,6 +28,7 @@ pub fn detail_tables(c: &Crawl) -> Vec<Table> {
         all.push(sec_links::broken_links(c));
         all.push(sec_links::external_links(c));
         all.push(sec_link_zones::link_zones(c));
+        all.push(sec_link_context::link_context(c));
     }
     if on("pages") {
         all.push(sec_meta::canonicals(c));

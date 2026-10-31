@@ -3,6 +3,7 @@ import { pathSegments } from '@/services/siteFocus/pageType';
 import { isChromeOrigin, linkOrigin } from './chrome';
 import { unigramKeys, type AuthorityContext, type AuthorityPage } from './context';
 import { blend } from './depth';
+import { orphanNodes } from '@/services/linkGraph';
 import { isGenericAnchor } from './genericAnchors';
 import type { LinkAudit, SiloReport } from './types';
 
@@ -92,7 +93,7 @@ export const auditSilo = (context: AuthorityContext, eligible: AuthorityPage[], 
   const bleedLinks = edges.filter((edge) => ok.has(edge.from) && context.byUrl.get(edge.to)!.focus.trs < BLEED_BELOW && context.byUrl.get(edge.to)!.focus.type !== 'technical').map((edge) => ({ from: edge.from, to: edge.to }));
   bleedLinks.forEach((edge) => { (audits[edge.from] ??= { linksToPillar: false, inbound: inbound.get(edge.from) ?? 0, bleedTargets: [] }).bleedTargets.push(edge.to); });
   const nonHome = eligible.filter((entry) => entry.focus.type !== 'homepage');
-  const orphans = nonHome.filter((entry) => !(inbound.get(entry.url) ?? 0)).map((entry) => entry.url).sort();
+  const orphans = orphanNodes(nonHome.map((entry) => entry.url), edges);
   const orphanRatio = nonHome.length ? orphans.length / nonHome.length : 0;
   const bleedRatio = eligible.length ? new Set(bleedLinks.map((edge) => edge.from)).size / eligible.length : 0;
   const connectivityMean = connectivity.length ? connectivity.reduce((sum, value) => sum + value, 0) / connectivity.length : null;

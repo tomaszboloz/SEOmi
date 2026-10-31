@@ -2,10 +2,11 @@ import { focusConfigHash } from '@/services/siteFocus/configHash';
 import { readAnchorUrls } from './anchors';
 import { readBrandPolicy } from './brand';
 import { readBusinessGoal } from './goal';
+import { readFocusSegments } from './segments';
 import { readManualTopic, type ManualTopic } from './topic';
-import type { BrandPolicyInput } from '@/services/siteFocus/types';
+import type { BrandPolicyInput, FocusSegmentInput } from '@/services/siteFocus/types';
 
-export interface ProjectFocusOptions { manualTopic?: ManualTopic; anchorUrls?: string[]; businessGoal?: string; brand?: BrandPolicyInput }
+export interface ProjectFocusOptions { manualTopic?: ManualTopic; anchorUrls?: string[]; businessGoal?: string; brand?: BrandPolicyInput; segments?: FocusSegmentInput[] }
 
 /**
  * The project's saved Core Topic inputs, so every SFS consumer picks the same topic as the Focus tab.
@@ -15,9 +16,10 @@ export const projectFocusOptions = (projectId: string | null | undefined): Proje
   const anchorUrls = readAnchorUrls(projectId);
   const businessGoal = readBusinessGoal(projectId);
   const brand = readBrandPolicy(projectId);
+  const segments = readFocusSegments(projectId);
   return {
     manualTopic: readManualTopic(projectId), ...(anchorUrls.length ? { anchorUrls } : {}), ...(businessGoal ? { businessGoal } : {}),
-    ...(Object.keys(brand).length ? { brand } : {}),
+    ...(Object.keys(brand).length ? { brand } : {}), ...(segments.length ? { segments } : {}),
   };
 };
 

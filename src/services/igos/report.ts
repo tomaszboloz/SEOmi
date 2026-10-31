@@ -1,4 +1,4 @@
-import { baseCoverage, edsi, fhem, nefr, novelEntities, penalty, sdd } from './components';
+import { baseCoverage, edsi, fhem, missingBasics, nefr, novelEntities, penalty, sdd } from './components';
 import { IGOS_PROFILE as P } from './profile';
 import type { Availability, CompetitorDoc, ConsensusBaseline, TargetDoc, ZonedChunk } from './types';
 import { zoneChunks } from './zones';
@@ -23,6 +23,8 @@ export interface IgosReport {
   availableDocs: number;
   requestedDocs: number;
   novelEntities: string[];
+  /** Consensus entities the page lacks; they lower coverage and drive the penalty multiplier. */
+  missingBasics?: string[];
   zones: ZonedChunk[];
   limitations: string[];
   provenance?: IgosProvenance;
@@ -42,7 +44,7 @@ export const buildIgosReport = (target: TargetDoc, docs: CompetitorDoc[], baseli
   const components = { nefr: nefr(novel.length, baseline.consensusEntities.length), edsi: edsi(text, target.wordCount), fhem: fhem(text), sdd: sdd(target.terms, baseline.terms) };
   const coverage = baseCoverage(target, baseline);
   const multiplier = penalty(coverage);
-  const base = { ...empty, zones, novelEntities: novel, components, coverage, multiplier, onTopicShare: onTopic };
+  const base = { ...empty, zones, novelEntities: novel, missingBasics: missingBasics(target, baseline), components, coverage, multiplier, onTopicShare: onTopic };
   if (onTopic < P.onTopicQuota) return { ...base, status: 'off-topic', limitations: [...empty.limitations, 'off-topic-below-quota'] };
   const raw = P.weights.nefr * components.nefr + P.weights.edsi * components.edsi + P.weights.fhem * components.fhem + P.weights.sdd * components.sdd;
   return { ...base, igos: Math.round(100 * raw * multiplier) };

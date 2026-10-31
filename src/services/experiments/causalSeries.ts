@@ -4,6 +4,7 @@ import { areSitesIndependent, propertyMatchScore } from '@/services/causalMarket
 import type { Intervention } from './registry';
 import { estimateCausalImpact, type CausalEstimate, type CausalInput } from './causalImpact';
 import { fitLinear } from './causalStats';
+import { backtestCausal, type BacktestResult, type FamilyResult } from './causalPolicy';
 
 /**
  * Daily clicks series for a site-level intervention and an independent control property (#97).
@@ -30,7 +31,13 @@ const groupsOf = (snapshots: readonly GscPerformanceSnapshot[]): Group[] => {
 
 const shift = (date: string, days: number): string => new Date(Date.parse(`${date}T00:00:00Z`) + days * DAY).toISOString().slice(0, 10);
 
-export interface CausalSetup { testSite: string | null; controlSite: string | null; estimate: CausalEstimate | null; unavailable: 'page-series-unavailable' | 'no-test-series' | null }
+export interface CausalSetup {
+  testSite: string | null; controlSite: string | null; estimate: CausalEstimate | null; unavailable: 'page-series-unavailable' | 'no-test-series' | null;
+  /** Pseudo-intervention backtest; only run when the real estimate exists. */
+  backtest?: BacktestResult | null;
+  /** Holm-adjusted result across the experiments shown together. */
+  family?: FamilyResult;
+}
 
 export const causalImpactFor = (intervention: Intervention, snapshots: readonly GscPerformanceSnapshot[], rootUrl: string | undefined): CausalSetup => {
   const none = { testSite: null, controlSite: null, estimate: null };
@@ -60,5 +67,6 @@ export const causalImpactFor = (intervention: Intervention, snapshots: readonly 
     test: dates.map((date) => test.daily.get(date) ?? null),
     control: control ? dates.map((date) => control.daily.get(date) ?? null) : null,
   };
-  return { testSite: test.site, controlSite: control?.site ?? null, estimate: estimateCausalImpact(input), unavailable: null };
+  const estimate = estimateCausalImpact(input);
+  return { testSite: test.site, controlSite: control?.site ?? null, estimate, unavailable: null, backtest: estimate.status === 'estimated' ? backtestCausal(input) : null };
 };

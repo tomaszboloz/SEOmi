@@ -3,49 +3,59 @@ use scraper::{ElementRef, Html, Selector};
 use std::collections::HashSet;
 
 const MAX_ELEMENTS: usize = 512;
+/// Levels below `<body>` that shape the layout; deeper nodes are article content, not template.
+const MAX_DEPTH: usize = 5;
 const MAX_VARIABLES: usize = 32;
 const MAX_VAR_LEN: usize = 120;
 
-fn excluded(el: &ElementRef) -> bool {
-    if matches!(
-        el.value().name(),
-        "script" | "style" | "noscript" | "svg" | "template"
-    ) {
-        return true;
+/// Dynamic or decorative subtrees, plus inline phrasing tags whose count follows the text.
+const SKIPPED: [&str; 31] = [
+    "script", "style", "noscript", "svg", "template", "a", "span", "strong", "em", "b", "i", "u",
+    "s", "br", "wbr", "small", "sup", "sub", "code", "abbr", "time", "mark", "img", "picture",
+    "source", "cite", "q", "kbd", "var", "bdi", "bdo",
+];
+
+fn skipped(name: &str) -> bool {
+    SKIPPED.contains(&name)
+}
+
+/// Layout skeleton of `el`: each level keeps the sorted set of distinct child skeletons, so pages of one
+/// template with a different number or order of paragraphs, list items or cards share a signature (#139),
+/// while a different layout (an extra sidebar, form or section type) still differs.
+/// A child cut off by the element budget is left out rather than recorded half-explored.
+fn skeleton(el: ElementRef, depth: usize, budget: &mut usize) -> String {
+    let name = el.value().name();
+    if depth >= MAX_DEPTH {
+        return name.to_owned();
     }
-    el.ancestors()
-        .filter_map(ElementRef::wrap)
-        .take_while(|a| a.value().name() != "body")
-        .any(|a| {
-            matches!(
-                a.value().name(),
-                "script" | "style" | "noscript" | "svg" | "template"
-            )
-        })
+    let mut children = Vec::new();
+    for child in el.children().filter_map(ElementRef::wrap) {
+        if skipped(child.value().name()) {
+            continue;
+        }
+        if *budget == 0 {
+            break;
+        }
+        *budget -= 1;
+        let shape = skeleton(child, depth + 1, budget);
+        if *budget == 0 && child.children().any(|c| ElementRef::wrap(c).is_some()) {
+            break;
+        }
+        children.push(shape);
+    }
+    children.sort();
+    children.dedup();
+    if children.is_empty() {
+        name.to_owned()
+    } else {
+        format!("{name}({})", children.join(","))
+    }
 }
 
 pub(super) fn signature(document: &Html) -> Option<String> {
     let body = document.select(&Selector::parse("body").ok()?).next()?;
-    let base_depth = body.ancestors().filter_map(ElementRef::wrap).count();
-    let tags = body
-        .descendants()
-        .filter_map(ElementRef::wrap)
-        .filter(|el| !excluded(el))
-        .take(MAX_ELEMENTS - 1)
-        .map(|el| {
-            let depth = el
-                .ancestors()
-                .filter_map(ElementRef::wrap)
-                .count()
-                .saturating_sub(base_depth);
-            format!("{depth}:{}", el.value().name())
-        });
-    Some(
-        std::iter::once("0:body".to_string())
-            .chain(tags)
-            .collect::<Vec<_>>()
-            .join(">"),
-    )
+    let mut budget = MAX_ELEMENTS - 1;
+    Some(skeleton(body, 0, &mut budget))
 }
 
 fn values(document: &Html, selector: &str) -> Option<Vec<String>> {

@@ -19,6 +19,8 @@ export interface SubtopicCoverage {
   similarity: number;
   /** Entity Depth 0-100 of the best page; absent when no component could be measured. */
   depth?: number;
+  /** Depth components measured for the best page (entities / questions / gain); absent on older reports. */
+  depthParts?: Array<'entities' | 'questions' | 'gain'>;
   entitiesPresent: string[];
   entitiesMissing: string[];
   questionsMissing: string[];
@@ -58,4 +60,14 @@ export interface AuthorityRecommendation {
   ratio: number;
   items: string[];
   urls: string[];
+}
+
+/** What CDES really rests on: covered sub-topics with each depth component measured (#58 GEM-58-04). */
+export interface DepthInputs {
+  /** complete: every covered sub-topic had all three parts; partial: some part missing somewhere; unavailable: no depth. */
+  status: 'complete' | 'partial' | 'unavailable';
+  rows: number;
+  measured: Record<'entities' | 'questions' | 'gain', number>;
+  /** Parts absent from at least one covered sub-topic. */
+  missing: Array<'entities' | 'questions' | 'gain'>;
 }

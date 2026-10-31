@@ -92,6 +92,7 @@ pub async fn run_crawl_loop<R: Runtime>(
             },
         );
 
+        let pages_before = state.pages.len();
         let (resp, page_duration) =
             fetch_page_step(app, control, setup, state, robots_crawl_delay, &current_url).await;
 
@@ -115,6 +116,12 @@ pub async fn run_crawl_loop<R: Runtime>(
             }
         }
 
+        // Only a page this step actually added is logged; never re-log an earlier one.
+        if state.pages.len() > pages_before {
+            if let Some(page) = state.pages.last() {
+                control.record_event(&setup.run_id, "page", &serde_json::json!({ "page": page }));
+            }
+        }
         prefetch_next_window(app, control, setup, state, robots_rules, parallelism).await;
     }
 }

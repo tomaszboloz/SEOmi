@@ -9,3 +9,4 @@ export { readTrustHistory, recordTrust, trustHistoryKey, TRUST_HISTORY_LIMIT, co
 export { persistCompletedTrustRun, type CompletedTrustResult } from './completion';
 export { summarizeTrust, crawlTrustSummary, TRUST_PDF_AUTHORS, type TrustPdfSummary } from './summary';
 export { safeRegistryUrl, verifyProfile, clearRegistryCache, nativeRegistryFetcher, type RegistryOptions, type RegistryResult } from './registry';
+export { readScoringProfile, saveScoringProfile, scoringProfileKey } from './scoringPreference';

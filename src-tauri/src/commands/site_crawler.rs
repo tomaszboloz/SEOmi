@@ -22,6 +22,7 @@ mod content_terms;
 mod control;
 mod crawl_delay;
 mod duplicate_annotation;
+mod event_recorder;
 mod favicon;
 mod fetch_data;
 mod fetch_types;

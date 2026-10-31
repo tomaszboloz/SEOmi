@@ -35,12 +35,27 @@ pub(super) fn public_feed_url(
         "bing-serp" if !keyword.trim().is_empty() => {
             Url::parse("https://www.bing.com/search").unwrap()
         }
+        "wikidata-entities" if !keyword.trim().is_empty() => {
+            Url::parse("https://www.wikidata.org/w/api.php").unwrap()
+        }
         "bing-serp" => return Err("Bing RSS requires a keyword.".into()),
         _ => return Err("Unsupported public feed.".into()),
     };
     if feed == "google-trends" {
         url.query_pairs_mut()
             .append_pair("geo", &geo.to_ascii_uppercase());
+    } else if feed == "wikidata-entities" {
+        // Language-independent entity IDs (#99, #110): label search in the page language.
+        let primary = language.split('-').next().unwrap_or(language);
+        url.query_pairs_mut()
+            .clear()
+            .append_pair("action", "wbsearchentities")
+            .append_pair("format", "json")
+            .append_pair("type", "item")
+            .append_pair("limit", "5")
+            .append_pair("language", &primary.to_ascii_lowercase())
+            .append_pair("uselang", &primary.to_ascii_lowercase())
+            .append_pair("search", keyword.trim());
     } else if feed == "google-suggestions" {
         let mut query = url.query_pairs_mut();
         query
@@ -86,5 +101,17 @@ mod tests {
         assert!(public_feed_url("google-suggestions", "PL", "", "pl").is_err());
         assert!(public_feed_url("unknown", "PL", "query", "pl").is_err());
         assert!(public_feed_url("google-suggestions", "POL", "query", "pl").is_err());
+    }
+
+    #[test]
+    fn wikidata_entities_use_fixed_endpoint_and_primary_language() {
+        let url = public_feed_url("wikidata-entities", "DE", " Kaffeemühle ", "de-AT").unwrap();
+        assert_eq!(url.host_str(), Some("www.wikidata.org"));
+        assert_eq!(url.path(), "/w/api.php");
+        let pairs = url.query_pairs().collect::<Vec<_>>();
+        assert!(pairs.contains(&("action".into(), "wbsearchentities".into())));
+        assert!(pairs.contains(&("language".into(), "de".into())));
+        assert!(pairs.contains(&("search".into(), "Kaffeemühle".into())));
+        assert!(public_feed_url("wikidata-entities", "DE", "  ", "de").is_err());
     }
 }

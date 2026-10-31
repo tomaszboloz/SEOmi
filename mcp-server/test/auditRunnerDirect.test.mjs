@@ -60,6 +60,17 @@ test('audits a redirected HTML response through the controlled HTTPS transport',
   assert.equal(result.discovered_links[0], 'https://1.1.1.1/next');
   assert.equal(result.semantic_content_source, 'primary-root');
   assert.ok(result.semantic_terms.includes('semantic'));
+  assert.equal(result.link_details, undefined, 'link details are opt-in');
+});
+
+test('adds per-link placement evidence only when requested and never for non-HTML', async () => {
+  response(200, { 'content-type': 'text/html' }, '<main><p>See the <a href="/doc" rel="nofollow">docs</a> today.</p></main>');
+  const result = await auditPublicUrl('https://1.1.1.1/links', 2_000, { includeLinkDetails: true });
+  assert.deepEqual(result.link_details, [{ url: 'https://1.1.1.1/doc', anchor_text: 'docs', rel: 'nofollow', nofollow: true,
+    is_internal: true, zone: 'main', zone_method: 'html-ancestry', context_before: 'See the', context_after: 'today.' }]);
+  assert.equal(result.link_details_truncated, false);
+  response(200, { 'content-type': 'application/json' }, '{"a":"<a href=\\"/x\\">x</a>"}');
+  assert.deepEqual((await auditPublicUrl('https://1.1.1.1/data.json', 2_000, { includeLinkDetails: true })).link_details, []);
 });
 
 test('rejects an advertised body above the audit limit and marks non-HTML semantic data unavailable', async () => {

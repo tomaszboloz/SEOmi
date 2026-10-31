@@ -1,10 +1,10 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import i18n from '@/i18n';
 import { CrawlAuthorityTab } from '@/components/Domain/crawlResults/authority/CrawlAuthorityTab';
 import { readAuthorityHistory, readTaxonomy, readTopicalBenchmark, writeTaxonomy } from '@/services/topicalAuthorityMonitoring';
 import type { ReferenceOutcome } from '@/services/topicalAuthorityReference';
-import { COMPETITORS, OWN_HOST, ownSite, referenceTaxonomy } from './authorityFixtures';
+import { COMPETITORS, NOW, OWN_HOST, ownSite, referenceTaxonomy } from './authorityFixtures';
 import { createCrawlResultFixture, createCrawlRunFixture } from './fixtures/crawl';
 
 vi.mock('@/services/desktopNotifications/delivery', () => ({ sendProjectNotification: vi.fn().mockResolvedValue(false) }));
@@ -15,7 +15,9 @@ const makeRun = (id: string) => createCrawlRunFixture({ id, startUrl: START, res
 const defaultTaxonomy = referenceTaxonomy(pages)!;
 const okOutcome = (): ReferenceOutcome => ({ status: 'ok', taxonomy: structuredClone(defaultTaxonomy), competitors: COMPETITORS });
 
-beforeEach(async () => { localStorage.clear(); await i18n.changeLanguage('en'); });
+// Pin the clock next to the fixture date: cached maps expire after 30 days (TAXONOMY_TTL_DAYS).
+beforeEach(async () => { localStorage.clear(); vi.useFakeTimers({ toFake: ['Date'] }); vi.setSystemTime(new Date(NOW)); await i18n.changeLanguage('en'); });
+afterEach(() => vi.useRealTimers());
 
 describe('Authority tab', () => {
   it('shows the partial analysis and an honest empty state without a reference map', () => {

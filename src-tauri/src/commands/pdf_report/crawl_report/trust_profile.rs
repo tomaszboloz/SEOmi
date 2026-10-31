@@ -13,6 +13,12 @@ pub fn notes(trust: &Value) -> Vec<String> {
             &[&arg(Some(profile)), &arg(Some(version))],
         ));
     }
+    if let Some(scoring) = trust
+        .get("scoring_profile")
+        .filter(|value| value.as_str().is_some_and(|name| name != "legacy"))
+    {
+        notes.push(tf(t(k::SCORING), &[&arg(Some(scoring))]));
+    }
     if let Some(coverage) = trust.get("coverage").and_then(Value::as_object) {
         let detail = coverage
             .iter()
