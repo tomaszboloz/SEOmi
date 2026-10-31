@@ -1,3 +1,33 @@
+# SEOmi 0.8.0 — release notes
+
+## Added
+- Execution Card (#124): each Executive action opens a card with diagnosis, location (URLs), artifact type and deployment (tracker task, content brief, or the reason there is none). Removals and merges never become tasks; they stay behind the #81 URL protection check.
+- Executive action review (#89): Accept / Defer / Reject per action with a dated per-project history that follows the action into later crawls. The hero and module cards describe the HSS trend in words, compared only within the same scoring profile (#72, #73).
+- Site Focus segments (#82): up to 10 per-project segments (label, URL prefix, optional topic), each scored against its own Core Topic, with a keyboard-accessible panel and a table in the crawl PDF. The site-wide score does not change.
+- Site Focus: the "semantic bridge" decision in URL protection now fires for pages that use Core terms (#81). Score-profile decision register with every decision marked `proposed` (#83). Synthetic calibration scenarios and a PDF render harness for visual review (#52, #53).
+- Template governor: template signatures use a depth-capped layout skeleton, so pages from one template cluster on real crawls (#139).
+- Topical Authority: opt-in real People Also Ask questions from DataForSEO (billed separately); reference maps are tied to their SERP market; stable sub-topic IDs; entity-depth inputs shown as complete, partial or unavailable; cannibalization groups show Search Console shared queries and the click leader; coverage map filters that survive drill-down; the SFS/TAS timeline breaks the TAS line when the scoring profile changes (#57-#62).
+- International parity: topics of each language version are matched to Wikidata IDs on request (native feed, 30-day cache, manual override), with alerts for entities missing in one language (#99, #110).
+- Trust: per-project opt-in to the `claim-backed-v1` scoring profile; role-weighted sameAs score; S_schema penalty for disconnected JSON-LD islands; hedged and negated claims no longer count as backed; review-process and disclaimer pages count as editorial transparency (#65, #87, #88).
+- AIO: crawl PDF "Passage inspector" table (#64); labelling round trip for alert-threshold calibration (#108); opt-in pre-publish timing benchmark (#94).
+- SPRS and links: crawl PDF table of internal links with DOM zone and ±15 words of anchor context; MCP `seomi_audit_url` flag `include_link_details`; per-page DOM structure counts (#70); opt-in `npm run bench:sprs` (#71).
+- Crawl event log (#138): schema v3 `crawl_events` table written by the native crawler. After a restart an open log is replayed with gap and run checks, and Resume keeps the logged pages.
+- IGOS and SIJA sections in the page audit PDF; missing consensus entities listed as basics to add (#67-#69). Shared orphan rule and SERP evidence across modules (#106).
+- Platform: versioned analysis envelope with migrations, rollback and quarantine, and a DAG runner (#85); semantic source descriptors, embedding cache and redacted provider errors (#86); rotated and `.gz` server logs (#92); mention stance including Cyrillic negation (#93); WebVTT/SRT captions and opt-in local OCR provider (#96); placebo backtest and Holm adjustment for experiments (#97); dominant SERP format and intent in decay snapshots (#98); YMYL dose-to-term binding with an imported term list (#137).
+- Governance: owner-only settings and Action pin evidence in `docs/GOVERNANCE.md`; `docs/SEMANTIC_SUITE_STATUS.md` maps every Semantic Suite child issue to its state and code (#77, #100-#102).
+
+## Fixed
+- SPRS no longer overflows the call stack above about 120k pages (#71).
+- AIO no longer flags a chunk as missing the topic anchor when the Core term is written in capitals (#63).
+- PDF: brackets inside Arabic text are no longer drawn backwards (#53).
+- Authority tests pin the clock to their fixture date; they failed once the 30-day map cache passed the fixture date.
+
+## Quality
+- Strings for every addition are in all 12 locales; non-PL/EN strings are machine-written and await native review (#109).
+
+## Included
+- Everything from 0.7.0 (below).
+
 # SEOmi 0.7.0 — release notes
 
 ## Added
