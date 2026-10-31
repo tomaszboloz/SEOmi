@@ -4,6 +4,8 @@
  * something that is never counted as a recommendation. Cues are uncalibrated evidence, not sentiment
  * analysis, and semantic co-occurrence never proves that an LLM endorses the brand.
  */
+import { mentionsInSense, type AliasSense } from './aliasSense';
+
 export type MentionStance = 'neutral' | 'negated' | 'critical' | 'quoted';
 
 const NEGATIONS = new Set([
@@ -25,8 +27,6 @@ const QUOTES = /["„“”«»「」『』]/u;
 const sentences = (text: string): string[] => text.split(/(?<=[.!?…。！？])\s+/u).map((part) => part.trim()).filter(Boolean);
 const tokens = (text: string): string[] => text.toLocaleLowerCase().split(/[^\p{L}\p{N}'’-]+/u).filter(Boolean).map((token) => token.replace(/’/gu, "'"));
 const escape = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-const mentions = (text: string, alias: string): boolean =>
-  new RegExp(`(?<![\\p{L}\\p{N}])${escape(alias.trim())}(?![\\p{L}\\p{N}])`, 'iu').test(text);
 
 /** True when the alias is wrapped in quotation marks within the sentence. */
 const quotedAlias = (sentence: string, alias: string): boolean =>
@@ -44,8 +44,8 @@ const stanceOf = (sentence: string, aliases: string[]): MentionStance => {
 };
 
 /** Strongest stance across the sentences that mention the brand; `neutral` when none of them carries a cue. */
-export const mentionStance = (paragraph: string, brandAliases: string[]): MentionStance => {
+export const mentionStance = (paragraph: string, brandAliases: string[], senses: AliasSense[] = []): MentionStance => {
   const aliases = brandAliases.map((alias) => alias.trim()).filter(Boolean);
-  const relevant = sentences(paragraph).filter((sentence) => aliases.some((alias) => mentions(sentence, alias)));
+  const relevant = sentences(paragraph).filter((sentence) => aliases.some((alias) => mentionsInSense(sentence, alias, senses, paragraph)));
   return relevant.map((sentence) => stanceOf(sentence, aliases)).reduce<MentionStance>((worst, stance) => (RANK.indexOf(stance) > RANK.indexOf(worst) ? stance : worst), 'neutral');
 };
