@@ -1,3 +1,18 @@
+# SEOmi 0.8.2 — release notes
+
+## Added
+
+- Arabic PDF reports (#53): table columns run from the right margin and cell text is right-aligned.
+- TAS taxonomy (#57): nodes list merged aliases, an evidence `confidence` and a heading `rank`; pure `previewTaxonomyMerge` for manual pillars (no UI yet).
+- IGOS drop alert (#68): fires only when provider, model and TOP set are unchanged. Keys in all 12 locales.
+- SIJA (#69): page features read from the crawler `dom_structure`; funnel transitions count internal links between TOFU/MOFU/BOFU and skip what it cannot classify.
+- MCP (#70): `seomi_crawl_site` takes `include_link_details`.
+- Off-page (#93): alias and homonym sense rules (`aliasSense.ts`), optional in `mentionStance` and `findCoCitations`; not wired into analysis yet.
+
+## Changed
+
+- SPRS (#71): PageRank tolerance is `min(1e-6, 0.01/n)`; unchanged below 10k pages.
+
 # SEOmi 0.8.1 — release notes
 
 ## Changed
