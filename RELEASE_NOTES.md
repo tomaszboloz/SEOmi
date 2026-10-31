@@ -1,3 +1,9 @@
+# SEOmi 0.8.3 — release notes
+
+## Added
+
+- Real process-kill test for the crawl event log (#138): a child process appends events to a file-backed store, the parent kills it (SIGKILL on Unix, TerminateProcess on Windows), and a fresh open must list the run as open, keep every committed event without a sequence gap, and close it as interrupted.
+
 # SEOmi 0.8.2 — release notes
 
 ## Added

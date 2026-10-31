@@ -1,7 +1,7 @@
 {
   "name": "seomi",
   "private": true,
-  "version": "0.8.2",
+  "version": "0.8.3",
   "type": "module",
   "scripts": {
     "predev": "node scripts/sync-app-version.mjs",
