@@ -2540,6 +2540,8 @@
     "profileSecretsNotice": "Values are not read back into the interface after saving; save a new profile to change them.",
     "interruptedTitle": "Vorherigen Crawl fortsetzen",
     "interruptedDescription": "{{url}} · Limit {{limit}} URLs · unvollständiges oder unterbrochenes Ergebnis von {{date}}. Das Fortsetzen startet einen neuen Lauf mit der gespeicherten Konfiguration{{completed}}{{frontier}}.",
+    "interruptedCompleted": ", {{count}} URLs abgeschlossen",
+    "interruptedFrontier": ", {{count}} in der Warteschlange",
     "resumeCrawl": "Crawl fortsetzen",
     "discard": "Verwerfen",
     "progressStatus": "Crawling internal domain links and checking status codes…",

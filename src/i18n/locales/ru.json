@@ -2540,6 +2540,8 @@
     "profileSecretsNotice": "Values are not read back into the interface after saving; save a new profile to change them.",
     "interruptedTitle": "Предыдущий обход можно продолжить",
     "interruptedDescription": "{{url}} · лимит {{limit}} URL · частичный или прерванный результат от {{date}}. Продолжение запустит новый обход с сохранённой конфигурацией{{completed}}{{frontier}}.",
+    "interruptedCompleted": ", завершено URL: {{count}}",
+    "interruptedFrontier": ", в очереди: {{count}}",
     "resumeCrawl": "Продолжить обход",
     "discard": "Удалить",
     "progressStatus": "Crawling internal domain links and checking status codes…",

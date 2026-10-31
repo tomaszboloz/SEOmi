@@ -43,6 +43,7 @@ it('restores pages logged before a restart, shows them and resumes on top of the
   const restored = useToolsStore.getState().interruptedCrawl;
   expect(restored).toMatchObject({ runId: 'run-live', recoveredRunId: 'run-live', recoveredPages: 1, recoveredInvalidPages: 1, completedUrls: ['https://e.test/'] });
   render(<CrawlResumePanel session={{ ...useToolsStore.getState(), t: i18n.t } as never} />);
+  expect(screen.getByText(/saved configuration, 1 URLs done\./)).toBeTruthy();
   expect(screen.getByText(/1 pages finished before the app closed/)).toBeTruthy();
   expect(screen.getByText(/1 logged pages could not be read/)).toBeTruthy();
   const startSiteCrawl = vi.fn().mockResolvedValue(null);
