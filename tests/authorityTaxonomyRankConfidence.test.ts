@@ -21,7 +21,7 @@ describe('taxonomy rank and confidence branches', () => {
       suggestions: [],
     });
     const row = taxonomy!.subtopics.find((item) => item.label === 'espresso machines')!;
-    expect(row.sources.domains).toEqual(['one.test', 'two.test']);
+    expect(row.sources?.domains).toEqual(['one.test', 'two.test']);
     expect(row.rank).toBe(1);
   });
 
