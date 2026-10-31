@@ -12,9 +12,15 @@ use serde_json::Value;
 
 /// Inspector fields exist only in summaries produced by the 0.7+ engine.
 fn has_evidence(passage: &Value) -> bool {
-    ["self_containment", "spo_density", "answer_first", "offset_start", "facts"]
-        .iter()
-        .any(|key| passage.get(*key).is_some_and(|value| !value.is_null()))
+    [
+        "self_containment",
+        "spo_density",
+        "answer_first",
+        "offset_start",
+        "facts",
+    ]
+    .iter()
+    .any(|key| passage.get(*key).is_some_and(|value| !value.is_null()))
 }
 
 fn component(value: Option<&Value>) -> String {
