@@ -6217,7 +6217,11 @@
           "own-domain": "nazwa Twojej domeny",
           "own-alias": "nazwa Twojej marki",
           "competitor-brand": "marka konkurencji"
-        }
+        },
+        "tSegments": "Wyniki segmentów",
+        "segmentsIntro": "Segmenty zdefiniowane w tym projekcie, każdy oceniony względem własnego tematu przewodniego. Kreska oznacza, że pod prefiksem nie oceniono żadnej strony.",
+        "colSegment": "Segment",
+        "colCore": "Temat przewodni"
       },
       "authority": {
         "title": "Autorytet tematyczny",
@@ -7423,6 +7427,17 @@
         "own-alias": "nazwa Twojej marki",
         "competitor-brand": "marka konkurencji"
       }
+    },
+    "segments": {
+      "title": "Segmenty z własnym tematem",
+      "inputLabel": "Segmenty (jeden w wierszu: Nazwa | /prefiks-ścieżki | opcjonalny temat)",
+      "placeholder": "Sklep | /sklep | pompy insulinowe",
+      "save": "Zapisz segmenty",
+      "help": "Dla witryn wielotematycznych: każdy segment jest oceniany względem własnego tematu przewodniego (wpisanego tematu albo tematu, który najmocniej niosą jego strony). Site Focus Score całej witryny się nie zmienia. Maksymalnie {{max}} segmentów.",
+      "dropped": "Niepoprawne wiersze: {{count}}. Nie zostały zapisane. Format: Nazwa | /prefiks-ścieżki | opcjonalny temat.",
+      "needsProject": "Segmenty są zapisywane per projekt. Otwórz ten crawl z projektu, aby je ustawić.",
+      "item": "{{label}} ({{prefix}}): {{score}}, {{band}}. Temat: {{core}}. Ocenione strony: {{scored}} z {{pages}}.",
+      "unavailable": "{{label}} ({{prefix}}): brak ocenionych stron pod tym prefiksem, więc nie ma wyniku (to nie jest 0)."
     }
   },
   "focusBenchmark": {

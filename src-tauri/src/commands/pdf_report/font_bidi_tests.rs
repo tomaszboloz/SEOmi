@@ -1,3 +1,4 @@
+use super::font_bidi::mirrored;
 use super::*;
 
 fn hex(fonts: &mut FontSet, text: &str) -> String {
@@ -49,4 +50,21 @@ fn text_without_arabic_is_unchanged() {
             .collect::<String>(),
         "Zażółć 12"
     );
+}
+
+#[test]
+fn brackets_inside_right_to_left_runs_are_mirrored_but_extract_logically() {
+    let mut fonts = FontSet::new();
+    let (open, close) = (hex(&mut fonts, "("), hex(&mut fonts, ")"));
+    let word = hex(&mut fonts, "نقطة");
+    let line = "(نقطة)";
+    assert_eq!(hex(&mut fonts, line), format!("{open}{word}{close}"));
+    assert_eq!(fonts.encode(line)[0].actual_text.as_deref(), Some(line));
+    assert_eq!(
+        hex(&mut fonts, "(ab)"),
+        format!("{open}{}{close}", hex(&mut fonts, "ab"))
+    );
+    assert_eq!(mirrored('['), ']');
+    assert_eq!(mirrored('\u{BB}'), '\u{AB}');
+    assert_eq!(mirrored('x'), 'x');
 }

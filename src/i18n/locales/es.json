@@ -6217,7 +6217,11 @@
           "own-domain": "el nombre de su dominio",
           "own-alias": "el nombre de su marca",
           "competitor-brand": "marca de la competencia"
-        }
+        },
+        "tSegments": "Puntuaciones de segmentos",
+        "segmentsIntro": "Segmentos definidos para este proyecto, cada uno evaluado frente a su propio tema central. Un guion significa que no se evaluó ninguna página bajo el prefijo.",
+        "colSegment": "Segmento",
+        "colCore": "Tema central"
       },
       "authority": {
         "title": "Autoridad temática",
@@ -7423,6 +7427,17 @@
         "own-alias": "el nombre de su marca",
         "competitor-brand": "una marca de la competencia"
       }
+    },
+    "segments": {
+      "title": "Segmentos con tema propio",
+      "inputLabel": "Segmentos (uno por línea: Nombre | /prefijo-de-ruta | tema opcional)",
+      "placeholder": "Tienda | /tienda | bombas de insulina",
+      "save": "Guardar segmentos",
+      "help": "Para sitios con varios temas: cada segmento se evalúa frente a su propio tema central (el tema que escribas o el que más llevan sus páginas). El Site Focus Score de todo el sitio no cambia. Hasta {{max}} segmentos.",
+      "dropped": "{{count}} línea(s) no eran válidas y no se guardaron. Formato: Nombre | /prefijo-de-ruta | tema opcional.",
+      "needsProject": "Los segmentos se guardan por proyecto. Abre este rastreo desde un proyecto para configurarlos.",
+      "item": "{{label}} ({{prefix}}): {{score}}, {{band}}. Tema central: {{core}}. Páginas evaluadas: {{scored}} de {{pages}}.",
+      "unavailable": "{{label}} ({{prefix}}): ninguna página evaluada bajo este prefijo, así que no hay puntuación (no es 0)."
     }
   },
   "focusBenchmark": {

@@ -6217,7 +6217,11 @@
           "own-domain": "您的域名",
           "own-alias": "您的品牌名称",
           "competitor-brand": "竞争对手品牌"
-        }
+        },
+        "tSegments": "分段得分",
+        "segmentsIntro": "为此项目定义的分段，每个分段按其自身核心主题评分。短横线表示该前缀下没有已评分页面。",
+        "colSegment": "分段",
+        "colCore": "核心主题"
       },
       "authority": {
         "title": "主题权威度",
@@ -7423,6 +7427,17 @@
         "own-alias": "您的品牌名称",
         "competitor-brand": "竞争对手品牌"
       }
+    },
+    "segments": {
+      "title": "具有自身主题的分段",
+      "inputLabel": "分段（每行一个：名称 | /路径前缀 | 可选主题）",
+      "placeholder": "商店 | /shop | 胰岛素泵",
+      "save": "保存分段",
+      "help": "适用于多主题网站：每个分段都按其自身的核心主题评分（你输入的主题，或其页面承载最多的主题）。整站的 Site Focus Score 不会改变。最多 {{max}} 个分段。",
+      "dropped": "有 {{count}} 行无效，未保存。格式：名称 | /路径前缀 | 可选主题。",
+      "needsProject": "分段按项目保存。请从项目中打开此抓取以进行设置。",
+      "item": "{{label}}（{{prefix}}）：{{score}}，{{band}}。核心主题：{{core}}。已评分页面：{{scored}}/{{pages}}。",
+      "unavailable": "{{label}}（{{prefix}}）：此前缀下没有已评分页面，因此没有分数（不是 0）。"
     }
   },
   "focusBenchmark": {

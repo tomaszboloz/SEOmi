@@ -2,5 +2,5 @@ export { computePri, sanitizePriParams, DEFAULT_PRI_PARAMS, type PriParams, type
 export { decideProtection, DEFAULT_PRI_THRESHOLD, DEFAULT_TRS_THRESHOLD, type ProtectionOptions, type ProtectionResult, type ProtectionDecision, type ProtectionReason } from './decide';
 export { adviceFor, ADVICE_CONDITIONS, type AdviceCondition, type ProtectionAdvice, type ProtectionAlternative } from './advice';
 export { collectEvidence, type ProtectionEvidence, type ProtectionParameters } from './evidence';
-export { protectionRows, MAX_PROTECTION_ROWS, type ProtectionRows } from './forReport';
+export { protectionRows, relatedToCore, BRIDGE_MIN_CORE_TERMS, MAX_PROTECTION_ROWS, type ProtectionRows } from './forReport';
 export { logVisitEvidence, verifiedGooglebotHits, type LogVisitEvidence } from './logEvidence';

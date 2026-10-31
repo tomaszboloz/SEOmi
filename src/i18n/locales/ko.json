@@ -6217,7 +6217,11 @@
           "own-domain": "도메인 이름",
           "own-alias": "자사 브랜드 이름",
           "competitor-brand": "경쟁사 브랜드"
-        }
+        },
+        "tSegments": "세그먼트 점수",
+        "segmentsIntro": "이 프로젝트에 정의한 세그먼트이며, 각각 자체 핵심 주제를 기준으로 평가됩니다. 대시는 접두사 아래 평가된 페이지가 없음을 뜻합니다.",
+        "colSegment": "세그먼트",
+        "colCore": "핵심 주제"
       },
       "authority": {
         "title": "주제 권위도",
@@ -7423,6 +7427,17 @@
         "own-alias": "자사 브랜드 이름",
         "competitor-brand": "경쟁사 브랜드"
       }
+    },
+    "segments": {
+      "title": "자체 주제가 있는 세그먼트",
+      "inputLabel": "세그먼트(한 줄에 하나: 이름 | /경로-접두사 | 선택 주제)",
+      "placeholder": "쇼핑 | /shop | 인슐린 펌프",
+      "save": "세그먼트 저장",
+      "help": "다중 주제 사이트용: 각 세그먼트는 자체 핵심 주제(입력한 주제 또는 해당 페이지가 가장 많이 다루는 주제)를 기준으로 평가됩니다. 사이트 전체 Site Focus Score는 바뀌지 않습니다. 최대 {{max}}개 세그먼트.",
+      "dropped": "유효하지 않은 줄 {{count}}개는 저장되지 않았습니다. 형식: 이름 | /경로-접두사 | 선택 주제.",
+      "needsProject": "세그먼트는 프로젝트별로 저장됩니다. 설정하려면 프로젝트에서 이 크롤을 여세요.",
+      "item": "{{label}} ({{prefix}}): {{score}}, {{band}}. 핵심 주제: {{core}}. 평가된 페이지: {{pages}}개 중 {{scored}}개.",
+      "unavailable": "{{label}} ({{prefix}}): 이 접두사 아래 평가된 페이지가 없어 점수가 없습니다(0이 아님)."
     }
   },
   "focusBenchmark": {

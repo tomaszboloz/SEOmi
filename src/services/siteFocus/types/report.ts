@@ -3,6 +3,7 @@ import type { SfsBand } from './base';
 import type { CoreTopic, FocusCluster, PageFocus, SiteFlags, SubSite } from './page';
 import type { LinkSuggestion, Recommendation, TopicGap } from './recommend';
 import type { SfsProfileRef } from '../profile';
+import type { FocusSegmentInput, SegmentFocus } from './segments';
 
 /** Per-project brand dictionary (#56). Terms are matched after the same stemming as page terms. */
 export interface BrandPolicyInput {
@@ -46,6 +47,8 @@ export interface SiteFocusReport {
   clusters: FocusCluster[];
   pages: PageFocus[];
   subSites?: SubSite[];
+  /** User-defined segments scored against their own Core (#82 GEM-82-05); absent when none are set. */
+  segments?: SegmentFocus[];
   flags: SiteFlags;
   recommendations: Recommendation[];
   gaps: TopicGap[];
@@ -71,6 +74,8 @@ export interface SiteFocusOptions {
   anchorUrls?: string[];
   /** Explicit business goal (#82); picks the matching cluster after a manual topic, before anchors. */
   businessGoal?: string;
+  /** User-defined segments of a multi-topic site (#82); they never change the site-wide Core or SFS. */
+  segments?: FocusSegmentInput[];
   /** Pluggable term-to-term similarity (e.g. embeddings). Blended into term clustering. */
   similarity?: TermSimilarity;
   /** Shared embedding set (#86): its term vectors feed term clustering; without it the report is `tfidf-only`. */

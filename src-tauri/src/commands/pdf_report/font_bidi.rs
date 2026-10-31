@@ -6,6 +6,25 @@ use unicode_bidi::BidiInfo;
 pub(super) struct Segment {
     pub(super) range: Range<usize>,
     pub(super) arabic: bool,
+    /// Drawn inside a right-to-left run, where paired brackets are mirrored (UAX #9 rule L4).
+    pub(super) rtl: bool,
+}
+
+/// Bidi_Mirroring_Glyph for the paired punctuation that appears in report text.
+pub(super) fn mirrored(character: char) -> char {
+    match character {
+        '(' => ')',
+        ')' => '(',
+        '[' => ']',
+        ']' => '[',
+        '{' => '}',
+        '}' => '{',
+        '<' => '>',
+        '>' => '<',
+        '\u{AB}' => '\u{BB}',
+        '\u{BB}' => '\u{AB}',
+        other => other,
+    }
 }
 
 impl FontSet {
@@ -19,6 +38,7 @@ impl FontSet {
                 _ => segments.push(Segment {
                     range: start..end,
                     arabic,
+                    rtl: false,
                 }),
             }
         }
@@ -36,12 +56,14 @@ impl FontSet {
                     .iter()
                     .filter(|segment| run.contains(&segment.range.start))
                     .collect();
-                if levels[run.start].is_rtl() {
+                let rtl = levels[run.start].is_rtl();
+                if rtl {
                     inside.reverse();
                 }
                 ordered.extend(inside.into_iter().map(|segment| Segment {
                     range: segment.range.clone(),
                     arabic: segment.arabic,
+                    rtl,
                 }));
             }
         }
@@ -76,7 +98,13 @@ impl FontSet {
         if segment.arabic {
             self.encode_arabic(slice, runs);
         } else {
-            self.encode_scalar(slice.chars().next().unwrap_or('?'), runs);
+            let character = slice.chars().next().unwrap_or('?');
+            let drawn = if segment.rtl {
+                mirrored(character)
+            } else {
+                character
+            };
+            self.encode_scalar(drawn, runs);
         }
     }
 }

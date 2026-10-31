@@ -10,6 +10,7 @@ const list = (value: readonly string[] | string | undefined, fold = true): strin
  * Hash of the project inputs that pick the Core Topic and filter terms (#82 GEM-82-06/07). Two
  * reports with different hashes were built from different choices: dependent TAS/IGOS/EETV views
  * must be rebuilt and the history keeps both versions instead of overwriting one with the other.
+ * User segments are left out on purpose: they add per-segment scores but never change the site Core or SFS.
  */
 export const focusConfigHash = (options: ConfigInput = {}): string => stableHash({
   manualTopic: list(options.manualTopic),

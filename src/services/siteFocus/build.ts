@@ -10,6 +10,7 @@ import { computeFlags, detectSubSites } from './flags';
 import { buildLinkSuggestions } from './links';
 import { resolveAnchors } from './anchors';
 import { buildRecommendations } from './recommend';
+import { cleanSegments, scoreSegments } from './segments';
 import { buildTermStats, tfidfVector } from './terms';
 import { describeBrandFilter, resolveBrandPolicy } from './brandPolicy';
 import { focusConfigHash } from './configHash';
@@ -74,6 +75,8 @@ export const buildSiteFocusReport = (pages: FocusPage[], startUrl: string, optio
   const { score, onTopicRatio } = computeSfs(focus);
   const described = describeClusters(selection.clusters, surfaces, totals);
   const subSites = detectSubSites(described, selection.clusters, items, context, totals);
+  const segmentInputs = cleanSegments(options.segments);
+  const segments = segmentInputs.length ? scoreSegments(segmentInputs, { items, live, vectors, clusters, totals, language, context }) : [];
   const flags = computeFlags(items, selection.confidence, !!selection.manual, mode, subSites.length > 0, source);
   const filteredGaps: Parameters<typeof describeBrandFilter>[1] = [];
   const gaps = analyzeGaps(items, vectors, selection.core.keys, totals, surfaces, options.competitorTerms ?? [], language, brand, filteredGaps);
@@ -87,7 +90,7 @@ export const buildSiteFocusReport = (pages: FocusPage[], startUrl: string, optio
   return {
     score, band: bandFor(score), confidence: selection.confidence, onTopicRatio,
     coreTopic: describeCore(selection, surfaces, stats.documentFrequency, stats.pageCount),
-    clusters: described, pages: focus, ...(subSites.length ? { subSites } : {}), flags,
+    clusters: described, pages: focus, ...(subSites.length ? { subSites } : {}), ...(segments.length ? { segments } : {}), flags,
     recommendations: buildRecommendations(focus, score, flags, gaps, linkSuggestions.length, subSites),
     gaps, linkSuggestions, model: modelState, generatedAt: options.now ?? new Date().toISOString(),
     pageCount: pages.length, version: SITE_FOCUS_VERSION, profile: sfsProfileRef(), coreConfigHash: focusConfigHash(options),

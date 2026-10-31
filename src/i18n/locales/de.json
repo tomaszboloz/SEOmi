@@ -6217,7 +6217,11 @@
           "own-domain": "Ihr Domainname",
           "own-alias": "Ihr Markenname",
           "competitor-brand": "Wettbewerbermarke"
-        }
+        },
+        "tSegments": "Segmentwerte",
+        "segmentsIntro": "Für dieses Projekt definierte Segmente, jeweils gegen ihr eigenes Kernthema bewertet. Ein Strich bedeutet, dass unter dem Präfix keine Seite bewertet wurde.",
+        "colSegment": "Segment",
+        "colCore": "Kernthema"
       },
       "authority": {
         "title": "Thematische Autorität",
@@ -7423,6 +7427,17 @@
         "own-alias": "Ihr Markenname",
         "competitor-brand": "eine Wettbewerbermarke"
       }
+    },
+    "segments": {
+      "title": "Segmente mit eigenem Thema",
+      "inputLabel": "Segmente (eins pro Zeile: Name | /Pfad-Präfix | optionales Thema)",
+      "placeholder": "Shop | /shop | Insulinpumpen",
+      "save": "Segmente speichern",
+      "help": "Für Websites mit mehreren Themen: Jedes Segment wird gegen sein eigenes Kernthema bewertet (das eingegebene Thema oder das Thema, das seine Seiten am stärksten tragen). Der Site Focus Score der ganzen Website ändert sich nicht. Höchstens {{max}} Segmente.",
+      "dropped": "{{count}} Zeile(n) waren ungültig und wurden nicht gespeichert. Format: Name | /Pfad-Präfix | optionales Thema.",
+      "needsProject": "Segmente werden pro Projekt gespeichert. Öffnen Sie diesen Crawl aus einem Projekt, um sie festzulegen.",
+      "item": "{{label}} ({{prefix}}): {{score}}, {{band}}. Kernthema: {{core}}. Bewertete Seiten: {{scored}} von {{pages}}.",
+      "unavailable": "{{label}} ({{prefix}}): Unter diesem Präfix wurde keine Seite bewertet, daher gibt es keinen Wert (nicht 0)."
     }
   },
   "focusBenchmark": {
