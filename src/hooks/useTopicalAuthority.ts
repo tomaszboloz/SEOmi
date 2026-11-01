@@ -12,6 +12,8 @@ import {
 } from '@/services/topicalAuthorityReference';
 
 import { recordReferenceSnapshot } from '@/services/semanticDecay/recordReferenceSnapshot';
+import { neuralMarketCentroid } from '@/services/semanticDecay/neuralCentroid';
+import { loadEmbeddingSession } from '@/components/Keywords/embeddingClustering/useEmbeddingClustering';
 
 export interface ReferenceRunOptions { /** Opt-in real People Also Ask via the separately billed advanced SERP. */ withQuestions?: boolean }
 export type ReferenceRunner = (input: ReferenceInput, options?: ReferenceRunOptions) => Promise<ReferenceOutcome>;
@@ -90,7 +92,11 @@ export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runn
       const where = market();
       const stamped: ReferenceTaxonomy = { ...outcome.taxonomy, market: where };
       writeTaxonomy(projectId, stamped);
-      recordReferenceSnapshot(projectId ?? null, stamped, outcome.serp, where);
+      const embedding = loadEmbeddingSession(projectId ?? null).settings;
+      const neural = embedding.provider === 'ollama' && embedding.ollamaModel?.trim()
+        ? await neuralMarketCentroid(stamped, { model: embedding.ollamaModel, signal: own.signal }).catch(() => null) : null;
+      if (controller.current !== own) return;
+      recordReferenceSnapshot(projectId ?? null, stamped, outcome.serp, where, neural ?? undefined);
       const fresh = buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: stamped, now: sfs.generatedAt });
       setPendingBenchmark(withSerpEvidence(buildTopicalBenchmark(fresh, domainOf(startUrl), outcome.competitors, stamped, new Date().toISOString(), outcome.attempted), outcome.serp));
       setTaxonomy(stamped);
