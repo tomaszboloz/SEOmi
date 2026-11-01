@@ -8431,7 +8431,10 @@
       "before": "之前",
       "after": "之后",
       "delta": "变化",
-      "solver": "从当前分数热启动：{{iterations}} 次迭代，残差 {{residual}}。"
+      "solver": "从当前分数热启动：{{iterations}} 次迭代，残差 {{residual}}。",
+      "flags": "诊断标记变化",
+      "flagOn": "{{page}} 现在为：{{flag}}",
+      "flagOff": "{{page}} 不再为：{{flag}}"
     }
   },
   "decayUi": {

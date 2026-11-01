@@ -8431,7 +8431,10 @@
       "before": "Before",
       "after": "After",
       "delta": "Change",
-      "solver": "Warm-started from the current scores: {{iterations}} iterations, residual {{residual}}."
+      "solver": "Warm-started from the current scores: {{iterations}} iterations, residual {{residual}}.",
+      "flags": "Diagnostic flag changes",
+      "flagOn": "{{page}} is now: {{flag}}",
+      "flagOff": "{{page}} is no longer: {{flag}}"
     }
   },
   "decayUi": {

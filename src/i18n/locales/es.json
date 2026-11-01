@@ -8431,7 +8431,10 @@
       "before": "Antes",
       "after": "Después",
       "delta": "Cambio",
-      "solver": "Arranque en caliente desde las puntuaciones actuales: {{iterations}} iteraciones, residuo {{residual}}."
+      "solver": "Arranque en caliente desde las puntuaciones actuales: {{iterations}} iteraciones, residuo {{residual}}.",
+      "flags": "Cambios en los indicadores de diagnóstico",
+      "flagOn": "{{page}} ahora es: {{flag}}",
+      "flagOff": "{{page}} ya no es: {{flag}}"
     }
   },
   "decayUi": {

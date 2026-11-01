@@ -8431,7 +8431,10 @@
       "before": "Prima",
       "after": "Dopo",
       "delta": "Variazione",
-      "solver": "Avvio a caldo dai punteggi attuali: {{iterations}} iterazioni, residuo {{residual}}."
+      "solver": "Avvio a caldo dai punteggi attuali: {{iterations}} iterazioni, residuo {{residual}}.",
+      "flags": "Modifiche agli indicatori diagnostici",
+      "flagOn": "{{page}} ora è: {{flag}}",
+      "flagOff": "{{page}} non è più: {{flag}}"
     }
   },
   "decayUi": {

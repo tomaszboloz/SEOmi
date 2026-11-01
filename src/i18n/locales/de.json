@@ -8431,7 +8431,10 @@
       "before": "Vorher",
       "after": "Nachher",
       "delta": "Änderung",
-      "solver": "Warmstart mit den aktuellen Werten: {{iterations}} Iterationen, Residuum {{residual}}."
+      "solver": "Warmstart mit den aktuellen Werten: {{iterations}} Iterationen, Residuum {{residual}}.",
+      "flags": "Änderungen der Diagnose-Markierungen",
+      "flagOn": "{{page}} ist jetzt: {{flag}}",
+      "flagOff": "{{page}} ist nicht mehr: {{flag}}"
     }
   },
   "decayUi": {

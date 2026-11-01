@@ -116,3 +116,4 @@ export const computeSprs = (nodes: PageRankNode[], edges: SprsEdge[], initialRan
 };
 
 export * from './sprsWhatIf';
+export * from './sprsFlagChanges';

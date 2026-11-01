@@ -8431,7 +8431,10 @@
       "before": "Przed",
       "after": "Po",
       "delta": "Zmiana",
-      "solver": "Start od obecnych wyników: {{iterations}} iteracji, residuum {{residual}}."
+      "solver": "Start od obecnych wyników: {{iterations}} iteracji, residuum {{residual}}.",
+      "flags": "Zmiany flag diagnostycznych",
+      "flagOn": "{{page}}: teraz {{flag}}",
+      "flagOff": "{{page}}: już nie {{flag}}"
     }
   },
   "decayUi": {

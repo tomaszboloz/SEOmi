@@ -8431,7 +8431,10 @@
       "before": "이전",
       "after": "이후",
       "delta": "변화",
-      "solver": "현재 점수에서 웜 스타트: 반복 {{iterations}}회, 잔차 {{residual}}."
+      "solver": "현재 점수에서 웜 스타트: 반복 {{iterations}}회, 잔차 {{residual}}.",
+      "flags": "진단 플래그 변경",
+      "flagOn": "{{page}} 현재: {{flag}}",
+      "flagOff": "{{page}} 더 이상 아님: {{flag}}"
     }
   },
   "decayUi": {

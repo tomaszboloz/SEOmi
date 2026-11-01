@@ -8431,7 +8431,10 @@
       "before": "変更前",
       "after": "変更後",
       "delta": "差分",
-      "solver": "現在のスコアからウォームスタート: {{iterations}} 回の反復、残差 {{residual}}。"
+      "solver": "現在のスコアからウォームスタート: {{iterations}} 回の反復、残差 {{residual}}。",
+      "flags": "診断フラグの変化",
+      "flagOn": "{{page}} は現在：{{flag}}",
+      "flagOff": "{{page}} はもう該当しません：{{flag}}"
     }
   },
   "decayUi": {

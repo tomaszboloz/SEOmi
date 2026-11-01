@@ -8431,7 +8431,10 @@
       "before": "Avant",
       "after": "Après",
       "delta": "Variation",
-      "solver": "Démarrage à chaud depuis les scores actuels : {{iterations}} itérations, résidu {{residual}}."
+      "solver": "Démarrage à chaud depuis les scores actuels : {{iterations}} itérations, résidu {{residual}}.",
+      "flags": "Changements des indicateurs de diagnostic",
+      "flagOn": "{{page}} est maintenant : {{flag}}",
+      "flagOff": "{{page}} n'est plus : {{flag}}"
     }
   },
   "decayUi": {

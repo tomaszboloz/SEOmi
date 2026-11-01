@@ -8431,7 +8431,10 @@
       "before": "Antes",
       "after": "Depois",
       "delta": "Variação",
-      "solver": "Início a quente a partir das pontuações atuais: {{iterations}} iterações, resíduo {{residual}}."
+      "solver": "Início a quente a partir das pontuações atuais: {{iterations}} iterações, resíduo {{residual}}.",
+      "flags": "Alterações nos indicadores de diagnóstico",
+      "flagOn": "{{page}} agora é: {{flag}}",
+      "flagOff": "{{page}} deixou de ser: {{flag}}"
     }
   },
   "decayUi": {

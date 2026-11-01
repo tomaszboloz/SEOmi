@@ -8431,7 +8431,10 @@
       "before": "قبل",
       "after": "بعد",
       "delta": "التغيّر",
-      "solver": "بدء دافئ من الدرجات الحالية: {{iterations}} تكرارات، البقية {{residual}}."
+      "solver": "بدء دافئ من الدرجات الحالية: {{iterations}} تكرارات، البقية {{residual}}.",
+      "flags": "تغيّرات علامات التشخيص",
+      "flagOn": "{{page}} الآن: {{flag}}",
+      "flagOff": "{{page}} لم تعد: {{flag}}"
     }
   },
   "decayUi": {

@@ -1,5 +1,6 @@
 import type { PageRankNode } from './pageRank';
 import { computeSprs, type SprsEdge } from './sprs';
+import { flagChanges, type FlagChange } from './sprsFlagChanges';
 
 export interface EdgeRef { source: string; target: string }
 
@@ -27,6 +28,8 @@ export interface WhatIfResult {
   residual: number;
   /** Rejected change; nothing was simulated when this is not empty. */
   issues: WhatIfIssue[];
+  /** Dead-end, under-linked and leak flags that switched for pages present before and after (GEM-71-09). */
+  flagChanges: FlagChange[];
   /** True when the solver hit its limit, so deltas are approximate. */
   uncertain: boolean;
 }
@@ -59,7 +62,7 @@ export const validateWhatIf = (nodes: PageRankNode[], edges: SprsEdge[], change:
 /** Simulates link changes on a copy, warm-started from the current ranks; the input arrays are never mutated. */
 export const simulateWhatIfRun = (nodes: PageRankNode[], edges: SprsEdge[], change: WhatIfChange): WhatIfResult => {
   const issues = validateWhatIf(nodes, edges, change);
-  if (issues.length) return { rows: [], converged: false, iterations: 0, residual: Number.NaN, issues, uncertain: true };
+  if (issues.length) return { rows: [], converged: false, iterations: 0, residual: Number.NaN, issues, flagChanges: [], uncertain: true };
   const before = computeSprs(nodes, edges);
   const removed = new Set((change.remove ?? []).map(key));
   const removedNodes = new Set(change.removeNodes ?? []);
@@ -84,7 +87,7 @@ export const simulateWhatIfRun = (nodes: PageRankNode[], edges: SprsEdge[], chan
   const rows = changed
     .filter((row) => row.delta !== 0)
     .sort((a, b) => magnitude(b) - magnitude(a) || (a.nodeId < b.nodeId ? -1 : 1));
-  return { rows, converged: after.converged, iterations: after.iterations, residual: after.residual, issues: [], uncertain: !after.converged };
+  return { rows, converged: after.converged, iterations: after.iterations, residual: after.residual, issues: [], flagChanges: flagChanges(before.pages, after.pages), uncertain: !after.converged };
 };
 
 export const simulateWhatIf = (nodes: PageRankNode[], edges: SprsEdge[], change: WhatIfChange): WhatIfRow[] => simulateWhatIfRun(nodes, edges, change).rows;
