@@ -8440,7 +8440,8 @@
       "flags": "Diagnostic flag changes",
       "flagOn": "{{page}} is now: {{flag}}",
       "flagOff": "{{page}} is no longer: {{flag}}"
-    }
+    },
+    "meta": "{{iterations}} iterations, residual {{residual}}"
   },
   "decayUi": {
     "snapshots": "Snapshots supporting this verdict: {{count}}",

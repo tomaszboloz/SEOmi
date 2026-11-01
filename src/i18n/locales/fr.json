@@ -8440,7 +8440,8 @@
       "flags": "Changements des indicateurs de diagnostic",
       "flagOn": "{{page}} est maintenant : {{flag}}",
       "flagOff": "{{page}} n'est plus : {{flag}}"
-    }
+    },
+    "meta": "{{iterations}} itérations, résidu {{residual}}"
   },
   "decayUi": {
     "snapshots": "Instantanés à l’appui de ce verdict : {{count}}",

@@ -8440,7 +8440,8 @@
       "flags": "诊断标记变化",
       "flagOn": "{{page}} 现在为：{{flag}}",
       "flagOff": "{{page}} 不再为：{{flag}}"
-    }
+    },
+    "meta": "{{iterations}} 次迭代，残差 {{residual}}"
   },
   "decayUi": {
     "snapshots": "支持此判定的快照数量：{{count}}",

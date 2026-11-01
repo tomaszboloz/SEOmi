@@ -8440,7 +8440,8 @@
       "flags": "진단 플래그 변경",
       "flagOn": "{{page}} 현재: {{flag}}",
       "flagOff": "{{page}} 더 이상 아님: {{flag}}"
-    }
+    },
+    "meta": "반복 {{iterations}}회, 잔차 {{residual}}"
   },
   "decayUi": {
     "snapshots": "이 판정의 근거가 되는 스냅샷 수: {{count}}",

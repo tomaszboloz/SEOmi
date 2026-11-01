@@ -8440,7 +8440,8 @@
       "flags": "Alterações nos indicadores de diagnóstico",
       "flagOn": "{{page}} agora é: {{flag}}",
       "flagOff": "{{page}} deixou de ser: {{flag}}"
-    }
+    },
+    "meta": "{{iterations}} iterações, resíduo {{residual}}"
   },
   "decayUi": {
     "snapshots": "Capturas que fundamentam este diagnóstico: {{count}}",

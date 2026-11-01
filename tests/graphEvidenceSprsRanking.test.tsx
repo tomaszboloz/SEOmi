@@ -19,8 +19,8 @@ const edges = [
 it('ranks with the same SPRS solver as the Signals tab, including nofollow, and tolerates a graph without topic edges (#106)', () => {
   const graph = { nodes: ['a', 'b', 'c'].map(node), edges, clusters: [], hasSemanticTerms: true, totalEdges: 4, totalTopicEdges: 0, totalInternalLinks: 4, truncated: false } as unknown as SemanticMap;
   const { container } = render(<GraphEvidencePanel graph={graph} />);
-  const shown = [...container.querySelectorAll('ol li span.font-mono')].map((item) => item.textContent);
-  const expected = buildSprsReport({ ...graph, topicEdges: [] }).pages.map((page) => `${(page.probability * 100).toFixed(2)}%`);
-  expect(shown).toEqual(expected);
-  expect(screen.getByText('mapUi.graphEvidence.structureTitle')).toBeTruthy();
+  const report = buildSprsReport({ ...graph, topicEdges: [] });
+  const shown = [...container.querySelectorAll('section[aria-label="sprsUi.title"] tbody tr')].map((row) => [row.children[0].textContent, row.children[1].textContent]);
+  expect(shown).toEqual(report.pages.map((page) => [`/${page.nodeId}`, String(page.score)]));
+  expect(screen.getAllByText('sprsUi.title')).toHaveLength(1);
 });

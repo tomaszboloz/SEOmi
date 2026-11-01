@@ -8440,7 +8440,8 @@
       "flags": "診断フラグの変化",
       "flagOn": "{{page}} は現在：{{flag}}",
       "flagOff": "{{page}} はもう該当しません：{{flag}}"
-    }
+    },
+    "meta": "{{iterations}} 回の反復、残差 {{residual}}"
   },
   "decayUi": {
     "snapshots": "この判定の根拠となるスナップショット数: {{count}}",

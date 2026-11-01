@@ -8440,7 +8440,8 @@
       "flags": "Zmiany flag diagnostycznych",
       "flagOn": "{{page}}: teraz {{flag}}",
       "flagOff": "{{page}}: już nie {{flag}}"
-    }
+    },
+    "meta": "{{iterations}} iteracji, residuum {{residual}}"
   },
   "decayUi": {
     "snapshots": "Liczba zrzutów stanowiących podstawę oceny: {{count}}",

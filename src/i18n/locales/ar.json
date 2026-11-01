@@ -8440,7 +8440,8 @@
       "flags": "تغيّرات علامات التشخيص",
       "flagOn": "{{page}} الآن: {{flag}}",
       "flagOff": "{{page}} لم تعد: {{flag}}"
-    }
+    },
+    "meta": "{{iterations}} تكرارات، المتبقي {{residual}}"
   },
   "decayUi": {
     "snapshots": "لقطات تدعم هذا التقييم: {{count}}",

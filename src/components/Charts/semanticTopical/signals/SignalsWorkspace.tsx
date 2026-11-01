@@ -51,7 +51,7 @@ export const SignalsWorkspace = ({ projectId = null, pages, graph, subtopicsByUr
   const templates = useMemo(() => buildTemplateEvents(pages, { subtopicsByUrl }), [pages, subtopicsByUrl]);
   return <div className="space-y-4" data-testid="signals-workspace" aria-label={t('semanticWorkspace.tabSignals')}>
     <StaleSnapshotBanner stale={stale} onRefresh={refresh} />
-    <SprsPanel report={sprs} />
+    <SprsPanel report={sprs} labelFor={(id) => graph.nodes.find((node) => node.id === id)?.page.url ?? id} />
     <SprsWhatIf nodes={sprsInput.nodes} edges={sprsInput.edges} />
     <HreflangParityPanel report={parity} exceptions={parityExceptions.handlers} />
     {topics.length > 0 && new Set(topics.map((topic) => topic.language)).size > 1 && <EntityParityPanel links={entities.links} gaps={entities.gaps} pending={entities.pending} running={entities.running} onMatch={() => void entities.match()} onCorrect={projectId ? entities.correct : undefined} />}

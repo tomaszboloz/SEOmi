@@ -8440,7 +8440,8 @@
       "flags": "Änderungen der Diagnose-Markierungen",
       "flagOn": "{{page}} ist jetzt: {{flag}}",
       "flagOff": "{{page}} ist nicht mehr: {{flag}}"
-    }
+    },
+    "meta": "{{iterations}} Iterationen, Residuum {{residual}}"
   },
   "decayUi": {
     "snapshots": "Snapshots als Grundlage dieser Bewertung: {{count}}",
