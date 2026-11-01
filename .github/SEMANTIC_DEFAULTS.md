@@ -13,3 +13,6 @@ Decisions delegated to the maintainer on 2026-11-01. Each default is determinist
 - simContext: lexical cosine of the +-15 word context plus anchor against the target's semantic terms.
 - Tolerance min(1e-6, 1% of 1/n), max 150 iterations. The legacy solver profile (1e-12, 200) stays the default of `calculatePageRank`.
 - Reproducible benchmark: `npm run bench:sprs` (50k pages, 2M edges). Reference run: 4.8 s, about 108 MB, 5 iterations (Mac arm64, Node 24). Other hardware: rerun and compare, no fixed budget is enforced.
+
+## Link graph URL identity (#70 GEM-70-05)
+Accepted decision: canonical URLs are NOT aliases. A canonical tag can point to a different page, so a link to a canonical target that was not crawled stays an unresolved target (reported in `skippedLinks.unresolvedTargets`). Only a crawled page's requested URL and its `final_url` (redirect result) identify that page. Pinned by `tests/semanticGraphCanonicalPolicy.test.ts`.
