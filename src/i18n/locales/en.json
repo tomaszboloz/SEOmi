@@ -9203,8 +9203,12 @@
       "not-organic": "Confirm that the export is limited to organic search sessions.",
       "no-header": "No header with a landing page column and a revenue column was found.",
       "no-rows": "The file has no landing page with a numeric revenue value.",
-      "storage-failed": "Local storage could not be updated; the import was not saved."
-    }
+      "storage-failed": "Local storage could not be updated; the import was not saved.",
+      "invalid-response": "Google Analytics returned revenue data in an unexpected format.",
+      "fetch-failed": "Revenue could not be fetched from Google Analytics. Check the connection and the property."
+    },
+    "api": "Fetch from GA4 API",
+    "apiNote": "Needs Google Analytics connected. Reads the last 90 full days of organic search revenue per landing page in the property currency GA4 reports. Without purchase events GA4 reports 0."
   },
   "entityParity": {
     "title": "Entities across language versions (Wikidata)",

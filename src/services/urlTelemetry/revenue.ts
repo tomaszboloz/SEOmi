@@ -14,7 +14,7 @@ export const REVENUE_ATTRIBUTION = 'ga4-session-landing-page' as const;
 export const MAX_REVENUE_ROWS = 5000;
 
 export interface RevenueImport {
-  provider: 'ga4-export';
+  provider: 'ga4-export' | 'ga4-api';
   attribution: typeof REVENUE_ATTRIBUTION;
   currency: string;
   /** The user confirmed the export is limited to organic search sessions. */

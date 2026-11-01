@@ -9203,8 +9203,12 @@
       "not-organic": "Potwierdź, że eksport obejmuje wyłącznie sesje z wyszukiwania organicznego.",
       "no-header": "Nie znaleziono nagłówka z kolumną strony docelowej i kolumną przychodu.",
       "no-rows": "Plik nie zawiera strony docelowej z liczbową wartością przychodu.",
-      "storage-failed": "Nie udało się zapisać w pamięci lokalnej; import nie został zapisany."
-    }
+      "storage-failed": "Nie udało się zapisać w pamięci lokalnej; import nie został zapisany.",
+      "invalid-response": "Google Analytics zwrócił dane o przychodzie w nieoczekiwanym formacie.",
+      "fetch-failed": "Nie udało się pobrać przychodu z Google Analytics. Sprawdź połączenie i właściwość."
+    },
+    "api": "Pobierz z GA4 API",
+    "apiNote": "Wymaga połączonego Google Analytics. Czyta ostatnie 90 pełnych dni przychodu z wyszukiwania organicznego per strona docelowa, w walucie właściwości zgłaszanej przez GA4. Bez zdarzeń zakupu GA4 zwraca 0."
   },
   "entityParity": {
     "title": "Encje w wersjach językowych (Wikidata)",

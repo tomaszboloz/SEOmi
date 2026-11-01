@@ -9203,8 +9203,12 @@
       "not-organic": "Conferma che l’esportazione è limitata alle sessioni da ricerca organica.",
       "no-header": "Nessuna intestazione con una colonna della pagina di destinazione e una delle entrate.",
       "no-rows": "Il file non contiene pagine di destinazione con un valore numerico di entrate.",
-      "storage-failed": "Impossibile aggiornare l’archiviazione locale; l’importazione non è stata salvata."
-    }
+      "storage-failed": "Impossibile aggiornare l’archiviazione locale; l’importazione non è stata salvata.",
+      "invalid-response": "Google Analytics ha restituito dati di ricavo in un formato inatteso.",
+      "fetch-failed": "Impossibile recuperare i ricavi da Google Analytics. Controlla la connessione e la proprietà."
+    },
+    "api": "Recupera dall'API GA4",
+    "apiNote": "Richiede Google Analytics collegato. Legge gli ultimi 90 giorni completi di ricavi da ricerca organica per pagina di destinazione, nella valuta della proprietà indicata da GA4. Senza eventi di acquisto GA4 riporta 0."
   },
   "entityParity": {
     "title": "Entità tra versioni linguistiche (Wikidata)",

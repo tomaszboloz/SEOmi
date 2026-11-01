@@ -9203,8 +9203,12 @@
       "not-organic": "내보내기가 자연 검색 세션으로 제한되어 있는지 확인하세요.",
       "no-header": "방문 페이지 열과 수익 열이 있는 머리글을 찾지 못했습니다.",
       "no-rows": "파일에 숫자 수익 값이 있는 방문 페이지가 없습니다.",
-      "storage-failed": "로컬 저장소를 업데이트하지 못해 가져오기가 저장되지 않았습니다."
-    }
+      "storage-failed": "로컬 저장소를 업데이트하지 못해 가져오기가 저장되지 않았습니다.",
+      "invalid-response": "Google Analytics가 예상치 못한 형식으로 수익 데이터를 반환했습니다.",
+      "fetch-failed": "Google Analytics에서 수익을 가져오지 못했습니다. 연결과 속성을 확인하세요."
+    },
+    "api": "GA4 API에서 가져오기",
+    "apiNote": "Google Analytics 연결이 필요합니다. GA4가 보고하는 속성 통화로 방문 페이지별 오가닉 검색 수익을 최근 90일(전체 일) 읽습니다. 구매 이벤트가 없으면 GA4는 0을 보고합니다."
   },
   "entityParity": {
     "title": "언어 버전 간 엔터티 (Wikidata)",

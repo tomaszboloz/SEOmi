@@ -9203,8 +9203,12 @@
       "not-organic": "Confirmez que l’export est limité aux sessions de recherche organique.",
       "no-header": "Aucun en-tête avec une colonne page de destination et une colonne revenus n’a été trouvé.",
       "no-rows": "Le fichier ne contient aucune page de destination avec un revenu numérique.",
-      "storage-failed": "Le stockage local n’a pas pu être mis à jour ; l’import n’a pas été enregistré."
-    }
+      "storage-failed": "Le stockage local n’a pas pu être mis à jour ; l’import n’a pas été enregistré.",
+      "invalid-response": "Google Analytics a renvoyé des données de revenus dans un format inattendu.",
+      "fetch-failed": "Impossible de récupérer les revenus depuis Google Analytics. Vérifiez la connexion et la propriété."
+    },
+    "api": "Récupérer via l'API GA4",
+    "apiNote": "Nécessite Google Analytics connecté. Lit les 90 derniers jours complets de revenus de recherche organique par page de destination, dans la devise de la propriété indiquée par GA4. Sans événements d'achat, GA4 indique 0."
   },
   "entityParity": {
     "title": "Entités entre versions linguistiques (Wikidata)",

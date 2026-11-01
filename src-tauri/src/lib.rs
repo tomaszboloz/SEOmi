@@ -92,6 +92,7 @@ pub(crate) fn compose<R: tauri::Runtime>(builder: Builder<R>) -> Builder<R> {
                 commands::search_console::ga4::commands::connect_google_analytics,
                 commands::search_console::ga4::commands::list_google_analytics_properties,
                 commands::search_console::ga4::commands::google_analytics_performance,
+                commands::search_console::ga4::revenue::google_analytics_revenue,
                 commands::search_console::connect_search_console,
                 commands::search_console::list_search_console_properties,
                 commands::search_console::search_console_performance,

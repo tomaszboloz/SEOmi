@@ -9203,8 +9203,12 @@
       "not-organic": "Bestätigen Sie, dass der Export auf Sitzungen aus der organischen Suche beschränkt ist.",
       "no-header": "Keine Kopfzeile mit einer Landingpage- und einer Umsatzspalte gefunden.",
       "no-rows": "Die Datei enthält keine Landingpage mit numerischem Umsatz.",
-      "storage-failed": "Der lokale Speicher konnte nicht aktualisiert werden; der Import wurde nicht gespeichert."
-    }
+      "storage-failed": "Der lokale Speicher konnte nicht aktualisiert werden; der Import wurde nicht gespeichert.",
+      "invalid-response": "Google Analytics lieferte Umsatzdaten in einem unerwarteten Format.",
+      "fetch-failed": "Der Umsatz konnte nicht von Google Analytics abgerufen werden. Prüfen Sie Verbindung und Property."
+    },
+    "api": "Aus der GA4-API abrufen",
+    "apiNote": "Setzt verbundenes Google Analytics voraus. Liest die letzten 90 vollen Tage organischen Suchumsatz je Landingpage in der von GA4 gemeldeten Property-Währung. Ohne Kaufereignisse meldet GA4 0."
   },
   "entityParity": {
     "title": "Entitäten über Sprachversionen (Wikidata)",

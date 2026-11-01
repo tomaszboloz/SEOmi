@@ -9203,8 +9203,12 @@
       "not-organic": "Confirme que a exportação se limita a sessões de pesquisa orgânica.",
       "no-header": "Não foi encontrado um cabeçalho com coluna de página de destino e coluna de receita.",
       "no-rows": "O arquivo não tem página de destino com valor numérico de receita.",
-      "storage-failed": "Não foi possível atualizar o armazenamento local; a importação não foi salva."
-    }
+      "storage-failed": "Não foi possível atualizar o armazenamento local; a importação não foi salva.",
+      "invalid-response": "O Google Analytics devolveu dados de receita num formato inesperado.",
+      "fetch-failed": "Não foi possível obter a receita do Google Analytics. Verifique a ligação e a propriedade."
+    },
+    "api": "Obter da API do GA4",
+    "apiNote": "Requer o Google Analytics ligado. Lê os últimos 90 dias completos de receita de pesquisa orgânica por página de destino, na moeda da propriedade indicada pelo GA4. Sem eventos de compra, o GA4 indica 0."
   },
   "entityParity": {
     "title": "Entidades entre versões de idioma (Wikidata)",

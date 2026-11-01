@@ -9203,8 +9203,12 @@
       "not-organic": "请确认导出仅限于自然搜索会话。",
       "no-header": "未找到包含着陆页列和收入列的表头。",
       "no-rows": "文件中没有带数值收入的着陆页。",
-      "storage-failed": "无法更新本地存储；导入未保存。"
-    }
+      "storage-failed": "无法更新本地存储；导入未保存。",
+      "invalid-response": "Google Analytics 返回的收入数据格式异常。",
+      "fetch-failed": "无法从 Google Analytics 获取收入。请检查连接和媒体资源。"
+    },
+    "api": "从 GA4 API 获取",
+    "apiNote": "需要已连接 Google Analytics。按 GA4 报告的媒体资源货币,读取最近 90 个完整日、各着陆页的自然搜索收入。没有购买事件时 GA4 报告 0。"
   },
   "entityParity": {
     "title": "各语言版本中的实体（Wikidata）",

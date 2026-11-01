@@ -9,6 +9,8 @@ mod mapping;
 mod models;
 mod provider_models;
 mod report;
+pub mod revenue;
+mod revenue_model;
 mod streams;
 mod transport;
 mod validation;
