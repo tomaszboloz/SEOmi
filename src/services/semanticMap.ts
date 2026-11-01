@@ -17,7 +17,7 @@ export const buildSemanticMap = (
 ): SemanticMap => {
   const selectedPages = pages.slice(0, MAX_GRAPH_NODES);
   const { termsByPage, topicEdges, totalTopicEdges, groupMembers, groupDetails, find } = buildSemanticTopics(selectedPages);
-  const { allEdges, edges, incoming } = buildContentEdges(selectedPages, options);
+  const { allEdges, edges, incoming, skipped } = buildContentEdges(selectedPages, options);
   const inbound = inboundSources(allEdges.map((edge) => ({ from: edge.source, to: edge.target })));
   const start = normalizeGraphUrl(startUrl);
   const roots = new Set(selectedPages.flatMap((page, index) => (normalizeGraphUrl(page.url) === start || normalizeGraphUrl(page.final_url) === start ? [`page-${index}`] : [])));
@@ -48,6 +48,7 @@ export const buildSemanticMap = (
     totalEdges: allEdges.length,
     totalTopicEdges,
     totalInternalLinks: allEdges.reduce((sum, edge) => sum + edge.links, 0),
+    skippedLinks: skipped,
     truncated: pages.length > MAX_GRAPH_NODES || allEdges.length > MAX_GRAPH_EDGES || totalTopicEdges > MAX_TOPIC_EDGES,
   };
 };

@@ -10,6 +10,7 @@ export const buildContentEdges = (selectedPages: CrawledPageSummary[], options: 
   const pageIdByUrl = pageOwnersByUrl(selectedPages);
   const edgeGroups = new Map<string, SemanticContentEdge>();
   const terms = new Map<string, Set<string> | null>();
+  const skipped = { selfLinks: 0, unresolvedTargets: 0 };
   const termsOf = (target: string) => {
     if (!terms.has(target)) terms.set(target, targetTerms(selectedPages[Number(target.slice(5))]));
     return terms.get(target) ?? null;
@@ -25,7 +26,8 @@ export const buildContentEdges = (selectedPages: CrawledPageSummary[], options: 
         link.target_url,
         selectedPages[index].final_url || selectedPages[index].url,
       ));
-      if (!target || target === source) continue;
+      if (!target) { skipped.unresolvedTargets += 1; continue; }
+      if (target === source) { skipped.selfLinks += 1; continue; }
       const id = `${source}->${target}`;
       const edge = edgeGroups.get(id) ?? { id, source, target, anchors: [], links: 0, zoneWeightSum: 0, unweightedZoneLinks: 0 };
       edge.links += 1;
@@ -47,5 +49,5 @@ export const buildContentEdges = (selectedPages: CrawledPageSummary[], options: 
   const edges = allEdges.slice(0, MAX_GRAPH_EDGES);
   const incoming = new Map<string, number>();
   allEdges.forEach((edge) => incoming.set(edge.target, (incoming.get(edge.target) ?? 0) + edge.links));
-  return { allEdges, edges, incoming };
+  return { allEdges, edges, incoming, skipped };
 };

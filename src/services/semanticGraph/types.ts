@@ -45,6 +45,8 @@ export interface SemanticMap {
   totalEdges: number;
   totalTopicEdges: number;
   totalInternalLinks: number;
+  /** Internal links left out of the edges with their reason (#70 GEM-70-06): self-links and targets not in the crawled set. */
+  skippedLinks?: { selfLinks: number; unresolvedTargets: number };
   clusters: Array<{ id: string; label: string; pageCount: number }>;
   hasSemanticTerms: boolean;
   truncated: boolean;
