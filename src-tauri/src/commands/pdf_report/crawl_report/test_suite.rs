@@ -34,6 +34,8 @@ mod tests_focus_protection;
 mod tests_focus_segments;
 #[path = "tests_focus_visual.rs"]
 mod tests_focus_visual;
+#[path = "tests_link_graph.rs"]
+mod tests_link_graph;
 #[path = "tests_link_zones.rs"]
 mod tests_link_zones;
 #[path = "tests_more.rs"]
