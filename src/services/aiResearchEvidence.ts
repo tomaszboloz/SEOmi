@@ -1,4 +1,5 @@
 import type { AiProvider } from '@/types';
+import { splitSentences } from '@/services/textSentences';
 
 export interface AiResearchSettings {
   prompts: string[];
@@ -67,7 +68,7 @@ export const analyzeAiEvidence = (response: string, brand: string, domain: strin
       return url.username || url.password ? '' : value;
     } catch { return ''; }
   });
-  const evidence = safeResponse.split(/(?<=[.!?])\s+|\n/).filter((sentence) => {
+  const evidence = splitSentences(safeResponse, { newlines: true }).filter((sentence) => {
     if (prompt && normalizedText(sentence.trim()) === normalizedText(prompt.trim())) return false;
     return !/\b(i\s*(do not|don't|cannot|can't|am unable)|unable to|could not|no sources?|not enough information|not determine|not known|blocked)\b|nie (wiem|znam|mogę)|brak (danych|informacji)/i.test(sentence);
   }).join('\n');
