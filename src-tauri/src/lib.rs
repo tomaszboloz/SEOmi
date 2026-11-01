@@ -7,19 +7,17 @@ mod startup;
 #[cfg(test)]
 mod startup_tests;
 pub mod utils;
-use tauri::Builder;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     utils::logging::init();
     desktop_builder()
         .run(tauri::generate_context!())
-        .expect("Error while running SEOmi desktop application");
+        .expect("SEOmi failed to start");
 }
-
 /// Shared production composition root, also exercised by the real desktop E2E binary.
-pub fn desktop_builder() -> Builder<tauri::Wry> {
+pub fn desktop_builder() -> tauri::Builder<tauri::Wry> {
     compose(
-        Builder::default()
+        tauri::Builder::default()
             .plugin(tauri_plugin_dialog::init())
             .plugin(tauri_plugin_updater::Builder::new().build())
             .plugin(tauri_plugin_process::init())
@@ -27,7 +25,7 @@ pub fn desktop_builder() -> Builder<tauri::Wry> {
     )
 }
 /// Runtime-generic state, handlers and startup hook, so MockRuntime tests drive the shipped IPC surface.
-pub(crate) fn compose<R: tauri::Runtime>(builder: Builder<R>) -> Builder<R> {
+pub(crate) fn compose<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::Builder<R> {
     builder
         .manage(commands::site_crawler::CrawlControl::new())
         .manage(commands::seo_audit::AuditControl::new())
@@ -92,6 +90,9 @@ pub(crate) fn compose<R: tauri::Runtime>(builder: Builder<R>) -> Builder<R> {
                 commands::search_console::ga4::commands::connect_google_analytics,
                 commands::search_console::ga4::commands::list_google_analytics_properties,
                 commands::search_console::ga4::commands::google_analytics_performance,
+                commands::search_console::ga4::revenue::google_analytics_revenue,
+                commands::search_console::ga4::daily::google_analytics_daily,
+                commands::search_console::page_daily::search_console_page_daily,
                 commands::search_console::connect_search_console,
                 commands::search_console::list_search_console_properties,
                 commands::search_console::search_console_performance,
@@ -105,6 +106,7 @@ pub(crate) fn compose<R: tauri::Runtime>(builder: Builder<R>) -> Builder<R> {
                 commands::render_worker::start_render_worker,
                 commands::render_worker::stop_render_worker,
                 commands::render_worker::render_worker_status,
+                commands::image_fetch::fetch_image_bytes,
                 commands::bot_dns::dns_reverse,
                 commands::bot_dns::dns_forward,
                 commands::scheduler::register_audit_wakeup,
@@ -117,6 +119,9 @@ pub(crate) fn compose<R: tauri::Runtime>(builder: Builder<R>) -> Builder<R> {
                 commands::scheduled_worker::load_scheduled_execution,
                 commands::scheduled_worker::list_scheduled_executions,
                 commands::scheduled_worker::acknowledge_scheduled_execution,
+                commands::scheduled_worker::ledger::reserve_monitoring_alert,
+                commands::scheduled_worker::ledger::finish_monitoring_alert,
+                commands::scheduled_worker::ledger::list_monitoring_ledger,
                 commands::updater::check_for_updates,
                 commands::updater::install_update,
                 commands::site_crawler::crawl_site,

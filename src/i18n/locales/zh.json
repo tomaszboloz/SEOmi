@@ -1890,7 +1890,8 @@
       "no": "否",
       "tableSummary": "页面表格（{{count}}）",
       "tableCaption": "架构图中显示的页面，含状态、深度、入站链接、TRS 与分区"
-    }
+    },
+    "coreTopicShare": "核心主题词占比 {{percent}}%"
   },
   "crawlDiff": {
     "fields": {
@@ -2376,7 +2377,8 @@
       "authority": "主题权威度",
       "aio": "AI 就绪度",
       "trust": "实体信任度",
-      "offPage": "站外分析"
+      "offPage": "站外分析",
+      "evidence": "遥测、实验与 SERP 漂移"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -4903,6 +4905,8 @@
         "Zone method",
         "Context before",
         "Context after",
+        "上下文已截断",
+        "锚文本词偏移",
         "Section heading"
       ],
       "crawlImages": [
@@ -5742,7 +5746,9 @@
           "off-topic-below-quota": "切题段落太少。",
           "local-lexical-embeddings": "相似度使用本地词汇向量而非语义模型计算，区域为近似值。",
           "heuristic-entities": "实体来自首字母大写的短语和主谓宾事实，而不是训练好的实体模型。",
-          "semantic-provider-unavailable": "项目的语义嵌入提供方不可用，已改用本地词汇向量。"
+          "semantic-provider-unavailable": "项目的语义嵌入提供方不可用，已改用本地词汇向量。",
+          "ollama-entities": "除大写短语启发式外，实体还由本地 Ollama 模型扩展。",
+          "ollama-entities-unavailable": "Ollama 实体模型不可用，仅使用了大写短语启发式。"
         },
         "intent": {
           "definitional": "定义",
@@ -5763,7 +5769,9 @@
         },
         "mismatchAdvice": "该页面的意图与多数 TOP 页面不同：请检查它是否满足同一需求。",
         "missingBasics": "缺少的基础内容",
-        "basicsAdvice": "先补齐缺少的 {{0}} 个基础主题：覆盖率低于一半时得分会被扣减，新事实不能替代基础内容。"
+        "basicsAdvice": "先补齐缺少的 {{0}} 个基础主题：覆盖率低于一半时得分会被扣减，新事实不能替代基础内容。",
+        "previous": "上一次保存的运行",
+        "previousValue": "{{0}}：意图 {{1}}，SSAS {{2}}，已渲染 {{3}} 个页面"
       }
     },
     "crawl": {
@@ -6461,6 +6469,53 @@
           "no-follow-links": "没有可分析的follow链接。",
           "source-text-or-authority-missing": "部分来源缺少文本、可用向量或提供方权威值。"
         }
+      },
+      "evidence": {
+        "title": "遥测、实验与 SERP 漂移",
+        "intro": "本项目最近保存的数据。每个区块仅在有数据时出现;此处不做任何估计。",
+        "tRevenue": "各着陆页自然搜索收入",
+        "revenueIntro": "币种 {{0}};归因 {{1}};期间 {{2}}。此处缺失的页面表示未知,而非零。",
+        "colPage": "着陆页",
+        "colRevenue": "收入",
+        "tExperiments": "实验估计",
+        "experimentsIntro": "累计点击与反事实对比,括号内为 95% 区间。这是关联估计而非已证明的因果;无法估计表示数据不足以得出结果。",
+        "colTarget": "对象",
+        "colDate": "变更日期",
+        "colMethod": "方法",
+        "colStatus": "状态",
+        "colEffect": "累计效应 [95%]",
+        "colProbability": "符号概率",
+        "tDecay": "SERP 漂移历史",
+        "decayIntro": "将已保存的可比 SERP 快照与第一份比较。仅供参考:漂移是复查的理由,不是损失的证据。",
+        "colQuery": "查询",
+        "colVerdict": "判定",
+        "colSamples": "快照",
+        "colShift": "质心偏移",
+        "colEntities": "实体 新增 / 丢失",
+        "na": "无",
+        "disclaimer": "非 Google 数据;不预测损失,也不自动改写。缺失数据显示为不可用,绝不显示为零。",
+        "status": {
+          "estimated": "已估计",
+          "not-estimable": "无法估计"
+        },
+        "verdict": {
+          "too-few-samples": "快照太少",
+          "incompatible": "不可比",
+          "stable": "稳定",
+          "not-persistent": "不持续",
+          "cooldown": "冷却期",
+          "alert": "建议复查"
+        },
+        "method": {
+          "regression": "回归",
+          "structural": "季节结构"
+        },
+        "colOutcome": "结果",
+        "outcome": {
+          "gsc-clicks": "Search Console 点击",
+          "ga4-key-events": "GA4 关键事件",
+          "ga4-revenue": "GA4 收入"
+        }
       }
     },
     "recs": {
@@ -7040,7 +7095,8 @@
       "unmatchedTopic": "没有页面与主题“{{topic}}”匹配,将改用自动识别的主题。",
       "gateSkipped": "已跳过 {{count}} 个页面（noindex/canonical）。",
       "gateInclude": "纳入这些页面",
-      "gateExclude": "重新排除"
+      "gateExclude": "重新排除",
+      "semantic": "语义相似度已启用：{{model}}。"
     },
     "skip": {
       "render-timeout": "JavaScript 渲染超时",
@@ -7558,7 +7614,8 @@
         "entities": "实体",
         "questions": "用户问题（PAA）",
         "gain": "信息增益"
-      }
+      },
+      "linkFlags": "按位置统计的内部链接：菜单 {{menu}}，侧边栏/页脚 {{sidebarFooter}}，正文 {{content}}，无位置数据 {{unknown}}。菜单和侧边栏/页脚链接不计为正文链接。"
     },
     "warning": {
       "empty-authority": "空洞权威：网站涉及 {{tcr}}% 的主题，但平均深度仅 {{depth}}/100。发布新内容前，请先用数据和实体深化现有页面。",
@@ -7593,7 +7650,29 @@
       },
       "withPaa": "包含真实的“相关问题”(People Also Ask)（DataForSEO 高级 SERP，单独计费）",
       "paaUsed": "已使用 SERP 中的 {{count}} 个 People Also Ask 问题。",
-      "paaMissing": "没有 People Also Ask 来源：问题仅来自竞争对手的标题和 Google 搜索建议。"
+      "paaMissing": "没有 People Also Ask 来源：问题仅来自竞争对手的标题和 Google 搜索建议。",
+      "autoRefresh": "在计划抓取后自动刷新此图谱（可选；消耗 SERP 配额，最多每周一次，每 30 天 4 次尝试）",
+      "merge": {
+        "title": "与主题图的支柱比较",
+        "note": "仅预览。添加支柱之前不会有任何更改。",
+        "matched": "匹配的手动支柱（{{count}}）：",
+        "added": "您的图谱中缺少的参考支柱（{{count}}）：",
+        "manualOnly": "仅存在于您的图谱中，保持不变（{{count}}）：",
+        "apply": "将 {{count}} 个参考支柱添加到主题图",
+        "done": "已向主题图添加 {{count}} 个支柱。",
+        "failed": "无法更新主题图：{{error}}"
+      },
+      "entities": {
+        "label": "实体识别",
+        "lexical": "仅焦点词（默认）",
+        "heuristic": "本地名称检测",
+        "ollama": "本地名称检测 + Ollama 模型",
+        "model": "Ollama 模型"
+      },
+      "kg": {
+        "button": "将支柱关联到 Wikidata（公开查询）",
+        "summary": "已将 {{linked}} 个支柱关联到 Wikidata 条目，其中 {{review}} 个需要复核（第一个搜索结果，标签并非完全匹配）。"
+      }
     },
     "coverage": {
       "title": "主题覆盖图谱",
@@ -8083,6 +8162,24 @@
         "hedged": "措辞保留",
         "negated": "否定",
         "note": "本地检查只读取本页面（引用位置、标识符、保留措辞、否定）。它从不读取被引用的文献，因此无法确认支持关系。"
+      },
+      "entail": {
+        "sourceLabel": "要比较的来源文本(粘贴)",
+        "useModel": "同时询问本地模型(Ollama,可选)",
+        "run": "将主张与来源文本比较",
+        "results": "比较结果",
+        "label": {
+          "consistent": "与文本一致",
+          "related": "相关但不匹配",
+          "unrelated": "无关",
+          "contradicts": "可能矛盾",
+          "unknown": "文本不足"
+        },
+        "method": {
+          "heuristic": "词汇启发式",
+          "model": "本地模型"
+        },
+        "note": "仅为关联证据,不会将主张标为已验证或来源标为已核查。"
       }
     },
     "identity": {
@@ -8233,6 +8330,10 @@
     "workflow": "流程：诊断 → 选择优先级 → 模块证据 → What-If → 简报 / 复制 / 导出。不会发布到 CMS。",
     "run": "抓取：{{date}}",
     "runUnsaved": "抓取：尚未保存",
+    "refresh": "根据已保存数据重新计算",
+    "related": {
+      "title": "相关视图"
+    },
     "hss": {
       "title": "Holistic Semantic Score（HSS）",
       "valueAria": "HSS {{value}}",
@@ -8272,7 +8373,9 @@
     "reason": {
       "not-provided": "未提供数值。",
       "not-run": "此次抓取未运行该模块。",
-      "domain-aggregation-undefined": "按页面计算的模块：尚未定义站点级分数，因此予以排除而不是取平均。",
+      "insufficient-pages": "已测量的页面或短语太少，无法计算站点分数（至少需要 3 个）。",
+      "sprs-unavailable": "无法评估链接图。",
+      "sprs-not-converged": "链接流计算未收敛。",
       "sfs-no-scored-pages": "没有可评分的页面。",
       "tas-no-reference-map": "请先构建参考主题图以测量 TAS。",
       "eetv-no-signals": "未发现信任信号。",
@@ -8297,6 +8400,11 @@
       "hint": "按每估算小时的 HSS 变化量排序。变化量仅来自各模块自身的模拟；没有模拟时显示为不可用。不承诺流量、引用或投资回报。",
       "empty": "此次抓取的模块报告未生成任何行动。",
       "internalLink": "添加内部链接：{{from}} → {{to}}",
+      "module": {
+        "fix-leak": "修复 {{url}} 的链接外流",
+        "add-inlinks": "为 {{url}} 添加入站链接",
+        "rewrite-weak-passages": "重写 {{url}} 上较弱的段落"
+      },
       "delta": "HSS Δ {{value}}",
       "deltaUnavailable": "HSS Δ 不可用（无声明的模型）",
       "moduleDelta": "{{module}} Δ {{value}}",
@@ -8391,6 +8499,14 @@
     "igos": {
       "title": "IGOS 下降",
       "body": "在相同的 TOP 页面和模型下，“{{phrase}}”的信息增益分从 {{from}} 降至 {{to}}（{{points}} 分）。"
+    },
+    "igosTopChange": {
+      "title": "IGOS：TOP 集合已变化",
+      "body": "“{{phrase}}”的 TOP 页面已变化（新增 {{added}}，移除 {{removed}}）。IGOS 与上次运行不可比较。"
+    },
+    "taskRegression": {
+      "title": "优化导致得分下降",
+      "body": "{{count}} 个已验证任务使得分下降；最严重的是 {{url}} 下降 {{worst}} 分。"
     }
   },
   "sprsUi": {
@@ -8421,8 +8537,12 @@
       "before": "之前",
       "after": "之后",
       "delta": "变化",
-      "solver": "从当前分数热启动：{{iterations}} 次迭代，残差 {{residual}}。"
-    }
+      "solver": "从当前分数热启动：{{iterations}} 次迭代，残差 {{residual}}。",
+      "flags": "诊断标记变化",
+      "flagOn": "{{page}} 现在为：{{flag}}",
+      "flagOff": "{{page}} 不再为：{{flag}}"
+    },
+    "meta": "{{iterations}} 次迭代，残差 {{residual}}"
   },
   "decayUi": {
     "snapshots": "支持此判定的快照数量：{{count}}",
@@ -8497,6 +8617,11 @@
         "product-cards": "展示产品或优惠：{{analysed}} 个排名靠前页面中有 {{count}} 个显示产品或价格卡片。",
         "cta": "添加明确的行动号召：{{analysed}} 个 TOP 页面中有 {{count}} 个包含（纯信息页面可忽略）。"
       }
+    },
+    "funnel": {
+      "title": "已抓取页面之间的漏斗转换",
+      "fromTo": "自 \\ 至",
+      "summary": "已分类 {{classified}} 个页面，{{unclassified}} 个无已测结构，跳过 {{skipped}} 条内部链接（目标未分类）。"
     }
   },
   "prePublishUi": {
@@ -8627,7 +8752,19 @@
     "saveBudget": "保存预算",
     "savedBudget": "LLM 预算已保存。",
     "invalidLimit": "请输入有效的非负每月上限。",
-    "invalidWarn": "警告阈值必须是 1 到 100 的整数。"
+    "invalidWarn": "警告阈值必须是 1 到 100 的整数。",
+    "dictTitle": "YMYL 术语表",
+    "dictHint": "剂量和金额必须与来源中的同一术语相邻。内置 MeSH 种子属于公有领域。不含 ICD-10：请导入您自己的授权或开放列表。列表仅保存在此设备上。",
+    "dictSeed": "使用内置 MeSH 种子（公有领域）",
+    "dictFile": "导入列表（TXT 或 CSV）",
+    "dictPaste": "或粘贴术语，每行一个",
+    "dictSave": "保存列表",
+    "dictClear": "清除已导入列表",
+    "dictSaved": "术语表已保存。",
+    "dictFailed": "无法保存术语表。",
+    "dictEmpty": "未找到可用术语。",
+    "dictCount": "已启用 {{count}} 个术语",
+    "dictPasted": "粘贴的列表"
   },
   "templateGovernor": {
     "title": "程序化模板质量",
@@ -8761,7 +8898,9 @@
       "off-topic-below-quota": "切题段落太少。",
       "local-lexical-embeddings": "相似度使用本地词汇向量而非语义模型计算，区域为近似值。",
       "heuristic-entities": "实体来自首字母大写的短语和主谓宾事实，而不是训练好的实体模型。",
-      "semantic-provider-unavailable": "项目的语义嵌入提供方不可用，已改用本地词汇向量。"
+      "semantic-provider-unavailable": "项目的语义嵌入提供方不可用，已改用本地词汇向量。",
+      "ollama-entities": "除大写短语启发式外，实体还由本地 Ollama 模型扩展。",
+      "ollama-entities-unavailable": "Ollama 实体模型不可用，仅使用了大写短语启发式。"
     },
     "rec": {
       "rewrite-echo": "偏移量 {{offset}} 处的段落重复了竞品内容：请用自己的话改写。",
@@ -9011,6 +9150,11 @@
       "negated": "否定提及；不是推荐",
       "critical": "品牌附近有批评性措辞；不是推荐",
       "quoted": "引用或转述的观点；不是来源本身的推荐"
+    },
+    "senses": {
+      "label": "别名规则(同形异义词)",
+      "hint": "每行一条规则:别名 | -表示其他含义的词 | +品牌含义所必需的词。按项目保存,下次分析时使用。",
+      "error": "无法保存规则(无效或过长)。"
     }
   },
   "experimentsUi": {
@@ -9072,6 +9216,12 @@
       "rows-truncated": "已保存的页面行被截断，页面比较可能不完整。",
       "low-volume": "基准点击次数少于30，数据量不足以进行可靠比较。",
       "pending": "干预日期在未来，正在等待评估。"
+    },
+    "outcome": {
+      "label": "衡量的结果",
+      "gsc-clicks": "Search Console 点击",
+      "ga4-key-events": "GA4 关键事件(自然搜索)",
+      "ga4-revenue": "GA4 收入(自然搜索)"
     }
   },
   "linkInjector": {
@@ -9181,7 +9331,17 @@
       "not-estimable": "无法回测：前期太短，无法进行伪干预。"
     },
     "familySignificant": "对同时显示的 {{family}} 个实验校正后仍显著（Holm，p = {{p}}）。",
-    "familyNotSignificant": "对同时显示的 {{family}} 个实验校正后不显著（Holm，p = {{p}}）。"
+    "familyNotSignificant": "对同时显示的 {{family}} 个实验校正后不显著（Holm，p = {{p}}）。",
+    "structuralTitle": "含季节性的结构估计",
+    "structuralMethod": "局部水平趋势加每周季节性;对照有信息量时先回归剔除。95%区间来自固定种子的后验预测模拟。这是 BSTS 式近似,不是完整的贝叶斯拟合,显示的是关联而非已证明的因果。",
+    "pageContamination": "对照页面可能与被修改页面共享链接、模板或主题,同一改动可能影响它。请把结果视为弱于独立对照的结果。",
+    "pageLoad": "加载此页面的每日序列",
+    "pageNeedsGsc": "请先连接 Search Console 资源。",
+    "pageLoadFailed": "无法加载或保存每日序列。",
+    "ga4Load": "加载 GA4 每日序列",
+    "ga4NeedsConnection": "请先连接 Google Analytics。",
+    "ga4Loaded": "已保存 {{days}} 天;收入币种为 {{currency}}。",
+    "ga4LoadFailed": "无法加载或保存 GA4 序列。"
   },
   "revenueImportUi": {
     "title": "收入（可选的 GA4 导出）",
@@ -9198,8 +9358,12 @@
       "not-organic": "请确认导出仅限于自然搜索会话。",
       "no-header": "未找到包含着陆页列和收入列的表头。",
       "no-rows": "文件中没有带数值收入的着陆页。",
-      "storage-failed": "无法更新本地存储；导入未保存。"
-    }
+      "storage-failed": "无法更新本地存储；导入未保存。",
+      "invalid-response": "Google Analytics 返回的收入数据格式异常。",
+      "fetch-failed": "无法从 Google Analytics 获取收入。请检查连接和媒体资源。"
+    },
+    "api": "从 GA4 API 获取",
+    "apiNote": "需要已连接 Google Analytics。按 GA4 报告的媒体资源货币,读取最近 90 个完整日、各着陆页的自然搜索收入。没有购买事件时 GA4 报告 0。"
   },
   "entityParity": {
     "title": "各语言版本中的实体（Wikidata）",
@@ -9222,5 +9386,53 @@
       "error": "查询失败"
     },
     "correctPlaceholder": "Q123 / none"
+  },
+  "semanticSource": {
+    "title": "语义相似度（可选）",
+    "hint": "使用本地 Ollama 嵌入模型，在 Site Focus 和 Topical Authority 中匹配同义词。默认关闭。关闭时报告使用 TF-IDF 并明确说明。不会为您安装或下载任何内容。",
+    "enable": "可用时使用嵌入",
+    "provider": "来源",
+    "providerOllama": "Ollama（神经网络）",
+    "providerHybrid": "混合（本地哈希 + Ollama）",
+    "url": "Ollama 地址（留空 = 本地默认）",
+    "model": "嵌入模型",
+    "timeout": "每批超时（毫秒）",
+    "maxEntries": "每次运行最多页面数",
+    "save": "保存",
+    "test": "测试 Ollama 连接",
+    "testing": "测试中...",
+    "saved": "设置已保存。",
+    "failed": "无法保存设置。",
+    "invalid": "请检查数值：超时 1000 至 300000 毫秒，页面 1 至 5000，模型不能为空。",
+    "testOk": "正常：{{model}}，{{dimensions}} 维。",
+    "testFail": "回退到 TF-IDF：{{reason}}。",
+    "reason": {
+      "offline": "无法连接 Ollama",
+      "timeout": "请求超时",
+      "cancelled": "已取消",
+      "rate-limited": "请求受限",
+      "model-missing": "模型未安装",
+      "invalid-response": "响应无效",
+      "failed": "未知错误"
+    }
+  },
+  "imageOcrUi": {
+    "title": "OCR 与图文一致性(本地,可选)",
+    "note": "仅在您输入已在运行的本地 Ollama 视觉模型后才会运行,不会下载任何内容。最多 {{max}} 张图片,仅发送到您的 Ollama 服务器。结果为部分结果:没有逐行边框或置信度。一致性数值是文本重叠启发式(ALT、文件名、页面文本),并非图像理解。",
+    "model": "Ollama 视觉模型",
+    "run": "运行 OCR",
+    "cancel": "取消 OCR",
+    "status": {
+      "running": "OCR 运行中:完成 {{ok}},失败 {{failed}}。",
+      "done": "OCR 完成:完成 {{ok}},失败 {{failed}}。",
+      "cancelled": "OCR 已取消:完成 {{ok}},失败 {{failed}}。",
+      "error": "OCR 因错误停止:完成 {{ok}},失败 {{failed}}。"
+    },
+    "origin": {
+      "media-only": "仅在图片中",
+      "duplicate-of-html": "HTML 中也有"
+    },
+    "fact": "“{{text}}”({{origin}},部分) {{url}}",
+    "alignment": "{{url}}:文本重叠 {{pct}}%(启发式)"
   }
 }

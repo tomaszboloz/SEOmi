@@ -1890,7 +1890,8 @@
       "no": "いいえ",
       "tableSummary": "ページ表（{{count}}）",
       "tableCaption": "構造マップに表示されるページ（ステータス、深さ、被リンク、TRS、セクション付き）"
-    }
+    },
+    "coreTopicShare": "コアトピックの語の割合 {{percent}}%"
   },
   "crawlDiff": {
     "fields": {
@@ -2376,7 +2377,8 @@
       "authority": "トピカルオーソリティ",
       "aio": "AI対応度",
       "trust": "エンティティの信頼性",
-      "offPage": "オフページ分析"
+      "offPage": "オフページ分析",
+      "evidence": "テレメトリ、実験、SERPのドリフト"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -4903,6 +4905,8 @@
         "Zone method",
         "Context before",
         "Context after",
+        "コンテキスト切り詰め",
+        "アンカー語オフセット",
         "Section heading"
       ],
       "crawlImages": [
@@ -5742,7 +5746,9 @@
           "off-topic-below-quota": "トピック内の段落が少なすぎます。",
           "local-lexical-embeddings": "類似度はセマンティックモデルではなくローカルの語彙ベクトルで計算されるため、ゾーンは近似値です。",
           "heuristic-entities": "エンティティは大文字で始まる語句と主語・述語・目的語の事実から抽出しており、学習済みのエンティティモデルではありません。",
-          "semantic-provider-unavailable": "プロジェクトのセマンティック埋め込みプロバイダーが利用できなかったため、ローカルの語彙ベクトルを使用しました。"
+          "semantic-provider-unavailable": "プロジェクトのセマンティック埋め込みプロバイダーが利用できなかったため、ローカルの語彙ベクトルを使用しました。",
+          "ollama-entities": "大文字フレーズのヒューリスティックに加え、ローカルの Ollama モデルでエンティティを拡張しました。",
+          "ollama-entities-unavailable": "Ollama のエンティティモデルが利用できず、大文字フレーズのヒューリスティックのみを使用しました。"
         },
         "intent": {
           "definitional": "定義",
@@ -5763,7 +5769,9 @@
         },
         "mismatchAdvice": "このページは多くのTOPページと異なる意図に見えます。同じニーズに応えているか確認してください。",
         "missingBasics": "不足している基本事項",
-        "basicsAdvice": "まず不足している基本トピック（{{0}} 件）を扱ってください。網羅率が半分未満だとスコアが減点され、新しい事実は基本を代替しません。"
+        "basicsAdvice": "まず不足している基本トピック（{{0}} 件）を扱ってください。網羅率が半分未満だとスコアが減点され、新しい事実は基本を代替しません。",
+        "previous": "前回保存された実行",
+        "previousValue": "{{0}}：意図 {{1}}、SSAS {{2}}、レンダリング済み {{3}} ページ"
       }
     },
     "crawl": {
@@ -6461,6 +6469,53 @@
           "no-follow-links": "分析可能なfollowリンクがありません。",
           "source-text-or-authority-missing": "一部ソースにテキスト、使用可能なベクトル、提供元の権威スコアがありません。"
         }
+      },
+      "evidence": {
+        "title": "テレメトリ、実験、SERPのドリフト",
+        "intro": "このプロジェクトの最新の保存データです。各ブロックはデータがある場合のみ表示され、ここでは何も推定しません。",
+        "tRevenue": "ランディングページ別オーガニック収益",
+        "revenueIntro": "通貨 {{0}}、アトリビューション {{1}}、期間 {{2}}。ここにないページは不明であり、0ではありません。",
+        "colPage": "ランディングページ",
+        "colRevenue": "収益",
+        "tExperiments": "実験の推定",
+        "experimentsIntro": "累積クリックを反事実と比較し、95%区間を括弧内に示します。これは因果の証明ではなく関連の推定で、推定不可はデータが結果を許さなかったことを意味します。",
+        "colTarget": "対象",
+        "colDate": "変更日",
+        "colMethod": "手法",
+        "colStatus": "状態",
+        "colEffect": "累積効果 [95%]",
+        "colProbability": "符号の確率",
+        "tDecay": "SERPドリフト履歴",
+        "decayIntro": "保存済みの比較可能なSERPスナップショットを最初のものと比較します。参考情報のみで、ドリフトは見直しの理由であり損失の証拠ではありません。",
+        "colQuery": "クエリ",
+        "colVerdict": "判定",
+        "colSamples": "スナップショット",
+        "colShift": "重心のずれ",
+        "colEntities": "エンティティ 新規 / 消失",
+        "na": "なし",
+        "disclaimer": "Googleのデータではありません。損失の予測も自動書き換えも行いません。欠損データは利用不可として表示し、0とはしません。",
+        "status": {
+          "estimated": "推定済み",
+          "not-estimable": "推定不可"
+        },
+        "verdict": {
+          "too-few-samples": "スナップショット不足",
+          "incompatible": "比較不可",
+          "stable": "安定",
+          "not-persistent": "持続せず",
+          "cooldown": "クールダウン",
+          "alert": "見直し推奨"
+        },
+        "method": {
+          "regression": "回帰",
+          "structural": "季節構造"
+        },
+        "colOutcome": "成果",
+        "outcome": {
+          "gsc-clicks": "Search Consoleのクリック",
+          "ga4-key-events": "GA4キーイベント",
+          "ga4-revenue": "GA4収益"
+        }
       }
     },
     "recs": {
@@ -7040,7 +7095,8 @@
       "unmatchedTopic": "トピック「{{topic}}」に一致するページはありませんでした。代わりに検出されたトピックを使用します。",
       "gateSkipped": "{{count}} ページをスキップしました（noindex/canonical）。",
       "gateInclude": "含める",
-      "gateExclude": "再び除外"
+      "gateExclude": "再び除外",
+      "semantic": "意味的類似度が有効：{{model}}。"
     },
     "skip": {
       "render-timeout": "JavaScript のレンダリングがタイムアウトしました",
@@ -7558,7 +7614,8 @@
         "entities": "エンティティ",
         "questions": "ユーザーの質問 (PAA)",
         "gain": "情報利得"
-      }
+      },
+      "linkFlags": "配置別の内部リンク：メニュー {{menu}}、サイドバー/フッター {{sidebarFooter}}、本文 {{content}}、配置データなし {{unknown}}。メニューとサイドバー/フッターのリンクは本文リンクとして数えません。"
     },
     "warning": {
       "empty-authority": "空虚なオーソリティ：トピックの{{tcr}}%に触れていますが平均の深さは{{depth}}/100しかありません。新規公開の前に既存ページを事実とエンティティで深めてください。",
@@ -7593,7 +7650,29 @@
       },
       "withPaa": "実際の「他の人はこちらも質問」(PAA) を含める（DataForSEO 高度 SERP、別料金）",
       "paaUsed": "SERP の PAA 質問を {{count}} 件使用しました。",
-      "paaMissing": "PAA のソースがありません。質問は競合の見出しと Google サジェストのみから取得しています。"
+      "paaMissing": "PAA のソースがありません。質問は競合の見出しと Google サジェストのみから取得しています。",
+      "autoRefresh": "予約クロールの後にこのマップを自動更新する（任意。SERP の利用枠を消費し、最大で週1回、30日あたり4回まで試行）",
+      "merge": {
+        "title": "トピックマップのピラーと比較",
+        "note": "プレビューのみです。ピラーを追加するまで何も変わりません。",
+        "matched": "一致する手作業のピラー（{{count}}）：",
+        "added": "マップにない参照ピラー（{{count}}）：",
+        "manualOnly": "マップにのみ存在し、そのまま残るもの（{{count}}）：",
+        "apply": "参照ピラー {{count}} 件をトピックマップに追加",
+        "done": "ピラー {{count}} 件をトピックマップに追加しました。",
+        "failed": "トピックマップを更新できませんでした：{{error}}"
+      },
+      "entities": {
+        "label": "エンティティ認識",
+        "lexical": "フォーカス用語のみ（既定）",
+        "heuristic": "ローカルの名称検出",
+        "ollama": "ローカルの名称検出 + Ollama モデル",
+        "model": "Ollama モデル"
+      },
+      "kg": {
+        "button": "ピラーを Wikidata に関連付ける（公開検索）",
+        "summary": "{{linked}} 件のピラーを Wikidata の項目に関連付けました。要確認は {{review}} 件です（検索の最初の結果で、ラベルは完全一致ではありません）。"
+      }
     },
     "coverage": {
       "title": "トピックカバレッジマップ",
@@ -8083,6 +8162,24 @@
         "hedged": "断定を避けた表現",
         "negated": "否定",
         "note": "ローカル確認はこのページだけを読みます（引用の位置、識別子、断定回避、否定）。引用文献は読まないため、裏付けを確認することはできません。"
+      },
+      "entail": {
+        "sourceLabel": "比較する出典テキスト(貼り付け)",
+        "useModel": "ローカルモデル(Ollama、任意)にも問い合わせる",
+        "run": "主張を出典テキストと比較",
+        "results": "比較結果",
+        "label": {
+          "consistent": "テキストと整合",
+          "related": "関連あり・不一致",
+          "unrelated": "無関係",
+          "contradicts": "矛盾の可能性",
+          "unknown": "テキスト不足"
+        },
+        "method": {
+          "heuristic": "単語ヒューリスティック",
+          "model": "ローカルモデル"
+        },
+        "note": "関連性の証拠のみ。主張を検証済み、出典を確認済みとは扱いません。"
       }
     },
     "identity": {
@@ -8233,6 +8330,10 @@
     "workflow": "流れ：診断 → 優先度の選択 → モジュールの根拠 → What-If → ブリーフ / コピー / エクスポート。CMS への公開は行いません。",
     "run": "クロール：{{date}}",
     "runUnsaved": "クロール：未保存",
+    "refresh": "保存データから再計算",
+    "related": {
+      "title": "関連ビュー"
+    },
     "hss": {
       "title": "Holistic Semantic Score（HSS）",
       "valueAria": "HSS {{value}}",
@@ -8272,7 +8373,9 @@
     "reason": {
       "not-provided": "値が指定されていません。",
       "not-run": "このクロールではモジュールが実行されていません。",
-      "domain-aggregation-undefined": "ページ単位のモジュールです。サイト単位のスコアが未定義のため、平均せずに除外しています。",
+      "insufficient-pages": "サイト単位のスコアには測定済みのページまたはフレーズが少なすぎます（3件以上必要）。",
+      "sprs-unavailable": "リンクグラフを評価できませんでした。",
+      "sprs-not-converged": "リンクフローの計算が収束しませんでした。",
       "sfs-no-scored-pages": "評価できたページがありません。",
       "tas-no-reference-map": "TAS を測定するには参照トピックマップを作成してください。",
       "eetv-no-signals": "信頼シグナルが見つかりませんでした。",
@@ -8297,6 +8400,11 @@
       "hint": "推定 1 時間あたりの HSS 差分で並べています。差分は各モジュール自身のシミュレーションのみから算出し、ない場合は利用不可です。トラフィック、引用、ROI を約束するものではありません。",
       "empty": "このクロールのモジュールレポートからアクションは生成されませんでした。",
       "internalLink": "内部リンクを追加：{{from}} → {{to}}",
+      "module": {
+        "fix-leak": "{{url}} のリンク漏れを修正",
+        "add-inlinks": "{{url}} への内部リンクを追加",
+        "rewrite-weak-passages": "{{url}} の弱い箇所を書き直す"
+      },
       "delta": "HSS Δ {{value}}",
       "deltaUnavailable": "HSS Δ 利用不可（宣言されたモデルなし）",
       "moduleDelta": "{{module}} Δ {{value}}",
@@ -8391,6 +8499,14 @@
     "igos": {
       "title": "IGOSが低下",
       "body": "「{{phrase}}」の情報利得スコアが、同じTOPページとモデルで {{from}} から {{to}} に低下しました（{{points}} ポイント）。"
+    },
+    "igosTopChange": {
+      "title": "IGOS：TOP セットが変更",
+      "body": "「{{phrase}}」の TOP ページが変わりました（追加 {{added}}、削除 {{removed}}）。IGOS は前回の実行と比較できません。"
+    },
+    "taskRegression": {
+      "title": "最適化でスコアが低下",
+      "body": "検証済みタスク {{count}} 件でスコアが低下しました。最大は {{url}} の {{worst}} ポイントです。"
     }
   },
   "sprsUi": {
@@ -8421,8 +8537,12 @@
       "before": "変更前",
       "after": "変更後",
       "delta": "差分",
-      "solver": "現在のスコアからウォームスタート: {{iterations}} 回の反復、残差 {{residual}}。"
-    }
+      "solver": "現在のスコアからウォームスタート: {{iterations}} 回の反復、残差 {{residual}}。",
+      "flags": "診断フラグの変化",
+      "flagOn": "{{page}} は現在：{{flag}}",
+      "flagOff": "{{page}} はもう該当しません：{{flag}}"
+    },
+    "meta": "{{iterations}} 回の反復、残差 {{residual}}"
   },
   "decayUi": {
     "snapshots": "この判定の根拠となるスナップショット数: {{count}}",
@@ -8497,6 +8617,11 @@
         "product-cards": "商品やオファーを表示: 上位 {{analysed}} ページ中 {{count}} ページが商品・価格カードを表示しています。",
         "cta": "明確な行動喚起を追加してください: TOP ページ {{analysed}} 件中 {{count}} 件にあります（純粋な情報ページでは不要です）。"
       }
+    },
+    "funnel": {
+      "title": "クロール済みページ間のファネル遷移",
+      "fromTo": "From \\ to",
+      "summary": "分類済み {{classified}} ページ、構造未計測 {{unclassified}} ページ、スキップした内部リンク {{skipped}} 件（遷移先が未分類）。"
     }
   },
   "prePublishUi": {
@@ -8627,7 +8752,19 @@
     "saveBudget": "予算を保存",
     "savedBudget": "LLM予算を保存しました。",
     "invalidLimit": "0以上の有効な月間上限を入力してください。",
-    "invalidWarn": "警告しきい値は1から100の整数で指定してください。"
+    "invalidWarn": "警告しきい値は1から100の整数で指定してください。",
+    "dictTitle": "YMYL用語リスト",
+    "dictHint": "用量や金額は、出典内で同じ用語の近くに記載されている必要があります。同梱のMeSHは米国政府の著作物でパブリックドメインです。ICD-10は同梱していません。ライセンス済みまたはオープンな独自リストをインポートしてください。リストはこの端末にのみ保存されます。",
+    "dictSeed": "同梱のMeSHシードを使う（パブリックドメイン）",
+    "dictFile": "リストをインポート（TXTまたはCSV）",
+    "dictPaste": "または用語を1行に1つ貼り付け",
+    "dictSave": "リストを保存",
+    "dictClear": "インポート済みリストを消去",
+    "dictSaved": "用語リストを保存しました。",
+    "dictFailed": "用語リストを保存できませんでした。",
+    "dictEmpty": "使用できる用語が見つかりません。",
+    "dictCount": "有効な用語：{{count}}",
+    "dictPasted": "貼り付けたリスト"
   },
   "templateGovernor": {
     "title": "プログラマティックテンプレートの品質",
@@ -8761,7 +8898,9 @@
       "off-topic-below-quota": "トピック内の段落が少なすぎます。",
       "local-lexical-embeddings": "類似度はセマンティックモデルではなくローカルの語彙ベクトルで計算されるため、ゾーンは近似値です。",
       "heuristic-entities": "エンティティは大文字で始まる語句と主語・述語・目的語の事実から抽出しており、学習済みのエンティティモデルではありません。",
-      "semantic-provider-unavailable": "プロジェクトのセマンティック埋め込みプロバイダーが利用できなかったため、ローカルの語彙ベクトルを使用しました。"
+      "semantic-provider-unavailable": "プロジェクトのセマンティック埋め込みプロバイダーが利用できなかったため、ローカルの語彙ベクトルを使用しました。",
+      "ollama-entities": "大文字フレーズのヒューリスティックに加え、ローカルの Ollama モデルでエンティティを拡張しました。",
+      "ollama-entities-unavailable": "Ollama のエンティティモデルが利用できず、大文字フレーズのヒューリスティックのみを使用しました。"
     },
     "rec": {
       "rewrite-echo": "オフセット {{offset}} の段落は競合の記述と重複しています。自分の言葉で書き直してください。",
@@ -9011,6 +9150,11 @@
       "negated": "否定的な言及です。推奨ではありません",
       "critical": "ブランドの近くに批判的な表現があります。推奨ではありません",
       "quoted": "引用または他者の意見です。ソース自身の推奨ではありません"
+    },
+    "senses": {
+      "label": "エイリアス規則(同音異義語)",
+      "hint": "1行1規則: エイリアス | -別の意味を示す語 | +ブランドの意味に必須の語。プロジェクトごとに保存され、次回の分析で使われます。",
+      "error": "規則を保存できませんでした(無効または長すぎます)。"
     }
   },
   "experimentsUi": {
@@ -9072,6 +9216,12 @@
       "rows-truncated": "保存されたページ行が切り詰められており、比較が不完全な可能性があります。",
       "low-volume": "基準期間のクリック数が30未満で、信頼できる比較には少なすぎます。",
       "pending": "施策の日付が未来のため、評価は保留中です。"
+    },
+    "outcome": {
+      "label": "測定する成果",
+      "gsc-clicks": "Search Consoleのクリック",
+      "ga4-key-events": "GA4キーイベント(オーガニック)",
+      "ga4-revenue": "GA4収益(オーガニック)"
     }
   },
   "linkInjector": {
@@ -9181,7 +9331,17 @@
       "not-estimable": "バックテスト不可: 事前期間が疑似介入には短すぎます。"
     },
     "familySignificant": "同時に表示した {{family}} 件の実験で補正後も有意です (Holm, p = {{p}})。",
-    "familyNotSignificant": "同時に表示した {{family}} 件の実験で補正後は有意ではありません (Holm, p = {{p}})。"
+    "familyNotSignificant": "同時に表示した {{family}} 件の実験で補正後は有意ではありません (Holm, p = {{p}})。",
+    "structuralTitle": "季節性を含む構造推定",
+    "structuralMethod": "局所水準トレンドと週次の季節性を用い、情報を持つ対照は回帰で除きます。95%区間は固定シードの事後予測シミュレーションによるものです。これはBSTS型の近似で、完全なベイズ推定ではなく、因果の証明ではなく関連を示します。",
+    "pageContamination": "対照ページは変更したページとリンク、テンプレート、トピックを共有している可能性があり、同じ変更の影響を受けることがあります。独立した対照より弱い結果として扱ってください。",
+    "pageLoad": "このページの日次系列を読み込む",
+    "pageNeedsGsc": "先にSearch Consoleプロパティを接続してください。",
+    "pageLoadFailed": "日次系列を読み込めないか保存できませんでした。",
+    "ga4Load": "GA4の日次系列を読み込む",
+    "ga4NeedsConnection": "先にGoogle Analyticsを接続してください。",
+    "ga4Loaded": "{{days}}日分を保存。収益は{{currency}}です。",
+    "ga4LoadFailed": "GA4系列を読み込めないか保存できませんでした。"
   },
   "revenueImportUi": {
     "title": "収益（任意の GA4 エクスポート）",
@@ -9198,8 +9358,12 @@
       "not-organic": "エクスポートがオーガニック検索のセッションに限定されていることを確認してください。",
       "no-header": "ランディングページ列と収益列を含むヘッダーが見つかりません。",
       "no-rows": "数値の収益を持つランディングページがファイルにありません。",
-      "storage-failed": "ローカルストレージを更新できず、インポートは保存されませんでした。"
-    }
+      "storage-failed": "ローカルストレージを更新できず、インポートは保存されませんでした。",
+      "invalid-response": "Google Analyticsが想定外の形式で収益データを返しました。",
+      "fetch-failed": "Google Analyticsから収益を取得できませんでした。接続とプロパティを確認してください。"
+    },
+    "api": "GA4 APIから取得",
+    "apiNote": "Google Analyticsの接続が必要です。GA4が報告するプロパティ通貨で、ランディングページ別のオーガニック検索収益を直近90日分(完全な日)取得します。購入イベントがない場合、GA4は0を返します。"
   },
   "entityParity": {
     "title": "言語バージョン間のエンティティ (Wikidata)",
@@ -9222,5 +9386,53 @@
       "error": "検索失敗"
     },
     "correctPlaceholder": "Q123 / none"
+  },
+  "semanticSource": {
+    "title": "意味的類似度（任意）",
+    "hint": "ローカルのOllama埋め込みモデルで、Site FocusとTopical Authorityの同義語を照合します。既定ではオフです。オフの場合、レポートはTF-IDFを使い、その旨を表示します。インストールやダウンロードは自動では行いません。",
+    "enable": "利用可能なときは埋め込みを使う",
+    "provider": "ソース",
+    "providerOllama": "Ollama（ニューラル）",
+    "providerHybrid": "ハイブリッド（ローカルハッシュ + Ollama）",
+    "url": "Ollamaのアドレス（空欄 = ローカル既定）",
+    "model": "埋め込みモデル",
+    "timeout": "バッチごとのタイムアウト（ms）",
+    "maxEntries": "1回に処理する最大ページ数",
+    "save": "保存",
+    "test": "Ollama接続をテスト",
+    "testing": "テスト中...",
+    "saved": "設定を保存しました。",
+    "failed": "設定を保存できませんでした。",
+    "invalid": "値を確認してください：タイムアウト1000〜300000 ms、ページ数1〜5000、モデル名は必須。",
+    "testOk": "動作中：{{model}}、{{dimensions}}次元。",
+    "testFail": "TF-IDFに戻ります：{{reason}}。",
+    "reason": {
+      "offline": "Ollamaに接続できません",
+      "timeout": "タイムアウト",
+      "cancelled": "キャンセルされました",
+      "rate-limited": "リクエスト制限",
+      "model-missing": "モデルが未インストール",
+      "invalid-response": "無効な応答",
+      "failed": "不明なエラー"
+    }
+  },
+  "imageOcrUi": {
+    "title": "OCRとテキストと画像の整合(ローカル・任意)",
+    "note": "すでに稼働中のローカルOllama視覚モデル名を入力した場合のみ実行され、何もダウンロードされません。画像は最大{{max}}件、お使いのOllamaサーバーにのみ送信されます。結果は部分的で、行ごとの枠や信頼度はありません。整合値はテキスト重複のヒューリスティック(ALT、ファイル名、ページ本文)であり、画像理解ではありません。",
+    "model": "Ollama視覚モデル",
+    "run": "OCRを実行",
+    "cancel": "OCRをキャンセル",
+    "status": {
+      "running": "OCR実行中: 完了 {{ok}}、失敗 {{failed}}。",
+      "done": "OCR完了: 完了 {{ok}}、失敗 {{failed}}。",
+      "cancelled": "OCRをキャンセルしました: 完了 {{ok}}、失敗 {{failed}}。",
+      "error": "エラーでOCRが停止しました: 完了 {{ok}}、失敗 {{failed}}。"
+    },
+    "origin": {
+      "media-only": "画像内のみ",
+      "duplicate-of-html": "HTMLにも存在"
+    },
+    "fact": "「{{text}}」({{origin}}、部分的) {{url}}",
+    "alignment": "{{url}}: テキスト重複 {{pct}}%(ヒューリスティック)"
   }
 }

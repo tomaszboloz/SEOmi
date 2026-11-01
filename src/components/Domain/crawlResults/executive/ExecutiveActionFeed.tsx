@@ -7,7 +7,7 @@ import { ExecutiveActionReview } from './ExecutiveActionReview';
 import type { CodeParams } from '@/services/siteFocus/types';
 import type { CrawlTab } from '../helpers/crawlResultsTabsConfig';
 import { codeTitle } from '../focus/focusText';
-import { ExecutionCardDetails } from './ExecutionCardDetails';
+import { ExecutionCardDetails, type CardFocus } from './ExecutionCardDetails';
 
 const MAX_SHOWN = 25;
 
@@ -18,18 +18,19 @@ export const actionTitle = (t: TFunction, action: ExecutiveAction): string => {
   if (action.source === 'sfs' && action.type !== 'internal-link') return codeTitle(t, 'recommendation', code, params);
   if (action.source === 'tas') return t(`authority.rec.${code}`, { ...params, defaultValue: code });
   if (action.source === 'eetv') return t(`trust.findings.code.${code}`, { ...params, defaultValue: code });
+  if (action.source === 'sprs' || action.source === 'aior') return t(`executive.actions.module.${code}`, { url: action.urls[0] ?? '' });
   return t('executive.actions.internalLink', { from: action.urls[0] ?? '', to: action.urls[1] ?? '' });
 };
 
 const signed = (value: number): string => `${value > 0 ? '+' : ''}${value}`;
 
-export interface ExecutiveActionFeedProps { actions: ExecutiveAction[]; onOpen: (tab: CrawlTab) => void; hss?: HssReport | null; projectId?: string | null }
+export interface ExecutiveActionFeedProps { actions: ExecutiveAction[]; onOpen: (tab: CrawlTab) => void; hss?: HssReport | null; projectId?: string | null; focus?: CardFocus | null }
 
 /** Action feed (#89 / #73 GEM-73-05): explicit delta, effort range, conflicts and a drill-down to the module screen. */
-export const ExecutiveActionFeed = ({ actions, onOpen, projectId = null, hss = null }: ExecutiveActionFeedProps) => {
+export const ExecutiveActionFeed = ({ actions, onOpen, projectId = null, hss = null, focus = null }: ExecutiveActionFeedProps) => {
   const { t } = useTranslation();
   const [log, setLog] = useState(() => readDecisionLog(projectId));
-  const decide = (action: ExecutiveAction, decision: ActionDecisionKind) => setLog(recordDecision(projectId, hss?.runId ?? 'unsaved', action, decision));
+  const decide = (runId: string, action: ExecutiveAction, decision: ActionDecisionKind) => setLog(recordDecision(projectId, runId, action, decision));
   return (
     <section aria-labelledby="executive-actions-title" className="space-y-2 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
       <h2 id="executive-actions-title" className="text-sm font-semibold text-slate-200">{t('executive.actions.title')}</h2>
@@ -51,8 +52,8 @@ export const ExecutiveActionFeed = ({ actions, onOpen, projectId = null, hss = n
               <button type="button" onClick={() => onOpen(action.drillTab)} className="mt-2 rounded border border-slate-700 px-2 py-1 text-slate-200 hover:border-emerald-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
                 {t('executive.actions.open', { tab: t(`crawl.tabs.${action.drillTab}`) })}
               </button>
-              <ExecutionCardDetails action={action} hss={hss} projectId={projectId} onOpen={onOpen} />
-              {projectId && hss && <ExecutiveActionReview projectId={projectId} action={action} log={log} onDecide={decide} />}
+              <ExecutionCardDetails action={action} hss={hss} projectId={projectId} onOpen={onOpen} focus={focus} />
+              {projectId && hss && <ExecutiveActionReview projectId={projectId} action={action} log={log} onDecide={(item, decision) => decide(hss.runId, item, decision)} />}
             </li>
           ))}
         </ol>

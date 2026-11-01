@@ -1,5 +1,6 @@
 import { useCallback, useDeferredValue, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSemanticEmbeddings } from '@/hooks/useSemanticEmbeddings';
 import { useSiteFocus } from '@/hooks/useSiteFocus';
 import { buildSiteFocusReport } from '@/services/siteFocus';
 import type { SfsSnapshot, SiteFocusReport } from '@/services/siteFocus';
@@ -12,7 +13,7 @@ import { CoreAnchorsPanel } from './CoreAnchorsPanel';
 import { CoreTopicPanel } from './CoreTopicPanel';
 import { FocusBanners } from './FocusBanners';
 import { GateBanner } from './GateBanner';
-import { ProtectionPanel } from './ProtectionPanel';
+import { ConnectedProtectionPanel } from './ConnectedProtectionPanel';
 import { FocusHeatmapTree } from './FocusHeatmapTree';
 import { FocusHero } from './FocusHero';
 import { FocusHistoryChart } from './FocusHistoryChart';
@@ -47,6 +48,7 @@ const topicText = (topic: string | string[] | undefined): string => (Array.isArr
 export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchmark, historySlot, onReport }: CrawlFocusTabProps) => {
   const { t } = useTranslation();
   const focus = useSiteFocus(run, projectId);
+  const { set: embeddings } = useSemanticEmbeddings(projectId, pages);
   const persisted = Boolean(run) && validFocusProject(projectId);
   const [draft, setDraft] = useState(() => topicText(focus.manualTopic));
   const [anchorDraft, setAnchorDraft] = useState(() => focus.anchorUrls.join('\n'));
@@ -75,9 +77,9 @@ export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchm
   const base = focus.report ?? local;
   const report = useMemo(
     () => (base && (competitorTerms.length || includeGated)
-      ? buildSiteFocusReport(pages, startUrl, { manualTopic: focus.manualTopic ?? (deferredTopic || undefined), anchorUrls, businessGoal: focus.businessGoal, brand: focus.brandPolicy, segments: focus.segments, competitorTerms, includeNonIndexable: includeGated, now: base.generatedAt })
+      ? buildSiteFocusReport(pages, startUrl, { manualTopic: focus.manualTopic ?? (deferredTopic || undefined), anchorUrls, businessGoal: focus.businessGoal, brand: focus.brandPolicy, segments: focus.segments, competitorTerms, includeNonIndexable: includeGated, embeddings, now: base.generatedAt })
       : base),
-    [base, competitorTerms, pages, startUrl, focus.manualTopic, deferredTopic, anchorUrls, focus.businessGoal, focus.brandPolicy, focus.segments, includeGated],
+    [base, competitorTerms, pages, startUrl, focus.manualTopic, deferredTopic, anchorUrls, focus.businessGoal, focus.brandPolicy, focus.segments, includeGated, embeddings],
   );
   useEffect(() => { if (report) onReport?.(report); }, [report, onReport]);
 
@@ -108,7 +110,7 @@ export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchm
       <FocusHero report={report} history={prior} onRecalculate={onRecalculate} recalcDisabled={spent} recalcNote={note} />
       <FocusBanners report={report} />
       <GateBanner report={report} pages={pages} included={includeGated} onToggle={() => setIncludeGated((value) => !value)} sitemapUrls={run?.result?.sitemap_urls} projectId={projectId} baselineScore={taskBaseline} />
-      <ProtectionPanel report={report} projectId={projectId} />
+      <ConnectedProtectionPanel report={report} projectId={projectId} />
       {historySlot ?? <FocusHistoryChart series={series} />}
       {weekly && <WeeklySummaryCard weekly={weekly} />}
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">

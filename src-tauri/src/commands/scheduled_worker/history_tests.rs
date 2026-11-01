@@ -88,3 +88,52 @@ fn finalization_preserves_errors_and_invalid_completion_does_not_mutate_task() {
     );
     assert_eq!(serde_json::to_value(task).unwrap(), before);
 }
+
+#[test]
+fn delivery_fingerprint_is_stable_and_changes_with_every_identity_part() {
+    let base = ScheduledExecutionHandoff {
+        project_id: "p".into(),
+        schedule_id: "s".into(),
+        task_type: "page-audit".into(),
+        started_at: "2026-09-25T02:00:00Z".into(),
+        completed_at: "2026-09-25T03:00:00Z".into(),
+        succeeded: true,
+        next_run_at: "2026-09-26T03:00:00Z".into(),
+        error: None,
+        scheduler_error: None,
+        result: None,
+        fingerprint: None,
+    };
+    let fingerprint = base.fingerprint_of();
+    assert_eq!(fingerprint.len(), 64);
+    assert_eq!(fingerprint, base.fingerprint_of());
+    let mut later = base.clone();
+    later.next_run_at = "2030-01-01T00:00:00Z".into();
+    later.error = Some("ignored".into());
+    assert_eq!(
+        later.fingerprint_of(),
+        fingerprint,
+        "next run and error text are not identity"
+    );
+    let changes: [fn(&mut ScheduledExecutionHandoff); 6] = [
+        |h| h.project_id = "q".into(),
+        |h| h.schedule_id = "t".into(),
+        |h| h.task_type = "site-crawl".into(),
+        |h| h.started_at = "2026-09-25T02:00:01Z".into(),
+        |h| h.completed_at = "2026-09-25T03:00:01Z".into(),
+        |h| h.succeeded = false,
+    ];
+    for change in changes {
+        let mut other = base.clone();
+        change(&mut other);
+        assert_ne!(other.fingerprint_of(), fingerprint);
+    }
+    let wire = serde_json::to_value(&base).unwrap();
+    assert!(wire.get("fingerprint").is_none());
+    let mut stamped = base;
+    stamped.fingerprint = Some(fingerprint.clone());
+    assert_eq!(
+        serde_json::to_value(&stamped).unwrap()["fingerprint"],
+        fingerprint
+    );
+}

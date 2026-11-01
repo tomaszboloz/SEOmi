@@ -4,10 +4,9 @@ import { SFS_TRS_SCALE } from '@/services/siteFocus';
 import { DEFAULT_TRS_THRESHOLD } from '@/services/urlProtection/decide';
 
 describe('score profile decision register (#83 GEM-83-02..15)', () => {
-  it('lists every divergence named in #83 once, all still proposed', () => {
+  it('lists every divergence named in #83 once', () => {
     const ids = PROFILE_DECISIONS.map((decision) => decision.id);
-    expect(ids).toEqual(['D-SFS', 'D-PRI', 'D-LOG', 'D-DRAFT', 'D-TAS', 'D-AIO', 'D-IGOS', 'D-EETV', 'D-SIJA', 'D-SPRS', 'D-HSS']);
-    expect(PROFILE_DECISIONS.every((decision) => decision.status === 'proposed')).toBe(true);
+    expect(ids).toEqual(['D-SFS', 'D-PRI', 'D-LOG', 'D-DRAFT', 'D-TAS', 'D-AIO', 'D-IGOS', 'D-EETV', 'D-SIJA', 'D-SPRS', 'D-HSS', 'D-ANCHOR']);
     expect(PROFILE_DECISIONS.flatMap(decisionProblems)).toEqual([]);
   });
 
@@ -25,6 +24,12 @@ describe('score profile decision register (#83 GEM-83-02..15)', () => {
     expect(decisionProblems(accepted)).toEqual([]);
     expect(decisionProblems({ ...accepted, author: ' ', decidedAt: 'soon', chosen: undefined }))
       .toEqual(['accepted-without-author', 'accepted-without-date', 'accepted-without-choice']);
-    expect(decisionProblems({ ...base, author: 'agent' })).toEqual(['proposed-with-author']);
+    expect(decisionProblems({ ...base, status: 'proposed', author: 'agent' })).toEqual(['proposed-with-author']);
+  });
+
+  it('records every entry as accepted by owner delegation on a fixed date', () => {
+    expect(PROFILE_DECISIONS.every((decision) => decision.status === 'accepted' && decision.chosen === 'code')).toBe(true);
+    expect(PROFILE_DECISIONS.every((decision) => decision.decidedAt === '2026-11-01')).toBe(true);
+    expect(PROFILE_DECISIONS.every((decision) => decision.rationale?.startsWith('accepted by owner delegation 2026-11-01'))).toBe(true);
   });
 });

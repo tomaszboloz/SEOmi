@@ -1,4 +1,5 @@
 import type { TrustJsonLd } from '@/services/eeatTrust/jsonLd';
+import { declaredNodes, nodeId } from '@/services/jsonLd/model';
 
 export interface SchemaDiffEntry { id: string; property: string; value: unknown; source: 'observed' | 'generated' | 'trust' }
 export interface SchemaConflict { id: string; property: string; existing: unknown; incoming: unknown; source: 'generated' | 'trust' }
@@ -17,12 +18,8 @@ export interface SchemaComposition {
 }
 
 type Node = Record<string, unknown>;
-const nodesOf = (value: Record<string, unknown> | undefined): Node[] => {
-  const graph = value?.['@graph'];
-  if (Array.isArray(graph)) return graph.filter((item): item is Node => Boolean(item && typeof item === 'object'));
-  return value && typeof value === 'object' ? [value] : [];
-};
-const idOf = (node: Node): string | undefined => typeof node['@id'] === 'string' && node['@id'].trim() ? node['@id'].trim() : undefined;
+const nodesOf = (value: Record<string, unknown> | undefined): Node[] => declaredNodes(value);
+const idOf = nodeId;
 const comparable = (value: unknown): unknown => Array.isArray(value) && value.length === 1 ? comparable(value[0]) : value;
 const equal = (left: unknown, right: unknown): boolean => JSON.stringify(comparable(left)) === JSON.stringify(comparable(right));
 const merge = (target: Node, incoming: Node, id: string, source: 'generated' | 'trust', added: SchemaDiffEntry[], conflicts: SchemaConflict[]): void => {

@@ -2,9 +2,10 @@
 
 use super::{attention, count, label, method, num, of_total};
 use crate::commands::pdf_report::audit_report::check::{Check, Status};
-use crate::commands::pdf_report::audit_report::ctx::{field, format_number, list_at};
+use crate::commands::pdf_report::audit_report::ctx::{field, format_number, list_at, pretty_time};
 use crate::commands::pdf_report::audit_report::strings::phrase as p;
 use crate::commands::pdf_report::audit_report::strings::{report as s, t, tf};
+use crate::commands::pdf_report::layout::text::EMPTY;
 use serde_json::Value;
 
 pub(super) fn rows(sija: &Value) -> Vec<Check> {
@@ -47,6 +48,19 @@ pub(super) fn rows(sija: &Value) -> Vec<Check> {
             &funnel.each_ref().map(String::as_str),
         )),
     ));
+    if let Some(previous) = sija.get("previous").filter(|value| value.is_object()) {
+        let at = field(previous, "runAt").map_or_else(|| EMPTY.into(), |raw| pretty_time(&raw));
+        let ssas = num(previous, "/ssas").map_or_else(|| EMPTY.into(), format_number);
+        let prior = field(previous, "intent")
+            .map_or_else(|| t(p::NONE).to_owned(), |code| label("intent", &code));
+        rows.push(Check::info(
+            t(p::PREVIOUS),
+            Some(tf(
+                t(p::PREVIOUS_VALUE),
+                &[&at, &prior, &ssas, &count(previous, "/analysed")],
+            )),
+        ));
+    }
     let gaps = list_at(sija, "/gaps");
     if gaps.is_empty() {
         rows.push(Check::new(

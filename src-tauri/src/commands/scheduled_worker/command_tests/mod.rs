@@ -25,6 +25,7 @@ fn handoff(schedule: &str, succeeded: bool) -> ScheduledExecutionHandoff {
         error: None,
         scheduler_error: None,
         result: None,
+        fingerprint: None,
     }
 }
 

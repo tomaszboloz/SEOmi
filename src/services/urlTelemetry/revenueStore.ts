@@ -6,7 +6,7 @@ import { dropSnapshot } from './store';
 export const revenueImportKey = (projectId: string): string => `seomi_project_${projectId}_revenue_import_v1`;
 
 const schema: z.ZodType<RevenueImport> = z.object({
-  provider: z.literal('ga4-export'),
+  provider: z.enum(['ga4-export', 'ga4-api']),
   attribution: z.literal(REVENUE_ATTRIBUTION),
   currency: z.string().regex(/^[A-Z]{3}$/u),
   organicOnly: z.literal(true),

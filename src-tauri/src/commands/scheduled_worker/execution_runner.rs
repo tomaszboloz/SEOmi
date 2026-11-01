@@ -88,7 +88,7 @@ where
     } else {
         unregister(project_id.clone(), schedule_id.clone()).err()
     };
-    let handoff = ScheduledExecutionHandoff {
+    let mut handoff = ScheduledExecutionHandoff {
         project_id,
         schedule_id,
         task_type: task.task_type,
@@ -99,7 +99,9 @@ where
         error,
         scheduler_error,
         result: None,
+        fingerprint: None,
     };
+    handoff.fingerprint = Some(handoff.fingerprint_of());
     let metadata_path = execution_path(&app, &handoff.project_id, &handoff.schedule_id)?;
     let result_path = result_path(&app, &handoff.project_id, &handoff.schedule_id)?;
     if let Ok(result) = outcome {

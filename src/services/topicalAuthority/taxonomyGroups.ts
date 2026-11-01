@@ -1,6 +1,7 @@
 import type { FocusPage } from '@/services/siteFocus';
 import { phraseKey } from '@/services/siteFocus/terms';
 import { jaccard, unigramKeys } from './context';
+import { heuristicEntities, type EntityOptions } from './ner';
 
 export interface CompetitorPages { domain: string; pages: FocusPage[] }
 
@@ -75,9 +76,24 @@ export const addPhrases = (groups: Group[], phrases: string[], language: string,
   return groups;
 };
 
+/** Title and headings of a page: the text names are recognised in. */
+export const pageTexts = (page: FocusPage): string[] => [page.title ?? '', ...(page.heading_texts?.h1 ?? []), ...(page.heading_texts?.h2 ?? []), ...(page.heading_texts?.h3 ?? [])];
+
+/** Names that at least half of the group's pages mention: local heuristic recogniser and/or names a local model supplied. */
+const namedEntities = (group: Group, options: EntityOptions): Array<{ surface: string; pages: number }> => {
+  const counts = new Map<string, number>();
+  group.pages.forEach((page) => {
+    const texts = pageTexts(page);
+    const haystack = texts.join(' \n ').toLowerCase();
+    const names = new Set([...(options.heuristic ? texts.flatMap(heuristicEntities) : []), ...(options.extra ?? []).map((name) => name.toLowerCase().trim()).filter((name) => name.length >= 3 && haystack.includes(name))]);
+    names.forEach((name) => counts.set(name, (counts.get(name) ?? 0) + 1));
+  });
+  return [...counts].map(([surface, pages]) => ({ surface, pages })).filter((entry) => entry.pages >= Math.max(2, Math.ceil(group.pages.length * ENTITY_SHARE)));
+};
+
 /** Entities: terms at least half of the pages under a heading share, minus the heading's own words. */
-export const entitiesOf = (group: Group, language: string): string[] => {
-  const counts = new Map<string, { surface: string; pages: number; weight: number }>();
+export const entitiesOf = (group: Group, language: string, options: EntityOptions = {}): string[] => {
+  const counts = new Map<string, { surface: string; pages: number; weight: number; named?: boolean }>();
   group.pages.forEach((page) => (page.focus_terms ?? []).forEach((term) => {
     const key = phraseKey(term.surface || term.term, language);
     if (!key || group.keys.has(key)) return;
@@ -87,5 +103,8 @@ export const entitiesOf = (group: Group, language: string): string[] => {
     counts.set(key, entry);
   }));
   const need = Math.max(2, Math.ceil(group.pages.length * ENTITY_SHARE));
-  return [...counts.values()].filter((entry) => entry.pages >= need).sort((a, b) => b.pages - a.pages || b.weight - a.weight || (a.surface < b.surface ? -1 : 1)).slice(0, MAX_ENTITIES).map((entry) => entry.surface);
+  const named = namedEntities(group, options).filter((entry) => !group.keys.has(phraseKey(entry.surface, language) ?? ''));
+  // Recognised names rank first: they are the specific entities, the lexical terms are generic topic words.
+  named.forEach((entry) => counts.set(phraseKey(entry.surface, language) ?? entry.surface, { surface: entry.surface, pages: entry.pages, weight: 0, named: true }));
+  return [...counts.values()].filter((entry) => entry.pages >= need).sort((a, b) => Number(Boolean(b.named)) - Number(Boolean(a.named)) || b.pages - a.pages || b.weight - a.weight || (a.surface < b.surface ? -1 : 1)).slice(0, MAX_ENTITIES).map((entry) => entry.surface);
 };

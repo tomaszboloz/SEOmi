@@ -11,3 +11,5 @@ export { checkDraftOverlap, type DraftOverlap } from './draft';
 export { isGenericAnchor } from './genericAnchors';
 export { measureFreshness, normalizeFreshness, FRESH_DAYS } from './freshness';
 export { previewTaxonomyMerge, type MergePreview } from './taxonomyMerge';
+export { importPreviewPillars } from './taxonomyImport';
+export { heuristicEntities, ENTITY_MODES, type EntityMode, type EntityOptions } from './ner';

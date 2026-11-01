@@ -6,6 +6,7 @@ import { crawlFilename } from './filenames';
 import { crawlAuthoritySummary } from './authoritySummary';
 import { crawlAioSummary } from '@/services/aioReadiness/summary';
 import { crawlOffPageSummary } from '@/services/offPage/summary';
+import { crawlEvidenceSummary } from './evidenceSummary';
 import { crawlFocusSummary } from './focusSummary';
 import { crawlTrustSummary } from '@/services/eeatTrust';
 
@@ -90,6 +91,7 @@ export const downloadCrawlPdf = async (run: CrawlRunRecord, template?: CrawlRepo
   const authority = !template || template.sections.includes('authority') ? crawlAuthoritySummary(run) : undefined;
   const aio = !template || template.sections.includes('aio') ? crawlAioSummary(run) : undefined;
   const offPage = !template || template.sections.includes('offPage') ? crawlOffPageSummary(run) : undefined;
+  const evidence = !template || template.sections.includes('evidence') ? crawlEvidenceSummary(run) : undefined;
   const trust = !template || template.sections.includes('trust') ? crawlTrustSummary(run) : undefined;
   return downloadPdf('generate_crawl_pdf', {
   run: {
@@ -109,6 +111,7 @@ export const downloadCrawlPdf = async (run: CrawlRunRecord, template?: CrawlRepo
     ...(authority ? { authority } : {}),
     ...(aio ? { aio } : {}),
     ...(offPage ? { offPage } : {}),
+    ...(evidence ? { evidence } : {}),
     ...(trust ? { trust } : {}),
   },
 }, crawlFilename(run, 'report', 'pdf'));

@@ -1890,7 +1890,8 @@
       "no": "아니요",
       "tableSummary": "페이지 표 ({{count}})",
       "tableCaption": "상태, 깊이, 인바운드 링크, TRS, 섹션과 함께 구조 지도에 표시된 페이지"
-    }
+    },
+    "coreTopicShare": "핵심 주제 용어 비율 {{percent}}%"
   },
   "crawlDiff": {
     "fields": {
@@ -2376,7 +2377,8 @@
       "authority": "주제 권위도",
       "aio": "AI 준비도",
       "trust": "엔터티 신뢰도",
-      "offPage": "오프페이지 분석"
+      "offPage": "오프페이지 분석",
+      "evidence": "텔레메트리, 실험, SERP 드리프트"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -4903,6 +4905,8 @@
         "Zone method",
         "Context before",
         "Context after",
+        "컨텍스트 잘림",
+        "앵커 단어 오프셋",
         "Section heading"
       ],
       "crawlImages": [
@@ -5742,7 +5746,9 @@
           "off-topic-below-quota": "주제에 맞는 문단이 너무 적습니다.",
           "local-lexical-embeddings": "유사도는 의미 모델이 아닌 로컬 어휘 벡터로 계산되므로 영역은 근사치입니다.",
           "heuristic-entities": "엔터티는 대문자 구문과 주어-서술어-목적어 사실에서 추출하며, 학습된 엔터티 모델이 아닙니다.",
-          "semantic-provider-unavailable": "프로젝트의 의미 임베딩 제공자를 사용할 수 없어 로컬 어휘 벡터를 사용했습니다."
+          "semantic-provider-unavailable": "프로젝트의 의미 임베딩 제공자를 사용할 수 없어 로컬 어휘 벡터를 사용했습니다.",
+          "ollama-entities": "대문자 구문 휴리스틱에 더해 로컬 Ollama 모델로 엔터티를 확장했습니다.",
+          "ollama-entities-unavailable": "Ollama 엔터티 모델을 사용할 수 없어 대문자 구문 휴리스틱만 사용했습니다."
         },
         "intent": {
           "definitional": "정의",
@@ -5763,7 +5769,9 @@
         },
         "mismatchAdvice": "이 페이지는 대부분의 TOP 페이지와 다른 의도로 보입니다. 같은 요구에 답하는지 확인하세요.",
         "missingBasics": "누락된 기본 항목",
-        "basicsAdvice": "먼저 누락된 기본 주제 {{0}}개를 다루세요. 커버리지가 절반 미만이면 점수가 감점되며, 새로운 사실이 기본을 대신하지 않습니다."
+        "basicsAdvice": "먼저 누락된 기본 주제 {{0}}개를 다루세요. 커버리지가 절반 미만이면 점수가 감점되며, 새로운 사실이 기본을 대신하지 않습니다.",
+        "previous": "이전 저장 실행",
+        "previousValue": "{{0}}: 의도 {{1}}, SSAS {{2}}, 렌더링된 페이지 {{3}}개"
       }
     },
     "crawl": {
@@ -6461,6 +6469,53 @@
           "no-follow-links": "분석할 follow 링크가 없습니다.",
           "source-text-or-authority-missing": "일부 출처에 텍스트, 유효한 벡터 또는 제공자 권위 정보가 없습니다."
         }
+      },
+      "evidence": {
+        "title": "텔레메트리, 실험, SERP 드리프트",
+        "intro": "이 프로젝트의 최근 저장 데이터입니다. 각 블록은 데이터가 있을 때만 나타나며 여기서는 아무것도 추정하지 않습니다.",
+        "tRevenue": "방문 페이지별 오가닉 수익",
+        "revenueIntro": "통화 {{0}}; 기여 {{1}}; 기간 {{2}}. 여기에 없는 페이지는 0이 아니라 알 수 없음입니다.",
+        "colPage": "방문 페이지",
+        "colRevenue": "수익",
+        "tExperiments": "실험 추정",
+        "experimentsIntro": "누적 클릭을 반사실과 비교하고 95% 구간을 괄호에 표시합니다. 인과가 아니라 연관의 추정이며, 추정 불가는 데이터가 결과를 허용하지 않았다는 뜻입니다.",
+        "colTarget": "대상",
+        "colDate": "변경일",
+        "colMethod": "방법",
+        "colStatus": "상태",
+        "colEffect": "누적 효과 [95%]",
+        "colProbability": "부호 확률",
+        "tDecay": "SERP 드리프트 이력",
+        "decayIntro": "저장된 비교 가능한 SERP 스냅샷을 첫 번째와 비교합니다. 참고용이며 드리프트는 검토 사유일 뿐 손실의 증거가 아닙니다.",
+        "colQuery": "쿼리",
+        "colVerdict": "판정",
+        "colSamples": "스냅샷",
+        "colShift": "중심 이동",
+        "colEntities": "엔터티 신규 / 소실",
+        "na": "해당 없음",
+        "disclaimer": "Google 데이터가 아니며 손실 예측이나 자동 재작성은 없습니다. 누락된 데이터는 0이 아니라 사용 불가로 표시됩니다.",
+        "status": {
+          "estimated": "추정됨",
+          "not-estimable": "추정 불가"
+        },
+        "verdict": {
+          "too-few-samples": "스냅샷 부족",
+          "incompatible": "비교 불가",
+          "stable": "안정",
+          "not-persistent": "지속되지 않음",
+          "cooldown": "쿨다운",
+          "alert": "검토 권장"
+        },
+        "method": {
+          "regression": "회귀",
+          "structural": "계절 구조"
+        },
+        "colOutcome": "결과",
+        "outcome": {
+          "gsc-clicks": "Search Console 클릭",
+          "ga4-key-events": "GA4 주요 이벤트",
+          "ga4-revenue": "GA4 수익"
+        }
       }
     },
     "recs": {
@@ -7040,7 +7095,8 @@
       "unmatchedTopic": "\"{{topic}}\" 주제와 일치하는 페이지가 없습니다. 대신 감지된 주제를 사용합니다.",
       "gateSkipped": "{{count}}개 페이지를 건너뛰었습니다(noindex/canonical).",
       "gateInclude": "포함하기",
-      "gateExclude": "다시 제외"
+      "gateExclude": "다시 제외",
+      "semantic": "의미 유사도 사용 중: {{model}}."
     },
     "skip": {
       "render-timeout": "JavaScript 렌더링 시간 초과",
@@ -7558,7 +7614,8 @@
         "entities": "엔터티",
         "questions": "사용자 질문(PAA)",
         "gain": "정보 이득"
-      }
+      },
+      "linkFlags": "위치별 내부 링크: 메뉴 {{menu}}, 사이드바/푸터 {{sidebarFooter}}, 본문 {{content}}, 위치 데이터 없음 {{unknown}}. 메뉴와 사이드바/푸터 링크는 본문 링크로 세지 않습니다."
     },
     "warning": {
       "empty-authority": "빈 권위: 주제의 {{tcr}}%를 다루지만 평균 깊이는 {{depth}}/100에 불과합니다. 새 글보다 기존 페이지를 데이터와 엔티티로 보강하세요.",
@@ -7593,7 +7650,29 @@
       },
       "withPaa": "실제 '관련 질문'(People Also Ask) 포함 (DataForSEO 고급 SERP, 별도 과금)",
       "paaUsed": "SERP의 People Also Ask 질문 {{count}}개를 사용했습니다.",
-      "paaMissing": "People Also Ask 소스 없음: 질문은 경쟁사 제목과 Google 자동완성에서만 가져옵니다."
+      "paaMissing": "People Also Ask 소스 없음: 질문은 경쟁사 제목과 Google 자동완성에서만 가져옵니다.",
+      "autoRefresh": "예약된 크롤링 후 이 지도를 자동으로 새로 고침(선택 사항, SERP 할당량 사용, 최대 주 1회, 30일당 4회 시도)",
+      "merge": {
+        "title": "주제 지도의 필러와 비교",
+        "note": "미리보기 전용입니다. 필러를 추가하기 전에는 아무것도 바뀌지 않습니다.",
+        "matched": "일치하는 수동 필러({{count}}):",
+        "added": "지도에 없는 참조 필러({{count}}):",
+        "manualOnly": "내 지도에만 있으며 그대로 유지({{count}}):",
+        "apply": "참조 필러 {{count}}개를 주제 지도에 추가",
+        "done": "필러 {{count}}개를 주제 지도에 추가했습니다.",
+        "failed": "주제 지도를 업데이트하지 못했습니다: {{error}}"
+      },
+      "entities": {
+        "label": "엔터티 인식",
+        "lexical": "포커스 용어만(기본값)",
+        "heuristic": "로컬 이름 감지",
+        "ollama": "로컬 이름 감지 + Ollama 모델",
+        "model": "Ollama 모델"
+      },
+      "kg": {
+        "button": "필러를 Wikidata에 연결(공개 조회)",
+        "summary": "필러 {{linked}}개를 Wikidata 항목에 연결했고, {{review}}개는 검토가 필요합니다(첫 번째 검색 결과이며 레이블이 정확히 일치하지 않음)."
+      }
     },
     "coverage": {
       "title": "주제 커버리지 지도",
@@ -8083,6 +8162,24 @@
         "hedged": "유보적 표현",
         "negated": "부정",
         "note": "로컬 검사는 이 페이지만 읽습니다(인용 위치, 식별자, 유보 표현, 부정). 인용된 문헌은 읽지 않으므로 뒷받침 여부를 확인할 수 없습니다."
+      },
+      "entail": {
+        "sourceLabel": "비교할 출처 텍스트(붙여넣기)",
+        "useModel": "로컬 모델(Ollama, 선택)에도 질문",
+        "run": "주장을 출처 텍스트와 비교",
+        "results": "비교 결과",
+        "label": {
+          "consistent": "텍스트와 일치",
+          "related": "관련 있으나 불일치",
+          "unrelated": "무관",
+          "contradicts": "모순 가능",
+          "unknown": "텍스트 부족"
+        },
+        "method": {
+          "heuristic": "단어 휴리스틱",
+          "model": "로컬 모델"
+        },
+        "note": "연관 증거일 뿐입니다. 주장을 검증됨, 출처를 확인됨으로 표시하지 않습니다."
       }
     },
     "identity": {
@@ -8233,6 +8330,10 @@
     "workflow": "흐름: 진단 → 우선순위 선택 → 모듈 근거 → What-If → 브리프 / 복사 / 내보내기. CMS에 게시하지 않습니다.",
     "run": "크롤: {{date}}",
     "runUnsaved": "크롤: 아직 저장되지 않음",
+    "refresh": "저장된 데이터로 다시 계산",
+    "related": {
+      "title": "관련 보기"
+    },
     "hss": {
       "title": "Holistic Semantic Score(HSS)",
       "valueAria": "HSS {{value}}",
@@ -8272,7 +8373,9 @@
     "reason": {
       "not-provided": "값이 제공되지 않았습니다.",
       "not-run": "이 크롤에서는 모듈이 실행되지 않았습니다.",
-      "domain-aggregation-undefined": "페이지 단위 모듈입니다. 사이트 단위 점수가 아직 정의되지 않아 평균하지 않고 제외합니다.",
+      "insufficient-pages": "사이트 단위 점수를 내기에는 측정된 페이지나 구문이 너무 적습니다(최소 3개 필요).",
+      "sprs-unavailable": "링크 그래프를 평가하지 못했습니다.",
+      "sprs-not-converged": "링크 흐름 계산이 수렴하지 않았습니다.",
       "sfs-no-scored-pages": "점수를 매길 수 있는 페이지가 없습니다.",
       "tas-no-reference-map": "TAS를 측정하려면 참조 주제 맵을 만드세요.",
       "eetv-no-signals": "신뢰 신호가 관찰되지 않았습니다.",
@@ -8297,6 +8400,11 @@
       "hint": "예상 1시간당 HSS 변화량 순으로 정렬합니다. 변화량은 각 모듈 자체 시뮬레이션에서만 가져오며, 없으면 사용 불가로 표시합니다. 트래픽, 인용, ROI를 약속하지 않습니다.",
       "empty": "이 크롤의 모듈 보고서에서 생성된 작업이 없습니다.",
       "internalLink": "내부 링크 추가: {{from}} → {{to}}",
+      "module": {
+        "fix-leak": "{{url}}의 링크 누수 수정",
+        "add-inlinks": "{{url}}에 들어오는 링크 추가",
+        "rewrite-weak-passages": "{{url}}의 약한 문단 다시 쓰기"
+      },
       "delta": "HSS Δ {{value}}",
       "deltaUnavailable": "HSS Δ 사용 불가(선언된 모델 없음)",
       "moduleDelta": "{{module}} Δ {{value}}",
@@ -8391,6 +8499,14 @@
     "igos": {
       "title": "IGOS 하락",
       "body": "동일한 TOP 페이지와 모델에서 \"{{phrase}}\"의 정보 이득 점수가 {{from}}에서 {{to}}(으)로 떨어졌습니다({{points}}점)."
+    },
+    "igosTopChange": {
+      "title": "IGOS: TOP 집합 변경",
+      "body": "\"{{phrase}}\"의 TOP 페이지가 변경되었습니다(추가 {{added}}, 제거 {{removed}}). IGOS는 이전 실행과 비교할 수 없습니다."
+    },
+    "taskRegression": {
+      "title": "최적화로 점수가 하락",
+      "body": "검증된 작업 {{count}}개가 점수를 낮췄습니다. 가장 큰 하락은 {{url}}의 {{worst}}점입니다."
     }
   },
   "sprsUi": {
@@ -8421,8 +8537,12 @@
       "before": "이전",
       "after": "이후",
       "delta": "변화",
-      "solver": "현재 점수에서 웜 스타트: 반복 {{iterations}}회, 잔차 {{residual}}."
-    }
+      "solver": "현재 점수에서 웜 스타트: 반복 {{iterations}}회, 잔차 {{residual}}.",
+      "flags": "진단 플래그 변경",
+      "flagOn": "{{page}} 현재: {{flag}}",
+      "flagOff": "{{page}} 더 이상 아님: {{flag}}"
+    },
+    "meta": "반복 {{iterations}}회, 잔차 {{residual}}"
   },
   "decayUi": {
     "snapshots": "이 판정의 근거가 되는 스냅샷 수: {{count}}",
@@ -8497,6 +8617,11 @@
         "product-cards": "제품이나 혜택 표시: 상위 {{analysed}}개 페이지 중 {{count}}개가 제품 또는 가격 카드를 보여 줍니다.",
         "cta": "명확한 행동 유도를 추가하세요: TOP 페이지 {{analysed}}개 중 {{count}}개에 있습니다(순수 정보 페이지는 제외)."
       }
+    },
+    "funnel": {
+      "title": "크롤된 페이지 간 퍼널 전환",
+      "fromTo": "출발 \\ 도착",
+      "summary": "분류된 페이지 {{classified}}개, 구조 미측정 {{unclassified}}개, 건너뛴 내부 링크 {{skipped}}개(대상 미분류)."
     }
   },
   "prePublishUi": {
@@ -8627,7 +8752,19 @@
     "saveBudget": "예산 저장",
     "savedBudget": "LLM 예산을 저장했습니다.",
     "invalidLimit": "0 이상인 유효한 월간 한도를 입력하세요.",
-    "invalidWarn": "경고 기준은 1에서 100 사이의 정수여야 합니다."
+    "invalidWarn": "경고 기준은 1에서 100 사이의 정수여야 합니다.",
+    "dictTitle": "YMYL 용어 목록",
+    "dictHint": "용량과 금액은 출처에서 같은 용어 옆에 있어야 합니다. 내장 MeSH 시드는 퍼블릭 도메인입니다. ICD-10은 포함되어 있지 않으니 라이선스가 있거나 공개된 목록을 직접 가져오세요. 목록은 이 기기에만 저장됩니다.",
+    "dictSeed": "내장 MeSH 시드 사용(퍼블릭 도메인)",
+    "dictFile": "목록 가져오기(TXT 또는 CSV)",
+    "dictPaste": "또는 용어를 한 줄에 하나씩 붙여넣기",
+    "dictSave": "목록 저장",
+    "dictClear": "가져온 목록 지우기",
+    "dictSaved": "용어 목록을 저장했습니다.",
+    "dictFailed": "용어 목록을 저장하지 못했습니다.",
+    "dictEmpty": "사용할 수 있는 용어가 없습니다.",
+    "dictCount": "활성 용어 {{count}}개",
+    "dictPasted": "붙여넣은 목록"
   },
   "templateGovernor": {
     "title": "프로그래매틱 템플릿 품질",
@@ -8761,7 +8898,9 @@
       "off-topic-below-quota": "주제에 맞는 문단이 너무 적습니다.",
       "local-lexical-embeddings": "유사도는 의미 모델이 아닌 로컬 어휘 벡터로 계산되므로 영역은 근사치입니다.",
       "heuristic-entities": "엔터티는 대문자 구문과 주어-서술어-목적어 사실에서 추출하며, 학습된 엔터티 모델이 아닙니다.",
-      "semantic-provider-unavailable": "프로젝트의 의미 임베딩 제공자를 사용할 수 없어 로컬 어휘 벡터를 사용했습니다."
+      "semantic-provider-unavailable": "프로젝트의 의미 임베딩 제공자를 사용할 수 없어 로컬 어휘 벡터를 사용했습니다.",
+      "ollama-entities": "대문자 구문 휴리스틱에 더해 로컬 Ollama 모델로 엔터티를 확장했습니다.",
+      "ollama-entities-unavailable": "Ollama 엔터티 모델을 사용할 수 없어 대문자 구문 휴리스틱만 사용했습니다."
     },
     "rec": {
       "rewrite-echo": "오프셋 {{offset}}의 문단이 경쟁 구절을 반복합니다. 자신의 말로 다시 쓰세요.",
@@ -9011,6 +9150,11 @@
       "negated": "부정된 언급입니다. 추천이 아닙니다",
       "critical": "브랜드 근처에 비판적 표현이 있습니다. 추천이 아닙니다",
       "quoted": "인용되거나 타인의 의견입니다. 출처 자체의 추천이 아닙니다"
+    },
+    "senses": {
+      "label": "별칭 규칙(동음이의어)",
+      "hint": "한 줄에 규칙 하나: 별칭 | -다른 의미를 나타내는 단어 | +브랜드 의미에 필요한 단어. 프로젝트별로 저장되며 다음 분석에 사용됩니다.",
+      "error": "규칙을 저장할 수 없습니다(잘못되었거나 너무 깁니다)."
     }
   },
   "experimentsUi": {
@@ -9072,6 +9216,12 @@
       "rows-truncated": "저장된 페이지 행이 잘려 있어 비교가 불완전할 수 있습니다.",
       "low-volume": "기준 클릭수가 30 미만으로 신뢰할 수 있는 비교에 부족합니다.",
       "pending": "개입 날짜가 미래이므로 평가를 기다리는 중입니다。"
+    },
+    "outcome": {
+      "label": "측정 결과",
+      "gsc-clicks": "Search Console 클릭",
+      "ga4-key-events": "GA4 주요 이벤트(오가닉)",
+      "ga4-revenue": "GA4 수익(오가닉)"
     }
   },
   "linkInjector": {
@@ -9181,7 +9331,17 @@
       "not-estimable": "백테스트 불가: 사전 기간이 가상 개입에 너무 짧습니다."
     },
     "familySignificant": "함께 표시된 실험 {{family}}건에 대해 보정한 뒤에도 유의합니다 (Holm, p = {{p}}).",
-    "familyNotSignificant": "함께 표시된 실험 {{family}}건에 대해 보정하면 유의하지 않습니다 (Holm, p = {{p}})."
+    "familyNotSignificant": "함께 표시된 실험 {{family}}건에 대해 보정하면 유의하지 않습니다 (Holm, p = {{p}}).",
+    "structuralTitle": "계절성 구조 추정",
+    "structuralMethod": "국소 수준 추세와 주간 계절성을 사용하며, 정보가 있는 대조군은 회귀로 제거합니다. 95% 구간은 고정 시드 사후 예측 시뮬레이션에서 나옵니다. BSTS 방식의 근사이며 완전한 베이즈 적합이 아니고, 인과가 아니라 연관을 보여 줍니다.",
+    "pageContamination": "대조 페이지는 변경한 페이지와 링크, 템플릿, 주제를 공유할 수 있어 같은 변경의 영향을 받을 수 있습니다. 독립 대조군보다 약한 결과로 보세요.",
+    "pageLoad": "이 페이지의 일별 시계열 불러오기",
+    "pageNeedsGsc": "먼저 Search Console 속성을 연결하세요.",
+    "pageLoadFailed": "일별 시계열을 불러오거나 저장하지 못했습니다.",
+    "ga4Load": "GA4 일별 시계열 불러오기",
+    "ga4NeedsConnection": "먼저 Google Analytics를 연결하세요.",
+    "ga4Loaded": "{{days}}일 저장됨; 수익 통화는 {{currency}}입니다.",
+    "ga4LoadFailed": "GA4 시계열을 불러오거나 저장하지 못했습니다."
   },
   "revenueImportUi": {
     "title": "수익(선택 사항인 GA4 내보내기)",
@@ -9198,8 +9358,12 @@
       "not-organic": "내보내기가 자연 검색 세션으로 제한되어 있는지 확인하세요.",
       "no-header": "방문 페이지 열과 수익 열이 있는 머리글을 찾지 못했습니다.",
       "no-rows": "파일에 숫자 수익 값이 있는 방문 페이지가 없습니다.",
-      "storage-failed": "로컬 저장소를 업데이트하지 못해 가져오기가 저장되지 않았습니다."
-    }
+      "storage-failed": "로컬 저장소를 업데이트하지 못해 가져오기가 저장되지 않았습니다.",
+      "invalid-response": "Google Analytics가 예상치 못한 형식으로 수익 데이터를 반환했습니다.",
+      "fetch-failed": "Google Analytics에서 수익을 가져오지 못했습니다. 연결과 속성을 확인하세요."
+    },
+    "api": "GA4 API에서 가져오기",
+    "apiNote": "Google Analytics 연결이 필요합니다. GA4가 보고하는 속성 통화로 방문 페이지별 오가닉 검색 수익을 최근 90일(전체 일) 읽습니다. 구매 이벤트가 없으면 GA4는 0을 보고합니다."
   },
   "entityParity": {
     "title": "언어 버전 간 엔터티 (Wikidata)",
@@ -9222,5 +9386,53 @@
       "error": "조회 실패"
     },
     "correctPlaceholder": "Q123 / none"
+  },
+  "semanticSource": {
+    "title": "의미 유사도(선택)",
+    "hint": "로컬 Ollama 임베딩 모델로 Site Focus와 Topical Authority의 동의어를 맞춥니다. 기본값은 꺼짐입니다. 꺼져 있으면 보고서는 TF-IDF를 사용하고 그 사실을 표시합니다. 설치나 다운로드는 자동으로 하지 않습니다.",
+    "enable": "사용 가능할 때 임베딩 사용",
+    "provider": "소스",
+    "providerOllama": "Ollama(신경망)",
+    "providerHybrid": "하이브리드(로컬 해시 + Ollama)",
+    "url": "Ollama 주소(비우면 로컬 기본값)",
+    "model": "임베딩 모델",
+    "timeout": "배치당 제한 시간(ms)",
+    "maxEntries": "실행당 최대 페이지 수",
+    "save": "저장",
+    "test": "Ollama 연결 테스트",
+    "testing": "테스트 중...",
+    "saved": "설정을 저장했습니다.",
+    "failed": "설정을 저장하지 못했습니다.",
+    "invalid": "값을 확인하세요: 제한 시간 1000~300000 ms, 페이지 1~5000, 모델 이름 필수.",
+    "testOk": "작동 중: {{model}}, {{dimensions}}차원.",
+    "testFail": "TF-IDF로 되돌립니다: {{reason}}.",
+    "reason": {
+      "offline": "Ollama에 연결할 수 없음",
+      "timeout": "시간 초과",
+      "cancelled": "취소됨",
+      "rate-limited": "요청 제한",
+      "model-missing": "모델이 설치되지 않음",
+      "invalid-response": "잘못된 응답",
+      "failed": "알 수 없는 오류"
+    }
+  },
+  "imageOcrUi": {
+    "title": "OCR 및 텍스트-이미지 정합(로컬, 선택)",
+    "note": "이미 사용 중인 로컬 Ollama 비전 모델을 입력해야만 실행되며 아무것도 다운로드하지 않습니다. 이미지는 최대 {{max}}개이며 사용자의 Ollama 서버로만 전송됩니다. 결과는 부분적이며 줄별 상자나 신뢰도가 없습니다. 정합 값은 텍스트 겹침 휴리스틱(ALT, 파일 이름, 페이지 텍스트)이며 이미지 이해가 아닙니다.",
+    "model": "Ollama 비전 모델",
+    "run": "OCR 실행",
+    "cancel": "OCR 취소",
+    "status": {
+      "running": "OCR 실행 중: 완료 {{ok}}, 실패 {{failed}}.",
+      "done": "OCR 완료: 완료 {{ok}}, 실패 {{failed}}.",
+      "cancelled": "OCR 취소됨: 완료 {{ok}}, 실패 {{failed}}.",
+      "error": "오류로 OCR이 중지됨: 완료 {{ok}}, 실패 {{failed}}."
+    },
+    "origin": {
+      "media-only": "이미지에만 있음",
+      "duplicate-of-html": "HTML에도 있음"
+    },
+    "fact": "“{{text}}” ({{origin}}, 부분적) {{url}}",
+    "alignment": "{{url}}: 텍스트 겹침 {{pct}}%(휴리스틱)"
   }
 }

@@ -1,7 +1,7 @@
 use super::data::{flag, list, num};
 use crate::commands::pdf_report::audit_report::ctx::field;
 use serde_json::Value;
-use std::collections::{BTreeMap, HashSet};
+use std::collections::BTreeMap;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Idx {
@@ -56,26 +56,7 @@ pub fn duplicate_groups(pages: &[Value], key: &str) -> Vec<(String, Vec<usize>)>
         .collect()
 }
 
-/// Pages no other crawled page links to (the start page is never an orphan).
-pub fn orphans(pages: &[Value]) -> Vec<usize> {
-    let mut linked: HashSet<(usize, String)> = HashSet::new();
-    for (index, page) in pages.iter().enumerate() {
-        for link in list(page, "links")
-            .iter()
-            .filter(|l| flag(l, "is_internal"))
-        {
-            linked.insert((index, field(link, "target_url").unwrap_or_default()));
-        }
-    }
-    let targets = |url: &str, own: usize| linked.iter().any(|(from, to)| *from != own && to == url);
-    (0..pages.len())
-        .filter(|&i| num(&pages[i], "depth").unwrap_or(0.0) > 0.0)
-        .filter(|&i| {
-            let own = [field(&pages[i], "url"), field(&pages[i], "final_url")];
-            !own.iter().flatten().any(|url| targets(url, i))
-        })
-        .collect()
-}
+pub use super::link_graph::orphans;
 
 pub struct Metrics {
     pub counts: [usize; 3],

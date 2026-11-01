@@ -6,7 +6,7 @@ import {
   type ImageByteSource, type ImageDecoder, type ImageHashRow,
 } from '@/services/multimodal';
 
-const absolute = (src: string, base: string): string | null => {
+export const absolute = (src: string, base: string): string | null => {
   try { const url = new URL(src, base); return /^https?:$/u.test(url.protocol) ? url.href : null; } catch { return null; }
 };
 

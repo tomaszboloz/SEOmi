@@ -24,7 +24,7 @@ describe('GraphEvidencePanel', () => {
     expect(screen.getByRole('heading', { name: 'mapUi.graphEvidence.title' })).toBeTruthy();
     expect(screen.getByText('mapUi.graphEvidence.noSelection')).toBeTruthy();
     expect(screen.getByText('mapUi.graphEvidence.status.unavailable')).toBeTruthy();
-    expect(screen.getByText('mapUi.graphEvidence.structureTitle')).toBeTruthy();
+    expect(screen.getByText('sprsUi.title')).toBeTruthy();
   });
 
   it('announces that structural PageRank is partial when the graph is bounded', () => {

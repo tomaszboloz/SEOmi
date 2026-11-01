@@ -47,3 +47,7 @@ export { UTILITY_PATH_PATTERN } from '@/services/utilityPages';
 
 /** Social networks named by share buttons that sit inside the main content. */
 export const BRAND_TOKEN_PATTERN = /^(facebook|twitter|instagram|youtube|tiktok)$/;
+
+/** The one listing (hub) test shared by Site Focus page types and topical-diagnosis roles (#106). */
+export const looksLikeListing = (wordCount: number, linkedDocuments: number): boolean =>
+  linkedDocuments >= HUB_MIN_LINKED_DOCUMENTS && wordCount / linkedDocuments < HUB_MAX_WORDS_PER_LINK;

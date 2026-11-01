@@ -119,7 +119,7 @@ fn analytics_client(built: reqwest::Result<reqwest::Client>) -> Result<reqwest::
     built.map_err(|_| "Unable to initialize the Google Analytics client.".to_string())
 }
 
-async fn access_context(
+pub(super) async fn access_context(
     project_id: &str,
     client_id: &str,
     store: &dyn CredentialStore,

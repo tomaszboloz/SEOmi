@@ -13,7 +13,7 @@ export const crawlLinksCsv = (run: CrawlRunRecord): string => {
     page.url, page.final_url, link.target_url, link.target_http_status ?? '', link.target_response_time_ms ?? '',
     link.target_redirect_url || '', link.target_request_error_kind || '', link.target_checked_at || '',
     link.anchor_text, link.rel || '', link.is_internal, link.source_excerpt || '',
-    link.zone || '', link.zone_method || '', link.context_before || '', link.context_after || '', link.section_heading || '',
+    link.zone || '', link.zone_method || '', link.context_before || '', link.context_after || '', link.context_truncated ?? '', link.context_anchor_offset ?? '', link.section_heading || '',
   ]));
   return crawlCsv(headers, rows, metadata);
 };

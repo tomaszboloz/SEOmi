@@ -41,6 +41,8 @@ export interface SiloReport {
   weakAnchors: number;
   bleedLinks: Array<{ from: string; to: string }>;
   audits: Record<string, LinkAudit>;
+  /** Internal links by crawler placement (menu, sidebar/footer, content, unknown = no zone data). Menu and sidebar/footer links never count as content edges. */
+  linkFlags?: { menu: number; sidebarFooter: number; content: number; unknown: number };
 }
 
 /** Pair evidence that joined two pages into a group: A~B and B~C do not imply A~C. */

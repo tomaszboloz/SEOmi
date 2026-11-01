@@ -68,7 +68,7 @@ it('rejects invalid choices: same page, duplicate add, removing a link that does
 it('reports when a simulation changes no score and shows a table after removing a link', () => {
   const lone = [{ id: A }, { id: B }];
   render(<SprsWhatIf nodes={lone} edges={[{ source: A, target: B, links: 1 }]} />);
-  vi.mocked(simulateWhatIfRun).mockReturnValueOnce({ rows: [], converged: true, iterations: 1, residual: 0, issues: [], uncertain: false });
+  vi.mocked(simulateWhatIfRun).mockReturnValueOnce({ rows: [], converged: true, iterations: 1, residual: 0, issues: [], flagChanges: [], uncertain: false });
   pick('From page', B); pick('To page', A);
   fireEvent.click(screen.getByRole('button', { name: 'Simulate' }));
   expect(screen.getByRole('status').textContent).toBe('No score changes.');
@@ -77,7 +77,7 @@ it('reports when a simulation changes no score and shows a table after removing 
   expect(screen.queryByRole('status')).toBeNull();
   expect(screen.getByRole('table')).toBeTruthy();
   expect(screen.getByText(/^Warm-started from the current scores: \d+ iterations, residual /)).toBeTruthy();
-  vi.mocked(simulateWhatIfRun).mockReturnValueOnce({ rows: [], converged: false, iterations: 150, residual: 0.01, issues: [], uncertain: true });
+  vi.mocked(simulateWhatIfRun).mockReturnValueOnce({ rows: [], converged: false, iterations: 150, residual: 0.01, issues: [], flagChanges: [], uncertain: true });
   fireEvent.click(screen.getByRole('button', { name: 'Simulate' }));
   expect(screen.getByText('The solver did not converge; scores are approximate.')).toBeTruthy();
 });

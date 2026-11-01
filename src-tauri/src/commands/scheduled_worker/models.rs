@@ -62,6 +62,10 @@ pub struct ScheduledExecutionHandoff {
     pub scheduler_error: Option<String>,
     #[serde(default)]
     pub result: Option<Value>,
+    /// Stable identity of this delivery (project, schedule, task, window, outcome). The WebView uses it to
+    /// handle one native handoff once even when it is listed again after a restart.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub fingerprint: Option<String>,
 }
 
 pub(super) fn valid_identifier(value: &str) -> bool {

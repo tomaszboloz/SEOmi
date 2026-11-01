@@ -1890,7 +1890,8 @@
       "no": "nie",
       "tableSummary": "Tabela stron ({{count}})",
       "tableCaption": "Strony widoczne na mapie architektury ze statusem, głębokością, linkami przychodzącymi, TRS i sekcją"
-    }
+    },
+    "coreTopicShare": "{{percent}}% terminów w temacie głównym"
   },
   "crawlDiff": {
     "fields": {
@@ -2376,7 +2377,8 @@
       "authority": "Autorytet tematyczny",
       "aio": "Gotowość na AI",
       "trust": "Zaufanie do encji",
-      "offPage": "Analiza off-page"
+      "offPage": "Analiza off-page",
+      "evidence": "Telemetria, eksperymenty i dryf SERP"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "produkcja",
@@ -4903,6 +4905,8 @@
         "Zone method",
         "Context before",
         "Context after",
+        "Kontekst ucięty",
+        "Offset kotwicy (słowa)",
         "Section heading"
       ],
       "crawlImages": [
@@ -5742,7 +5746,9 @@
           "off-topic-below-quota": "Zbyt mało akapitów w temacie.",
           "local-lexical-embeddings": "Podobieństwo liczą lokalne wektory leksykalne, nie model semantyczny; strefy są przybliżone.",
           "heuristic-entities": "Encje pochodzą z fraz pisanych wielką literą i faktów podmiot-orzeczenie-dopełnienie, a nie z wytrenowanego modelu encji.",
-          "semantic-provider-unavailable": "Semantyczny dostawca embeddingów projektu był niedostępny; użyto lokalnych wektorów leksykalnych."
+          "semantic-provider-unavailable": "Semantyczny dostawca embeddingów projektu był niedostępny; użyto lokalnych wektorów leksykalnych.",
+          "ollama-entities": "Encje rozszerzył lokalny model Ollama, oprócz heurystyki wielkich liter.",
+          "ollama-entities-unavailable": "Model encji Ollama był niedostępny; użyto tylko heurystyki wielkich liter."
         },
         "intent": {
           "definitional": "Definicja",
@@ -5763,7 +5769,9 @@
         },
         "mismatchAdvice": "Strona ma inną intencję niż większość stron TOP: sprawdź, czy odpowiada na tę samą potrzebę.",
         "missingBasics": "Brakujące podstawy",
-        "basicsAdvice": "Najpierw omów brakujące podstawy ({{0}}): poniżej połowy pokrycia wynik jest obniżany, a nowe fakty nie zastępują podstaw."
+        "basicsAdvice": "Najpierw omów brakujące podstawy ({{0}}): poniżej połowy pokrycia wynik jest obniżany, a nowe fakty nie zastępują podstaw.",
+        "previous": "Poprzedni zapisany przebieg",
+        "previousValue": "{{0}}: intencja {{1}}, SSAS {{2}}, wyrenderowano {{3}} stron"
       }
     },
     "crawl": {
@@ -6461,6 +6469,53 @@
           "no-follow-links": "Brak linków follow do analizy.",
           "source-text-or-authority-missing": "Część źródeł nie ma tekstu, poprawnych wektorów lub autorytetu dostawcy."
         }
+      },
+      "evidence": {
+        "title": "Telemetria, eksperymenty i dryf SERP",
+        "intro": "Ostatnie zapisane dane projektu. Każdy blok pojawia się tylko, gdy są dane; nic tu nie jest szacowane.",
+        "tRevenue": "Przychód z wyszukiwania organicznego per strona docelowa",
+        "revenueIntro": "Waluta {{0}}; atrybucja {{1}}; okres {{2}}. Brak strony tutaj oznacza brak danych, nie zero.",
+        "colPage": "Strona docelowa",
+        "colRevenue": "Przychód",
+        "tExperiments": "Szacunki eksperymentów",
+        "experimentsIntro": "Skumulowane kliknięcia względem kontrfaktu, z przedziałem 95% w nawiasie. To szacunek związku, nie udowodniona przyczynowość; brak szacunku oznacza, że dane nie pozwoliły na wynik.",
+        "colTarget": "Cel",
+        "colDate": "Data zmiany",
+        "colMethod": "Metoda",
+        "colStatus": "Status",
+        "colEffect": "Efekt skumulowany [95%]",
+        "colProbability": "Prawdopodobieństwo znaku",
+        "tDecay": "Historia dryfu SERP",
+        "decayIntro": "Zapisane porównywalne snapshoty SERP względem pierwszego. Tylko doradczo: dryf to powód do przeglądu, nie dowód straty.",
+        "colQuery": "Zapytanie",
+        "colVerdict": "Werdykt",
+        "colSamples": "Snapshoty",
+        "colShift": "Przesunięcie centroidu",
+        "colEntities": "Encje nowe / utracone",
+        "na": "brak",
+        "disclaimer": "To nie dane Google; brak prognozy strat i automatycznego przepisywania. Brak danych jest pokazany jako niedostępny, nigdy jako zero.",
+        "status": {
+          "estimated": "Oszacowano",
+          "not-estimable": "Nie do oszacowania"
+        },
+        "verdict": {
+          "too-few-samples": "Za mało snapshotów",
+          "incompatible": "Nieporównywalne",
+          "stable": "Stabilne",
+          "not-persistent": "Niepowtarzalne",
+          "cooldown": "Okres karencji",
+          "alert": "Zalecany przegląd"
+        },
+        "method": {
+          "regression": "Regresja",
+          "structural": "Strukturalny sezonowy"
+        },
+        "colOutcome": "Wynik",
+        "outcome": {
+          "gsc-clicks": "Kliknięcia Search Console",
+          "ga4-key-events": "Kluczowe zdarzenia GA4",
+          "ga4-revenue": "Przychód GA4"
+        }
       }
     },
     "recs": {
@@ -7040,7 +7095,8 @@
       "unmatchedTopic": "Żadna strona nie pasuje do tematu „{{topic}}”. Zamiast niego użyto wykrytego tematu.",
       "gateSkipped": "Pominięto {{count}} stron (noindex/canonical).",
       "gateInclude": "Uwzględnij je",
-      "gateExclude": "Znów pomiń"
+      "gateExclude": "Znów pomiń",
+      "semantic": "Podobieństwo semantyczne aktywne: {{model}}."
     },
     "skip": {
       "render-timeout": "Renderowanie JavaScript przekroczyło limit czasu",
@@ -7558,7 +7614,8 @@
         "entities": "encje",
         "questions": "pytania użytkowników (PAA)",
         "gain": "przyrost informacji"
-      }
+      },
+      "linkFlags": "Linki wewnętrzne wg położenia: {{menu}} w menu, {{sidebarFooter}} w sidebarze/stopce, {{content}} w treści, {{unknown}} bez danych o położeniu. Linki z menu i sidebaru/stopki nie są liczone jako linki w treści."
     },
     "warning": {
       "empty-authority": "Pusty autorytet: witryna dotyka {{tcr}}% tematów, ale średnia głębokość to tylko {{depth}}/100. Pogłębiaj istniejące strony twardymi danymi i encjami, zanim dodasz nowe.",
@@ -7593,7 +7650,29 @@
       },
       "withPaa": "Uwzględnij prawdziwe People Also Ask (zaawansowany SERP DataForSEO, płatny osobno)",
       "paaUsed": "Użyto {{count}} pytań People Also Ask z SERP.",
-      "paaMissing": "Brak źródła People Also Ask: pytania pochodzą tylko z nagłówków konkurencji i Google Suggest."
+      "paaMissing": "Brak źródła People Also Ask: pytania pochodzą tylko z nagłówków konkurencji i Google Suggest.",
+      "autoRefresh": "Odświeżaj tę mapę automatycznie po zaplanowanych crawlach (opt-in; zużywa limit SERP, najwyżej raz w tygodniu, 4 próby na 30 dni)",
+      "merge": {
+        "title": "Porównaj z filarami Twojej mapy tematycznej",
+        "note": "Tylko podgląd. Nic się nie zmieni, dopóki nie dodasz filarów.",
+        "matched": "Pasujące filary ręczne ({{count}}):",
+        "added": "Filary referencyjne, których brakuje w Twojej mapie ({{count}}):",
+        "manualOnly": "Tylko w Twojej mapie, bez zmian ({{count}}):",
+        "apply": "Dodaj {{count}} filarów referencyjnych do mapy tematycznej",
+        "done": "Dodano {{count}} filarów do mapy tematycznej.",
+        "failed": "Nie udało się zaktualizować mapy tematycznej: {{error}}"
+      },
+      "entities": {
+        "label": "Rozpoznawanie encji",
+        "lexical": "Tylko terminy tematyczne (domyślnie)",
+        "heuristic": "Lokalne wykrywanie nazw",
+        "ollama": "Lokalne wykrywanie nazw + model Ollama",
+        "model": "Model Ollama"
+      },
+      "kg": {
+        "button": "Powiąż filary z Wikidata (publiczne zapytanie)",
+        "summary": "{{linked}} filarów powiązanych z elementami Wikidata, {{review}} do sprawdzenia (pierwszy wynik wyszukiwania, nie dokładne dopasowanie etykiety)."
+      }
     },
     "coverage": {
       "title": "Mapa pokrycia tematu",
@@ -8083,6 +8162,24 @@
         "hedged": "ostrożne sformułowanie",
         "negated": "zaprzeczenie",
         "note": "Sprawdzenie lokalne czyta tylko tę stronę (pozycja przypisu, identyfikator, sformułowania ostrożne, zaprzeczenie). Nie czyta cytowanej pracy, więc nie potwierdza poparcia."
+      },
+      "entail": {
+        "sourceLabel": "Tekst źródła do porównania (wklej)",
+        "useModel": "Zapytaj też model lokalny (Ollama, opcjonalnie)",
+        "run": "Porównaj twierdzenia z tekstem źródła",
+        "results": "Wyniki porównania",
+        "label": {
+          "consistent": "zgodne z tekstem",
+          "related": "powiązane, bez dopasowania",
+          "unrelated": "niepowiązane",
+          "contradicts": "możliwa sprzeczność",
+          "unknown": "za mało tekstu"
+        },
+        "method": {
+          "heuristic": "heurystyka słów",
+          "model": "model lokalny"
+        },
+        "note": "Tylko dowód powiązania. Nie oznacza twierdzenia jako zweryfikowanego ani źródła jako sprawdzonego."
       }
     },
     "identity": {
@@ -8233,6 +8330,10 @@
     "workflow": "Przebieg: diagnoza → wybór priorytetu → dowody modułu → What-If → brief / kopiowanie / eksport. Nic nie trafia automatycznie do CMS.",
     "run": "Crawl: {{date}}",
     "runUnsaved": "Crawl: jeszcze niezapisany",
+    "refresh": "Przelicz z zapisanych danych",
+    "related": {
+      "title": "Powiązane widoki"
+    },
     "hss": {
       "title": "Holistyczny wynik semantyczny (HSS)",
       "valueAria": "HSS {{value}}",
@@ -8272,7 +8373,9 @@
     "reason": {
       "not-provided": "Nie podano wartości.",
       "not-run": "Moduł nie był uruchomiony dla tego crawla.",
-      "domain-aggregation-undefined": "Moduł per strona: wynik dla całej witryny nie jest jeszcze zdefiniowany, więc jest pominięty, a nie uśredniany.",
+      "insufficient-pages": "Za mało zmierzonych stron lub fraz, by policzyć wynik witryny (potrzeba co najmniej 3).",
+      "sprs-unavailable": "Nie udało się ocenić grafu linków.",
+      "sprs-not-converged": "Obliczenie przepływu linków nie zbiegło się.",
       "sfs-no-scored-pages": "Żadna strona nie została oceniona.",
       "tas-no-reference-map": "Zbuduj referencyjną mapę tematów, aby zmierzyć TAS.",
       "eetv-no-signals": "Nie zaobserwowano sygnałów zaufania.",
@@ -8297,6 +8400,11 @@
       "hint": "Kolejność według delty HSS na szacowaną godzinę. Delta pochodzi wyłącznie z symulacji samych modułów; bez niej jest niedostępna. To nie jest obietnica ruchu, cytowań ani ROI.",
       "empty": "Raporty modułów tego crawla nie wygenerowały działań.",
       "internalLink": "Dodaj link wewnętrzny: {{from}} → {{to}}",
+      "module": {
+        "fix-leak": "Napraw wyciek linków na {{url}}",
+        "add-inlinks": "Dodaj linki przychodzące do {{url}}",
+        "rewrite-weak-passages": "Przepisz słabe fragmenty na {{url}}"
+      },
       "delta": "Δ HSS {{value}}",
       "deltaUnavailable": "Δ HSS niedostępna (brak zadeklarowanego modelu)",
       "moduleDelta": "Δ {{module}} {{value}}",
@@ -8391,6 +8499,14 @@
     "igos": {
       "title": "Spadł wynik IGOS",
       "body": "Wynik zysku informacyjnego dla „{{phrase}}” spadł z {{from}} do {{to}} ({{points}} pkt) przy tych samych stronach TOP i modelu."
+    },
+    "igosTopChange": {
+      "title": "IGOS: zmienił się zestaw TOP",
+      "body": "Zestaw stron TOP dla \"{{phrase}}\" zmienił się (dodano {{added}}, usunięto {{removed}}). IGOS nie jest porównywalny z poprzednim przebiegiem."
+    },
+    "taskRegression": {
+      "title": "Optymalizacja pogorszyła wynik",
+      "body": "{{count}} zweryfikowanych zadań obniżyło wynik; najgorsze to {{worst}} pkt na {{url}}."
     }
   },
   "sprsUi": {
@@ -8421,8 +8537,12 @@
       "before": "Przed",
       "after": "Po",
       "delta": "Zmiana",
-      "solver": "Start od obecnych wyników: {{iterations}} iteracji, residuum {{residual}}."
-    }
+      "solver": "Start od obecnych wyników: {{iterations}} iteracji, residuum {{residual}}.",
+      "flags": "Zmiany flag diagnostycznych",
+      "flagOn": "{{page}}: teraz {{flag}}",
+      "flagOff": "{{page}}: już nie {{flag}}"
+    },
+    "meta": "{{iterations}} iteracji, residuum {{residual}}"
   },
   "decayUi": {
     "snapshots": "Liczba zrzutów stanowiących podstawę oceny: {{count}}",
@@ -8497,6 +8617,11 @@
         "product-cards": "Pokaż produkty lub oferty: karty produktów lub cen ma {{count}} z {{analysed}} stron z TOP.",
         "cta": "Dodaj wyraźne wezwanie do działania: ma je {{count}} z {{analysed}} stron TOP (pomiń dla stron czysto informacyjnych)."
       }
+    },
+    "funnel": {
+      "title": "Przejścia lejka między przeskanowanymi stronami",
+      "fromTo": "Z \\ do",
+      "summary": "Sklasyfikowano {{classified}} stron, {{unclassified}} bez zmierzonej struktury, pominięto {{skipped}} linków wewnętrznych (cel bez klasyfikacji)."
     }
   },
   "prePublishUi": {
@@ -8627,7 +8752,19 @@
     "saveBudget": "Zapisz budżet",
     "savedBudget": "Zapisano budżet LLM.",
     "invalidLimit": "Wpisz prawidłowy nieujemny limit miesięczny.",
-    "invalidWarn": "Próg ostrzeżenia musi być liczbą całkowitą od 1 do 100."
+    "invalidWarn": "Próg ostrzeżenia musi być liczbą całkowitą od 1 do 100.",
+    "dictTitle": "Lista terminów YMYL",
+    "dictHint": "Dawki i kwoty muszą stać przy tym samym terminie w źródle. Zalążek MeSH jest w domenie publicznej. ICD-10 nie jest dołączone: zaimportuj własną, licencjonowaną lub otwartą listę. Lista zostaje na tym urządzeniu.",
+    "dictSeed": "Użyj wbudowanego zalążka MeSH (domena publiczna)",
+    "dictFile": "Importuj listę (TXT lub CSV)",
+    "dictPaste": "Albo wklej terminy, po jednym w wierszu",
+    "dictSave": "Zapisz listę",
+    "dictClear": "Wyczyść zaimportowaną listę",
+    "dictSaved": "Zapisano listę terminów.",
+    "dictFailed": "Nie udało się zapisać listy terminów.",
+    "dictEmpty": "Nie znaleziono użytecznych terminów.",
+    "dictCount": "Aktywne terminy: {{count}}",
+    "dictPasted": "wklejona lista"
   },
   "templateGovernor": {
     "title": "Jakość szablonów programatycznych",
@@ -8761,7 +8898,9 @@
       "off-topic-below-quota": "Zbyt mało akapitów w temacie.",
       "local-lexical-embeddings": "Podobieństwo liczą lokalne wektory leksykalne, nie model semantyczny; strefy są przybliżone.",
       "heuristic-entities": "Encje pochodzą z fraz pisanych wielką literą i faktów podmiot-orzeczenie-dopełnienie, a nie z wytrenowanego modelu encji.",
-      "semantic-provider-unavailable": "Semantyczny dostawca embeddingów projektu był niedostępny; użyto lokalnych wektorów leksykalnych."
+      "semantic-provider-unavailable": "Semantyczny dostawca embeddingów projektu był niedostępny; użyto lokalnych wektorów leksykalnych.",
+      "ollama-entities": "Encje rozszerzył lokalny model Ollama, oprócz heurystyki wielkich liter.",
+      "ollama-entities-unavailable": "Model encji Ollama był niedostępny; użyto tylko heurystyki wielkich liter."
     },
     "rec": {
       "rewrite-echo": "Akapit na offsecie {{offset}} powtarza fragment konkurencji: przepisz go własnymi słowami.",
@@ -9011,6 +9150,11 @@
       "negated": "Wzmianka z przeczeniem; to nie rekomendacja",
       "critical": "Krytyczne słowa przy marce; to nie rekomendacja",
       "quoted": "Cytat lub cudza opinia; to nie rekomendacja samego źródła"
+    },
+    "senses": {
+      "label": "Reguły aliasów (homonimy)",
+      "hint": "Jedna reguła na linię: Alias | -słowa innego znaczenia | +słowa wymagane dla znaczenia marki. Zapis per projekt, użyte w kolejnej analizie.",
+      "error": "Nie udało się zapisać reguł (nieprawidłowe lub zbyt długie)."
     }
   },
   "experimentsUi": {
@@ -9072,6 +9216,12 @@
       "rows-truncated": "Zapisane wiersze stron są ucięte; porównanie strony może być niepełne.",
       "low-volume": "Bazowa liczba kliknięć jest mniejsza niż 30; zbyt mały wolumen do wiarygodnego porównania.",
       "pending": "Data interwencji jest w przyszłości; ocena oczekuje."
+    },
+    "outcome": {
+      "label": "Mierzony wynik",
+      "gsc-clicks": "Kliknięcia Search Console",
+      "ga4-key-events": "Kluczowe zdarzenia GA4 (organiczne)",
+      "ga4-revenue": "Przychód GA4 (organiczny)"
     }
   },
   "linkInjector": {
@@ -9181,7 +9331,17 @@
       "not-estimable": "Backtest niemożliwy: okres przed zmianą jest za krótki na pozorne interwencje."
     },
     "familySignificant": "Nadal istotne po korekcie na {{family}} eksperymentów pokazanych razem (Holm, p = {{p}}).",
-    "familyNotSignificant": "Nieistotne po korekcie na {{family}} eksperymentów pokazanych razem (Holm, p = {{p}})."
+    "familyNotSignificant": "Nieistotne po korekcie na {{family}} eksperymentów pokazanych razem (Holm, p = {{p}}).",
+    "structuralTitle": "Sezonowy model strukturalny",
+    "structuralMethod": "Trend poziomu lokalnego plus sezonowość tygodniowa, z odjętą kontrolą, gdy niesie informację. Przedział 95% pochodzi z symulacji predykcyjnej z ustalonym ziarnem. To przybliżenie typu BSTS, nie pełny model bayesowski, i pokazuje związek, a nie udowodnioną przyczynowość.",
+    "pageContamination": "Strona kontrolna może dzielić linki, szablony lub temat ze zmienioną stroną, więc ta sama zmiana może na nią wpływać. Traktuj wynik jako słabszy niż przy niezależnej kontroli.",
+    "pageLoad": "Wczytaj dzienną serię tej strony",
+    "pageNeedsGsc": "Najpierw połącz właściwość Search Console.",
+    "pageLoadFailed": "Nie udało się wczytać lub zapisać serii dziennej.",
+    "ga4Load": "Wczytaj dzienną serię GA4",
+    "ga4NeedsConnection": "Najpierw połącz Google Analytics.",
+    "ga4Loaded": "Zapisano {{days}} dni; przychód w {{currency}}.",
+    "ga4LoadFailed": "Nie udało się wczytać lub zapisać serii GA4."
   },
   "revenueImportUi": {
     "title": "Przychód (opcjonalny eksport GA4)",
@@ -9198,8 +9358,12 @@
       "not-organic": "Potwierdź, że eksport obejmuje wyłącznie sesje z wyszukiwania organicznego.",
       "no-header": "Nie znaleziono nagłówka z kolumną strony docelowej i kolumną przychodu.",
       "no-rows": "Plik nie zawiera strony docelowej z liczbową wartością przychodu.",
-      "storage-failed": "Nie udało się zapisać w pamięci lokalnej; import nie został zapisany."
-    }
+      "storage-failed": "Nie udało się zapisać w pamięci lokalnej; import nie został zapisany.",
+      "invalid-response": "Google Analytics zwrócił dane o przychodzie w nieoczekiwanym formacie.",
+      "fetch-failed": "Nie udało się pobrać przychodu z Google Analytics. Sprawdź połączenie i właściwość."
+    },
+    "api": "Pobierz z GA4 API",
+    "apiNote": "Wymaga połączonego Google Analytics. Czyta ostatnie 90 pełnych dni przychodu z wyszukiwania organicznego per strona docelowa, w walucie właściwości zgłaszanej przez GA4. Bez zdarzeń zakupu GA4 zwraca 0."
   },
   "entityParity": {
     "title": "Encje w wersjach językowych (Wikidata)",
@@ -9222,5 +9386,53 @@
       "error": "błąd wyszukiwania"
     },
     "correctPlaceholder": "Q123 / none"
+  },
+  "semanticSource": {
+    "title": "Podobieństwo semantyczne (opcjonalne)",
+    "hint": "Używa lokalnego modelu embeddingów Ollama do dopasowania synonimów w Site Focus i Topical Authority. Domyślnie wyłączone. Bez tego raporty używają TF-IDF i mówią o tym wprost. Nic nie jest instalowane ani pobierane za Ciebie.",
+    "enable": "Używaj embeddingów, gdy są dostępne",
+    "provider": "Źródło",
+    "providerOllama": "Ollama (neuronowe)",
+    "providerHybrid": "Hybryda (lokalny hash + Ollama)",
+    "url": "Adres Ollamy (puste = domyślny lokalny)",
+    "model": "Model embeddingów",
+    "timeout": "Limit czasu na partię (ms)",
+    "maxEntries": "Maks. stron na przebieg",
+    "save": "Zapisz",
+    "test": "Testuj połączenie z Ollamą",
+    "testing": "Testowanie...",
+    "saved": "Zapisano ustawienia.",
+    "failed": "Nie udało się zapisać ustawień.",
+    "invalid": "Sprawdź wartości: limit czasu 1000 do 300000 ms, strony 1 do 5000, model niepusty.",
+    "testOk": "Działa: {{model}}, {{dimensions}} wymiarów.",
+    "testFail": "Wracam do TF-IDF: {{reason}}.",
+    "reason": {
+      "offline": "Ollama jest nieosiągalna",
+      "timeout": "przekroczono limit czasu",
+      "cancelled": "anulowano",
+      "rate-limited": "limit zapytań",
+      "model-missing": "model nie jest zainstalowany",
+      "invalid-response": "nieprawidłowa odpowiedź",
+      "failed": "nieznany błąd"
+    }
+  },
+  "imageOcrUi": {
+    "title": "OCR i zgodność tekstu z obrazem (lokalnie, opcjonalnie)",
+    "note": "Działa dopiero po wpisaniu lokalnego modelu wizyjnego Ollama, który już uruchamiasz; nic nie jest pobierane. Maksymalnie {{max}} obrazów, wysyłanych tylko na Twój serwer Ollama. Wyniki są częściowe: bez ramek per linia i bez pewności. Zgodność to heurystyka nakładania się tekstu (ALT, nazwa pliku, tekst strony), nie rozumienie obrazu.",
+    "model": "Model wizyjny Ollama",
+    "run": "Uruchom OCR",
+    "cancel": "Anuluj OCR",
+    "status": {
+      "running": "OCR trwa: {{ok}} gotowych, {{failed}} z błędem.",
+      "done": "OCR zakończony: {{ok}} gotowych, {{failed}} z błędem.",
+      "cancelled": "OCR anulowany: {{ok}} gotowych, {{failed}} z błędem.",
+      "error": "OCR zatrzymany przez błąd: {{ok}} gotowych, {{failed}} z błędem."
+    },
+    "origin": {
+      "media-only": "tylko w obrazie",
+      "duplicate-of-html": "także w HTML"
+    },
+    "fact": "„{{text}}” ({{origin}}, częściowe) {{url}}",
+    "alignment": "{{url}}: nakładanie tekstu {{pct}}% (heurystyka)"
   }
 }

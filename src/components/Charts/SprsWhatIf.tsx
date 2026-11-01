@@ -55,6 +55,11 @@ export const SprsWhatIf = ({ nodes, edges }: { nodes: Array<{ id: string }>; edg
           <tbody>{result.rows.slice(0, MAX_ROWS).map((row) => <tr key={row.nodeId}><td className="break-all">{row.nodeId}</td><td>{cell(row.before)}</td><td>{cell(row.after)}</td><td className={row.delta === null ? 'text-slate-400' : row.delta > 0 ? 'text-emerald-300' : 'text-rose-300'}>{row.delta !== null && row.delta > 0 ? '+' : ''}{cell(row.delta)}</td></tr>)}</tbody>
         </table>
       ))}
+      {result && result.flagChanges.length > 0 && (
+        <ul aria-label={t('sprsUi.whatIf.flags')} className="list-disc ps-4 text-slate-300">
+          {result.flagChanges.map((change) => <li key={`${change.nodeId}-${change.flag}`} className="break-all">{t(change.now ? 'sprsUi.whatIf.flagOn' : 'sprsUi.whatIf.flagOff', { page: change.nodeId, flag: t(`sprsUi.${change.flag}`) })}</li>)}
+        </ul>
+      )}
     </section>
   );
 };

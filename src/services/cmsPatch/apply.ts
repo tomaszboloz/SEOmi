@@ -2,12 +2,13 @@ import { authorize, type TeamContext } from '@/services/team/guard';
 import type { KeyValueStore } from '@/services/team/auditStore';
 import { recordAudit } from '@/services/team/auditStore';
 import { isReviewedSource, validateYmylClaim, type YmylSource } from '@/services/llmEconomy/factGate';
+import type { TermDictionary } from '@/services/llmEconomy/termBinding';
 import { ADAPTERS } from './adapters';
 import type { PatchPlan } from './plan';
 import { CmsError, type CmsTarget, type CmsTransport } from './types';
 import { sectionApplied } from './verify';
 
-export interface Approval { approvedBy: string; planHash: string; factGatePassed?: boolean; sources?: YmylSource[] }
+export interface Approval { approvedBy: string; planHash: string; factGatePassed?: boolean; sources?: YmylSource[]; terms?: TermDictionary }
 
 export interface Backup { target: CmsTarget; content: string; revision: string; at: string }
 
@@ -53,7 +54,7 @@ export const applyPatch = async (plan: PatchPlan, approval: Approval | null, dep
       && source.targetId === targetId
       && source.sourceId.trim().length > 0
       && current.content.includes(source.text));
-    const check = validateYmylClaim(plan.replacement, sources);
+    const check = validateYmylClaim(plan.replacement, sources, approval.terms);
     if (!sources.length || !check.allowed) return fail('fact-gate-required', `Unsupported numeric claims: ${check.rejectedValues.join(', ') || 'reviewed source required'}`);
   }
   const backup: Backup = { target: plan.target, content: current.content, revision: current.revision, at: (deps.now?.() ?? new Date()).toISOString() };

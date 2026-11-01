@@ -47,3 +47,6 @@ These need repository admin settings or an owner decision. They stay open until 
 
 ## Account boundary (issue #101)
 The repo is under a personal account. Teams, org 2FA/SSO/SCIM, independent required review and ISO/SOC2 do not follow from repo settings. Required approvals stay below blocking the sole maintainer.
+
+## Owner steps
+Exact commands and read-backs for every owner-only step: `.github/OWNER_STEPS.md`.

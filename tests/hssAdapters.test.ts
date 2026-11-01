@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { computeHss, DOMAIN_AGGREGATION_UNDEFINED, hssInputsFromReports } from '@/services/hss';
+import { computeHss, hssInputsFromReports } from '@/services/hss';
 import type { AioReport } from '@/services/aioReadiness';
 import type { TrustReport } from '@/services/eeatTrust';
 import type { SiteFocusReport } from '@/services/siteFocus';
@@ -13,10 +13,10 @@ const values = (inputs: ReturnType<typeof hssInputsFromReports>) => Object.fromE
 const reasons = (inputs: ReturnType<typeof hssInputsFromReports>) => Object.fromEntries(inputs.map((input) => [input.module, input.reason]));
 
 describe('HSS adapters (#72 GEM-72-01/06)', () => {
-  it('reads only the scalars each engine reports; per-page modules stay unavailable', () => {
+  it('reads only the scalars each engine reports; per-page modules without history stay not-run', () => {
     const inputs = hssInputsFromReports({ runId: 'r', sfs, tas, trust, aio: aio() });
     expect(values(inputs)).toEqual({ sfs: 72, tas: 55, igos: null, sprs: null, eetv: 64, sija: null, aior: 81 });
-    expect(reasons(inputs)).toMatchObject({ igos: DOMAIN_AGGREGATION_UNDEFINED, sprs: DOMAIN_AGGREGATION_UNDEFINED, sija: DOMAIN_AGGREGATION_UNDEFINED });
+    expect(reasons(inputs)).toMatchObject({ igos: 'not-run', sprs: 'not-run', sija: 'not-run' });
     const report = computeHss(inputs, 'r');
     expect(report.status).toBe('partial');
     expect(report.availableWeight).toBe(0.6);

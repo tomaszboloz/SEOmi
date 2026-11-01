@@ -4,6 +4,7 @@ import { OffPagePanel } from '@/components/Charts/OffPagePanel';
 import { useOffPageReports } from './useOffPageReports';
 import { useOffPageSources } from './useOffPageSources';
 import { OffPageSourceResults } from './OffPageSourceResults';
+import { OffPageAliasSenses } from './OffPageAliasSenses';
 import { OffPageHistory } from './OffPageHistory';
 import { OffPageAnchorContexts, OffPageLinkProfile } from './OffPageLinkEvidence';
 
@@ -27,6 +28,7 @@ export const OffPageSourcesWorkspace = ({ profile }: { profile: BacklinkProfileD
       <input value={session.settings.ollamaModel ?? ''} disabled={running}
         onChange={(event) => session.setSettings({ ...session.settings, ollamaModel: event.target.value })} />
     </label>}
+    <OffPageAliasSenses key={session.projectId ?? ''} projectId={session.projectId} disabled={running} />
     <button type="button" disabled={!session.enabled || running} onClick={() => void session.run()}>{t('offPageSourcesUi.analyze')}</button>
     {running && <button type="button" onClick={session.cancel}>{t('offPageSourcesUi.cancel')}</button>}
     {session.status !== 'idle' && <>

@@ -12,7 +12,7 @@ export const TargetPhraseIntentSection: React.FC<{ report: TopTenContentGapRepor
   const { result, running, failed, canRun, start, history } = usePhraseIntent(report, projectId);
   const phrase = report?.phrase ?? '';
   // The PDF export reads the latest SIJA result of this audited URL (#69 GEM-69-08).
-  useEffect(() => { setPhraseSija(auditUrl, phrase, result); }, [auditUrl, phrase, result]);
+  useEffect(() => { setPhraseSija(auditUrl, phrase, result, history[1]); }, [auditUrl, phrase, result, history]);
   return (
     <section className="space-y-2 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 text-xs text-slate-300">
       <p className="leading-5 text-slate-400">{t('sijaUi.phrase.description')}</p>

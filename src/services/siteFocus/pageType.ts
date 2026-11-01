@@ -1,6 +1,6 @@
 import { normalizeSemanticText } from '@/services/semanticText';
 import { UTILITY_SEGMENT_PATTERN } from '@/services/utilityPages';
-import { HUB_MAX_WORDS_PER_LINK, HUB_MIN_LINKED_DOCUMENTS } from '@/services/topicalDiagnosis/thresholds';
+import { looksLikeListing } from '@/services/topicalDiagnosis/thresholds';
 import type { FocusPage, PageType } from './types';
 
 export const TYPE_WEIGHT: Record<PageType, number> = { homepage: 3, category: 2, article: 1, technical: 0.1 };
@@ -75,7 +75,7 @@ export const classifyPage = (page: FocusPage, context: TypeContext): PageType =>
   if (segments.some((segment) => UTILITY_SEGMENT_PATTERN.test(normalizeSemanticText(segment))) || TECHNICAL_TITLE.test(title)) return 'technical';
   if ((context.graph.downward.get(url) ?? 0) < MIN_DOWNWARD_ARTICLES) return 'article';
   const linked = context.graph.targets.get(url) ?? 0;
-  const listing = linked >= HUB_MIN_LINKED_DOCUMENTS && page.word_count / linked < HUB_MAX_WORDS_PER_LINK;
+  const listing = looksLikeListing(page.word_count, linked);
   const popular = page.depth <= 1 && (context.graph.inlinks.get(url) ?? 0) >= Math.max(5, Math.ceil(context.pageCount * 0.15));
   return CATEGORY_SEGMENT.test(segments[segments.length - 1]) || segments.some((segment) => TAXONOMY_SEGMENT.test(segment)) || listing || popular ? 'category' : 'article';
 };

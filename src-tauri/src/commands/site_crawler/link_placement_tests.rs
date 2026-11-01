@@ -1,4 +1,5 @@
-use super::link_placement::{build_link, context_words, dom_zone, LinkFacts};
+use super::link_context::context_words;
+use super::link_placement::{build_link, dom_zone, LinkFacts};
 use scraper::{Html, Selector};
 
 fn first_link(html: &str) -> (Html, Selector) {

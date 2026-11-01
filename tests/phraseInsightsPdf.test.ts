@@ -51,4 +51,14 @@ describe('phrase insights for the audit PDF (#68, #69)', () => {
     await downloadAuditPdf(audit);
     expect(vi.mocked(invokeTauriCommand).mock.calls[1][1]).toHaveProperty('audit.phrase_insights.igos.igos', 42);
   });
+
+  it('attaches the previous stored SIJA run only when one exists (GEM-69-08)', () => {
+    const previous = { runAt: '2026-09-01T00:00:00Z', intent: 'comparison' as const, serpIntent: null, ssas: 55, analysed: 4, requested: 5 };
+    setPhraseSija('u', 'herbata', sija, previous);
+    expect(phraseInsightsFor('u')?.sija?.previous).toEqual({ runAt: '2026-09-01T00:00:00Z', intent: 'comparison', ssas: 55, analysed: 4 });
+    setPhraseSija('u', 'herbata', sija);
+    expect(phraseInsightsFor('u')?.sija).not.toHaveProperty('previous');
+    setPhraseIgos('u', 'herbata', null);
+    expect(phraseInsightsFor('u')?.sija).toBeDefined();
+  });
 });

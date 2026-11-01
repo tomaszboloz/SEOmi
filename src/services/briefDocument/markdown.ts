@@ -1,3 +1,5 @@
+import { splitSentences } from '@/services/textSentences';
+
 export const stripFrontMatter = (value: string) => value.replace(/^---\s*\r?\n[\s\S]*?\r?\n---\s*\r?\n?/, '');
 export const scoreWords = (value: string) => (value.match(/[\p{L}\p{N}]+(?:['’_-][\p{L}\p{N}]+)*/gu) ?? []).length;
 export const scoreSections = (value: string) => {
@@ -29,4 +31,4 @@ export const markdownBlocks = (value: string): DraftBlock[] => {
 };
 const questionStarts = new Set(['what', 'why', 'how', 'when', 'where', 'which', 'who', 'is', 'are', 'can', 'do', 'does', 'should', 'will', 'vs', 'co', 'jak', 'dlaczego', 'kiedy', 'gdzie', 'który', 'która', 'czy', 'ile', 'kim', 'czym']);
 export const isQuestionHeading = (heading: string) => heading.trim().endsWith('?') || questionStarts.has(heading.trim().toLocaleLowerCase().split(/\s+/)[0]);
-export const sentenceLengths = (value: string) => value.split(/(?<=[.!?])\s+/).map((sentence) => scoreWords(sentence)).filter(Boolean);
+export const sentenceLengths = (value: string) => splitSentences(value).map((sentence) => scoreWords(sentence)).filter(Boolean);

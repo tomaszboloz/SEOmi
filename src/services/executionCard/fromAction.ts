@@ -20,7 +20,9 @@ export interface ExecutionCard {
 /** Removals and merges become 301/410 rules only through Deployment Artifacts behind the #81 URL guard. */
 const REMOVALS = new Set(['sfs:remove-offtopic', 'tas:merge-cannibalized']);
 const MAX_ITEMS = 20;
-const MODULE: Record<ExecutiveAction['source'], TaskModule> = { sfs: 'sfs', tas: 'tas', eetv: 'eetv', links: 'sprs' };
+/** Sources that can become tracker tasks; SPRS and AIO-R actions only point at their module tab. */
+type TaskSource = 'sfs' | 'tas' | 'eetv' | 'links';
+const MODULE: Record<TaskSource, TaskModule> = { sfs: 'sfs', tas: 'tas', eetv: 'eetv', links: 'sprs' };
 
 /** Site-level module score from HSS; null when not measured. SPRS is per page in the tracker, so it stays null. */
 const baselineFor = (module: TaskModule, hss: HssReport | null | undefined): number | null => {
@@ -42,6 +44,7 @@ const itemsOf = (action: ExecutiveAction): string[] =>
 const artifactKind = (action: ExecutiveAction, items: string[]): CardArtifactKind => {
   if (REMOVALS.has(action.type)) return 'removal';
   if (action.type === 'internal-link') return 'link';
+  if (action.source === 'sprs' || action.source === 'aior') return 'module';
   return items.length && action.urls.length === 1 ? 'entities' : 'module';
 };
 
@@ -54,7 +57,7 @@ const noTaskReason = (action: ExecutiveAction, kind: CardArtifactKind): CardNoTa
 };
 
 const taskFor = (action: ExecutiveAction, kind: CardArtifactKind, items: string[], hss: HssReport | null | undefined): NewTask => {
-  const module = MODULE[action.source];
+  const module = MODULE[action.source as TaskSource];
   const expected = action.moduleDelta && action.moduleDelta.module === module ? action.moduleDelta.value : undefined;
   const priority = priorityOf(action.hssDelta);
   return {
@@ -66,7 +69,7 @@ const taskFor = (action: ExecutiveAction, kind: CardArtifactKind, items: string[
 };
 
 const briefFor = (action: ExecutiveAction, items: string[]): BriefRecommendationInput | null =>
-  action.source !== 'links' && action.urls.length === 1 && !REMOVALS.has(action.type) && action.type !== 'internal-link'
+  action.source !== 'links' && action.source !== 'sprs' && action.source !== 'aior' && action.urls.length === 1 && !REMOVALS.has(action.type) && action.type !== 'internal-link'
     ? { origin: action.source, title: action.urls[0], sourceUrl: action.urls[0], ...(items.length ? { missingEntities: items } : {}) }
     : null;
 

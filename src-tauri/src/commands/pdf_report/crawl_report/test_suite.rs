@@ -22,6 +22,8 @@ mod tests_aio_inspector;
 mod tests_authority;
 #[path = "tests_data.rs"]
 mod tests_data;
+#[path = "tests_evidence.rs"]
+mod tests_evidence;
 #[path = "tests_focus.rs"]
 mod tests_focus;
 #[path = "tests_focus_brand.rs"]
@@ -34,6 +36,8 @@ mod tests_focus_protection;
 mod tests_focus_segments;
 #[path = "tests_focus_visual.rs"]
 mod tests_focus_visual;
+#[path = "tests_link_graph.rs"]
+mod tests_link_graph;
 #[path = "tests_link_zones.rs"]
 mod tests_link_zones;
 #[path = "tests_more.rs"]

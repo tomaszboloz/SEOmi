@@ -1,21 +1,31 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { CrawlRunRecord, CrawledPageSummary } from '@/types';
 import type { FocusPage, SiteFocusReport } from '@/services/siteFocus';
-import { buildAuthorityReport, type ReferenceTaxonomy, type TopicalAuthorityReport } from '@/services/topicalAuthority';
+import { buildAuthorityReport, type EntityMode, type ReferenceTaxonomy, type TopicalAuthorityReport } from '@/services/topicalAuthority';
 import {
-  readAuthorityHistory, readTaxonomy, readTopicalBenchmark, recordAuthority, validAuthorityProject, writeTaxonomy, clearTaxonomy, taxonomyMatchesCore,
+  readAuthorityHistory, readTaxonomy, readTopicalBenchmark, recordAuthority, validAuthorityProject, writeTaxonomy, clearTaxonomy, taxonomyMatchesCore, readRefreshState, writeRefreshState, readEntitySettings, writeEntitySettings, type EntitySettings,
   type AuthorityHistoryEntry,
 } from '@/services/topicalAuthorityMonitoring';
 import {
-  buildTopicalBenchmark, createReferenceDeps, referenceMarket, runReference, withSerpEvidence,
+  buildTopicalBenchmark, createReferenceDeps, linkPillarEntities, type PillarLinkResult, type PillarLookup, referenceMarket, runReference, withSerpEvidence,
   type ReferenceInput, type ReferenceOutcome, type ReferenceProgress, type TopicalBenchmark,
 } from '@/services/topicalAuthorityReference';
 
+import { lookupWikidata } from '@/services/entityIds';
+import { useSemanticEmbeddings } from '@/hooks/useSemanticEmbeddings';
 import { recordReferenceSnapshot } from '@/services/semanticDecay/recordReferenceSnapshot';
+import { neuralMarketCentroid } from '@/services/semanticDecay/neuralCentroid';
+import { loadEmbeddingSession } from '@/components/Keywords/embeddingClustering/useEmbeddingClustering';
 
-export interface ReferenceRunOptions { /** Opt-in real People Also Ask via the separately billed advanced SERP. */ withQuestions?: boolean }
+export interface ReferenceRunOptions {
+  /** Opt-in real People Also Ask via the separately billed advanced SERP. */
+  withQuestions?: boolean;
+  entityMode?: EntityMode;
+  /** Local Ollama model, used only in `ollama` entity mode. */
+  ollamaModel?: string;
+}
 export type ReferenceRunner = (input: ReferenceInput, options?: ReferenceRunOptions) => Promise<ReferenceOutcome>;
-export const defaultReferenceRunner: ReferenceRunner = (input, options) => runReference(createReferenceDeps(options), input);
+export const defaultReferenceRunner: ReferenceRunner = (input, options) => runReference(createReferenceDeps(options), { ...input, entityMode: options?.entityMode });
 
 export interface ReferenceState {
   running: boolean;
@@ -32,6 +42,8 @@ const domainOf = (startUrl: string): string => {
 };
 
 export interface UseTopicalAuthorityArgs {
+  /** Wikidata lookup for the optional pillar link (defaults to the native public feed). */
+  entityLookup?: PillarLookup;
   pages: CrawledPageSummary[];
   startUrl: string;
   sfs: SiteFocusReport | null | undefined;
@@ -43,11 +55,14 @@ export interface UseTopicalAuthorityArgs {
 }
 
 /** Topical Authority for a crawl: report, cached reference map, competitor benchmark, history and the map builder. */
-export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runner = defaultReferenceRunner, market = referenceMarket }: UseTopicalAuthorityArgs) => {
+export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runner = defaultReferenceRunner, market = referenceMarket, entityLookup = lookupWikidata }: UseTopicalAuthorityArgs) => {
+  const { set: embeddings } = useSemanticEmbeddings(projectId, pages);
   const [taxonomy, setTaxonomy] = useState<ReferenceTaxonomy | null>(() => readTaxonomy(projectId));
   const [benchmark, setBenchmark] = useState<TopicalBenchmark | null>(() => readTopicalBenchmark(projectId));
   const [history, setHistory] = useState<AuthorityHistoryEntry[]>(() => readAuthorityHistory(projectId));
   const [state, setState] = useState<ReferenceState>(IDLE);
+  const [entities, setEntities] = useState<EntitySettings>(() => readEntitySettings(projectId));
+  const [autoRefresh, setAutoRefreshState] = useState(() => readRefreshState(projectId).enabled);
   const [scope, setScope] = useState(projectId);
   const controller = useRef<AbortController | null>(null);
   const [pendingBenchmark, setPendingBenchmark] = useState<TopicalBenchmark | null>(null);
@@ -57,6 +72,8 @@ export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runn
     setTaxonomy(readTaxonomy(projectId));
     setBenchmark(readTopicalBenchmark(projectId));
     setHistory(readAuthorityHistory(projectId));
+    setAutoRefreshState(readRefreshState(projectId).enabled);
+    setEntities(readEntitySettings(projectId));
     setPendingBenchmark(null);
   }
 
@@ -65,8 +82,8 @@ export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runn
   // A cached map built for another Core Topic, language or SERP market is not applied (treated as absent until rebuilt).
   const usable = taxonomy && sfs && taxonomyMatchesCore(taxonomy, { coreLabel: sfs.coreTopic.label, language: sfs.model.language, market: market() }) ? taxonomy : null;
   const report = useMemo<TopicalAuthorityReport | null>(
-    () => (sfs ? buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: usable, now: sfs.generatedAt }) : null),
-    [pages, startUrl, sfs, usable],
+    () => (sfs ? buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: usable, embeddings, now: sfs.generatedAt }) : null),
+    [pages, startUrl, sfs, usable, embeddings],
   );
 
   useEffect(() => {
@@ -84,24 +101,43 @@ export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runn
     controller.current = own;
     setState({ ...IDLE, running: true });
     try {
-      const outcome = await runner({ report: sfs, startUrl, signal: own.signal, onProgress: (progress) => { if (!own.signal.aborted) setState((current) => ({ ...current, progress })); } }, options);
+      const outcome = await runner({ report: sfs, startUrl, signal: own.signal, onProgress: (progress) => { if (!own.signal.aborted) setState((current) => ({ ...current, progress })); } }, { ...options, entityMode: entities.mode, ollamaModel: entities.model || undefined });
       if (controller.current !== own) return;
       if (outcome.status !== 'ok') { setState({ ...IDLE, failure: outcome }); return; }
       const where = market();
       const stamped: ReferenceTaxonomy = { ...outcome.taxonomy, market: where };
       writeTaxonomy(projectId, stamped);
-      recordReferenceSnapshot(projectId ?? null, stamped, outcome.serp, where);
-      const fresh = buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: stamped, now: sfs.generatedAt });
+      const embedding = loadEmbeddingSession(projectId ?? null).settings;
+      const neural = embedding.provider === 'ollama' && embedding.ollamaModel?.trim()
+        ? await neuralMarketCentroid(stamped, { model: embedding.ollamaModel, competitors: outcome.competitors, signal: own.signal }).catch(() => null) : null;
+      if (controller.current !== own) return;
+      recordReferenceSnapshot(projectId ?? null, stamped, outcome.serp, where, neural ?? undefined);
+      const fresh = buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: stamped, embeddings, now: sfs.generatedAt });
       setPendingBenchmark(withSerpEvidence(buildTopicalBenchmark(fresh, domainOf(startUrl), outcome.competitors, stamped, new Date().toISOString(), outcome.attempted), outcome.serp));
       setTaxonomy(stamped);
       setState(IDLE);
     } catch (error) {
       if (controller.current === own) setState({ ...IDLE, error: error instanceof Error ? error.message : String(error) });
     }
-  }, [sfs, startUrl, pages, projectId, runner, market]);
+  }, [sfs, startUrl, pages, projectId, runner, market, entities, embeddings]);
 
   const cancel = useCallback(() => controller.current?.abort(), []);
   const clear = useCallback(() => { clearTaxonomy(projectId); setTaxonomy(null); setBenchmark(null); setPendingBenchmark(null); }, [projectId]);
 
-  return { report, taxonomy: usable, benchmark: pendingBenchmark ?? benchmark, history, state, build, cancel, clear };
+  const setAutoRefresh = useCallback((enabled: boolean) => {
+    if (writeRefreshState(projectId, { ...readRefreshState(projectId), enabled })) setAutoRefreshState(enabled);
+  }, [projectId]);
+
+  const [linking, setLinking] = useState<PillarLinkResult | null>(null);
+  const linkPillars = useCallback(async () => {
+    if (!usable) return;
+    const result = await linkPillarEntities(usable, entityLookup);
+    writeTaxonomy(projectId, result.taxonomy);
+    setTaxonomy(result.taxonomy);
+    setLinking(result);
+  }, [usable, entityLookup, projectId]);
+
+  const saveEntities = useCallback((next: EntitySettings) => { if (writeEntitySettings(projectId, next)) setEntities(readEntitySettings(projectId)); }, [projectId]);
+
+  return { linkPillars, linking, entities, saveEntities, report, taxonomy: usable, benchmark: pendingBenchmark ?? benchmark, history, state, build, cancel, clear, autoRefresh, setAutoRefresh };
 };

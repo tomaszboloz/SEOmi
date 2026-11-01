@@ -1,5 +1,5 @@
+use super::link_context::context_words;
 use super::link_context_redaction::redact_context_word;
-use super::link_placement::context_words;
 use scraper::{Html, Selector};
 
 #[test]

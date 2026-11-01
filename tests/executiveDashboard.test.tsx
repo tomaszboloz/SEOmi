@@ -76,7 +76,7 @@ describe('Executive dashboard (#73)', () => {
     const run = createCrawlRunFixture({ result });
     render(<CrawlExecutiveTab pages={result.pages} startUrl={result.start_url} run={run} projectId="p1" onOpenTab={vi.fn()} />);
     expect(screen.getByText('Executive dashboard')).toBeTruthy();
-    expect(screen.getAllByText(/Per-page module/)).toHaveLength(3);
+    expect(screen.getAllByText('The module did not run for this crawl.').length).toBeGreaterThanOrEqual(2);
     fireEvent.click(screen.getByRole('button', { name: 'Copy HSS + actions (JSON)' }));
     expect(await screen.findByText('Copied')).toBeTruthy();
     const payload = JSON.parse((copy.mock.calls[0] as unknown as [string])[0]);

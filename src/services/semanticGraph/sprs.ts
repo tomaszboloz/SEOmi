@@ -48,6 +48,10 @@ export interface SprsReport {
   unknownSimilarityEdges: number;
   /** Links weighted at the neutral zone weight because their zone is unknown or unweighted. */
   unweightedZoneLinks: number;
+  /** Self-links removed before ranking (GEM-70-06): they pass no flow, but are reported, not hidden. */
+  droppedSelfEdges?: number;
+  /** Pages and edges kept out of the ranking with their reason (GEM-70-06); set by `buildSprsReport`. */
+  excluded?: { gatedPages: number; nofollowOnlyEdges: number };
   /** Edges whose flow was multiplied by simPage / simContext (known for every edge of their source). */
   pageSimilarityWeightedEdges?: number;
   contextSimilarityWeightedEdges?: number;
@@ -104,6 +108,7 @@ export const computeSprs = (nodes: PageRankNode[], edges: SprsEdge[], initialRan
   return {
     status: 'ready', pages, converged: rank.converged, iterations: rank.iterations, residual: rank.residual,
     unknownSimilarityEdges: kept.filter((edge) => knownSimilarity(edge) === undefined).length,
+    droppedSelfEdges: edges.length - kept.length,
     unweightedZoneLinks: kept.reduce((sum, edge) => sum + (edge.unweightedZoneLinks ?? 0), 0),
     pageSimilarityWeightedEdges: similarityWeighting.pageWeightedEdges,
     contextSimilarityWeightedEdges: similarityWeighting.contextWeightedEdges,
@@ -111,3 +116,4 @@ export const computeSprs = (nodes: PageRankNode[], edges: SprsEdge[], initialRan
 };
 
 export * from './sprsWhatIf';
+export * from './sprsFlagChanges';

@@ -1,5 +1,6 @@
 export { computeHss } from './compute';
-export { DOMAIN_AGGREGATION_UNDEFINED, hssInputsFromReports, type HssSources } from './adapters';
+export { hssInputsFromReports, type HssSources } from './adapters';
+export { meanModuleInput, PAGE_MODULE_PROFILE, sprsModuleInput } from './pageModules';
 export { HSS_EXPORT_SCHEMA, hssExportPayload, reproducesHss, type HssExport } from './exportPayload';
 export { HSS_PROFILE, type HssProfile } from './profile';
 export { comparableHss, simulateHss, type HssWhatIf } from './whatIf';

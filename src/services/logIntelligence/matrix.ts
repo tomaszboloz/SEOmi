@@ -1,6 +1,6 @@
 import type { LogImportState } from './importer';
 
-/** Crawl Efficiency Matrix (#92). Thresholds are placeholders until #83 settles them; all are overridable. */
+/** Crawl Efficiency Matrix (#92). Defaults are calibrated on labelled fixtures (matrixCalibration.ts), not on real logs; all are overridable. */
 export interface MatrixOptions {
   windowDays?: number;
   /** Days with log lines needed in the window; fewer gives 'inconclusive'. */
@@ -38,6 +38,10 @@ export const coverageOf = (state: LogImportState, windowDays: number): { coverag
   return { coverageDays: inWindow.length, periodDays: windowDays };
 };
 
+/** Verdict for one page with enough log coverage; pure so thresholds can be calibrated on labelled cases. */
+export const classifyCrawl = (trs: number, hits: number, o: Pick<Required<MatrixOptions>, 'wasteMaxTrs' | 'wasteMinHits' | 'starvationMaxHits'>): 'waste' | 'starvation' | 'ok' =>
+  trs < o.wasteMaxTrs && hits > o.wasteMinHits ? 'waste' : hits < o.starvationMaxHits ? 'starvation' : 'ok';
+
 export const buildCrawlMatrix = (state: LogImportState, trsByPath: ReadonlyMap<string, number>, options: MatrixOptions = {}): MatrixResult => {
   const o = { ...DEFAULT_MATRIX, ...options };
   const { coverageDays, periodDays } = coverageOf(state, o.windowDays);
@@ -53,9 +57,8 @@ export const buildCrawlMatrix = (state: LogImportState, trsByPath: ReadonlyMap<s
     if (noLogs) return { path, trs, hits: null, verdict: 'no-logs', linkReviewCandidate: false };
     const count = hits.get(path) ?? 0;
     if (!sufficient || trs === null) return { path, trs, hits: count, verdict: 'inconclusive', linkReviewCandidate: false };
-    const waste = trs !== null && trs < o.wasteMaxTrs && count > o.wasteMinHits;
-    const starved = trs !== null && count < o.starvationMaxHits;
-    return { path, trs, hits: count, verdict: waste ? 'waste' : starved ? 'starvation' : 'ok', linkReviewCandidate: waste || starved };
+    const verdict = classifyCrawl(trs, count, o);
+    return { path, trs, hits: count, verdict, linkReviewCandidate: verdict !== 'ok' };
   });
   return { coverageDays, periodDays, sufficient, rows };
 };

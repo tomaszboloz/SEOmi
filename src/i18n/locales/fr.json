@@ -1890,7 +1890,8 @@
       "no": "non",
       "tableSummary": "Tableau des pages ({{count}})",
       "tableCaption": "Pages affichées sur la carte d'architecture avec statut, profondeur, liens entrants, TRS et section"
-    }
+    },
+    "coreTopicShare": "{{percent}} % des termes dans le sujet principal"
   },
   "crawlDiff": {
     "fields": {
@@ -2376,7 +2377,8 @@
       "authority": "Autorité thématique",
       "aio": "Préparation à l'IA",
       "trust": "Confiance des entités",
-      "offPage": "Analyse off-page"
+      "offPage": "Analyse off-page",
+      "evidence": "Télémétrie, expériences et dérive de SERP"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -4903,6 +4905,8 @@
         "Zone method",
         "Context before",
         "Context after",
+        "Contexte tronqué",
+        "Position de l'ancre (mots)",
         "Section heading"
       ],
       "crawlImages": [
@@ -5742,7 +5746,9 @@
           "off-topic-below-quota": "Trop peu de paragraphes sur le sujet.",
           "local-lexical-embeddings": "La similarité utilise des vecteurs lexicaux locaux, pas un modèle sémantique ; les zones sont approximatives.",
           "heuristic-entities": "Les entités proviennent d'expressions en majuscules et de faits sujet-prédicat-objet, pas d'un modèle d'entités entraîné.",
-          "semantic-provider-unavailable": "Le fournisseur sémantique d'embeddings du projet était indisponible ; des vecteurs lexicaux locaux ont été utilisés."
+          "semantic-provider-unavailable": "Le fournisseur sémantique d'embeddings du projet était indisponible ; des vecteurs lexicaux locaux ont été utilisés.",
+          "ollama-entities": "Les entités ont été complétées par le modèle Ollama local en plus de l'heuristique des majuscules.",
+          "ollama-entities-unavailable": "Le modèle d'entités Ollama était indisponible ; seule l'heuristique des majuscules a été utilisée."
         },
         "intent": {
           "definitional": "Définition",
@@ -5763,7 +5769,9 @@
         },
         "mismatchAdvice": "La page relève d’une autre intention que la plupart des pages TOP : vérifiez qu’elle répond au même besoin.",
         "missingBasics": "Fondamentaux manquants",
-        "basicsAdvice": "Couvrez d’abord les {{0}} sujets de base manquants : sous la moitié de couverture le score est pénalisé, et des faits nouveaux ne remplacent pas les bases."
+        "basicsAdvice": "Couvrez d’abord les {{0}} sujets de base manquants : sous la moitié de couverture le score est pénalisé, et des faits nouveaux ne remplacent pas les bases.",
+        "previous": "Exécution enregistrée précédente",
+        "previousValue": "{{0}} : intention {{1}}, SSAS {{2}}, {{3}} pages rendues"
       }
     },
     "crawl": {
@@ -6461,6 +6469,53 @@
           "no-follow-links": "Aucun lien follow à analyser.",
           "source-text-or-authority-missing": "Certaines sources n’ont pas de texte, de vecteurs utilisables ou d’autorité fournisseur."
         }
+      },
+      "evidence": {
+        "title": "Télémétrie, expériences et dérive de SERP",
+        "intro": "Dernières données enregistrées du projet. Chaque bloc n'apparaît que s'il y a des données ; rien n'est estimé ici.",
+        "tRevenue": "Revenus organiques par page de destination",
+        "revenueIntro": "Devise {{0}} ; attribution {{1}} ; période {{2}}. Une page absente est inconnue, pas zéro.",
+        "colPage": "Page de destination",
+        "colRevenue": "Revenus",
+        "tExperiments": "Estimations des expériences",
+        "experimentsIntro": "Clics cumulés face à un contrefactuel, intervalle à 95 % entre crochets. Cela estime une association, pas une causalité prouvée ; non estimable signifie que les données n'ont pas permis de résultat.",
+        "colTarget": "Cible",
+        "colDate": "Date du changement",
+        "colMethod": "Méthode",
+        "colStatus": "Statut",
+        "colEffect": "Effet cumulé [95 %]",
+        "colProbability": "Probabilité du signe",
+        "tDecay": "Historique de dérive de la SERP",
+        "decayIntro": "Instantanés de SERP comparables enregistrés par rapport au premier. À titre indicatif : une dérive appelle une revue, ce n'est pas la preuve d'une perte.",
+        "colQuery": "Requête",
+        "colVerdict": "Verdict",
+        "colSamples": "Instantanés",
+        "colShift": "Décalage du centroïde",
+        "colEntities": "Entités nouvelles / perdues",
+        "na": "n/d",
+        "disclaimer": "Pas des données Google ; aucune prévision de pertes ni réécriture automatique. Les données manquantes sont indiquées comme indisponibles, jamais comme zéro.",
+        "status": {
+          "estimated": "Estimé",
+          "not-estimable": "Non estimable"
+        },
+        "verdict": {
+          "too-few-samples": "Trop peu d'instantanés",
+          "incompatible": "Non comparable",
+          "stable": "Stable",
+          "not-persistent": "Non persistant",
+          "cooldown": "Période de repos",
+          "alert": "Revue suggérée"
+        },
+        "method": {
+          "regression": "Régression",
+          "structural": "Structurel saisonnier"
+        },
+        "colOutcome": "Résultat",
+        "outcome": {
+          "gsc-clicks": "Clics Search Console",
+          "ga4-key-events": "Événements clés GA4",
+          "ga4-revenue": "Revenus GA4"
+        }
       }
     },
     "recs": {
@@ -7040,7 +7095,8 @@
       "unmatchedTopic": "Aucune page ne correspond au sujet « {{topic}} ». Le sujet détecté est utilisé à la place.",
       "gateSkipped": "{{count}} pages ignorées (noindex/canonical).",
       "gateInclude": "Les inclure",
-      "gateExclude": "Les exclure à nouveau"
+      "gateExclude": "Les exclure à nouveau",
+      "semantic": "Similarité sémantique active : {{model}}."
     },
     "skip": {
       "render-timeout": "Le rendu JavaScript a dépassé le délai",
@@ -7558,7 +7614,8 @@
         "entities": "entités",
         "questions": "questions des utilisateurs (PAA)",
         "gain": "gain d’information"
-      }
+      },
+      "linkFlags": "Liens internes par emplacement : {{menu}} dans le menu, {{sidebarFooter}} en barre latérale/pied de page, {{content}} dans le contenu, {{unknown}} sans donnée d'emplacement. Les liens du menu et de la barre latérale/du pied de page ne sont pas comptés comme liens de contenu."
     },
     "warning": {
       "empty-authority": "Autorité creuse : le site touche {{tcr}}% des sujets mais la profondeur moyenne n’est que de {{depth}}/100. Approfondissez les pages existantes avant d’en publier de nouvelles.",
@@ -7593,7 +7650,29 @@
       },
       "withPaa": "Inclure les vrais « Autres questions posées » (SERP avancée DataForSEO, facturée à part)",
       "paaUsed": "{{count}} questions « Autres questions posées » de la SERP ont été utilisées.",
-      "paaMissing": "Aucune source « Autres questions posées » : les questions viennent seulement des titres des concurrents et de Google Suggest."
+      "paaMissing": "Aucune source « Autres questions posées » : les questions viennent seulement des titres des concurrents et de Google Suggest.",
+      "autoRefresh": "Actualiser cette carte automatiquement après les crawls planifiés (option ; consomme du quota SERP, au plus une fois par semaine, 4 essais par 30 jours)",
+      "merge": {
+        "title": "Comparer avec les piliers de votre carte thématique",
+        "note": "Aperçu seulement. Rien ne change tant que vous n'ajoutez pas de piliers.",
+        "matched": "Piliers manuels correspondants ({{count}}) :",
+        "added": "Piliers de référence absents de votre carte ({{count}}) :",
+        "manualOnly": "Uniquement dans votre carte, conservés ({{count}}) :",
+        "apply": "Ajouter {{count}} piliers de référence à la carte thématique",
+        "done": "{{count}} piliers ajoutés à la carte thématique.",
+        "failed": "Impossible de mettre à jour la carte thématique : {{error}}"
+      },
+      "entities": {
+        "label": "Reconnaissance d'entités",
+        "lexical": "Termes thématiques seulement (par défaut)",
+        "heuristic": "Détection locale des noms",
+        "ollama": "Détection locale des noms + modèle Ollama",
+        "model": "Modèle Ollama"
+      },
+      "kg": {
+        "button": "Lier les piliers à Wikidata (requête publique)",
+        "summary": "{{linked}} piliers liés à des éléments Wikidata, {{review}} à vérifier (premier résultat de recherche, pas une correspondance exacte du libellé)."
+      }
     },
     "coverage": {
       "title": "Carte de couverture du sujet",
@@ -8083,6 +8162,24 @@
         "hedged": "formulation prudente",
         "negated": "négation",
         "note": "Le contrôle local ne lit que cette page (position de la citation, identifiant, prudence, négation). Il ne lit jamais l'œuvre citée et ne peut donc pas confirmer qu'elle étaye l'affirmation."
+      },
+      "entail": {
+        "sourceLabel": "Texte de la source à comparer (coller)",
+        "useModel": "Interroger aussi le modèle local (Ollama, optionnel)",
+        "run": "Comparer les affirmations au texte source",
+        "results": "Résultats de la comparaison",
+        "label": {
+          "consistent": "cohérent avec le texte",
+          "related": "lié, sans correspondance",
+          "unrelated": "sans rapport",
+          "contradicts": "contradiction possible",
+          "unknown": "texte insuffisant"
+        },
+        "method": {
+          "heuristic": "heuristique lexicale",
+          "model": "modèle local"
+        },
+        "note": "Simple indice d'association. Ne marque ni l'affirmation comme vérifiée ni la source comme contrôlée."
       }
     },
     "identity": {
@@ -8233,6 +8330,10 @@
     "workflow": "Parcours : diagnostic → choix d’une priorité → preuves du module → What-If → brief / copie / export. Rien n’est publié dans un CMS.",
     "run": "Crawl : {{date}}",
     "runUnsaved": "Crawl : pas encore enregistré",
+    "refresh": "Recalculer à partir des données enregistrées",
+    "related": {
+      "title": "Vues associées"
+    },
     "hss": {
       "title": "Holistic Semantic Score (HSS)",
       "valueAria": "HSS {{value}}",
@@ -8272,7 +8373,9 @@
     "reason": {
       "not-provided": "Aucune valeur fournie.",
       "not-run": "Le module n’a pas été exécuté pour ce crawl.",
-      "domain-aggregation-undefined": "Module par page : aucun score de site n’est encore défini, il est donc exclu au lieu d’être moyenné.",
+      "insufficient-pages": "Trop peu de pages ou d’expressions mesurées pour un score de site (3 au minimum).",
+      "sprs-unavailable": "Le graphe de liens n’a pas pu être évalué.",
+      "sprs-not-converged": "Le calcul du flux de liens n’a pas convergé.",
       "sfs-no-scored-pages": "Aucune page n’a pu être notée.",
       "tas-no-reference-map": "Générez la carte thématique de référence pour mesurer le TAS.",
       "eetv-no-signals": "Aucun signal de confiance observé.",
@@ -8297,6 +8400,11 @@
       "hint": "Classé par delta HSS par heure estimée. Les deltas proviennent uniquement des simulations des modules ; sans elles, le delta est indisponible. Aucune promesse de trafic, de citations ni de ROI.",
       "empty": "Les rapports des modules de ce crawl n’ont produit aucune action.",
       "internalLink": "Ajouter un lien interne : {{from}} → {{to}}",
+      "module": {
+        "fix-leak": "Corriger la fuite de liens sur {{url}}",
+        "add-inlinks": "Ajouter des liens entrants vers {{url}}",
+        "rewrite-weak-passages": "Réécrire les passages faibles de {{url}}"
+      },
       "delta": "Δ HSS {{value}}",
       "deltaUnavailable": "Δ HSS indisponible (aucun modèle déclaré)",
       "moduleDelta": "Δ {{module}} {{value}}",
@@ -8391,6 +8499,14 @@
     "igos": {
       "title": "IGOS en baisse",
       "body": "Le score de gain d'information de « {{phrase}} » est passé de {{from}} à {{to}} ({{points}} points) avec les mêmes pages TOP et le même modèle."
+    },
+    "igosTopChange": {
+      "title": "IGOS : l'ensemble TOP a changé",
+      "body": "Les pages TOP pour \"{{phrase}}\" ont changé ({{added}} ajoutées, {{removed}} retirées). L'IGOS n'est pas comparable à l'exécution précédente."
+    },
+    "taskRegression": {
+      "title": "Une optimisation a dégradé un score",
+      "body": "{{count}} tâche(s) vérifiée(s) ont fait baisser leur score ; la pire perd {{worst}} points sur {{url}}."
     }
   },
   "sprsUi": {
@@ -8421,8 +8537,12 @@
       "before": "Avant",
       "after": "Après",
       "delta": "Variation",
-      "solver": "Démarrage à chaud depuis les scores actuels : {{iterations}} itérations, résidu {{residual}}."
-    }
+      "solver": "Démarrage à chaud depuis les scores actuels : {{iterations}} itérations, résidu {{residual}}.",
+      "flags": "Changements des indicateurs de diagnostic",
+      "flagOn": "{{page}} est maintenant : {{flag}}",
+      "flagOff": "{{page}} n'est plus : {{flag}}"
+    },
+    "meta": "{{iterations}} itérations, résidu {{residual}}"
   },
   "decayUi": {
     "snapshots": "Instantanés à l’appui de ce verdict : {{count}}",
@@ -8497,6 +8617,11 @@
         "product-cards": "Montrez des produits ou offres : {{count}} pages du TOP sur {{analysed}} affichent des fiches produit ou prix.",
         "cta": "Ajoutez un appel à l'action clair : {{count}} pages TOP sur {{analysed}} en ont un (à ignorer pour les pages purement informatives)."
       }
+    },
+    "funnel": {
+      "title": "Transitions d'entonnoir entre pages explorées",
+      "fromTo": "De \\ vers",
+      "summary": "{{classified}} pages classées, {{unclassified}} sans structure mesurée, {{skipped}} liens internes ignorés (cible non classée)."
     }
   },
   "prePublishUi": {
@@ -8627,7 +8752,19 @@
     "saveBudget": "Enregistrer le budget",
     "savedBudget": "Budget LLM enregistré.",
     "invalidLimit": "Saisissez une limite mensuelle valide.",
-    "invalidWarn": "Le seuil doit être un entier de 1 à 100."
+    "invalidWarn": "Le seuil doit être un entier de 1 à 100.",
+    "dictTitle": "Liste de termes YMYL",
+    "dictHint": "Les doses et montants doivent figurer près du même terme dans la source. Le jeu MeSH fourni est dans le domaine public. ICD-10 n'est pas inclus : importez votre propre liste sous licence ou ouverte. La liste reste sur cet appareil.",
+    "dictSeed": "Utiliser le jeu MeSH fourni (domaine public)",
+    "dictFile": "Importer une liste (TXT ou CSV)",
+    "dictPaste": "Ou collez des termes, un par ligne",
+    "dictSave": "Enregistrer la liste",
+    "dictClear": "Effacer la liste importée",
+    "dictSaved": "Liste de termes enregistrée.",
+    "dictFailed": "Impossible d'enregistrer la liste de termes.",
+    "dictEmpty": "Aucun terme exploitable trouvé.",
+    "dictCount": "{{count}} termes actifs",
+    "dictPasted": "liste collée"
   },
   "templateGovernor": {
     "title": "Qualité des gabarits programmatiques",
@@ -8761,7 +8898,9 @@
       "off-topic-below-quota": "Trop peu de paragraphes sur le sujet.",
       "local-lexical-embeddings": "La similarité utilise des vecteurs lexicaux locaux, pas un modèle sémantique ; les zones sont approximatives.",
       "heuristic-entities": "Les entités proviennent d'expressions en majuscules et de faits sujet-prédicat-objet, pas d'un modèle d'entités entraîné.",
-      "semantic-provider-unavailable": "Le fournisseur sémantique d'embeddings du projet était indisponible ; des vecteurs lexicaux locaux ont été utilisés."
+      "semantic-provider-unavailable": "Le fournisseur sémantique d'embeddings du projet était indisponible ; des vecteurs lexicaux locaux ont été utilisés.",
+      "ollama-entities": "Les entités ont été complétées par le modèle Ollama local en plus de l'heuristique des majuscules.",
+      "ollama-entities-unavailable": "Le modèle d'entités Ollama était indisponible ; seule l'heuristique des majuscules a été utilisée."
     },
     "rec": {
       "rewrite-echo": "Le paragraphe au décalage {{offset}} répète un passage concurrent : réécrivez-le avec vos mots.",
@@ -9011,6 +9150,11 @@
       "negated": "Mention négative ; pas une recommandation",
       "critical": "Termes critiques près de la marque ; pas une recommandation",
       "quoted": "Opinion citée ou attribuée ; pas une recommandation de la source elle-même"
+    },
+    "senses": {
+      "label": "Règles d'alias (homonymes)",
+      "hint": "Une règle par ligne : Alias | -mots d'un autre sens | +mots requis pour le sens de marque. Enregistré par projet, utilisé à la prochaine analyse.",
+      "error": "Impossible d'enregistrer les règles (invalides ou trop longues)."
     }
   },
   "experimentsUi": {
@@ -9072,6 +9216,12 @@
       "rows-truncated": "Les lignes de pages enregistrées sont tronquées ; la comparaison peut être incomplète.",
       "low-volume": "Moins de 30 clics de référence ; le volume est trop faible pour une comparaison fiable.",
       "pending": "La date d’intervention est future ; l’évaluation est en attente."
+    },
+    "outcome": {
+      "label": "Résultat mesuré",
+      "gsc-clicks": "Clics Search Console",
+      "ga4-key-events": "Événements clés GA4 (organique)",
+      "ga4-revenue": "Revenus GA4 (organique)"
     }
   },
   "linkInjector": {
@@ -9181,7 +9331,17 @@
       "not-estimable": "Backtest impossible : la période antérieure est trop courte pour des pseudo-interventions."
     },
     "familySignificant": "Toujours significatif après ajustement pour {{family}} expériences affichées ensemble (Holm, p = {{p}}).",
-    "familyNotSignificant": "Non significatif après ajustement pour {{family}} expériences affichées ensemble (Holm, p = {{p}})."
+    "familyNotSignificant": "Non significatif après ajustement pour {{family}} expériences affichées ensemble (Holm, p = {{p}}).",
+    "structuralTitle": "Estimation structurelle saisonnière",
+    "structuralMethod": "Tendance de niveau local plus saisonnalité hebdomadaire, le contrôle étant retiré lorsqu'il est informatif. L'intervalle à 95 % provient d'une simulation prédictive à graine fixe. C'est une approximation de type BSTS, pas un ajustement bayésien complet, et elle montre une association, pas une causalité prouvée.",
+    "pageContamination": "La page de contrôle peut partager liens, modèles ou sujet avec la page modifiée ; le même changement peut donc l'affecter. Considérez le résultat comme plus faible qu'avec un contrôle indépendant.",
+    "pageLoad": "Charger la série quotidienne de cette page",
+    "pageNeedsGsc": "Connectez d'abord une propriété Search Console.",
+    "pageLoadFailed": "La série quotidienne n'a pas pu être chargée ou enregistrée.",
+    "ga4Load": "Charger la série quotidienne GA4",
+    "ga4NeedsConnection": "Connectez d'abord Google Analytics.",
+    "ga4Loaded": "{{days}} jours enregistrés ; revenus en {{currency}}.",
+    "ga4LoadFailed": "La série GA4 n'a pas pu être chargée ou enregistrée."
   },
   "revenueImportUi": {
     "title": "Revenus (export GA4 facultatif)",
@@ -9198,8 +9358,12 @@
       "not-organic": "Confirmez que l’export est limité aux sessions de recherche organique.",
       "no-header": "Aucun en-tête avec une colonne page de destination et une colonne revenus n’a été trouvé.",
       "no-rows": "Le fichier ne contient aucune page de destination avec un revenu numérique.",
-      "storage-failed": "Le stockage local n’a pas pu être mis à jour ; l’import n’a pas été enregistré."
-    }
+      "storage-failed": "Le stockage local n’a pas pu être mis à jour ; l’import n’a pas été enregistré.",
+      "invalid-response": "Google Analytics a renvoyé des données de revenus dans un format inattendu.",
+      "fetch-failed": "Impossible de récupérer les revenus depuis Google Analytics. Vérifiez la connexion et la propriété."
+    },
+    "api": "Récupérer via l'API GA4",
+    "apiNote": "Nécessite Google Analytics connecté. Lit les 90 derniers jours complets de revenus de recherche organique par page de destination, dans la devise de la propriété indiquée par GA4. Sans événements d'achat, GA4 indique 0."
   },
   "entityParity": {
     "title": "Entités entre versions linguistiques (Wikidata)",
@@ -9222,5 +9386,53 @@
       "error": "recherche échouée"
     },
     "correctPlaceholder": "Q123 / none"
+  },
+  "semanticSource": {
+    "title": "Similarité sémantique (facultatif)",
+    "hint": "Utilise un modèle d'embeddings Ollama local pour associer les synonymes dans Site Focus et Topical Authority. Désactivé par défaut. Sans lui, les rapports utilisent TF-IDF et le disent. Rien n'est installé ni téléchargé pour vous.",
+    "enable": "Utiliser les embeddings si disponibles",
+    "provider": "Source",
+    "providerOllama": "Ollama (neuronal)",
+    "providerHybrid": "Hybride (hash local + Ollama)",
+    "url": "Adresse Ollama (vide = local par défaut)",
+    "model": "Modèle d'embeddings",
+    "timeout": "Délai par lot (ms)",
+    "maxEntries": "Pages max. par exécution",
+    "save": "Enregistrer",
+    "test": "Tester la connexion Ollama",
+    "testing": "Test en cours...",
+    "saved": "Réglages enregistrés.",
+    "failed": "Impossible d'enregistrer les réglages.",
+    "invalid": "Vérifiez les valeurs : délai 1000 à 300000 ms, pages 1 à 5000, modèle non vide.",
+    "testOk": "Fonctionne : {{model}}, {{dimensions}} dimensions.",
+    "testFail": "Retour à TF-IDF : {{reason}}.",
+    "reason": {
+      "offline": "Ollama injoignable",
+      "timeout": "délai dépassé",
+      "cancelled": "annulé",
+      "rate-limited": "limite de requêtes",
+      "model-missing": "modèle non installé",
+      "invalid-response": "réponse invalide",
+      "failed": "erreur inconnue"
+    }
+  },
+  "imageOcrUi": {
+    "title": "OCR et alignement texte-image (local, optionnel)",
+    "note": "Ne s'exécute qu'après saisie d'un modèle de vision Ollama local que vous utilisez déjà ; rien n'est téléchargé. {{max}} images au plus, envoyées uniquement à votre serveur Ollama. Résultats partiels : pas de boîtes par ligne ni de confiance. L'alignement est une heuristique de recouvrement de texte (ALT, nom de fichier, texte de la page), pas une compréhension de l'image.",
+    "model": "Modèle de vision Ollama",
+    "run": "Lancer l'OCR",
+    "cancel": "Annuler l'OCR",
+    "status": {
+      "running": "OCR en cours : {{ok}} terminées, {{failed}} en échec.",
+      "done": "OCR terminé : {{ok}} terminées, {{failed}} en échec.",
+      "cancelled": "OCR annulé : {{ok}} terminées, {{failed}} en échec.",
+      "error": "OCR arrêté sur erreur : {{ok}} terminées, {{failed}} en échec."
+    },
+    "origin": {
+      "media-only": "uniquement dans l'image",
+      "duplicate-of-html": "aussi dans le HTML"
+    },
+    "fact": "« {{text}} » ({{origin}}, partiel) {{url}}",
+    "alignment": "{{url}} : recouvrement de texte {{pct}} % (heuristique)"
   }
 }

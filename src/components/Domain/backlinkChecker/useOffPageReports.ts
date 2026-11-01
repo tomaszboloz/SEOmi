@@ -13,7 +13,7 @@ export const buildOffPageReports = (profile: BacklinkProfileData | null, analysi
       : (profile?.backlinks ?? []).map((b) => ({ sourceUrl: b.source_url, authority: b.domain_rank, follow: b.is_dofollow, vector: null })),
     { scale: 100, topic: analysis?.topic ?? null },
   ),
-  coCitation: findCoCitations(sourceParagraphs(analysis?.sources ?? []), analysis?.aliases ?? [], analysis?.coreEntity ?? ''),
+  coCitation: findCoCitations(sourceParagraphs(analysis?.sources ?? []), analysis?.aliases ?? [], analysis?.coreEntity ?? '', analysis?.senses),
 });
 
 export const useOffPageReports = (profile: BacklinkProfileData | null, analysis: SourceAnalysis | null = null): OffPageReports =>

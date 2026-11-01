@@ -1,4 +1,5 @@
 import type { PageFeatures } from './types';
+import { nodeTypes, parseJsonLd } from '@/services/jsonLd/model';
 
 const IGNORED_CONTENT = 'nav, header, footer, aside, style, noscript, template, [role="navigation"], [role="banner"], [role="contentinfo"]';
 const CHROME = `${IGNORED_CONTENT}, script`;
@@ -43,12 +44,11 @@ const hasSchemaType = (root: ParentNode, wanted: string): boolean => {
     if (!value || typeof value !== 'object') return false;
     const object = value as Record<string, unknown>;
     const schemaContext = inheritedContext || isSchemaContext(object['@context']);
-    const rawTypes = Array.isArray(object['@type']) ? object['@type'] : [object['@type']];
-    if (rawTypes.some((type) => typeof type === 'string' && (schemaTypeFromUrl(type) === wanted || (schemaContext && type === wanted)))) return true;
+    if (nodeTypes(object).some((type) => (schemaTypeFromUrl(type) === wanted || (schemaContext && type === wanted)))) return true;
     return Object.values(object).some((entry) => hasJsonType(entry, schemaContext));
   };
   return nodes.filter((el) => el.matches('script[type="application/ld+json"]')).some((script) => {
-    try { return hasJsonType(JSON.parse(script.textContent ?? '')); } catch { return false; }
+    return hasJsonType(parseJsonLd(script.textContent ?? ''));
   });
 };
 

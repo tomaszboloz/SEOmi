@@ -1,6 +1,7 @@
 import type { StructuredData } from '@/types';
 import i18n from '@/i18n';
 import type { SerpRichResultField, SerpRichResultPreview } from './types';
+import { nodeAndGraph, nodeTypes } from '@/services/jsonLd/model';
 
 const scalarText = (value: unknown): string | null => {
   if (typeof value === 'string' || typeof value === 'number') {
@@ -10,19 +11,9 @@ const scalarText = (value: unknown): string | null => {
   return null;
 };
 
-const schemaTypes = (content: Record<string, unknown>): string[] => {
-  const value = content['@type'];
-  if (typeof value === 'string') return [value];
-  return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : [];
-};
 
 const typedSchemaObjects = (structuredData: StructuredData[]): Array<{ content: Record<string, unknown>; types: string[] }> => structuredData
-  .flatMap((entry) => {
-    const content = entry.content && typeof entry.content === 'object' ? entry.content : null;
-    if (!content) return [];
-    const graph = Array.isArray(content['@graph']) ? content['@graph'].filter((item): item is Record<string, unknown> => Boolean(item && typeof item === 'object')) : [];
-    return [{ content, types: schemaTypes(content) }, ...graph.map((item) => ({ content: item, types: schemaTypes(item) }))];
-  });
+  .flatMap((entry) => nodeAndGraph(entry.content).map((content) => ({ content, types: nodeTypes(content) })));
 
 /**
  * Extracts only the most useful bounded rich-result evidence from structured

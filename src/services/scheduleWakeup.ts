@@ -1,3 +1,4 @@
+import { isDelivered, markDelivered } from '@/services/schedules/deliveries';
 import { applyScheduledExecution, type ScheduledAudit, type ScheduledExecutionHandoff } from '@/services/auditSchedule';
 import { invokeTauriCommand, isTauriEnvironment } from '@/services/tauri';
 
@@ -127,8 +128,10 @@ export const reconcileScheduledExecutions = async (projectId: string): Promise<S
   const handoffs = await invokeTauriCommand<ScheduledExecutionHandoff[]>('list_scheduled_executions', { projectId });
   const reconciled: ScheduledExecutionHandoff[] = [];
   for (const handoff of handoffs) {
+    if (isDelivered(projectId, handoff)) continue;
     const schedule = applyScheduledExecution(projectId, handoff);
     if (!schedule) continue;
+    markDelivered(projectId, handoff);
     reconciled.push(handoff);
   }
   return reconciled;

@@ -1,3 +1,33 @@
+# SEOmi 0.9.0 — release notes
+
+Work on the remaining open issues (round 3). Decisions in the #83 register are accepted by owner delegation (2026-11-01).
+
+## Added
+
+- Executive dashboard (#72, #73, #89, #124): IGOS and SIJA enter HSS as the mean of the latest per-phrase scores, SPRS as the share of pages that are neither under-linked nor leaking. Action feed now includes SPRS and AIO-R actions. Recalculate button and a Related views row. A single-URL SFS Execution Card shows a Before/After paragraph.
+- Decision register (#83, #82): all entries accepted; segments are scored against their own Core Topic. Calibration defaults and re-calibration steps in `.github/CALIBRATION_DEFAULTS.md`. Owner-only GitHub steps in `.github/OWNER_STEPS.md` (#100-102).
+- TAS (#57-61, #110): merge preview for manual pillars in the import UI, optional Wikidata linking, local entity recogniser with an optional Ollama path, scheduled-crawl decay and competitor alerts with a gated reference refresh, link flags in the SILC card.
+- EETV and AIO-R (#63-66, #87, #88, #94, #108, #109, #127): claim-versus-source entailment control (heuristic with an optional local model), word length unit and token estimate, tier-weight and calibration tests, structural accessibility tests, `npm run bench:prepublish`. ADR 0005.
+- IGOS, SIJA, SPRS (#67-71, #131, #143, #106): TOP-set change alert, optional Ollama entity extractor, funnel transitions matrix and PDF previous-run row, link context truncation fields, What-If flag changes, optional embedding similarity for SPRS, optimisation-task regression alert.
+- Platform (#85, #86, #137): history envelope adapters and Zod extensions, bounded safe payloads, Rust-to-TypeScript report envelope round trip, semantic embeddings for SFS and TAS (opt-in, TF-IDF fallback), YMYL term list (small public-domain MeSH seed, user-supplied ICD-10) wired into the CMS fact gate.
+- Integrations (#91-93, #96-98): alias and homonym rules in off-page analysis, native image download and OCR panel, GA4 revenue and key-event commands, per-page daily GSC series, structural counterfactual with weekly seasonality, PDF evidence section, native delivery ledger for scheduled monitoring. ADRs 0006 and 0007.
+
+## Changed
+
+- The semantic map graph evidence now shows the SPRS table instead of the plain PageRank list. Nofollow-only edges stop passing flow, noindex or erroring pages drop out through the indexability gate, and ranking percentages can differ from before.
+- SPRS scores change for projects that use a non-local embedding provider; nothing changes for `local`.
+- Shared sentence splitter: brief and AI-evidence sentence boundaries now also split on the ellipsis character and CJK full stops.
+- AI brief runner: a cancel that arrives after the text returns `cancelled`; the authority gap brief can be cancelled mid-generation.
+- The Site Focus weekly digest alert follows alert frequency, dedupe and history.
+- The crawl links CSV has two new columns, "Context truncated" and "Anchor word offset".
+- The crawl PDF orphan count uses the same rule as the app.
+- The default MeSH term seed makes the CMS fact gate stricter for dose-like values.
+
+## Known limits
+
+- Thresholds for neural embeddings and IGOS (.48/.82) are fixture-calibrated defaults, not confirmed on a real Ollama model.
+- GA4 revenue and key-event commands are tested against mocked responses only.
+- OCR results are partial (whole-image box, no confidence); there is no speech-to-text, only WebVTT and SRT captions.
 # SEOmi 0.8.6 — release notes
 
 ## Security

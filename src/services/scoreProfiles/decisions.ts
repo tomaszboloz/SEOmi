@@ -26,28 +26,36 @@ export interface ProfileDecision {
   rationale?: string;
 }
 
-const proposed = (id: string, issue: number, sourceSection: string, described: string, code: Record<string, CodeValue> = {}): ProfileDecision =>
-  ({ id, issue, sourceSection, described, code, status: 'proposed' });
+const OWNER = 'repo owner (delegated to agent)';
+const DECIDED_AT = '2026-11-01';
+const NOTE = 'accepted by owner delegation 2026-11-01';
 
-/** Every divergence named in #83, all `proposed` until a person accepts one (GEM-83-15). */
+/** Entry accepted by owner delegation: the shipped code value stays the approved profile, so no score changes. */
+const accepted = (id: string, issue: number, sourceSection: string, described: string, code: Record<string, CodeValue> = {}, why = 'shipped values stay the base profile until a calibration report ships a new profile version'): ProfileDecision =>
+  ({ id, issue, sourceSection, described, code, status: 'accepted', chosen: 'code', author: OWNER, decidedAt: DECIDED_AT, rationale: `${NOTE}: ${why}` });
+
+/** Every divergence named in #83, all `accepted` by owner delegation 2026-11-01 (GEM-83-15). */
 export const PROFILE_DECISIONS: readonly ProfileDecision[] = [
-  proposed('D-SFS', 52, 'SFS TRS scale and bands', 'TRS x125, bands 90/75/60/40; calibrate on real crawls',
+  accepted('D-SFS', 52, 'SFS TRS scale and bands', 'TRS x125, bands 90/75/60/40; calibrate on real crawls',
     { trsScale: SFS_TRS_SCALE, excellent: SFS_BANDS.excellent, good: SFS_BANDS.good, moderate: SFS_BANDS.moderate, weak: SFS_BANDS.weak }),
-  proposed('D-PRI', 81, 'URL protection guardrail', 'TRS < 40 and PRI < .15 (description) vs TRS < 60 (older code)', {
+  accepted('D-PRI', 81, 'URL protection guardrail', 'TRS < 40 and PRI < .15 (description) vs TRS < 60 (older code)', {
     trsThreshold: DEFAULT_TRS_THRESHOLD, priThreshold: DEFAULT_PRI_THRESHOLD, clicks: DEFAULT_PRI_PARAMS.clicksThreshold,
     conversions: DEFAULT_PRI_PARAMS.conversionsThreshold, domains: DEFAULT_PRI_PARAMS.domainsThreshold, tiesProtect: true,
   }),
-  proposed('D-LOG', 92, 'Crawl budget matrix', 'starvation < 1 hit in 14 days (description) vs < 2 in 30 days (code); waste TRS 45 / 25 hits', {
+  accepted('D-LOG', 92, 'Crawl budget matrix', 'starvation < 1 hit in 14 days (description) vs < 2 in 30 days (code); waste TRS 45 / 25 hits', {
     windowDays: DEFAULT_MATRIX.windowDays, starvationMaxHits: DEFAULT_MATRIX.starvationMaxHits, wasteMaxTrs: DEFAULT_MATRIX.wasteMaxTrs, wasteMinHits: DEFAULT_MATRIX.wasteMinHits,
   }),
-  proposed('D-DRAFT', 94, 'Pre-publish cannibalization', 'similarity .85/.86/.88 and donors .65-.84 (description) vs code', { prePublishCosine: PRE_PUBLISH_COSINE, sameIntentCosine: SAME_INTENT_COSINE }),
-  proposed('D-TAS', 57, 'Topical authority', 'I_j, connectivity, orphan, bleed and freshness weights; partial renormalisation'),
-  proposed('D-AIO', 63, 'AIO readiness', '300 max / 180 target / 30 answer-first words'),
-  proposed('D-IGOS', 67, 'Information gain', 'NEFR .35 vs .40, ChunkGain, JS/KL divergence'),
-  proposed('D-EETV', 65, 'E-E-A-T trust', '4-layer .60/.40 vs .55/.45 plus reviewer penalty .65; R_backed weights and YMYL'),
-  proposed('D-SIJA', 72, 'Search intent alignment', 'SSAS mismatch < 50 vs < 55; LOCAL / TOFU / MOFU'),
-  proposed('D-SPRS', 71, 'Semantic PageRank', 'similarity floor .05 in code, absent from description; raw to score normalisation'),
-  proposed('D-HSS', 83, 'Holistic site score', 'minimal coverage and domain/page aggregation; no undescribed formulas'),
+  accepted('D-DRAFT', 94, 'Pre-publish cannibalization', 'similarity .85/.86/.88 and donors .65-.84 (description) vs code', { prePublishCosine: PRE_PUBLISH_COSINE, sameIntentCosine: SAME_INTENT_COSINE }),
+  accepted('D-TAS', 57, 'Topical authority', 'I_j, connectivity, orphan, bleed and freshness weights; partial renormalisation'),
+  accepted('D-AIO', 63, 'AIO readiness', '300 max / 180 target / 30 answer-first words'),
+  accepted('D-IGOS', 67, 'Information gain', 'NEFR .35 vs .40, ChunkGain, JS/KL divergence'),
+  accepted('D-EETV', 65, 'E-E-A-T trust', '4-layer .60/.40 vs .55/.45 plus reviewer penalty .65; R_backed weights and YMYL'),
+  accepted('D-SIJA', 72, 'Search intent alignment', 'SSAS mismatch < 50 vs < 55; LOCAL / TOFU / MOFU'),
+  accepted('D-SPRS', 71, 'Semantic PageRank', 'similarity floor .05 in code, absent from description; raw to score normalisation'),
+  accepted('D-HSS', 83, 'Holistic site score', 'minimal coverage and domain/page aggregation; no undescribed formulas',
+    {}, 'weights .20/.25/.15/.15/.10/.10/.05 with renormalisation over measured modules; SIJA stays page-level, no invented domain scalar'),
+  accepted('D-ANCHOR', 82, 'Anchor pages vs detected segments', 'merge anchors with auto Core Topic and per-segment confidence',
+    {}, 'precedence manual topic, business goal, anchors, detection for the site Core; each user-defined segment is scored against its own Core built from its own pages, anchors never merge segments'),
 ];
 
 export type DecisionProblem = 'accepted-without-author' | 'accepted-without-date' | 'accepted-without-choice' | 'proposed-with-author';
