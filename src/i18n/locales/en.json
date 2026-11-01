@@ -7593,7 +7593,18 @@
       },
       "withPaa": "Include real People Also Ask (DataForSEO advanced SERP, billed separately)",
       "paaUsed": "{{count}} People Also Ask questions from the SERP were used.",
-      "paaMissing": "No People Also Ask source: questions come only from competitor headings and Google Suggest."
+      "paaMissing": "No People Also Ask source: questions come only from competitor headings and Google Suggest.",
+      "autoRefresh": "Refresh this map automatically after scheduled crawls (opt-in; uses SERP quota, at most weekly, 4 attempts per 30 days)",
+      "merge": {
+        "title": "Compare with your topical map pillars",
+        "note": "Preview only. Nothing changes until you add pillars.",
+        "matched": "Matching hand-made pillars ({{count}}):",
+        "added": "Reference pillars missing from your map ({{count}}):",
+        "manualOnly": "Only in your map, kept untouched ({{count}}):",
+        "apply": "Add {{count}} reference pillars to the topical map",
+        "done": "Added {{count}} pillars to the topical map.",
+        "failed": "Could not update the topical map: {{error}}"
+      }
     },
     "coverage": {
       "title": "Topic coverage map",

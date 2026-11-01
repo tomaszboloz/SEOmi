@@ -3,7 +3,7 @@ import type { CrawlRunRecord, CrawledPageSummary } from '@/types';
 import type { FocusPage, SiteFocusReport } from '@/services/siteFocus';
 import { buildAuthorityReport, type ReferenceTaxonomy, type TopicalAuthorityReport } from '@/services/topicalAuthority';
 import {
-  readAuthorityHistory, readTaxonomy, readTopicalBenchmark, recordAuthority, validAuthorityProject, writeTaxonomy, clearTaxonomy, taxonomyMatchesCore,
+  readAuthorityHistory, readTaxonomy, readTopicalBenchmark, recordAuthority, validAuthorityProject, writeTaxonomy, clearTaxonomy, taxonomyMatchesCore, readRefreshState, writeRefreshState,
   type AuthorityHistoryEntry,
 } from '@/services/topicalAuthorityMonitoring';
 import {
@@ -48,6 +48,7 @@ export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runn
   const [benchmark, setBenchmark] = useState<TopicalBenchmark | null>(() => readTopicalBenchmark(projectId));
   const [history, setHistory] = useState<AuthorityHistoryEntry[]>(() => readAuthorityHistory(projectId));
   const [state, setState] = useState<ReferenceState>(IDLE);
+  const [autoRefresh, setAutoRefreshState] = useState(() => readRefreshState(projectId).enabled);
   const [scope, setScope] = useState(projectId);
   const controller = useRef<AbortController | null>(null);
   const [pendingBenchmark, setPendingBenchmark] = useState<TopicalBenchmark | null>(null);
@@ -57,6 +58,7 @@ export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runn
     setTaxonomy(readTaxonomy(projectId));
     setBenchmark(readTopicalBenchmark(projectId));
     setHistory(readAuthorityHistory(projectId));
+    setAutoRefreshState(readRefreshState(projectId).enabled);
     setPendingBenchmark(null);
   }
 
@@ -103,5 +105,9 @@ export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runn
   const cancel = useCallback(() => controller.current?.abort(), []);
   const clear = useCallback(() => { clearTaxonomy(projectId); setTaxonomy(null); setBenchmark(null); setPendingBenchmark(null); }, [projectId]);
 
-  return { report, taxonomy: usable, benchmark: pendingBenchmark ?? benchmark, history, state, build, cancel, clear };
+  const setAutoRefresh = useCallback((enabled: boolean) => {
+    if (writeRefreshState(projectId, { ...readRefreshState(projectId), enabled })) setAutoRefreshState(enabled);
+  }, [projectId]);
+
+  return { report, taxonomy: usable, benchmark: pendingBenchmark ?? benchmark, history, state, build, cancel, clear, autoRefresh, setAutoRefresh };
 };

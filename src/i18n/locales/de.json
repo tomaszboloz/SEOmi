@@ -7593,7 +7593,18 @@
       },
       "withPaa": "Echte „Ähnliche Fragen“ (People Also Ask) einbeziehen (DataForSEO Advanced SERP, separat berechnet)",
       "paaUsed": "{{count}} „Ähnliche Fragen“ aus der SERP wurden verwendet.",
-      "paaMissing": "Keine Quelle für „Ähnliche Fragen“: Fragen stammen nur aus Überschriften der Konkurrenz und Google Suggest."
+      "paaMissing": "Keine Quelle für „Ähnliche Fragen“: Fragen stammen nur aus Überschriften der Konkurrenz und Google Suggest.",
+      "autoRefresh": "Diese Karte nach geplanten Crawls automatisch aktualisieren (Opt-in; verbraucht SERP-Kontingent, höchstens wöchentlich, 4 Versuche pro 30 Tage)",
+      "merge": {
+        "title": "Mit den Säulen Ihrer Themenkarte vergleichen",
+        "note": "Nur Vorschau. Nichts ändert sich, bis Sie Säulen hinzufügen.",
+        "matched": "Passende manuelle Säulen ({{count}}):",
+        "added": "Referenzsäulen, die in Ihrer Karte fehlen ({{count}}):",
+        "manualOnly": "Nur in Ihrer Karte, bleiben unberührt ({{count}}):",
+        "apply": "{{count}} Referenzsäulen zur Themenkarte hinzufügen",
+        "done": "{{count}} Säulen zur Themenkarte hinzugefügt.",
+        "failed": "Die Themenkarte konnte nicht aktualisiert werden: {{error}}"
+      }
     },
     "coverage": {
       "title": "Themenabdeckungskarte",

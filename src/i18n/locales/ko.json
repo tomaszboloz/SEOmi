@@ -7593,7 +7593,18 @@
       },
       "withPaa": "실제 '관련 질문'(People Also Ask) 포함 (DataForSEO 고급 SERP, 별도 과금)",
       "paaUsed": "SERP의 People Also Ask 질문 {{count}}개를 사용했습니다.",
-      "paaMissing": "People Also Ask 소스 없음: 질문은 경쟁사 제목과 Google 자동완성에서만 가져옵니다."
+      "paaMissing": "People Also Ask 소스 없음: 질문은 경쟁사 제목과 Google 자동완성에서만 가져옵니다.",
+      "autoRefresh": "예약된 크롤링 후 이 지도를 자동으로 새로 고침(선택 사항, SERP 할당량 사용, 최대 주 1회, 30일당 4회 시도)",
+      "merge": {
+        "title": "주제 지도의 필러와 비교",
+        "note": "미리보기 전용입니다. 필러를 추가하기 전에는 아무것도 바뀌지 않습니다.",
+        "matched": "일치하는 수동 필러({{count}}):",
+        "added": "지도에 없는 참조 필러({{count}}):",
+        "manualOnly": "내 지도에만 있으며 그대로 유지({{count}}):",
+        "apply": "참조 필러 {{count}}개를 주제 지도에 추가",
+        "done": "필러 {{count}}개를 주제 지도에 추가했습니다.",
+        "failed": "주제 지도를 업데이트하지 못했습니다: {{error}}"
+      }
     },
     "coverage": {
       "title": "주제 커버리지 지도",

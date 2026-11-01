@@ -7593,7 +7593,18 @@
       },
       "withPaa": "Inclure les vrais « Autres questions posées » (SERP avancée DataForSEO, facturée à part)",
       "paaUsed": "{{count}} questions « Autres questions posées » de la SERP ont été utilisées.",
-      "paaMissing": "Aucune source « Autres questions posées » : les questions viennent seulement des titres des concurrents et de Google Suggest."
+      "paaMissing": "Aucune source « Autres questions posées » : les questions viennent seulement des titres des concurrents et de Google Suggest.",
+      "autoRefresh": "Actualiser cette carte automatiquement après les crawls planifiés (option ; consomme du quota SERP, au plus une fois par semaine, 4 essais par 30 jours)",
+      "merge": {
+        "title": "Comparer avec les piliers de votre carte thématique",
+        "note": "Aperçu seulement. Rien ne change tant que vous n'ajoutez pas de piliers.",
+        "matched": "Piliers manuels correspondants ({{count}}) :",
+        "added": "Piliers de référence absents de votre carte ({{count}}) :",
+        "manualOnly": "Uniquement dans votre carte, conservés ({{count}}) :",
+        "apply": "Ajouter {{count}} piliers de référence à la carte thématique",
+        "done": "{{count}} piliers ajoutés à la carte thématique.",
+        "failed": "Impossible de mettre à jour la carte thématique : {{error}}"
+      }
     },
     "coverage": {
       "title": "Carte de couverture du sujet",

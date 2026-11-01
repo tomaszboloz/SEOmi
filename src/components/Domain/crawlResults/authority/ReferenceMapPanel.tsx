@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ReferenceState } from '@/hooks/useTopicalAuthority';
 import type { ReferenceTaxonomy } from '@/services/topicalAuthority';
+import { TaxonomyMergePreview } from './TaxonomyMergePreview';
 
 export interface ReferenceMapPanelProps {
   taxonomy: ReferenceTaxonomy | null;
@@ -10,10 +11,14 @@ export interface ReferenceMapPanelProps {
   onBuild: (withQuestions: boolean) => void;
   onCancel: () => void;
   onClear: () => void;
+  projectId?: string | null;
+  /** Opt-in scheduled refresh of this map after native crawls (policy-gated: cooldown, retry backoff, budget). */
+  autoRefresh?: boolean;
+  onAutoRefresh?: (enabled: boolean) => void;
 }
 
 /** Builds the market map from real SERP data; shows an honest empty state when no source is connected. */
-export const ReferenceMapPanel = ({ taxonomy, state, onBuild, onCancel, onClear }: ReferenceMapPanelProps) => {
+export const ReferenceMapPanel = ({ taxonomy, state, onBuild, onCancel, onClear, projectId, autoRefresh = false, onAutoRefresh }: ReferenceMapPanelProps) => {
   const { t, i18n } = useTranslation();
   const { running, progress, failure, error } = state;
   const [withQuestions, setWithQuestions] = useState(false);
@@ -34,10 +39,17 @@ export const ReferenceMapPanel = ({ taxonomy, state, onBuild, onCancel, onClear 
         <input type="checkbox" checked={withQuestions} disabled={running} onChange={(event) => setWithQuestions(event.target.checked)} />
         {t('authority.reference.withPaa')}
       </label>
+      {onAutoRefresh && (
+        <label className="flex items-start gap-2 text-xs text-slate-300">
+          <input type="checkbox" checked={autoRefresh} onChange={(event) => onAutoRefresh(event.target.checked)} className="mt-0.5" />
+          <span className="min-w-0 break-words">{t('authority.reference.autoRefresh')}</span>
+        </label>
+      )}
       {taxonomy ? (
         <p className="text-xs text-slate-300">{t('authority.reference.info', { subtopics: taxonomy.subtopics.length, pillars: taxonomy.pillars.length, competitors: taxonomy.competitors.length, source: taxonomy.source || '—', date: new Date(taxonomy.builtAt).toLocaleDateString(i18n.language) })}{' '}
           {taxonomy.paaCount ? t('authority.reference.paaUsed', { count: taxonomy.paaCount }) : t('authority.reference.paaMissing')}</p>
       ) : !running && !failure && !error && <p className="text-xs text-slate-400">{t('authority.reference.intro')}</p>}
+      {taxonomy && !running && <TaxonomyMergePreview taxonomy={taxonomy} projectId={projectId} />}
       {running && <p role="status" className="text-xs text-slate-300">{t(`authority.reference.progress.${progress?.phase ?? 'serp'}`, { done: progress?.done ?? 0, total: progress?.total ?? 0, domain: progress?.phase === 'crawl' ? progress.domain : '' })}</p>}
       {error && <p role="alert" className="text-xs text-red-300">{t('authority.reference.error', { error })}</p>}
       {failure?.status === 'cancelled' && <p className="text-xs text-slate-400">{t('authority.reference.cancelled')}</p>}

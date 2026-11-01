@@ -7593,7 +7593,18 @@
       },
       "withPaa": "包含真实的“相关问题”(People Also Ask)（DataForSEO 高级 SERP，单独计费）",
       "paaUsed": "已使用 SERP 中的 {{count}} 个 People Also Ask 问题。",
-      "paaMissing": "没有 People Also Ask 来源：问题仅来自竞争对手的标题和 Google 搜索建议。"
+      "paaMissing": "没有 People Also Ask 来源：问题仅来自竞争对手的标题和 Google 搜索建议。",
+      "autoRefresh": "在计划抓取后自动刷新此图谱（可选；消耗 SERP 配额，最多每周一次，每 30 天 4 次尝试）",
+      "merge": {
+        "title": "与主题图的支柱比较",
+        "note": "仅预览。添加支柱之前不会有任何更改。",
+        "matched": "匹配的手动支柱（{{count}}）：",
+        "added": "您的图谱中缺少的参考支柱（{{count}}）：",
+        "manualOnly": "仅存在于您的图谱中，保持不变（{{count}}）：",
+        "apply": "将 {{count}} 个参考支柱添加到主题图",
+        "done": "已向主题图添加 {{count}} 个支柱。",
+        "failed": "无法更新主题图：{{error}}"
+      }
     },
     "coverage": {
       "title": "主题覆盖图谱",

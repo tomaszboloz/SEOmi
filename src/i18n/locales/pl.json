@@ -7593,7 +7593,18 @@
       },
       "withPaa": "Uwzględnij prawdziwe People Also Ask (zaawansowany SERP DataForSEO, płatny osobno)",
       "paaUsed": "Użyto {{count}} pytań People Also Ask z SERP.",
-      "paaMissing": "Brak źródła People Also Ask: pytania pochodzą tylko z nagłówków konkurencji i Google Suggest."
+      "paaMissing": "Brak źródła People Also Ask: pytania pochodzą tylko z nagłówków konkurencji i Google Suggest.",
+      "autoRefresh": "Odświeżaj tę mapę automatycznie po zaplanowanych crawlach (opt-in; zużywa limit SERP, najwyżej raz w tygodniu, 4 próby na 30 dni)",
+      "merge": {
+        "title": "Porównaj z filarami Twojej mapy tematycznej",
+        "note": "Tylko podgląd. Nic się nie zmieni, dopóki nie dodasz filarów.",
+        "matched": "Pasujące filary ręczne ({{count}}):",
+        "added": "Filary referencyjne, których brakuje w Twojej mapie ({{count}}):",
+        "manualOnly": "Tylko w Twojej mapie, bez zmian ({{count}}):",
+        "apply": "Dodaj {{count}} filarów referencyjnych do mapy tematycznej",
+        "done": "Dodano {{count}} filarów do mapy tematycznej.",
+        "failed": "Nie udało się zaktualizować mapy tematycznej: {{error}}"
+      }
     },
     "coverage": {
       "title": "Mapa pokrycia tematu",

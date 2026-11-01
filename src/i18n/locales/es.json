@@ -7593,7 +7593,18 @@
       },
       "withPaa": "Incluir People Also Ask reales (SERP avanzada de DataForSEO, se factura aparte)",
       "paaUsed": "Se usaron {{count}} preguntas People Also Ask de la SERP.",
-      "paaMissing": "Sin fuente de People Also Ask: las preguntas proceden solo de los encabezados de la competencia y de Google Suggest."
+      "paaMissing": "Sin fuente de People Also Ask: las preguntas proceden solo de los encabezados de la competencia y de Google Suggest.",
+      "autoRefresh": "Actualizar este mapa automáticamente tras los rastreos programados (opcional; usa cuota SERP, como máximo una vez por semana, 4 intentos cada 30 días)",
+      "merge": {
+        "title": "Comparar con los pilares de tu mapa temático",
+        "note": "Solo vista previa. No cambia nada hasta que añadas pilares.",
+        "matched": "Pilares manuales coincidentes ({{count}}):",
+        "added": "Pilares de referencia que faltan en tu mapa ({{count}}):",
+        "manualOnly": "Solo en tu mapa, se conservan ({{count}}):",
+        "apply": "Añadir {{count}} pilares de referencia al mapa temático",
+        "done": "Se añadieron {{count}} pilares al mapa temático.",
+        "failed": "No se pudo actualizar el mapa temático: {{error}}"
+      }
     },
     "coverage": {
       "title": "Mapa de cobertura del tema",
