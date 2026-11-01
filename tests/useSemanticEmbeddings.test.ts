@@ -15,8 +15,8 @@ describe('useSemanticEmbeddings', () => {
     const spy = vi.spyOn(source, 'loadSemanticSet');
     const { result, rerender } = renderHook(({ id, list }) => useSemanticEmbeddings(id, list), { initialProps: { id: 'p1' as string | null, list: pages } });
     expect(result.current).toEqual({ set: undefined, status: 'off', failure: null });
-    act(() => { enable(); });
     rerender({ id: null, list: pages });
+    act(() => { enable(); });
     rerender({ id: 'p1', list: [] });
     expect(spy).not.toHaveBeenCalled();
     expect(result.current.status).toBe('off');
