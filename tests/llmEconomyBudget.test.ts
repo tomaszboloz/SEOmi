@@ -67,14 +67,14 @@ describe('llmSpend tracking and privacy', () => {
 
   it('reports status levels and guards next calls', () => {
     writeLlmBudget(P, { monthlyLimitUsd: 10, warnAtPercent: 80 });
-    expect(withinProjectBudget(P, 5)).toBe(true);
+    expect(withinProjectBudget(P, 5, oct)).toBe(true);
     recordLlmCost(P, { providerId: 'openai', costUsd: 8.5 }, oct);
     const spend = readLlmSpend(P, oct);
     const budget = readLlmBudget(P);
     const status = llmBudgetStatus(spend, budget);
     expect(status.level).toBe('warning');
     expect(status.remainingUsd).toBe(1.5);
-    expect(withinProjectBudget(P, 2)).toBe(false);
+    expect(withinProjectBudget(P, 2, oct)).toBe(false);
 
     recordLlmCost(P, { providerId: 'openai', costUsd: 2 }, oct);
     expect(llmBudgetStatus(readLlmSpend(P, oct), budget).level).toBe('exceeded');
