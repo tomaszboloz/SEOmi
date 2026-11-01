@@ -98,6 +98,7 @@ mod oauth_response;
 #[cfg(test)]
 #[path = "search_console/oauth_response_tests.rs"]
 mod oauth_response_tests;
+pub mod page_daily;
 #[cfg(test)]
 #[path = "search_console/performance_entry_tests.rs"]
 mod performance_entry_tests;
