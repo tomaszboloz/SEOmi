@@ -9119,6 +9119,12 @@
       "rows-truncated": "已保存的页面行被截断，页面比较可能不完整。",
       "low-volume": "基准点击次数少于30，数据量不足以进行可靠比较。",
       "pending": "干预日期在未来，正在等待评估。"
+    },
+    "outcome": {
+      "label": "衡量的结果",
+      "gsc-clicks": "Search Console 点击",
+      "ga4-key-events": "GA4 关键事件(自然搜索)",
+      "ga4-revenue": "GA4 收入(自然搜索)"
     }
   },
   "linkInjector": {
@@ -9234,7 +9240,11 @@
     "pageContamination": "对照页面可能与被修改页面共享链接、模板或主题,同一改动可能影响它。请把结果视为弱于独立对照的结果。",
     "pageLoad": "加载此页面的每日序列",
     "pageNeedsGsc": "请先连接 Search Console 资源。",
-    "pageLoadFailed": "无法加载或保存每日序列。"
+    "pageLoadFailed": "无法加载或保存每日序列。",
+    "ga4Load": "加载 GA4 每日序列",
+    "ga4NeedsConnection": "请先连接 Google Analytics。",
+    "ga4Loaded": "已保存 {{days}} 天;收入币种为 {{currency}}。",
+    "ga4LoadFailed": "无法加载或保存 GA4 序列。"
   },
   "revenueImportUi": {
     "title": "收入（可选的 GA4 导出）",

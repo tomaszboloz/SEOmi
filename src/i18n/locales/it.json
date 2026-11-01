@@ -9119,6 +9119,12 @@
       "rows-truncated": "Le righe delle pagine salvate sono troncate; il confronto può essere incompleto.",
       "low-volume": "Meno di 30 clic di riferimento; il volume è insufficiente per un confronto affidabile.",
       "pending": "La data dell’intervento è futura; la valutazione è in attesa."
+    },
+    "outcome": {
+      "label": "Risultato misurato",
+      "gsc-clicks": "Clic di Search Console",
+      "ga4-key-events": "Eventi chiave GA4 (organico)",
+      "ga4-revenue": "Ricavi GA4 (organico)"
     }
   },
   "linkInjector": {
@@ -9234,7 +9240,11 @@
     "pageContamination": "La pagina di controllo può condividere link, modelli o argomento con la pagina modificata, quindi la stessa modifica può influenzarla. Considera il risultato più debole rispetto a un controllo indipendente.",
     "pageLoad": "Carica la serie giornaliera di questa pagina",
     "pageNeedsGsc": "Collega prima una proprietà di Search Console.",
-    "pageLoadFailed": "Impossibile caricare o salvare la serie giornaliera."
+    "pageLoadFailed": "Impossibile caricare o salvare la serie giornaliera.",
+    "ga4Load": "Carica la serie giornaliera GA4",
+    "ga4NeedsConnection": "Collega prima Google Analytics.",
+    "ga4Loaded": "Salvati {{days}} giorni; ricavi in {{currency}}.",
+    "ga4LoadFailed": "Impossibile caricare o salvare la serie GA4."
   },
   "revenueImportUi": {
     "title": "Entrate (esportazione GA4 facoltativa)",

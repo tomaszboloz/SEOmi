@@ -9119,6 +9119,12 @@
       "rows-truncated": "저장된 페이지 행이 잘려 있어 비교가 불완전할 수 있습니다.",
       "low-volume": "기준 클릭수가 30 미만으로 신뢰할 수 있는 비교에 부족합니다.",
       "pending": "개입 날짜가 미래이므로 평가를 기다리는 중입니다。"
+    },
+    "outcome": {
+      "label": "측정 결과",
+      "gsc-clicks": "Search Console 클릭",
+      "ga4-key-events": "GA4 주요 이벤트(오가닉)",
+      "ga4-revenue": "GA4 수익(오가닉)"
     }
   },
   "linkInjector": {
@@ -9234,7 +9240,11 @@
     "pageContamination": "대조 페이지는 변경한 페이지와 링크, 템플릿, 주제를 공유할 수 있어 같은 변경의 영향을 받을 수 있습니다. 독립 대조군보다 약한 결과로 보세요.",
     "pageLoad": "이 페이지의 일별 시계열 불러오기",
     "pageNeedsGsc": "먼저 Search Console 속성을 연결하세요.",
-    "pageLoadFailed": "일별 시계열을 불러오거나 저장하지 못했습니다."
+    "pageLoadFailed": "일별 시계열을 불러오거나 저장하지 못했습니다.",
+    "ga4Load": "GA4 일별 시계열 불러오기",
+    "ga4NeedsConnection": "먼저 Google Analytics를 연결하세요.",
+    "ga4Loaded": "{{days}}일 저장됨; 수익 통화는 {{currency}}입니다.",
+    "ga4LoadFailed": "GA4 시계열을 불러오거나 저장하지 못했습니다."
   },
   "revenueImportUi": {
     "title": "수익(선택 사항인 GA4 내보내기)",

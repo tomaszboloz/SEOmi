@@ -9119,6 +9119,12 @@
       "rows-truncated": "保存されたページ行が切り詰められており、比較が不完全な可能性があります。",
       "low-volume": "基準期間のクリック数が30未満で、信頼できる比較には少なすぎます。",
       "pending": "施策の日付が未来のため、評価は保留中です。"
+    },
+    "outcome": {
+      "label": "測定する成果",
+      "gsc-clicks": "Search Consoleのクリック",
+      "ga4-key-events": "GA4キーイベント(オーガニック)",
+      "ga4-revenue": "GA4収益(オーガニック)"
     }
   },
   "linkInjector": {
@@ -9234,7 +9240,11 @@
     "pageContamination": "対照ページは変更したページとリンク、テンプレート、トピックを共有している可能性があり、同じ変更の影響を受けることがあります。独立した対照より弱い結果として扱ってください。",
     "pageLoad": "このページの日次系列を読み込む",
     "pageNeedsGsc": "先にSearch Consoleプロパティを接続してください。",
-    "pageLoadFailed": "日次系列を読み込めないか保存できませんでした。"
+    "pageLoadFailed": "日次系列を読み込めないか保存できませんでした。",
+    "ga4Load": "GA4の日次系列を読み込む",
+    "ga4NeedsConnection": "先にGoogle Analyticsを接続してください。",
+    "ga4Loaded": "{{days}}日分を保存。収益は{{currency}}です。",
+    "ga4LoadFailed": "GA4系列を読み込めないか保存できませんでした。"
   },
   "revenueImportUi": {
     "title": "収益（任意の GA4 エクスポート）",

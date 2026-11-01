@@ -9119,6 +9119,12 @@
       "rows-truncated": "Zapisane wiersze stron są ucięte; porównanie strony może być niepełne.",
       "low-volume": "Bazowa liczba kliknięć jest mniejsza niż 30; zbyt mały wolumen do wiarygodnego porównania.",
       "pending": "Data interwencji jest w przyszłości; ocena oczekuje."
+    },
+    "outcome": {
+      "label": "Mierzony wynik",
+      "gsc-clicks": "Kliknięcia Search Console",
+      "ga4-key-events": "Kluczowe zdarzenia GA4 (organiczne)",
+      "ga4-revenue": "Przychód GA4 (organiczny)"
     }
   },
   "linkInjector": {
@@ -9234,7 +9240,11 @@
     "pageContamination": "Strona kontrolna może dzielić linki, szablony lub temat ze zmienioną stroną, więc ta sama zmiana może na nią wpływać. Traktuj wynik jako słabszy niż przy niezależnej kontroli.",
     "pageLoad": "Wczytaj dzienną serię tej strony",
     "pageNeedsGsc": "Najpierw połącz właściwość Search Console.",
-    "pageLoadFailed": "Nie udało się wczytać lub zapisać serii dziennej."
+    "pageLoadFailed": "Nie udało się wczytać lub zapisać serii dziennej.",
+    "ga4Load": "Wczytaj dzienną serię GA4",
+    "ga4NeedsConnection": "Najpierw połącz Google Analytics.",
+    "ga4Loaded": "Zapisano {{days}} dni; przychód w {{currency}}.",
+    "ga4LoadFailed": "Nie udało się wczytać lub zapisać serii GA4."
   },
   "revenueImportUi": {
     "title": "Przychód (opcjonalny eksport GA4)",

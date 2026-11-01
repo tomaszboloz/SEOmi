@@ -105,12 +105,14 @@ it('loader saves the fetched series, reports failures and is disabled without a 
   await waitFor(() => expect(invokeTauriCommand).toHaveBeenCalled());
 });
 
-it('card shows the loader for pages and no loader for site-level interventions', () => {
+it('card shows a supplied loader instead of the regression section, and the regression section otherwise', () => {
   const evaluation = { status: 'pending', reasons: [], baseline: null, followUp: null, change: null, restOfSite: null, relativeVsSite: null, limitations: [] } as never;
+  const causal = { testSite: null, controlSite: null, estimate: null, unavailable: 'no-test-series' } as const;
   const view = render(<ExperimentCard intervention={intervention(URL_A)} evaluation={evaluation} onRemove={() => undefined} pageLoader={<p>LOADER</p>} />);
   expect(screen.getByText('LOADER')).toBeTruthy();
-  view.rerender(<ExperimentCard intervention={intervention('site')} evaluation={evaluation} causal={{ testSite: null, controlSite: null, estimate: null, unavailable: 'no-test-series' }} onRemove={() => undefined} pageLoader={<p>LOADER</p>} />);
+  view.rerender(<ExperimentCard intervention={intervention('site')} evaluation={evaluation} causal={causal} onRemove={() => undefined} />);
   expect(screen.queryByText('LOADER')).toBeNull();
+  expect(screen.getByTestId('causal-impact')).toBeTruthy();
 });
 
 it('panel wires saved page series and the Search Console settings into page interventions', async () => {

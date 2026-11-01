@@ -9119,6 +9119,12 @@
       "rows-truncated": "Saved page rows are truncated; the page comparison may be incomplete.",
       "low-volume": "Baseline clicks are below 30; the volume is too low for a reliable comparison.",
       "pending": "The intervention date is in the future; evaluation is pending."
+    },
+    "outcome": {
+      "label": "Outcome measured",
+      "gsc-clicks": "Search Console clicks",
+      "ga4-key-events": "GA4 key events (organic)",
+      "ga4-revenue": "GA4 revenue (organic)"
     }
   },
   "linkInjector": {
@@ -9234,7 +9240,11 @@
     "pageContamination": "The control page may share links, templates or topic with the changed page, so the same change can affect it. Treat the result as weaker than a result with an independent control.",
     "pageLoad": "Load daily series of this page",
     "pageNeedsGsc": "Connect a Search Console property first.",
-    "pageLoadFailed": "The daily series could not be loaded or saved."
+    "pageLoadFailed": "The daily series could not be loaded or saved.",
+    "ga4Load": "Load daily GA4 series",
+    "ga4NeedsConnection": "Connect Google Analytics first.",
+    "ga4Loaded": "Saved {{days}} days; revenue is in {{currency}}.",
+    "ga4LoadFailed": "The GA4 series could not be loaded or saved."
   },
   "revenueImportUi": {
     "title": "Revenue (optional GA4 export)",

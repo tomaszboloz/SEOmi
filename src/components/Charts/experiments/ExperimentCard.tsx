@@ -53,7 +53,7 @@ export const ExperimentCard = ({ intervention, evaluation, causal, onRemove, pag
         {t(`experimentsUi.${key}`)}: {points(evaluation.relativeVsSite?.[key] ?? null)}
       </p>)}
     </>}
-    {intervention.url === 'site' ? causal && <CausalImpactSection setup={causal} /> : pageLoader}
+    {pageLoader ?? (causal && <CausalImpactSection setup={causal} />)}
     {causal?.structural && <StructuralImpactSection estimate={causal.structural} pageLevel={intervention.url !== 'site'} />}
     <h6 className="font-semibold">{t('experimentsUi.limitations')}</h6>
     <ul className="list-disc ps-4">{evaluation.limitations.map(reason =>

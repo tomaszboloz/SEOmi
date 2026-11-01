@@ -9119,6 +9119,12 @@
       "rows-truncated": "As linhas de páginas salvas estão truncadas; a comparação pode estar incompleta.",
       "low-volume": "Menos de 30 cliques de referência; o volume é insuficiente para uma comparação confiável.",
       "pending": "A data da intervenção está no futuro; a avaliação está pendente."
+    },
+    "outcome": {
+      "label": "Resultado medido",
+      "gsc-clicks": "Cliques do Search Console",
+      "ga4-key-events": "Eventos-chave do GA4 (orgânico)",
+      "ga4-revenue": "Receita do GA4 (orgânico)"
     }
   },
   "linkInjector": {
@@ -9234,7 +9240,11 @@
     "pageContamination": "A página de controlo pode partilhar links, modelos ou tema com a página alterada, pelo que a mesma alteração a pode afetar. Trate o resultado como mais fraco do que com um controlo independente.",
     "pageLoad": "Carregar a série diária desta página",
     "pageNeedsGsc": "Ligue primeiro uma propriedade do Search Console.",
-    "pageLoadFailed": "Não foi possível carregar ou guardar a série diária."
+    "pageLoadFailed": "Não foi possível carregar ou guardar a série diária.",
+    "ga4Load": "Carregar a série diária do GA4",
+    "ga4NeedsConnection": "Ligue primeiro o Google Analytics.",
+    "ga4Loaded": "Guardados {{days}} dias; receita em {{currency}}.",
+    "ga4LoadFailed": "Não foi possível carregar ou guardar a série do GA4."
   },
   "revenueImportUi": {
     "title": "Receita (exportação opcional do GA4)",
