@@ -1890,7 +1890,8 @@
       "no": "non",
       "tableSummary": "Tableau des pages ({{count}})",
       "tableCaption": "Pages affichées sur la carte d'architecture avec statut, profondeur, liens entrants, TRS et section"
-    }
+    },
+    "coreTopicShare": "{{percent}} % des termes dans le sujet principal"
   },
   "crawlDiff": {
     "fields": {

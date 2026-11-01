@@ -1890,7 +1890,8 @@
       "no": "否",
       "tableSummary": "页面表格（{{count}}）",
       "tableCaption": "架构图中显示的页面，含状态、深度、入站链接、TRS 与分区"
-    }
+    },
+    "coreTopicShare": "核心主题词占比 {{percent}}%"
   },
   "crawlDiff": {
     "fields": {

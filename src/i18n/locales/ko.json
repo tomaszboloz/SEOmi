@@ -1890,7 +1890,8 @@
       "no": "아니요",
       "tableSummary": "페이지 표 ({{count}})",
       "tableCaption": "상태, 깊이, 인바운드 링크, TRS, 섹션과 함께 구조 지도에 표시된 페이지"
-    }
+    },
+    "coreTopicShare": "핵심 주제 용어 비율 {{percent}}%"
   },
   "crawlDiff": {
     "fields": {

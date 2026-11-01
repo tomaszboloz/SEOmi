@@ -1890,7 +1890,8 @@
       "no": "no",
       "tableSummary": "Page table ({{count}})",
       "tableCaption": "Pages shown on the architecture map with status, depth, inbound links, TRS and section"
-    }
+    },
+    "coreTopicShare": "{{percent}}% of terms in the core topic"
   },
   "crawlDiff": {
     "fields": {

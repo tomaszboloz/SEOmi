@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { buildSemanticMap } from '@/services/semanticMap';
+import { useTopicModel } from '@/hooks/useTopicModel';
 import { buildTopicalDiagnosis } from '@/services/topicalDiagnosis';
 import { normalizeGraphUrl } from '@/services/semanticGraph/urls';
 import { useProjectStore } from '@/stores/projectStore';
@@ -19,8 +20,9 @@ export const useCrawlArchitectureState = (props: CrawlArchitectureGraphProps) =>
   const [loadedStorageKey, setLoadedStorageKey] = useState(storageKey);
   const [activeView, setActiveViewState] = useState<MapView>(() => readPreferences(storageKey).activeView);
   
-  const graph = useMemo(() => buildSemanticMap(pages, startUrl, { includeAllInternalLinks: preferences.linkMode === 'all' }), [pages, preferences.linkMode, startUrl]);
-  const contentGraph = useMemo(() => buildSemanticMap(pages, startUrl), [pages, startUrl]);
+  const topicModel = useTopicModel(activeProjectId, pages, startUrl);
+  const graph = useMemo(() => buildSemanticMap(pages, startUrl, { includeAllInternalLinks: preferences.linkMode === 'all', topicModel }), [pages, preferences.linkMode, startUrl, topicModel]);
+  const contentGraph = useMemo(() => buildSemanticMap(pages, startUrl, { topicModel }), [pages, startUrl, topicModel]);
   const diagnosis = useMemo(() => buildTopicalDiagnosis(pages, startUrl), [pages, startUrl]);
   // URLs of the area or topic the graph is restricted to; null means no restriction.
   const diagnosisFilterUrls = useMemo(() => {

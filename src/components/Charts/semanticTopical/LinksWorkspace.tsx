@@ -23,7 +23,7 @@ import { isSelectedCompletedCrawl } from '@/services/optimizationTasks/crawlEvid
 import { busUrlKey } from '@/services/recommendationBus/url';
 import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
 import { useSprsEmbeddings } from './useSprsEmbeddings';
-import { topicModelOf } from '@/services/topicModel';
+import { useTopicModel } from '@/hooks/useTopicModel';
 
 /** Reports are an enhancement: incomplete page data must not break the links view. */
 const attempt = <T,>(build: () => T | undefined): T | undefined => { try { return build(); } catch { return undefined; } };
@@ -43,7 +43,7 @@ export const LinksWorkspace = ({ projectId, pages, run }: { projectId: string | 
   const bus = useMemo(() => runRecommendationBus(busInputFromReports(sfs, tas, guard)), [sfs, tas, guard]);
   const linkPages = useMemo(() => excludeQuarantinedPages(pages, bus.quarantine), [pages, bus]);
   const rules = useMemo(() => rulesFromQuarantine(bus.quarantine), [bus]);
-  const topicModel = useMemo(() => (sfs && !sfs.unavailable && sfs.model ? topicModelOf(sfs) : undefined), [sfs]);
+  const topicModel = useTopicModel(projectId, pages, startUrl);
   const semanticGraph = useMemo(() => (pages.length ? attempt(() => buildSemanticMap(pages, startUrl, { topicModel })) : undefined), [pages, startUrl, topicModel]);
   const embeddings = useSprsEmbeddings(projectId, pages);
   const sprs = useMemo(() => (semanticGraph ? attempt(() => buildSprsReport(semanticGraph, embeddings)) : undefined), [semanticGraph, embeddings]);

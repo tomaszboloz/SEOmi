@@ -1890,7 +1890,8 @@
       "no": "いいえ",
       "tableSummary": "ページ表（{{count}}）",
       "tableCaption": "構造マップに表示されるページ（ステータス、深さ、被リンク、TRS、セクション付き）"
-    }
+    },
+    "coreTopicShare": "コアトピックの語の割合 {{percent}}%"
   },
   "crawlDiff": {
     "fields": {

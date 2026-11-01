@@ -1890,7 +1890,8 @@
       "no": "nie",
       "tableSummary": "Tabela stron ({{count}})",
       "tableCaption": "Strony widoczne na mapie architektury ze statusem, głębokością, linkami przychodzącymi, TRS i sekcją"
-    }
+    },
+    "coreTopicShare": "{{percent}}% terminów w temacie głównym"
   },
   "crawlDiff": {
     "fields": {

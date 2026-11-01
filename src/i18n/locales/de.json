@@ -1890,7 +1890,8 @@
       "no": "nein",
       "tableSummary": "Seitentabelle ({{count}})",
       "tableCaption": "Auf der Architekturkarte gezeigte Seiten mit Status, Tiefe, eingehenden Links, TRS und Bereich"
-    }
+    },
+    "coreTopicShare": "{{percent}} % der Begriffe im Kernthema"
   },
   "crawlDiff": {
     "fields": {

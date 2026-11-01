@@ -1890,7 +1890,8 @@
       "no": "no",
       "tableSummary": "Tabella delle pagine ({{count}})",
       "tableCaption": "Pagine mostrate sulla mappa di architettura con stato, profondità, link in entrata, TRS e sezione"
-    }
+    },
+    "coreTopicShare": "{{percent}}% dei termini nel tema principale"
   },
   "crawlDiff": {
     "fields": {
