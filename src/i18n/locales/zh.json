@@ -8627,7 +8627,19 @@
     "saveBudget": "保存预算",
     "savedBudget": "LLM 预算已保存。",
     "invalidLimit": "请输入有效的非负每月上限。",
-    "invalidWarn": "警告阈值必须是 1 到 100 的整数。"
+    "invalidWarn": "警告阈值必须是 1 到 100 的整数。",
+    "dictTitle": "YMYL 术语表",
+    "dictHint": "剂量和金额必须与来源中的同一术语相邻。内置 MeSH 种子属于公有领域。不含 ICD-10：请导入您自己的授权或开放列表。列表仅保存在此设备上。",
+    "dictSeed": "使用内置 MeSH 种子（公有领域）",
+    "dictFile": "导入列表（TXT 或 CSV）",
+    "dictPaste": "或粘贴术语，每行一个",
+    "dictSave": "保存列表",
+    "dictClear": "清除已导入列表",
+    "dictSaved": "术语表已保存。",
+    "dictFailed": "无法保存术语表。",
+    "dictEmpty": "未找到可用术语。",
+    "dictCount": "已启用 {{count}} 个术语",
+    "dictPasted": "粘贴的列表"
   },
   "templateGovernor": {
     "title": "程序化模板质量",

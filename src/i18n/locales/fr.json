@@ -8627,7 +8627,19 @@
     "saveBudget": "Enregistrer le budget",
     "savedBudget": "Budget LLM enregistré.",
     "invalidLimit": "Saisissez une limite mensuelle valide.",
-    "invalidWarn": "Le seuil doit être un entier de 1 à 100."
+    "invalidWarn": "Le seuil doit être un entier de 1 à 100.",
+    "dictTitle": "Liste de termes YMYL",
+    "dictHint": "Les doses et montants doivent figurer près du même terme dans la source. Le jeu MeSH fourni est dans le domaine public. ICD-10 n'est pas inclus : importez votre propre liste sous licence ou ouverte. La liste reste sur cet appareil.",
+    "dictSeed": "Utiliser le jeu MeSH fourni (domaine public)",
+    "dictFile": "Importer une liste (TXT ou CSV)",
+    "dictPaste": "Ou collez des termes, un par ligne",
+    "dictSave": "Enregistrer la liste",
+    "dictClear": "Effacer la liste importée",
+    "dictSaved": "Liste de termes enregistrée.",
+    "dictFailed": "Impossible d'enregistrer la liste de termes.",
+    "dictEmpty": "Aucun terme exploitable trouvé.",
+    "dictCount": "{{count}} termes actifs",
+    "dictPasted": "liste collée"
   },
   "templateGovernor": {
     "title": "Qualité des gabarits programmatiques",

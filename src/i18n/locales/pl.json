@@ -8627,7 +8627,19 @@
     "saveBudget": "Zapisz budżet",
     "savedBudget": "Zapisano budżet LLM.",
     "invalidLimit": "Wpisz prawidłowy nieujemny limit miesięczny.",
-    "invalidWarn": "Próg ostrzeżenia musi być liczbą całkowitą od 1 do 100."
+    "invalidWarn": "Próg ostrzeżenia musi być liczbą całkowitą od 1 do 100.",
+    "dictTitle": "Lista terminów YMYL",
+    "dictHint": "Dawki i kwoty muszą stać przy tym samym terminie w źródle. Zalążek MeSH jest w domenie publicznej. ICD-10 nie jest dołączone: zaimportuj własną, licencjonowaną lub otwartą listę. Lista zostaje na tym urządzeniu.",
+    "dictSeed": "Użyj wbudowanego zalążka MeSH (domena publiczna)",
+    "dictFile": "Importuj listę (TXT lub CSV)",
+    "dictPaste": "Albo wklej terminy, po jednym w wierszu",
+    "dictSave": "Zapisz listę",
+    "dictClear": "Wyczyść zaimportowaną listę",
+    "dictSaved": "Zapisano listę terminów.",
+    "dictFailed": "Nie udało się zapisać listy terminów.",
+    "dictEmpty": "Nie znaleziono użytecznych terminów.",
+    "dictCount": "Aktywne terminy: {{count}}",
+    "dictPasted": "wklejona lista"
   },
   "templateGovernor": {
     "title": "Jakość szablonów programatycznych",

@@ -8627,7 +8627,19 @@
     "saveBudget": "Guardar presupuesto",
     "savedBudget": "Presupuesto LLM guardado.",
     "invalidLimit": "Introduce un límite mensual válido.",
-    "invalidWarn": "El umbral debe ser un entero entre 1 y 100."
+    "invalidWarn": "El umbral debe ser un entero entre 1 y 100.",
+    "dictTitle": "Lista de términos YMYL",
+    "dictHint": "Las dosis y cantidades deben aparecer junto al mismo término en la fuente. La semilla MeSH es de dominio público. ICD-10 no se incluye: importe su propia lista con licencia o abierta. La lista permanece en este dispositivo.",
+    "dictSeed": "Usar la semilla MeSH incluida (dominio público)",
+    "dictFile": "Importar lista (TXT o CSV)",
+    "dictPaste": "O pegue términos, uno por línea",
+    "dictSave": "Guardar lista",
+    "dictClear": "Borrar lista importada",
+    "dictSaved": "Lista de términos guardada.",
+    "dictFailed": "No se pudo guardar la lista de términos.",
+    "dictEmpty": "No se encontraron términos utilizables.",
+    "dictCount": "{{count}} términos activos",
+    "dictPasted": "lista pegada"
   },
   "templateGovernor": {
     "title": "Calidad de plantillas programáticas",

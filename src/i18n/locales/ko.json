@@ -8627,7 +8627,19 @@
     "saveBudget": "예산 저장",
     "savedBudget": "LLM 예산을 저장했습니다.",
     "invalidLimit": "0 이상인 유효한 월간 한도를 입력하세요.",
-    "invalidWarn": "경고 기준은 1에서 100 사이의 정수여야 합니다."
+    "invalidWarn": "경고 기준은 1에서 100 사이의 정수여야 합니다.",
+    "dictTitle": "YMYL 용어 목록",
+    "dictHint": "용량과 금액은 출처에서 같은 용어 옆에 있어야 합니다. 내장 MeSH 시드는 퍼블릭 도메인입니다. ICD-10은 포함되어 있지 않으니 라이선스가 있거나 공개된 목록을 직접 가져오세요. 목록은 이 기기에만 저장됩니다.",
+    "dictSeed": "내장 MeSH 시드 사용(퍼블릭 도메인)",
+    "dictFile": "목록 가져오기(TXT 또는 CSV)",
+    "dictPaste": "또는 용어를 한 줄에 하나씩 붙여넣기",
+    "dictSave": "목록 저장",
+    "dictClear": "가져온 목록 지우기",
+    "dictSaved": "용어 목록을 저장했습니다.",
+    "dictFailed": "용어 목록을 저장하지 못했습니다.",
+    "dictEmpty": "사용할 수 있는 용어가 없습니다.",
+    "dictCount": "활성 용어 {{count}}개",
+    "dictPasted": "붙여넣은 목록"
   },
   "templateGovernor": {
     "title": "프로그래매틱 템플릿 품질",

@@ -8627,7 +8627,19 @@
     "saveBudget": "Salva budget",
     "savedBudget": "Budget LLM salvato.",
     "invalidLimit": "Inserisci un limite mensile valido.",
-    "invalidWarn": "La soglia deve essere un intero da 1 a 100."
+    "invalidWarn": "La soglia deve essere un intero da 1 a 100.",
+    "dictTitle": "Elenco termini YMYL",
+    "dictHint": "Dosi e importi devono comparire accanto allo stesso termine nella fonte. Il set MeSH incluso è di pubblico dominio. ICD-10 non è incluso: importa il tuo elenco con licenza o aperto. L'elenco resta su questo dispositivo.",
+    "dictSeed": "Usa il set MeSH incluso (pubblico dominio)",
+    "dictFile": "Importa elenco (TXT o CSV)",
+    "dictPaste": "Oppure incolla i termini, uno per riga",
+    "dictSave": "Salva elenco",
+    "dictClear": "Cancella elenco importato",
+    "dictSaved": "Elenco dei termini salvato.",
+    "dictFailed": "Impossibile salvare l'elenco dei termini.",
+    "dictEmpty": "Nessun termine utilizzabile trovato.",
+    "dictCount": "{{count}} termini attivi",
+    "dictPasted": "elenco incollato"
   },
   "templateGovernor": {
     "title": "Qualità dei template programmatici",

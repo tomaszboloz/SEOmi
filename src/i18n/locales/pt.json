@@ -8627,7 +8627,19 @@
     "saveBudget": "Guardar orçamento",
     "savedBudget": "Orçamento LLM guardado.",
     "invalidLimit": "Introduza um limite mensal válido.",
-    "invalidWarn": "O limiar deve ser um inteiro de 1 a 100."
+    "invalidWarn": "O limiar deve ser um inteiro de 1 a 100.",
+    "dictTitle": "Lista de termos YMYL",
+    "dictHint": "Doses e valores devem estar junto do mesmo termo na fonte. O conjunto MeSH incluído é de domínio público. ICD-10 não está incluído: importe a sua própria lista licenciada ou aberta. A lista fica neste dispositivo.",
+    "dictSeed": "Usar o conjunto MeSH incluído (domínio público)",
+    "dictFile": "Importar lista (TXT ou CSV)",
+    "dictPaste": "Ou cole os termos, um por linha",
+    "dictSave": "Guardar lista",
+    "dictClear": "Limpar lista importada",
+    "dictSaved": "Lista de termos guardada.",
+    "dictFailed": "Não foi possível guardar a lista de termos.",
+    "dictEmpty": "Nenhum termo utilizável encontrado.",
+    "dictCount": "{{count}} termos ativos",
+    "dictPasted": "lista colada"
   },
   "templateGovernor": {
     "title": "Qualidade de modelos programáticos",

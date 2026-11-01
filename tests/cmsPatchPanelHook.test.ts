@@ -106,3 +106,15 @@ it('discards stale write failures after invalidation', async () => {
   expect(result.current.error).toBeNull();
   expect(result.current.busy).toBe(false);
 });
+
+it('passes no term dictionary when the MeSH seed is off and none is imported (#137)', async () => {
+  localStorage.setItem('seomi_ymyl_dictionary_v1', JSON.stringify({ schemaVersion: 1, data: { useMeshSeed: false, userText: '', userSource: '', importedAt: null } }));
+  const { result } = await setupHook();
+  act(() => result.current.update('ymyl', true));
+  await act(() => result.current.prepare());
+  act(() => result.current.confirmFacts(true));
+  expect(result.current.factGatePassed).toBe(true);
+  act(() => result.current.approve(true));
+  expect(result.current.approval?.terms).toBeUndefined();
+  localStorage.clear();
+});

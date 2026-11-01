@@ -7,6 +7,7 @@ import { useProjectStore } from '@/stores/projectStore';
 import { DataForSeoBudgetSettings } from '@/components/DataForSEO/cost/DataForSeoBudgetSettings';
 import { LlmEconomyPanel } from '@/components/AI/LlmEconomyPanel';
 import { LlmEconomyBudgetSettings } from '@/components/AI/LlmEconomyBudgetSettings';
+import { YmylDictionarySettings } from '@/components/AI/YmylDictionarySettings';
 import { SecretKeyField } from '@/components/Auth/SecretKeyField';
 
 interface ApiSettingsTabProps {
@@ -90,6 +91,7 @@ export const ApiSettingsTab: React.FC<ApiSettingsTabProps> = ({
 
       {/* Live project LLM ledger: shows live usage or empty state, never fictitious costs. */}
       <LlmEconomyBudgetSettings />
+      <YmylDictionarySettings />
       <LlmEconomyPanel projectId={activeProjectId} providerId={activeProjectId ? activeProvider : ''} />
 
       {secureStorageError &&<p role="alert" className="text-[11px] leading-4 text-rose-300">{secureStorageError}</p>}

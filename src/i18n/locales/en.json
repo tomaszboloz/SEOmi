@@ -8627,7 +8627,19 @@
     "saveBudget": "Save budget",
     "savedBudget": "LLM budget saved.",
     "invalidLimit": "Enter a valid non-negative monthly limit.",
-    "invalidWarn": "Warning threshold must be an integer from 1 to 100."
+    "invalidWarn": "Warning threshold must be an integer from 1 to 100.",
+    "dictTitle": "YMYL term list",
+    "dictHint": "Doses and amounts must stand next to the same term in the source. MeSH seed is public domain. ICD-10 is not bundled: import your own licensed or open list. The list stays on this device.",
+    "dictSeed": "Use bundled MeSH seed (public domain)",
+    "dictFile": "Import list (TXT or CSV)",
+    "dictPaste": "Or paste terms, one per line",
+    "dictSave": "Save list",
+    "dictClear": "Clear imported list",
+    "dictSaved": "Term list saved.",
+    "dictFailed": "Could not save the term list.",
+    "dictEmpty": "No usable terms found.",
+    "dictCount": "{{count}} terms active",
+    "dictPasted": "pasted list"
   },
   "templateGovernor": {
     "title": "Programmatic template quality",

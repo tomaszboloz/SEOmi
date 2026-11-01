@@ -8627,7 +8627,19 @@
     "saveBudget": "Budget speichern",
     "savedBudget": "LLM-Budget gespeichert.",
     "invalidLimit": "Gültiges nichtnegatives Monatslimit eingeben.",
-    "invalidWarn": "Schwelle muss eine ganze Zahl von 1 bis 100 sein."
+    "invalidWarn": "Schwelle muss eine ganze Zahl von 1 bis 100 sein.",
+    "dictTitle": "YMYL-Begriffsliste",
+    "dictHint": "Dosen und Beträge müssen in der Quelle beim selben Begriff stehen. Das MeSH-Grundset ist gemeinfrei. ICD-10 ist nicht enthalten: importieren Sie Ihre eigene lizenzierte oder offene Liste. Die Liste bleibt auf diesem Gerät.",
+    "dictSeed": "Mitgeliefertes MeSH-Grundset nutzen (gemeinfrei)",
+    "dictFile": "Liste importieren (TXT oder CSV)",
+    "dictPaste": "Oder Begriffe einfügen, einer pro Zeile",
+    "dictSave": "Liste speichern",
+    "dictClear": "Importierte Liste löschen",
+    "dictSaved": "Begriffsliste gespeichert.",
+    "dictFailed": "Begriffsliste konnte nicht gespeichert werden.",
+    "dictEmpty": "Keine brauchbaren Begriffe gefunden.",
+    "dictCount": "{{count}} Begriffe aktiv",
+    "dictPasted": "eingefügte Liste"
   },
   "templateGovernor": {
     "title": "Qualität programmatischer Templates",
