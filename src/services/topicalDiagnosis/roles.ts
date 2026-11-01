@@ -2,7 +2,7 @@ import type { CrawledPageSummary } from '@/types';
 import { normalizeGraphUrl } from '@/services/semanticGraph/urls';
 import type { DiagnosisDocument } from './types';
 import { isPaginationPage } from './pagination';
-import { HUB_MAX_WORDS_PER_LINK, HUB_MIN_LINKED_DOCUMENTS, UTILITY_PATH_PATTERN } from './thresholds';
+import { looksLikeListing, UTILITY_PATH_PATTERN } from './thresholds';
 
 const pathname = (url: string): string => {
   try {
@@ -29,7 +29,7 @@ export const assignRoles = (documents: DiagnosisDocument[]): DiagnosisDocument[]
     });
     // Legacy snapshots without a word count cannot prove a listing.
     if (typeof page.word_count !== 'number') return false;
-    return targets.size >= HUB_MIN_LINKED_DOCUMENTS && page.word_count / targets.size < HUB_MAX_WORDS_PER_LINK;
+    return looksLikeListing(page.word_count, targets.size);
   };
   return documents.map((document) => {
     const paginated = document.pages.some(isPaginationPage);
