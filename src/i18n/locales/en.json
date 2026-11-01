@@ -8233,6 +8233,8 @@
     "workflow": "Workflow: diagnosis → pick a priority → module evidence → What-If → brief / copy / export. Nothing is published to a CMS.",
     "run": "Run: {{date}}",
     "runUnsaved": "Run: not saved yet",
+    "refresh": "Recalculate from saved data",
+    "related": { "title": "Related views" },
     "hss": {
       "title": "Holistic Semantic Score (HSS)",
       "valueAria": "HSS {{value}}",
@@ -8272,7 +8274,9 @@
     "reason": {
       "not-provided": "No value was provided.",
       "not-run": "The module did not run for this crawl.",
-      "domain-aggregation-undefined": "Per-page module: a site-level score is not defined yet, so it is left out instead of averaged.",
+      "insufficient-pages": "Too few measured pages or phrases for a site-level score (at least 3 needed).",
+      "sprs-unavailable": "The link graph could not be scored.",
+      "sprs-not-converged": "The link-flow calculation did not converge.",
       "sfs-no-scored-pages": "No page could be scored.",
       "tas-no-reference-map": "Build the reference topic map to measure TAS.",
       "eetv-no-signals": "No trust signals were observed.",
@@ -8297,6 +8301,7 @@
       "hint": "Ranked by HSS delta per estimated hour. Deltas come only from the modules' own simulations; without one the delta is unavailable. Not a promise of traffic, citations or ROI.",
       "empty": "The module reports of this run produced no actions.",
       "internalLink": "Add an internal link: {{from}} → {{to}}",
+      "module": { "fix-leak": "Fix link leak on {{url}}", "add-inlinks": "Add inbound links to {{url}}", "rewrite-weak-passages": "Rewrite weak passages on {{url}}" },
       "delta": "HSS Δ {{value}}",
       "deltaUnavailable": "HSS Δ unavailable (no declared model)",
       "moduleDelta": "{{module}} Δ {{value}}",

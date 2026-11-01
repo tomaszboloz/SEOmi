@@ -8233,6 +8233,8 @@
     "workflow": "흐름: 진단 → 우선순위 선택 → 모듈 근거 → What-If → 브리프 / 복사 / 내보내기. CMS에 게시하지 않습니다.",
     "run": "크롤: {{date}}",
     "runUnsaved": "크롤: 아직 저장되지 않음",
+    "refresh": "저장된 데이터로 다시 계산",
+    "related": { "title": "관련 보기" },
     "hss": {
       "title": "Holistic Semantic Score(HSS)",
       "valueAria": "HSS {{value}}",
@@ -8272,7 +8274,9 @@
     "reason": {
       "not-provided": "값이 제공되지 않았습니다.",
       "not-run": "이 크롤에서는 모듈이 실행되지 않았습니다.",
-      "domain-aggregation-undefined": "페이지 단위 모듈입니다. 사이트 단위 점수가 아직 정의되지 않아 평균하지 않고 제외합니다.",
+      "insufficient-pages": "사이트 단위 점수를 내기에는 측정된 페이지나 구문이 너무 적습니다(최소 3개 필요).",
+      "sprs-unavailable": "링크 그래프를 평가하지 못했습니다.",
+      "sprs-not-converged": "링크 흐름 계산이 수렴하지 않았습니다.",
       "sfs-no-scored-pages": "점수를 매길 수 있는 페이지가 없습니다.",
       "tas-no-reference-map": "TAS를 측정하려면 참조 주제 맵을 만드세요.",
       "eetv-no-signals": "신뢰 신호가 관찰되지 않았습니다.",
@@ -8297,6 +8301,7 @@
       "hint": "예상 1시간당 HSS 변화량 순으로 정렬합니다. 변화량은 각 모듈 자체 시뮬레이션에서만 가져오며, 없으면 사용 불가로 표시합니다. 트래픽, 인용, ROI를 약속하지 않습니다.",
       "empty": "이 크롤의 모듈 보고서에서 생성된 작업이 없습니다.",
       "internalLink": "내부 링크 추가: {{from}} → {{to}}",
+      "module": { "fix-leak": "{{url}}의 링크 누수 수정", "add-inlinks": "{{url}}에 들어오는 링크 추가", "rewrite-weak-passages": "{{url}}의 약한 문단 다시 쓰기" },
       "delta": "HSS Δ {{value}}",
       "deltaUnavailable": "HSS Δ 사용 불가(선언된 모델 없음)",
       "moduleDelta": "{{module}} Δ {{value}}",

@@ -8233,6 +8233,8 @@
     "workflow": "流れ：診断 → 優先度の選択 → モジュールの根拠 → What-If → ブリーフ / コピー / エクスポート。CMS への公開は行いません。",
     "run": "クロール：{{date}}",
     "runUnsaved": "クロール：未保存",
+    "refresh": "保存データから再計算",
+    "related": { "title": "関連ビュー" },
     "hss": {
       "title": "Holistic Semantic Score（HSS）",
       "valueAria": "HSS {{value}}",
@@ -8272,7 +8274,9 @@
     "reason": {
       "not-provided": "値が指定されていません。",
       "not-run": "このクロールではモジュールが実行されていません。",
-      "domain-aggregation-undefined": "ページ単位のモジュールです。サイト単位のスコアが未定義のため、平均せずに除外しています。",
+      "insufficient-pages": "サイト単位のスコアには測定済みのページまたはフレーズが少なすぎます（3件以上必要）。",
+      "sprs-unavailable": "リンクグラフを評価できませんでした。",
+      "sprs-not-converged": "リンクフローの計算が収束しませんでした。",
       "sfs-no-scored-pages": "評価できたページがありません。",
       "tas-no-reference-map": "TAS を測定するには参照トピックマップを作成してください。",
       "eetv-no-signals": "信頼シグナルが見つかりませんでした。",
@@ -8297,6 +8301,7 @@
       "hint": "推定 1 時間あたりの HSS 差分で並べています。差分は各モジュール自身のシミュレーションのみから算出し、ない場合は利用不可です。トラフィック、引用、ROI を約束するものではありません。",
       "empty": "このクロールのモジュールレポートからアクションは生成されませんでした。",
       "internalLink": "内部リンクを追加：{{from}} → {{to}}",
+      "module": { "fix-leak": "{{url}} のリンク漏れを修正", "add-inlinks": "{{url}} への内部リンクを追加", "rewrite-weak-passages": "{{url}} の弱い箇所を書き直す" },
       "delta": "HSS Δ {{value}}",
       "deltaUnavailable": "HSS Δ 利用不可（宣言されたモデルなし）",
       "moduleDelta": "{{module}} Δ {{value}}",

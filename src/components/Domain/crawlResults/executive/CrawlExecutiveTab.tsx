@@ -5,6 +5,7 @@ import { hssExportPayload } from '@/services/hss';
 import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
 import type { CrawlTab } from '../helpers/crawlResultsTabsConfig';
 import { ExecutiveActionFeed } from './ExecutiveActionFeed';
+import { ExecutiveRelatedViews } from './ExecutiveRelatedViews';
 import { ExecutiveHssHero } from './ExecutiveHssHero';
 import { ExecutiveModuleCards } from './ExecutiveModuleCards';
 import { ExecutiveWhatIf } from './ExecutiveWhatIf';
@@ -28,7 +29,8 @@ type CopyState = 'idle' | 'copied' | 'failed';
  */
 export const CrawlExecutiveTab = ({ pages, startUrl, run, projectId, onOpenTab }: CrawlExecutiveTabProps) => {
   const { t, i18n } = useTranslation();
-  const { hss, actions } = useExecutiveData(pages, startUrl, run, projectId);
+  const [revision, setRevision] = useState(0);
+  const { hss, actions, sfs } = useExecutiveData(pages, startUrl, run, projectId, revision);
   const trend = useHssTrend(projectId, hss, run?.completedAt);
   const [copy, setCopy] = useState<CopyState>('idle');
   const exportJson = async () => {
@@ -45,6 +47,9 @@ export const CrawlExecutiveTab = ({ pages, startUrl, run, projectId, onOpenTab }
           <p className="text-xs text-slate-400">{date ? t('executive.run', { date }) : t('executive.runUnsaved')}</p>
         </div>
         <div className="flex flex-col items-end gap-1">
+          <button type="button" onClick={() => setRevision((value) => value + 1)} className="rounded border border-slate-700 px-3 py-1.5 text-xs text-slate-200 hover:border-emerald-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
+            {t('executive.refresh')}
+          </button>
           <button type="button" onClick={() => { void exportJson(); }} className="rounded border border-slate-700 px-3 py-1.5 text-xs text-slate-200 hover:border-emerald-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
             {t('executive.export.copy')}
           </button>
@@ -52,10 +57,11 @@ export const CrawlExecutiveTab = ({ pages, startUrl, run, projectId, onOpenTab }
         </div>
       </header>
       <p className="text-xs text-slate-300">{t('executive.workflow')}</p>
+      <ExecutiveRelatedViews onOpen={onOpenTab} />
       <ExecutiveHssHero hss={hss} trend={trend} />
       <ExecutiveModuleCards hss={hss} trend={trend} onOpen={onOpenTab} />
       <div className="grid gap-4 xl:grid-cols-[2fr_1fr]">
-        <ExecutiveActionFeed key={`${projectId ?? ''}|${hss.runId}`} actions={actions} onOpen={onOpenTab} projectId={projectId} hss={hss} />
+        <ExecutiveActionFeed key={`${projectId ?? ''}|${hss.runId}`} actions={actions} onOpen={onOpenTab} projectId={projectId} hss={hss} focus={sfs ? { report: sfs, pages } : null} />
         <ExecutiveWhatIf key={`${hss.runId}|${hss.profile.version}`} hss={hss} />
       </div>
     </div>

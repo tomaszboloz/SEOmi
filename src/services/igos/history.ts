@@ -37,6 +37,9 @@ const readAll = (projectId: string): Record<string, IgosHistoryEntry[]> => {
     .map(([phrase, rows]) => [phrase, Array.isArray(rows) ? rows.filter(isEntry) : []]));
 };
 
+/** Every phrase of the project, each newest first (used for the site-level HSS scalar). */
+export const loadAllIgosHistory = (projectId: string | null): IgosHistoryEntry[][] => projectId ? Object.values(readAll(projectId)) : [];
+
 /** Newest first; empty without a project or phrase. */
 export const loadIgosHistory = (projectId: string | null, phrase: string): IgosHistoryEntry[] =>
   projectId && phraseKey(phrase) ? readAll(projectId)[phraseKey(phrase)] ?? [] : [];

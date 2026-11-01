@@ -30,6 +30,9 @@ const readAll = (projectId: string): Record<string, SijaHistoryEntry[]> => {
   return Object.fromEntries(Object.entries(raw as Record<string, unknown>).map(([phrase, rows]) => [phrase, Array.isArray(rows) ? rows.filter(isEntry) : []]));
 };
 
+/** Every phrase of the project, each newest first (used for the site-level HSS scalar). */
+export const loadAllSijaHistory = (projectId: string | null): SijaHistoryEntry[][] => projectId ? Object.values(readAll(projectId)) : [];
+
 export const loadSijaHistory = (projectId: string | null, phrase: string): SijaHistoryEntry[] =>
   projectId && phraseKey(phrase) ? readAll(projectId)[phraseKey(phrase)] ?? [] : [];
 

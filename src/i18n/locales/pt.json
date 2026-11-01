@@ -8233,6 +8233,8 @@
     "workflow": "Fluxo: diagnóstico → escolher prioridade → evidências do módulo → What-If → brief / copiar / exportar. Nada é publicado em um CMS.",
     "run": "Rastreamento: {{date}}",
     "runUnsaved": "Rastreamento: ainda não salvo",
+    "refresh": "Recalcular com os dados guardados",
+    "related": { "title": "Vistas relacionadas" },
     "hss": {
       "title": "Holistic Semantic Score (HSS)",
       "valueAria": "HSS {{value}}",
@@ -8272,7 +8274,9 @@
     "reason": {
       "not-provided": "Nenhum valor foi informado.",
       "not-run": "O módulo não foi executado para este rastreamento.",
-      "domain-aggregation-undefined": "Módulo por página: ainda não há pontuação de site definida, então ele é excluído em vez de ser calculado pela média.",
+      "insufficient-pages": "Poucas páginas ou frases medidas para uma pontuação de site (são necessárias pelo menos 3).",
+      "sprs-unavailable": "Não foi possível pontuar o grafo de links.",
+      "sprs-not-converged": "O cálculo do fluxo de links não convergiu.",
       "sfs-no-scored-pages": "Nenhuma página pôde ser pontuada.",
       "tas-no-reference-map": "Gere o mapa temático de referência para medir o TAS.",
       "eetv-no-signals": "Nenhum sinal de confiança foi observado.",
@@ -8297,6 +8301,7 @@
       "hint": "Ordenado por delta de HSS por hora estimada. Os deltas vêm apenas das simulações dos próprios módulos; sem elas o delta fica indisponível. Não é promessa de tráfego, citações ou ROI.",
       "empty": "Os relatórios de módulos deste rastreamento não geraram ações.",
       "internalLink": "Adicionar link interno: {{from}} → {{to}}",
+      "module": { "fix-leak": "Corrigir a fuga de links em {{url}}", "add-inlinks": "Adicionar links de entrada para {{url}}", "rewrite-weak-passages": "Reescrever as passagens fracas de {{url}}" },
       "delta": "Δ HSS {{value}}",
       "deltaUnavailable": "Δ HSS indisponível (sem modelo declarado)",
       "moduleDelta": "Δ {{module}} {{value}}",

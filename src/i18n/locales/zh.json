@@ -8233,6 +8233,8 @@
     "workflow": "流程：诊断 → 选择优先级 → 模块证据 → What-If → 简报 / 复制 / 导出。不会发布到 CMS。",
     "run": "抓取：{{date}}",
     "runUnsaved": "抓取：尚未保存",
+    "refresh": "根据已保存数据重新计算",
+    "related": { "title": "相关视图" },
     "hss": {
       "title": "Holistic Semantic Score（HSS）",
       "valueAria": "HSS {{value}}",
@@ -8272,7 +8274,9 @@
     "reason": {
       "not-provided": "未提供数值。",
       "not-run": "此次抓取未运行该模块。",
-      "domain-aggregation-undefined": "按页面计算的模块：尚未定义站点级分数，因此予以排除而不是取平均。",
+      "insufficient-pages": "已测量的页面或短语太少，无法计算站点分数（至少需要 3 个）。",
+      "sprs-unavailable": "无法评估链接图。",
+      "sprs-not-converged": "链接流计算未收敛。",
       "sfs-no-scored-pages": "没有可评分的页面。",
       "tas-no-reference-map": "请先构建参考主题图以测量 TAS。",
       "eetv-no-signals": "未发现信任信号。",
@@ -8297,6 +8301,7 @@
       "hint": "按每估算小时的 HSS 变化量排序。变化量仅来自各模块自身的模拟；没有模拟时显示为不可用。不承诺流量、引用或投资回报。",
       "empty": "此次抓取的模块报告未生成任何行动。",
       "internalLink": "添加内部链接：{{from}} → {{to}}",
+      "module": { "fix-leak": "修复 {{url}} 的链接外流", "add-inlinks": "为 {{url}} 添加入站链接", "rewrite-weak-passages": "重写 {{url}} 上较弱的段落" },
       "delta": "HSS Δ {{value}}",
       "deltaUnavailable": "HSS Δ 不可用（无声明的模型）",
       "moduleDelta": "{{module}} Δ {{value}}",
