@@ -7,19 +7,17 @@ mod startup;
 #[cfg(test)]
 mod startup_tests;
 pub mod utils;
-use tauri::Builder;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     utils::logging::init();
     desktop_builder()
         .run(tauri::generate_context!())
-        .expect("Error while running SEOmi desktop application");
+        .expect("SEOmi failed to start");
 }
-
 /// Shared production composition root, also exercised by the real desktop E2E binary.
-pub fn desktop_builder() -> Builder<tauri::Wry> {
+pub fn desktop_builder() -> tauri::Builder<tauri::Wry> {
     compose(
-        Builder::default()
+        tauri::Builder::default()
             .plugin(tauri_plugin_dialog::init())
             .plugin(tauri_plugin_updater::Builder::new().build())
             .plugin(tauri_plugin_process::init())
@@ -27,7 +25,7 @@ pub fn desktop_builder() -> Builder<tauri::Wry> {
     )
 }
 /// Runtime-generic state, handlers and startup hook, so MockRuntime tests drive the shipped IPC surface.
-pub(crate) fn compose<R: tauri::Runtime>(builder: Builder<R>) -> Builder<R> {
+pub(crate) fn compose<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::Builder<R> {
     builder
         .manage(commands::site_crawler::CrawlControl::new())
         .manage(commands::seo_audit::AuditControl::new())
@@ -121,6 +119,9 @@ pub(crate) fn compose<R: tauri::Runtime>(builder: Builder<R>) -> Builder<R> {
                 commands::scheduled_worker::load_scheduled_execution,
                 commands::scheduled_worker::list_scheduled_executions,
                 commands::scheduled_worker::acknowledge_scheduled_execution,
+                commands::scheduled_worker::ledger::reserve_monitoring_alert,
+                commands::scheduled_worker::ledger::finish_monitoring_alert,
+                commands::scheduled_worker::ledger::list_monitoring_ledger,
                 commands::updater::check_for_updates,
                 commands::updater::install_update,
                 commands::site_crawler::crawl_site,

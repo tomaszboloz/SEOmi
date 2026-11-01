@@ -1,5 +1,6 @@
 import { sendProjectNotification } from '@/services/desktopNotifications/delivery';
-import { readMonitoringSettings, reserveMonitoringAlert } from './persistence';
+import { readMonitoringSettings } from './persistence';
+import { reserveDispatch } from './nativeLedger';
 import { compareGscForMonitoring, comparePageSpeedForMonitoring, evaluateCrawlAlert, evaluateSemanticAlert } from './evaluators';
 import type { GscPerformanceSnapshot } from '@/services/gscPerformanceTracker';
 import type { PageSpeedSnapshot } from '@/services/pagespeedHistory';
@@ -15,6 +16,7 @@ import type { CrawlRunRecord } from '@/types';
 export * from './types';
 export * from './policy';
 export * from './persistence';
+export * from './nativeLedger';
 export * from './evaluators';
 export * from './focus';
 export * from './scoreDrop';
@@ -28,13 +30,13 @@ export interface MonitoringDeliveryResult { alert: MonitoringAlert | null; deliv
 
 export const deliverMonitoringAlert = async (projectId: string, alert: MonitoringAlert | null, delivery: MonitoringDelivery = {}): Promise<MonitoringDeliveryResult> => {
   if (!alert) return { alert, delivered: false, persisted: false, duplicate: false, emailConfigured: Boolean(delivery.email) };
-  const reservation = reserveMonitoringAlert(projectId, alert, readMonitoringSettings(projectId));
+  const reservation = await reserveDispatch(projectId, alert, readMonitoringSettings(projectId));
   if (!reservation) return { alert, delivered: false, persisted: false, duplicate: false, emailConfigured: Boolean(delivery.email) };
   if (reservation.duplicate) return { alert, delivered: false, persisted: false, duplicate: true, emailConfigured: Boolean(delivery.email) };
   const desktop = await sendProjectNotification(projectId, () => ({ title: alert.title, body: alert.body })).catch(() => false);
   const email = delivery.email ? await delivery.email(alert).catch(() => false) : false;
   const sent = desktop || email;
-  const persisted = reservation.finish(sent);
+  const persisted = await reservation.finish(sent);
   return { alert, delivered: sent, persisted, duplicate: false, emailConfigured: Boolean(delivery.email) };
 };
 
