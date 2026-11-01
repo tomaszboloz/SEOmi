@@ -2377,7 +2377,8 @@
       "authority": "Autoridade temática",
       "aio": "Prontidão para IA",
       "trust": "Confiança de entidades",
-      "offPage": "Análise off-page"
+      "offPage": "Análise off-page",
+      "evidence": "Telemetria, experiências e deriva da SERP"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -6468,6 +6469,53 @@
           "no-follow-links": "Sem links follow para analisar.",
           "source-text-or-authority-missing": "Algumas fontes não têm texto, vetores utilizáveis ou autoridade do fornecedor."
         }
+      },
+      "evidence": {
+        "title": "Telemetria, experiências e deriva da SERP",
+        "intro": "Últimos dados guardados do projeto. Cada bloco só aparece se houver dados; aqui nada é estimado.",
+        "tRevenue": "Receita orgânica por página de destino",
+        "revenueIntro": "Moeda {{0}}; atribuição {{1}}; período {{2}}. Uma página ausente é desconhecida, não zero.",
+        "colPage": "Página de destino",
+        "colRevenue": "Receita",
+        "tExperiments": "Estimativas de experiências",
+        "experimentsIntro": "Cliques acumulados face a um contrafactual, com o intervalo de 95% entre parênteses. Estima uma associação, não causalidade provada; não estimável significa que os dados não permitiram um resultado.",
+        "colTarget": "Alvo",
+        "colDate": "Data da alteração",
+        "colMethod": "Método",
+        "colStatus": "Estado",
+        "colEffect": "Efeito acumulado [95%]",
+        "colProbability": "Probabilidade do sinal",
+        "tDecay": "Histórico de deriva da SERP",
+        "decayIntro": "Instantâneos de SERP comparáveis guardados face ao primeiro. Apenas indicativo: uma deriva é motivo de revisão, não prova de perda.",
+        "colQuery": "Consulta",
+        "colVerdict": "Veredicto",
+        "colSamples": "Instantâneos",
+        "colShift": "Deslocamento do centroide",
+        "colEntities": "Entidades novas / perdidas",
+        "na": "n/d",
+        "disclaimer": "Não são dados do Google; sem previsão de perdas nem reescrita automática. Dados em falta surgem como indisponíveis, nunca como zero.",
+        "status": {
+          "estimated": "Estimado",
+          "not-estimable": "Não estimável"
+        },
+        "verdict": {
+          "too-few-samples": "Poucos instantâneos",
+          "incompatible": "Não comparável",
+          "stable": "Estável",
+          "not-persistent": "Não persistente",
+          "cooldown": "Arrefecimento",
+          "alert": "Revisão sugerida"
+        },
+        "method": {
+          "regression": "Regressão",
+          "structural": "Estrutural sazonal"
+        },
+        "colOutcome": "Resultado",
+        "outcome": {
+          "gsc-clicks": "Cliques do Search Console",
+          "ga4-key-events": "Eventos-chave do GA4",
+          "ga4-revenue": "Receita do GA4"
+        }
       }
     },
     "recs": {
@@ -9102,6 +9150,11 @@
       "negated": "Menção negada; não é uma recomendação",
       "critical": "Linguagem crítica junto à marca; não é uma recomendação",
       "quoted": "Opinião citada ou atribuída; não é uma recomendação da própria fonte"
+    },
+    "senses": {
+      "label": "Regras de alias (homónimos)",
+      "hint": "Uma regra por linha: Alias | -palavras de outro sentido | +palavras exigidas para o sentido de marca. Guardado por projeto, usado na próxima análise.",
+      "error": "Não foi possível guardar as regras (inválidas ou demasiado longas)."
     }
   },
   "experimentsUi": {
@@ -9163,6 +9216,12 @@
       "rows-truncated": "As linhas de páginas salvas estão truncadas; a comparação pode estar incompleta.",
       "low-volume": "Menos de 30 cliques de referência; o volume é insuficiente para uma comparação confiável.",
       "pending": "A data da intervenção está no futuro; a avaliação está pendente."
+    },
+    "outcome": {
+      "label": "Resultado medido",
+      "gsc-clicks": "Cliques do Search Console",
+      "ga4-key-events": "Eventos-chave do GA4 (orgânico)",
+      "ga4-revenue": "Receita do GA4 (orgânico)"
     }
   },
   "linkInjector": {
@@ -9272,7 +9331,17 @@
       "not-estimable": "Backtest impossível: o período anterior é curto demais para pseudo-intervenções."
     },
     "familySignificant": "Ainda significativo após ajuste para {{family}} experimentos exibidos juntos (Holm, p = {{p}}).",
-    "familyNotSignificant": "Não significativo após ajuste para {{family}} experimentos exibidos juntos (Holm, p = {{p}})."
+    "familyNotSignificant": "Não significativo após ajuste para {{family}} experimentos exibidos juntos (Holm, p = {{p}}).",
+    "structuralTitle": "Estimativa estrutural sazonal",
+    "structuralMethod": "Tendência de nível local mais sazonalidade semanal, com o controlo retirado quando é informativo. O intervalo de 95% vem de uma simulação preditiva com semente fixa. É uma aproximação do tipo BSTS, não um ajuste bayesiano completo, e mostra uma associação, não causalidade provada.",
+    "pageContamination": "A página de controlo pode partilhar links, modelos ou tema com a página alterada, pelo que a mesma alteração a pode afetar. Trate o resultado como mais fraco do que com um controlo independente.",
+    "pageLoad": "Carregar a série diária desta página",
+    "pageNeedsGsc": "Ligue primeiro uma propriedade do Search Console.",
+    "pageLoadFailed": "Não foi possível carregar ou guardar a série diária.",
+    "ga4Load": "Carregar a série diária do GA4",
+    "ga4NeedsConnection": "Ligue primeiro o Google Analytics.",
+    "ga4Loaded": "Guardados {{days}} dias; receita em {{currency}}.",
+    "ga4LoadFailed": "Não foi possível carregar ou guardar a série do GA4."
   },
   "revenueImportUi": {
     "title": "Receita (exportação opcional do GA4)",
@@ -9289,8 +9358,12 @@
       "not-organic": "Confirme que a exportação se limita a sessões de pesquisa orgânica.",
       "no-header": "Não foi encontrado um cabeçalho com coluna de página de destino e coluna de receita.",
       "no-rows": "O arquivo não tem página de destino com valor numérico de receita.",
-      "storage-failed": "Não foi possível atualizar o armazenamento local; a importação não foi salva."
-    }
+      "storage-failed": "Não foi possível atualizar o armazenamento local; a importação não foi salva.",
+      "invalid-response": "O Google Analytics devolveu dados de receita num formato inesperado.",
+      "fetch-failed": "Não foi possível obter a receita do Google Analytics. Verifique a ligação e a propriedade."
+    },
+    "api": "Obter da API do GA4",
+    "apiNote": "Requer o Google Analytics ligado. Lê os últimos 90 dias completos de receita de pesquisa orgânica por página de destino, na moeda da propriedade indicada pelo GA4. Sem eventos de compra, o GA4 indica 0."
   },
   "entityParity": {
     "title": "Entidades entre versões de idioma (Wikidata)",
@@ -9342,5 +9415,24 @@
       "invalid-response": "resposta inválida",
       "failed": "erro desconhecido"
     }
+  },
+  "imageOcrUi": {
+    "title": "OCR e alinhamento texto-imagem (local, opcional)",
+    "note": "Só corre depois de indicar um modelo de visão Ollama local que já usa; nada é descarregado. No máximo {{max}} imagens, enviadas apenas ao seu servidor Ollama. Resultados parciais: sem caixas por linha nem confiança. O alinhamento é uma heurística de sobreposição de texto (ALT, nome do ficheiro, texto da página), não compreensão de imagem.",
+    "model": "Modelo de visão Ollama",
+    "run": "Executar OCR",
+    "cancel": "Cancelar OCR",
+    "status": {
+      "running": "OCR em curso: {{ok}} concluídas, {{failed}} com falha.",
+      "done": "OCR concluído: {{ok}} concluídas, {{failed}} com falha.",
+      "cancelled": "OCR cancelado: {{ok}} concluídas, {{failed}} com falha.",
+      "error": "OCR parado por erro: {{ok}} concluídas, {{failed}} com falha."
+    },
+    "origin": {
+      "media-only": "apenas na imagem",
+      "duplicate-of-html": "também no HTML"
+    },
+    "fact": "«{{text}}» ({{origin}}, parcial) {{url}}",
+    "alignment": "{{url}}: sobreposição de texto {{pct}}% (heurística)"
   }
 }

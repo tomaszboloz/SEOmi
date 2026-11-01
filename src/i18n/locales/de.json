@@ -2377,7 +2377,8 @@
       "authority": "Thematische Autorität",
       "aio": "KI-Bereitschaft",
       "trust": "Entitätsvertrauen",
-      "offPage": "Offpage-Analyse"
+      "offPage": "Offpage-Analyse",
+      "evidence": "Telemetrie, Experimente und SERP-Drift"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -6468,6 +6469,53 @@
           "no-follow-links": "Keine Follow-Links zur Analyse verfügbar.",
           "source-text-or-authority-missing": "Einigen Quellen fehlen Text, brauchbare Vektoren oder Anbieterautorität."
         }
+      },
+      "evidence": {
+        "title": "Telemetrie, Experimente und SERP-Drift",
+        "intro": "Zuletzt gespeicherte Daten dieses Projekts. Jeder Block erscheint nur, wenn Daten vorliegen; hier wird nichts geschätzt.",
+        "tRevenue": "Organischer Umsatz je Landingpage",
+        "revenueIntro": "Währung {{0}}; Zuordnung {{1}}; Zeitraum {{2}}. Eine fehlende Seite ist unbekannt, nicht null.",
+        "colPage": "Landingpage",
+        "colRevenue": "Umsatz",
+        "tExperiments": "Experiment-Schätzungen",
+        "experimentsIntro": "Kumulierte Klicks gegenüber einem Kontrafaktum, 95-%-Intervall in Klammern. Das schätzt einen Zusammenhang, keine bewiesene Kausalität; nicht schätzbar heißt, die Daten erlaubten kein Ergebnis.",
+        "colTarget": "Ziel",
+        "colDate": "Änderungsdatum",
+        "colMethod": "Methode",
+        "colStatus": "Status",
+        "colEffect": "Kumulierter Effekt [95 %]",
+        "colProbability": "Vorzeichenwahrscheinlichkeit",
+        "tDecay": "SERP-Drift-Verlauf",
+        "decayIntro": "Gespeicherte vergleichbare SERP-Snapshots gegenüber dem ersten. Nur beratend: Drift ist ein Anlass zur Prüfung, kein Beleg für einen Verlust.",
+        "colQuery": "Suchanfrage",
+        "colVerdict": "Urteil",
+        "colSamples": "Snapshots",
+        "colShift": "Zentroid-Verschiebung",
+        "colEntities": "Entitäten neu / verloren",
+        "na": "k. A.",
+        "disclaimer": "Keine Google-Daten; keine Verlustprognose und keine automatische Umschreibung. Fehlende Daten erscheinen als nicht verfügbar, nie als null.",
+        "status": {
+          "estimated": "Geschätzt",
+          "not-estimable": "Nicht schätzbar"
+        },
+        "verdict": {
+          "too-few-samples": "Zu wenige Snapshots",
+          "incompatible": "Nicht vergleichbar",
+          "stable": "Stabil",
+          "not-persistent": "Nicht anhaltend",
+          "cooldown": "Abkühlphase",
+          "alert": "Prüfung empfohlen"
+        },
+        "method": {
+          "regression": "Regression",
+          "structural": "Saisonal strukturell"
+        },
+        "colOutcome": "Ergebnis",
+        "outcome": {
+          "gsc-clicks": "Search-Console-Klicks",
+          "ga4-key-events": "GA4-Schlüsselereignisse",
+          "ga4-revenue": "GA4-Umsatz"
+        }
       }
     },
     "recs": {
@@ -9102,6 +9150,11 @@
       "negated": "Verneinte Erwähnung; keine Empfehlung",
       "critical": "Kritische Wortwahl bei der Marke; keine Empfehlung",
       "quoted": "Zitierte oder zugeschriebene Meinung; keine eigene Empfehlung der Quelle"
+    },
+    "senses": {
+      "label": "Alias-Regeln (Homonyme)",
+      "hint": "Eine Regel pro Zeile: Alias | -Wörter eines anderen Sinns | +Wörter, die für den Markensinn nötig sind. Pro Projekt gespeichert, bei der nächsten Analyse genutzt.",
+      "error": "Regeln konnten nicht gespeichert werden (ungültig oder zu lang)."
     }
   },
   "experimentsUi": {
@@ -9163,6 +9216,12 @@
       "rows-truncated": "Gespeicherte Seitenzeilen sind gekürzt; der Seitenvergleich kann unvollständig sein.",
       "low-volume": "Weniger als 30 Klicks im Referenzzeitraum; das Volumen ist für einen verlässlichen Vergleich zu gering.",
       "pending": "Die Maßnahme liegt in der Zukunft; die Auswertung steht aus."
+    },
+    "outcome": {
+      "label": "Gemessenes Ergebnis",
+      "gsc-clicks": "Search-Console-Klicks",
+      "ga4-key-events": "GA4-Schlüsselereignisse (organisch)",
+      "ga4-revenue": "GA4-Umsatz (organisch)"
     }
   },
   "linkInjector": {
@@ -9272,7 +9331,17 @@
       "not-estimable": "Backtest nicht möglich: Der Vorzeitraum ist für Schein-Interventionen zu kurz."
     },
     "familySignificant": "Nach Korrektur für {{family}} gemeinsam angezeigte Experimente weiterhin signifikant (Holm, p = {{p}}).",
-    "familyNotSignificant": "Nach Korrektur für {{family}} gemeinsam angezeigte Experimente nicht signifikant (Holm, p = {{p}})."
+    "familyNotSignificant": "Nach Korrektur für {{family}} gemeinsam angezeigte Experimente nicht signifikant (Holm, p = {{p}}).",
+    "structuralTitle": "Saisonale Strukturschätzung",
+    "structuralMethod": "Lokaler Niveautrend plus Wochensaisonalität; die Kontrolle wird herausgerechnet, wenn sie informativ ist. Das 95-%-Intervall stammt aus einer Posterior-Prädiktiv-Simulation mit festem Seed. Das ist eine BSTS-artige Näherung, kein vollständiger Bayes-Fit, und zeigt einen Zusammenhang, keine bewiesene Kausalität.",
+    "pageContamination": "Die Kontrollseite kann Links, Vorlagen oder Thema mit der geänderten Seite teilen, sodass dieselbe Änderung sie beeinflussen kann. Das Ergebnis ist schwächer als mit unabhängiger Kontrolle.",
+    "pageLoad": "Tagesreihe dieser Seite laden",
+    "pageNeedsGsc": "Verbinden Sie zuerst eine Search-Console-Property.",
+    "pageLoadFailed": "Die Tagesreihe konnte nicht geladen oder gespeichert werden.",
+    "ga4Load": "Tägliche GA4-Reihe laden",
+    "ga4NeedsConnection": "Verbinden Sie zuerst Google Analytics.",
+    "ga4Loaded": "{{days}} Tage gespeichert; Umsatz in {{currency}}.",
+    "ga4LoadFailed": "Die GA4-Reihe konnte nicht geladen oder gespeichert werden."
   },
   "revenueImportUi": {
     "title": "Umsatz (optionaler GA4-Export)",
@@ -9289,8 +9358,12 @@
       "not-organic": "Bestätigen Sie, dass der Export auf Sitzungen aus der organischen Suche beschränkt ist.",
       "no-header": "Keine Kopfzeile mit einer Landingpage- und einer Umsatzspalte gefunden.",
       "no-rows": "Die Datei enthält keine Landingpage mit numerischem Umsatz.",
-      "storage-failed": "Der lokale Speicher konnte nicht aktualisiert werden; der Import wurde nicht gespeichert."
-    }
+      "storage-failed": "Der lokale Speicher konnte nicht aktualisiert werden; der Import wurde nicht gespeichert.",
+      "invalid-response": "Google Analytics lieferte Umsatzdaten in einem unerwarteten Format.",
+      "fetch-failed": "Der Umsatz konnte nicht von Google Analytics abgerufen werden. Prüfen Sie Verbindung und Property."
+    },
+    "api": "Aus der GA4-API abrufen",
+    "apiNote": "Setzt verbundenes Google Analytics voraus. Liest die letzten 90 vollen Tage organischen Suchumsatz je Landingpage in der von GA4 gemeldeten Property-Währung. Ohne Kaufereignisse meldet GA4 0."
   },
   "entityParity": {
     "title": "Entitäten über Sprachversionen (Wikidata)",
@@ -9342,5 +9415,24 @@
       "invalid-response": "ungültige Antwort",
       "failed": "unbekannter Fehler"
     }
+  },
+  "imageOcrUi": {
+    "title": "OCR und Text-Bild-Abgleich (lokal, optional)",
+    "note": "Läuft erst, wenn Sie ein lokales Ollama-Vision-Modell eintragen, das Sie bereits betreiben; nichts wird heruntergeladen. Höchstens {{max}} Bilder, nur an Ihren Ollama-Server. Ergebnisse sind partiell: keine Zeilenboxen, keine Konfidenz. Der Abgleichswert ist eine Textüberlappungs-Heuristik (ALT, Dateiname, Seitentext), kein Bildverständnis.",
+    "model": "Ollama-Vision-Modell",
+    "run": "OCR starten",
+    "cancel": "OCR abbrechen",
+    "status": {
+      "running": "OCR läuft: {{ok}} fertig, {{failed}} fehlgeschlagen.",
+      "done": "OCR beendet: {{ok}} fertig, {{failed}} fehlgeschlagen.",
+      "cancelled": "OCR abgebrochen: {{ok}} fertig, {{failed}} fehlgeschlagen.",
+      "error": "OCR wegen eines Fehlers gestoppt: {{ok}} fertig, {{failed}} fehlgeschlagen."
+    },
+    "origin": {
+      "media-only": "nur im Bild",
+      "duplicate-of-html": "auch im HTML"
+    },
+    "fact": "„{{text}}“ ({{origin}}, partiell) {{url}}",
+    "alignment": "{{url}}: Textüberlappung {{pct}} % (Heuristik)"
   }
 }

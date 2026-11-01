@@ -27,6 +27,7 @@ mod run_tables;
 mod sec_aio;
 mod sec_authority;
 mod sec_dupes;
+mod sec_evidence;
 mod sec_extra;
 mod sec_focus;
 mod sec_http;
@@ -101,6 +102,9 @@ pub fn crawl_pdf(run: &Value) -> Vec<u8> {
         let off_page = data::OffPage::new(&run["offPage"]);
         doc.crawl_off_page(&off_page);
         sections.push(offpage_tables::sources(&off_page));
+    }
+    if sec_evidence::present(run) {
+        doc.crawl_evidence(&run["evidence"]);
     }
     if sec_trust::present(run) {
         doc.crawl_trust(&run["trust"]);

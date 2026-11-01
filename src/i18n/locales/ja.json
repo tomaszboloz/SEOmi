@@ -2377,7 +2377,8 @@
       "authority": "トピカルオーソリティ",
       "aio": "AI対応度",
       "trust": "エンティティの信頼性",
-      "offPage": "オフページ分析"
+      "offPage": "オフページ分析",
+      "evidence": "テレメトリ、実験、SERPのドリフト"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -6468,6 +6469,53 @@
           "no-follow-links": "分析可能なfollowリンクがありません。",
           "source-text-or-authority-missing": "一部ソースにテキスト、使用可能なベクトル、提供元の権威スコアがありません。"
         }
+      },
+      "evidence": {
+        "title": "テレメトリ、実験、SERPのドリフト",
+        "intro": "このプロジェクトの最新の保存データです。各ブロックはデータがある場合のみ表示され、ここでは何も推定しません。",
+        "tRevenue": "ランディングページ別オーガニック収益",
+        "revenueIntro": "通貨 {{0}}、アトリビューション {{1}}、期間 {{2}}。ここにないページは不明であり、0ではありません。",
+        "colPage": "ランディングページ",
+        "colRevenue": "収益",
+        "tExperiments": "実験の推定",
+        "experimentsIntro": "累積クリックを反事実と比較し、95%区間を括弧内に示します。これは因果の証明ではなく関連の推定で、推定不可はデータが結果を許さなかったことを意味します。",
+        "colTarget": "対象",
+        "colDate": "変更日",
+        "colMethod": "手法",
+        "colStatus": "状態",
+        "colEffect": "累積効果 [95%]",
+        "colProbability": "符号の確率",
+        "tDecay": "SERPドリフト履歴",
+        "decayIntro": "保存済みの比較可能なSERPスナップショットを最初のものと比較します。参考情報のみで、ドリフトは見直しの理由であり損失の証拠ではありません。",
+        "colQuery": "クエリ",
+        "colVerdict": "判定",
+        "colSamples": "スナップショット",
+        "colShift": "重心のずれ",
+        "colEntities": "エンティティ 新規 / 消失",
+        "na": "なし",
+        "disclaimer": "Googleのデータではありません。損失の予測も自動書き換えも行いません。欠損データは利用不可として表示し、0とはしません。",
+        "status": {
+          "estimated": "推定済み",
+          "not-estimable": "推定不可"
+        },
+        "verdict": {
+          "too-few-samples": "スナップショット不足",
+          "incompatible": "比較不可",
+          "stable": "安定",
+          "not-persistent": "持続せず",
+          "cooldown": "クールダウン",
+          "alert": "見直し推奨"
+        },
+        "method": {
+          "regression": "回帰",
+          "structural": "季節構造"
+        },
+        "colOutcome": "成果",
+        "outcome": {
+          "gsc-clicks": "Search Consoleのクリック",
+          "ga4-key-events": "GA4キーイベント",
+          "ga4-revenue": "GA4収益"
+        }
       }
     },
     "recs": {
@@ -9102,6 +9150,11 @@
       "negated": "否定的な言及です。推奨ではありません",
       "critical": "ブランドの近くに批判的な表現があります。推奨ではありません",
       "quoted": "引用または他者の意見です。ソース自身の推奨ではありません"
+    },
+    "senses": {
+      "label": "エイリアス規則(同音異義語)",
+      "hint": "1行1規則: エイリアス | -別の意味を示す語 | +ブランドの意味に必須の語。プロジェクトごとに保存され、次回の分析で使われます。",
+      "error": "規則を保存できませんでした(無効または長すぎます)。"
     }
   },
   "experimentsUi": {
@@ -9163,6 +9216,12 @@
       "rows-truncated": "保存されたページ行が切り詰められており、比較が不完全な可能性があります。",
       "low-volume": "基準期間のクリック数が30未満で、信頼できる比較には少なすぎます。",
       "pending": "施策の日付が未来のため、評価は保留中です。"
+    },
+    "outcome": {
+      "label": "測定する成果",
+      "gsc-clicks": "Search Consoleのクリック",
+      "ga4-key-events": "GA4キーイベント(オーガニック)",
+      "ga4-revenue": "GA4収益(オーガニック)"
     }
   },
   "linkInjector": {
@@ -9272,7 +9331,17 @@
       "not-estimable": "バックテスト不可: 事前期間が疑似介入には短すぎます。"
     },
     "familySignificant": "同時に表示した {{family}} 件の実験で補正後も有意です (Holm, p = {{p}})。",
-    "familyNotSignificant": "同時に表示した {{family}} 件の実験で補正後は有意ではありません (Holm, p = {{p}})。"
+    "familyNotSignificant": "同時に表示した {{family}} 件の実験で補正後は有意ではありません (Holm, p = {{p}})。",
+    "structuralTitle": "季節性を含む構造推定",
+    "structuralMethod": "局所水準トレンドと週次の季節性を用い、情報を持つ対照は回帰で除きます。95%区間は固定シードの事後予測シミュレーションによるものです。これはBSTS型の近似で、完全なベイズ推定ではなく、因果の証明ではなく関連を示します。",
+    "pageContamination": "対照ページは変更したページとリンク、テンプレート、トピックを共有している可能性があり、同じ変更の影響を受けることがあります。独立した対照より弱い結果として扱ってください。",
+    "pageLoad": "このページの日次系列を読み込む",
+    "pageNeedsGsc": "先にSearch Consoleプロパティを接続してください。",
+    "pageLoadFailed": "日次系列を読み込めないか保存できませんでした。",
+    "ga4Load": "GA4の日次系列を読み込む",
+    "ga4NeedsConnection": "先にGoogle Analyticsを接続してください。",
+    "ga4Loaded": "{{days}}日分を保存。収益は{{currency}}です。",
+    "ga4LoadFailed": "GA4系列を読み込めないか保存できませんでした。"
   },
   "revenueImportUi": {
     "title": "収益（任意の GA4 エクスポート）",
@@ -9289,8 +9358,12 @@
       "not-organic": "エクスポートがオーガニック検索のセッションに限定されていることを確認してください。",
       "no-header": "ランディングページ列と収益列を含むヘッダーが見つかりません。",
       "no-rows": "数値の収益を持つランディングページがファイルにありません。",
-      "storage-failed": "ローカルストレージを更新できず、インポートは保存されませんでした。"
-    }
+      "storage-failed": "ローカルストレージを更新できず、インポートは保存されませんでした。",
+      "invalid-response": "Google Analyticsが想定外の形式で収益データを返しました。",
+      "fetch-failed": "Google Analyticsから収益を取得できませんでした。接続とプロパティを確認してください。"
+    },
+    "api": "GA4 APIから取得",
+    "apiNote": "Google Analyticsの接続が必要です。GA4が報告するプロパティ通貨で、ランディングページ別のオーガニック検索収益を直近90日分(完全な日)取得します。購入イベントがない場合、GA4は0を返します。"
   },
   "entityParity": {
     "title": "言語バージョン間のエンティティ (Wikidata)",
@@ -9342,5 +9415,24 @@
       "invalid-response": "無効な応答",
       "failed": "不明なエラー"
     }
+  },
+  "imageOcrUi": {
+    "title": "OCRとテキストと画像の整合(ローカル・任意)",
+    "note": "すでに稼働中のローカルOllama視覚モデル名を入力した場合のみ実行され、何もダウンロードされません。画像は最大{{max}}件、お使いのOllamaサーバーにのみ送信されます。結果は部分的で、行ごとの枠や信頼度はありません。整合値はテキスト重複のヒューリスティック(ALT、ファイル名、ページ本文)であり、画像理解ではありません。",
+    "model": "Ollama視覚モデル",
+    "run": "OCRを実行",
+    "cancel": "OCRをキャンセル",
+    "status": {
+      "running": "OCR実行中: 完了 {{ok}}、失敗 {{failed}}。",
+      "done": "OCR完了: 完了 {{ok}}、失敗 {{failed}}。",
+      "cancelled": "OCRをキャンセルしました: 完了 {{ok}}、失敗 {{failed}}。",
+      "error": "エラーでOCRが停止しました: 完了 {{ok}}、失敗 {{failed}}。"
+    },
+    "origin": {
+      "media-only": "画像内のみ",
+      "duplicate-of-html": "HTMLにも存在"
+    },
+    "fact": "「{{text}}」({{origin}}、部分的) {{url}}",
+    "alignment": "{{url}}: テキスト重複 {{pct}}%(ヒューリスティック)"
   }
 }

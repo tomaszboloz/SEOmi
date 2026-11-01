@@ -9,7 +9,7 @@ import { computeTbva } from './tbva';
 export const createOffPageHistoryRecord = (analysis: SourceAnalysis, settings: SourceEmbeddingSettings): OffPageHistoryRecord => {
   const scale = 100;
   const report = computeTbva(analysis.sources.map((source) => ({ ...source, follow: true })), { scale, topic: analysis.topic });
-  const citations = findCoCitations(sourceParagraphs(analysis.sources), analysis.aliases, analysis.coreEntity);
+  const citations = findCoCitations(sourceParagraphs(analysis.sources), analysis.aliases, analysis.coreEntity, analysis.senses);
   const sources = analysis.sources.map((source) => {
     const similarity = source.availability === 'ok' && usableVector(analysis.topic) && usableVector(source.vector)
       && source.vector.length === analysis.topic.length ? Math.min(1, Math.max(0, cosine(source.vector, analysis.topic))) : null;

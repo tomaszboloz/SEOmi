@@ -2377,7 +2377,8 @@
       "authority": "주제 권위도",
       "aio": "AI 준비도",
       "trust": "엔터티 신뢰도",
-      "offPage": "오프페이지 분석"
+      "offPage": "오프페이지 분석",
+      "evidence": "텔레메트리, 실험, SERP 드리프트"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -6468,6 +6469,53 @@
           "no-follow-links": "분석할 follow 링크가 없습니다.",
           "source-text-or-authority-missing": "일부 출처에 텍스트, 유효한 벡터 또는 제공자 권위 정보가 없습니다."
         }
+      },
+      "evidence": {
+        "title": "텔레메트리, 실험, SERP 드리프트",
+        "intro": "이 프로젝트의 최근 저장 데이터입니다. 각 블록은 데이터가 있을 때만 나타나며 여기서는 아무것도 추정하지 않습니다.",
+        "tRevenue": "방문 페이지별 오가닉 수익",
+        "revenueIntro": "통화 {{0}}; 기여 {{1}}; 기간 {{2}}. 여기에 없는 페이지는 0이 아니라 알 수 없음입니다.",
+        "colPage": "방문 페이지",
+        "colRevenue": "수익",
+        "tExperiments": "실험 추정",
+        "experimentsIntro": "누적 클릭을 반사실과 비교하고 95% 구간을 괄호에 표시합니다. 인과가 아니라 연관의 추정이며, 추정 불가는 데이터가 결과를 허용하지 않았다는 뜻입니다.",
+        "colTarget": "대상",
+        "colDate": "변경일",
+        "colMethod": "방법",
+        "colStatus": "상태",
+        "colEffect": "누적 효과 [95%]",
+        "colProbability": "부호 확률",
+        "tDecay": "SERP 드리프트 이력",
+        "decayIntro": "저장된 비교 가능한 SERP 스냅샷을 첫 번째와 비교합니다. 참고용이며 드리프트는 검토 사유일 뿐 손실의 증거가 아닙니다.",
+        "colQuery": "쿼리",
+        "colVerdict": "판정",
+        "colSamples": "스냅샷",
+        "colShift": "중심 이동",
+        "colEntities": "엔터티 신규 / 소실",
+        "na": "해당 없음",
+        "disclaimer": "Google 데이터가 아니며 손실 예측이나 자동 재작성은 없습니다. 누락된 데이터는 0이 아니라 사용 불가로 표시됩니다.",
+        "status": {
+          "estimated": "추정됨",
+          "not-estimable": "추정 불가"
+        },
+        "verdict": {
+          "too-few-samples": "스냅샷 부족",
+          "incompatible": "비교 불가",
+          "stable": "안정",
+          "not-persistent": "지속되지 않음",
+          "cooldown": "쿨다운",
+          "alert": "검토 권장"
+        },
+        "method": {
+          "regression": "회귀",
+          "structural": "계절 구조"
+        },
+        "colOutcome": "결과",
+        "outcome": {
+          "gsc-clicks": "Search Console 클릭",
+          "ga4-key-events": "GA4 주요 이벤트",
+          "ga4-revenue": "GA4 수익"
+        }
       }
     },
     "recs": {
@@ -9102,6 +9150,11 @@
       "negated": "부정된 언급입니다. 추천이 아닙니다",
       "critical": "브랜드 근처에 비판적 표현이 있습니다. 추천이 아닙니다",
       "quoted": "인용되거나 타인의 의견입니다. 출처 자체의 추천이 아닙니다"
+    },
+    "senses": {
+      "label": "별칭 규칙(동음이의어)",
+      "hint": "한 줄에 규칙 하나: 별칭 | -다른 의미를 나타내는 단어 | +브랜드 의미에 필요한 단어. 프로젝트별로 저장되며 다음 분석에 사용됩니다.",
+      "error": "규칙을 저장할 수 없습니다(잘못되었거나 너무 깁니다)."
     }
   },
   "experimentsUi": {
@@ -9163,6 +9216,12 @@
       "rows-truncated": "저장된 페이지 행이 잘려 있어 비교가 불완전할 수 있습니다.",
       "low-volume": "기준 클릭수가 30 미만으로 신뢰할 수 있는 비교에 부족합니다.",
       "pending": "개입 날짜가 미래이므로 평가를 기다리는 중입니다。"
+    },
+    "outcome": {
+      "label": "측정 결과",
+      "gsc-clicks": "Search Console 클릭",
+      "ga4-key-events": "GA4 주요 이벤트(오가닉)",
+      "ga4-revenue": "GA4 수익(오가닉)"
     }
   },
   "linkInjector": {
@@ -9272,7 +9331,17 @@
       "not-estimable": "백테스트 불가: 사전 기간이 가상 개입에 너무 짧습니다."
     },
     "familySignificant": "함께 표시된 실험 {{family}}건에 대해 보정한 뒤에도 유의합니다 (Holm, p = {{p}}).",
-    "familyNotSignificant": "함께 표시된 실험 {{family}}건에 대해 보정하면 유의하지 않습니다 (Holm, p = {{p}})."
+    "familyNotSignificant": "함께 표시된 실험 {{family}}건에 대해 보정하면 유의하지 않습니다 (Holm, p = {{p}}).",
+    "structuralTitle": "계절성 구조 추정",
+    "structuralMethod": "국소 수준 추세와 주간 계절성을 사용하며, 정보가 있는 대조군은 회귀로 제거합니다. 95% 구간은 고정 시드 사후 예측 시뮬레이션에서 나옵니다. BSTS 방식의 근사이며 완전한 베이즈 적합이 아니고, 인과가 아니라 연관을 보여 줍니다.",
+    "pageContamination": "대조 페이지는 변경한 페이지와 링크, 템플릿, 주제를 공유할 수 있어 같은 변경의 영향을 받을 수 있습니다. 독립 대조군보다 약한 결과로 보세요.",
+    "pageLoad": "이 페이지의 일별 시계열 불러오기",
+    "pageNeedsGsc": "먼저 Search Console 속성을 연결하세요.",
+    "pageLoadFailed": "일별 시계열을 불러오거나 저장하지 못했습니다.",
+    "ga4Load": "GA4 일별 시계열 불러오기",
+    "ga4NeedsConnection": "먼저 Google Analytics를 연결하세요.",
+    "ga4Loaded": "{{days}}일 저장됨; 수익 통화는 {{currency}}입니다.",
+    "ga4LoadFailed": "GA4 시계열을 불러오거나 저장하지 못했습니다."
   },
   "revenueImportUi": {
     "title": "수익(선택 사항인 GA4 내보내기)",
@@ -9289,8 +9358,12 @@
       "not-organic": "내보내기가 자연 검색 세션으로 제한되어 있는지 확인하세요.",
       "no-header": "방문 페이지 열과 수익 열이 있는 머리글을 찾지 못했습니다.",
       "no-rows": "파일에 숫자 수익 값이 있는 방문 페이지가 없습니다.",
-      "storage-failed": "로컬 저장소를 업데이트하지 못해 가져오기가 저장되지 않았습니다."
-    }
+      "storage-failed": "로컬 저장소를 업데이트하지 못해 가져오기가 저장되지 않았습니다.",
+      "invalid-response": "Google Analytics가 예상치 못한 형식으로 수익 데이터를 반환했습니다.",
+      "fetch-failed": "Google Analytics에서 수익을 가져오지 못했습니다. 연결과 속성을 확인하세요."
+    },
+    "api": "GA4 API에서 가져오기",
+    "apiNote": "Google Analytics 연결이 필요합니다. GA4가 보고하는 속성 통화로 방문 페이지별 오가닉 검색 수익을 최근 90일(전체 일) 읽습니다. 구매 이벤트가 없으면 GA4는 0을 보고합니다."
   },
   "entityParity": {
     "title": "언어 버전 간 엔터티 (Wikidata)",
@@ -9342,5 +9415,24 @@
       "invalid-response": "잘못된 응답",
       "failed": "알 수 없는 오류"
     }
+  },
+  "imageOcrUi": {
+    "title": "OCR 및 텍스트-이미지 정합(로컬, 선택)",
+    "note": "이미 사용 중인 로컬 Ollama 비전 모델을 입력해야만 실행되며 아무것도 다운로드하지 않습니다. 이미지는 최대 {{max}}개이며 사용자의 Ollama 서버로만 전송됩니다. 결과는 부분적이며 줄별 상자나 신뢰도가 없습니다. 정합 값은 텍스트 겹침 휴리스틱(ALT, 파일 이름, 페이지 텍스트)이며 이미지 이해가 아닙니다.",
+    "model": "Ollama 비전 모델",
+    "run": "OCR 실행",
+    "cancel": "OCR 취소",
+    "status": {
+      "running": "OCR 실행 중: 완료 {{ok}}, 실패 {{failed}}.",
+      "done": "OCR 완료: 완료 {{ok}}, 실패 {{failed}}.",
+      "cancelled": "OCR 취소됨: 완료 {{ok}}, 실패 {{failed}}.",
+      "error": "오류로 OCR이 중지됨: 완료 {{ok}}, 실패 {{failed}}."
+    },
+    "origin": {
+      "media-only": "이미지에만 있음",
+      "duplicate-of-html": "HTML에도 있음"
+    },
+    "fact": "“{{text}}” ({{origin}}, 부분적) {{url}}",
+    "alignment": "{{url}}: 텍스트 겹침 {{pct}}%(휴리스틱)"
   }
 }

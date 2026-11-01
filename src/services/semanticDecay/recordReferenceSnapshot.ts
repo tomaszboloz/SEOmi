@@ -1,6 +1,7 @@
 import { normalize } from '@/services/embeddings/vector';
 import { TAXONOMY_VERSION, type ReferenceTaxonomy } from '@/services/topicalAuthority';
 import type { ReferenceSerpObservation } from '@/services/topicalAuthorityReference/types';
+import type { NeuralCentroid } from './neuralCentroid';
 import { summarizeSerpFormats } from './serpFormat';
 import { appendSerpSnapshot } from './snapshotStore';
 import type { SerpSnapshot } from './types';
@@ -45,26 +46,27 @@ const bestRanks = (serp: ReferenceSerpObservation[]): Array<{ url: string; rank:
 
 export interface ReferenceMarket { country: string; language: string }
 
-export const buildReferenceSnapshot = (taxonomy: ReferenceTaxonomy, serp: ReferenceSerpObservation[], market: ReferenceMarket): SerpSnapshot | null => {
+export const buildReferenceSnapshot = (taxonomy: ReferenceTaxonomy, serp: ReferenceSerpObservation[], market: ReferenceMarket, neural?: NeuralCentroid): SerpSnapshot | null => {
   const used = serp.filter((observation) => observation.hits.length);
   if (!used.length || used.some((observation) => PARTIAL_SERP_SOURCES.has(observation.source))) return null;
   const docs = bestRanks(used);
   if (!docs.length) return null;
   const provider = [...new Set(used.map((observation) => observation.source))].sort().join(', ');
+  const model = neural?.model ?? REFERENCE_DECAY_MODEL;
   const profile = JSON.stringify(['tas-reference', TAXONOMY_VERSION, [...new Set(used.map((observation) => observation.query))].sort()]);
   const formats = summarizeSerpFormats(docs.filter((doc) => doc.rank <= SERP_K).map((doc) => doc.url));
   const entities = [...new Set(taxonomy.subtopics.flatMap((subtopic) => subtopic.entities).map((entity) => entity.trim()).filter(Boolean))].sort().slice(0, MAX_ENTITIES);
   return {
-    id: JSON.stringify([taxonomy.builtAt, provider, REFERENCE_DECAY_MODEL, profile]), takenAt: taxonomy.builtAt,
+    id: JSON.stringify([taxonomy.builtAt, provider, model, profile]), takenAt: taxonomy.builtAt,
     query: taxonomy.coreLabel, country: market.country, language: market.language || taxonomy.language,
-    provider, model: REFERENCE_DECAY_MODEL, profile, k: SERP_K,
-    centroid: lexicalCentroid(taxonomy.commonTerms), consensusEntities: entities,
+    provider, model, profile, k: SERP_K,
+    centroid: neural?.centroid ?? lexicalCentroid(taxonomy.commonTerms), consensusEntities: entities,
     dominantIntent: formats.dominantIntent, dominantFormat: formats.dominantFormat, docs,
   };
 };
 
 /** Appends the snapshot to the project's Decay Radar history; false when nothing comparable could be saved. */
-export const recordReferenceSnapshot = (projectId: string | null, taxonomy: ReferenceTaxonomy, serp: ReferenceSerpObservation[] | undefined, market: ReferenceMarket): boolean => {
-  const snapshot = serp ? buildReferenceSnapshot(taxonomy, serp, market) : null;
+export const recordReferenceSnapshot = (projectId: string | null, taxonomy: ReferenceTaxonomy, serp: ReferenceSerpObservation[] | undefined, market: ReferenceMarket, neural?: NeuralCentroid): boolean => {
+  const snapshot = serp ? buildReferenceSnapshot(taxonomy, serp, market, neural) : null;
   return snapshot ? appendSerpSnapshot(projectId, snapshot) : false;
 };

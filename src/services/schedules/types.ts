@@ -22,6 +22,8 @@ export interface ScheduledExecutionHandoff {
   error?: string;
   schedulerError?: string;
   result?: unknown;
+  /** SHA-256 identity of this delivery, set by the native scheduler. */
+  fingerprint?: string;
 }
 
 export interface ScheduledAudit {

@@ -2377,7 +2377,8 @@
       "authority": "主题权威度",
       "aio": "AI 就绪度",
       "trust": "实体信任度",
-      "offPage": "站外分析"
+      "offPage": "站外分析",
+      "evidence": "遥测、实验与 SERP 漂移"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -6468,6 +6469,53 @@
           "no-follow-links": "没有可分析的follow链接。",
           "source-text-or-authority-missing": "部分来源缺少文本、可用向量或提供方权威值。"
         }
+      },
+      "evidence": {
+        "title": "遥测、实验与 SERP 漂移",
+        "intro": "本项目最近保存的数据。每个区块仅在有数据时出现;此处不做任何估计。",
+        "tRevenue": "各着陆页自然搜索收入",
+        "revenueIntro": "币种 {{0}};归因 {{1}};期间 {{2}}。此处缺失的页面表示未知,而非零。",
+        "colPage": "着陆页",
+        "colRevenue": "收入",
+        "tExperiments": "实验估计",
+        "experimentsIntro": "累计点击与反事实对比,括号内为 95% 区间。这是关联估计而非已证明的因果;无法估计表示数据不足以得出结果。",
+        "colTarget": "对象",
+        "colDate": "变更日期",
+        "colMethod": "方法",
+        "colStatus": "状态",
+        "colEffect": "累计效应 [95%]",
+        "colProbability": "符号概率",
+        "tDecay": "SERP 漂移历史",
+        "decayIntro": "将已保存的可比 SERP 快照与第一份比较。仅供参考:漂移是复查的理由,不是损失的证据。",
+        "colQuery": "查询",
+        "colVerdict": "判定",
+        "colSamples": "快照",
+        "colShift": "质心偏移",
+        "colEntities": "实体 新增 / 丢失",
+        "na": "无",
+        "disclaimer": "非 Google 数据;不预测损失,也不自动改写。缺失数据显示为不可用,绝不显示为零。",
+        "status": {
+          "estimated": "已估计",
+          "not-estimable": "无法估计"
+        },
+        "verdict": {
+          "too-few-samples": "快照太少",
+          "incompatible": "不可比",
+          "stable": "稳定",
+          "not-persistent": "不持续",
+          "cooldown": "冷却期",
+          "alert": "建议复查"
+        },
+        "method": {
+          "regression": "回归",
+          "structural": "季节结构"
+        },
+        "colOutcome": "结果",
+        "outcome": {
+          "gsc-clicks": "Search Console 点击",
+          "ga4-key-events": "GA4 关键事件",
+          "ga4-revenue": "GA4 收入"
+        }
       }
     },
     "recs": {
@@ -9102,6 +9150,11 @@
       "negated": "否定提及；不是推荐",
       "critical": "品牌附近有批评性措辞；不是推荐",
       "quoted": "引用或转述的观点；不是来源本身的推荐"
+    },
+    "senses": {
+      "label": "别名规则(同形异义词)",
+      "hint": "每行一条规则:别名 | -表示其他含义的词 | +品牌含义所必需的词。按项目保存,下次分析时使用。",
+      "error": "无法保存规则(无效或过长)。"
     }
   },
   "experimentsUi": {
@@ -9163,6 +9216,12 @@
       "rows-truncated": "已保存的页面行被截断，页面比较可能不完整。",
       "low-volume": "基准点击次数少于30，数据量不足以进行可靠比较。",
       "pending": "干预日期在未来，正在等待评估。"
+    },
+    "outcome": {
+      "label": "衡量的结果",
+      "gsc-clicks": "Search Console 点击",
+      "ga4-key-events": "GA4 关键事件(自然搜索)",
+      "ga4-revenue": "GA4 收入(自然搜索)"
     }
   },
   "linkInjector": {
@@ -9272,7 +9331,17 @@
       "not-estimable": "无法回测：前期太短，无法进行伪干预。"
     },
     "familySignificant": "对同时显示的 {{family}} 个实验校正后仍显著（Holm，p = {{p}}）。",
-    "familyNotSignificant": "对同时显示的 {{family}} 个实验校正后不显著（Holm，p = {{p}}）。"
+    "familyNotSignificant": "对同时显示的 {{family}} 个实验校正后不显著（Holm，p = {{p}}）。",
+    "structuralTitle": "含季节性的结构估计",
+    "structuralMethod": "局部水平趋势加每周季节性;对照有信息量时先回归剔除。95%区间来自固定种子的后验预测模拟。这是 BSTS 式近似,不是完整的贝叶斯拟合,显示的是关联而非已证明的因果。",
+    "pageContamination": "对照页面可能与被修改页面共享链接、模板或主题,同一改动可能影响它。请把结果视为弱于独立对照的结果。",
+    "pageLoad": "加载此页面的每日序列",
+    "pageNeedsGsc": "请先连接 Search Console 资源。",
+    "pageLoadFailed": "无法加载或保存每日序列。",
+    "ga4Load": "加载 GA4 每日序列",
+    "ga4NeedsConnection": "请先连接 Google Analytics。",
+    "ga4Loaded": "已保存 {{days}} 天;收入币种为 {{currency}}。",
+    "ga4LoadFailed": "无法加载或保存 GA4 序列。"
   },
   "revenueImportUi": {
     "title": "收入（可选的 GA4 导出）",
@@ -9289,8 +9358,12 @@
       "not-organic": "请确认导出仅限于自然搜索会话。",
       "no-header": "未找到包含着陆页列和收入列的表头。",
       "no-rows": "文件中没有带数值收入的着陆页。",
-      "storage-failed": "无法更新本地存储；导入未保存。"
-    }
+      "storage-failed": "无法更新本地存储；导入未保存。",
+      "invalid-response": "Google Analytics 返回的收入数据格式异常。",
+      "fetch-failed": "无法从 Google Analytics 获取收入。请检查连接和媒体资源。"
+    },
+    "api": "从 GA4 API 获取",
+    "apiNote": "需要已连接 Google Analytics。按 GA4 报告的媒体资源货币,读取最近 90 个完整日、各着陆页的自然搜索收入。没有购买事件时 GA4 报告 0。"
   },
   "entityParity": {
     "title": "各语言版本中的实体（Wikidata）",
@@ -9342,5 +9415,24 @@
       "invalid-response": "响应无效",
       "failed": "未知错误"
     }
+  },
+  "imageOcrUi": {
+    "title": "OCR 与图文一致性(本地,可选)",
+    "note": "仅在您输入已在运行的本地 Ollama 视觉模型后才会运行,不会下载任何内容。最多 {{max}} 张图片,仅发送到您的 Ollama 服务器。结果为部分结果:没有逐行边框或置信度。一致性数值是文本重叠启发式(ALT、文件名、页面文本),并非图像理解。",
+    "model": "Ollama 视觉模型",
+    "run": "运行 OCR",
+    "cancel": "取消 OCR",
+    "status": {
+      "running": "OCR 运行中:完成 {{ok}},失败 {{failed}}。",
+      "done": "OCR 完成:完成 {{ok}},失败 {{failed}}。",
+      "cancelled": "OCR 已取消:完成 {{ok}},失败 {{failed}}。",
+      "error": "OCR 因错误停止:完成 {{ok}},失败 {{failed}}。"
+    },
+    "origin": {
+      "media-only": "仅在图片中",
+      "duplicate-of-html": "HTML 中也有"
+    },
+    "fact": "“{{text}}”({{origin}},部分) {{url}}",
+    "alignment": "{{url}}:文本重叠 {{pct}}%(启发式)"
   }
 }

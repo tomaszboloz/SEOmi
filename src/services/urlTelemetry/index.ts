@@ -6,3 +6,4 @@ export { windowState, periodDays } from './measure';
 export { ensureUrlTelemetry, latestSnapshot, performanceDataOf } from './fromGscSnapshots';
 export { parseGa4RevenueCsv, REVENUE_ATTRIBUTION, type RevenueImport, type RevenueParseError } from './revenue';
 export { rememberRevenueImport, recallRevenueImport, forgetRevenueImport } from './revenueStore';
+export { ga4RevenueToImport, defaultRevenueRange, type Ga4RevenueError } from './ga4Revenue';

@@ -1,24 +1,33 @@
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { forgetRevenueImport, parseGa4RevenueCsv, recallRevenueImport, rememberRevenueImport } from '@/services/urlTelemetry';
+import { fetchGa4Revenue } from '@/services/ga4/revenueFetch';
+import { defaultRevenueRange, forgetRevenueImport, parseGa4RevenueCsv, recallRevenueImport, rememberRevenueImport } from '@/services/urlTelemetry';
 
 /**
  * Optional GA4 revenue export for URL protection (#91). The user states the currency and confirms the export
  * is limited to organic sessions; nothing is inferred. `onChange` lets the parent rebuild its telemetry.
  */
-export const RevenueImport = ({ projectId, onChange }: { projectId: string; onChange: () => void }) => {
+export const RevenueImport = ({ projectId, onChange, ga4, now = () => new Date() }: { projectId: string; onChange: () => void; ga4?: { clientId: string; siteUrl: string }; now?: () => Date }) => {
   const { t } = useTranslation();
   const id = useId();
   const [currency, setCurrency] = useState('');
   const [organic, setOrganic] = useState(false);
   const [current, setCurrent] = useState(() => recallRevenueImport(projectId));
   const [error, setError] = useState('');
-  const load = async (file: File) => {
-    const parsed = parseGa4RevenueCsv(await file.text(), { currency, organicOnly: organic, sourceFile: file.name });
-    if (typeof parsed === 'string') { setError(parsed); return; }
+  const store = (parsed: Parameters<typeof rememberRevenueImport>[1]) => {
     const saved = rememberRevenueImport(projectId, parsed);
     setError(saved ? '' : 'storage-failed');
     if (saved) { setCurrent(parsed); onChange(); }
+  };
+  const load = async (file: File) => {
+    const parsed = parseGa4RevenueCsv(await file.text(), { currency, organicOnly: organic, sourceFile: file.name });
+    if (typeof parsed === 'string') setError(parsed); else store(parsed);
+  };
+  const fetchApi = async (source: { clientId: string; siteUrl: string }) => {
+    try {
+      const parsed = await fetchGa4Revenue({ projectId, ...source, ...defaultRevenueRange(now()) }, now());
+      if (typeof parsed === 'string') setError(parsed); else store(parsed);
+    } catch { setError('fetch-failed'); }
   };
   const clear = () => { forgetRevenueImport(projectId); setCurrent(null); onChange(); };
   return <details className="rounded border border-white/10 p-2" data-testid="revenue-import">
@@ -44,6 +53,7 @@ export const RevenueImport = ({ projectId, onChange }: { projectId: string; onCh
         if (file) void load(file);
       }} />
     </div>
+    {ga4 && <p><button type="button" onClick={() => void fetchApi(ga4)} className="underline">{t('revenueImportUi.api')}</button> {t('revenueImportUi.apiNote')}</p>}
     {error && <p role="alert" className="text-amber-300">{t(`revenueImportUi.errors.${error}`)}</p>}
   </details>;
 };

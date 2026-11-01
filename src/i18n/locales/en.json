@@ -2377,7 +2377,8 @@
       "authority": "Topical Authority",
       "aio": "AI readiness",
       "trust": "Entity trust",
-      "offPage": "Off-page analysis"
+      "offPage": "Off-page analysis",
+      "evidence": "Telemetry, experiments and SERP drift"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -6468,6 +6469,53 @@
           "no-follow-links": "No follow links available for analysis.",
           "source-text-or-authority-missing": "Some sources lack text, usable vectors or provider authority."
         }
+      },
+      "evidence": {
+        "title": "Telemetry, experiments and SERP drift",
+        "intro": "Latest saved data of this project. Each block appears only when data exists; nothing is estimated here.",
+        "tRevenue": "Organic revenue per landing page",
+        "revenueIntro": "Currency {{0}}; attribution {{1}}; period {{2}}. A page missing here is unknown, not zero.",
+        "colPage": "Landing page",
+        "colRevenue": "Revenue",
+        "tExperiments": "Experiment estimates",
+        "experimentsIntro": "Cumulative clicks versus a counterfactual, with the 95% interval in brackets. These estimate an association, not proven causality; not-estimable means the data did not allow a result.",
+        "colTarget": "Target",
+        "colDate": "Change date",
+        "colMethod": "Method",
+        "colStatus": "Status",
+        "colEffect": "Cumulative effect [95%]",
+        "colProbability": "Same-sign probability",
+        "tDecay": "SERP drift history",
+        "decayIntro": "Saved comparable SERP snapshots against the first one. Advisory only: a drift is a reason to review, not proof of a loss.",
+        "colQuery": "Query",
+        "colVerdict": "Verdict",
+        "colSamples": "Snapshots",
+        "colShift": "Centroid shift",
+        "colEntities": "Entities new / lost",
+        "na": "n/a",
+        "disclaimer": "Not Google data; no forecast of losses and no automatic rewriting. Missing data is shown as unavailable, never as zero.",
+        "status": {
+          "estimated": "Estimated",
+          "not-estimable": "Not estimable"
+        },
+        "verdict": {
+          "too-few-samples": "Too few snapshots",
+          "incompatible": "Not comparable",
+          "stable": "Stable",
+          "not-persistent": "Not persistent",
+          "cooldown": "Cooldown",
+          "alert": "Review suggested"
+        },
+        "method": {
+          "regression": "Regression",
+          "structural": "Seasonal structural"
+        },
+        "colOutcome": "Outcome",
+        "outcome": {
+          "gsc-clicks": "Search Console clicks",
+          "ga4-key-events": "GA4 key events",
+          "ga4-revenue": "GA4 revenue"
+        }
       }
     },
     "recs": {
@@ -9102,6 +9150,11 @@
       "negated": "Negated mention; not a recommendation",
       "critical": "Critical wording near the brand; not a recommendation",
       "quoted": "Quoted or attributed opinion; not the source's own recommendation"
+    },
+    "senses": {
+      "label": "Alias rules (homonyms)",
+      "hint": "One rule per line: Alias | -words that mark another sense | +words required for the brand sense. Saved per project, used on the next analysis.",
+      "error": "Rules could not be saved (invalid or too long)."
     }
   },
   "experimentsUi": {
@@ -9163,6 +9216,12 @@
       "rows-truncated": "Saved page rows are truncated; the page comparison may be incomplete.",
       "low-volume": "Baseline clicks are below 30; the volume is too low for a reliable comparison.",
       "pending": "The intervention date is in the future; evaluation is pending."
+    },
+    "outcome": {
+      "label": "Outcome measured",
+      "gsc-clicks": "Search Console clicks",
+      "ga4-key-events": "GA4 key events (organic)",
+      "ga4-revenue": "GA4 revenue (organic)"
     }
   },
   "linkInjector": {
@@ -9272,7 +9331,17 @@
       "not-estimable": "Backtest not possible: the pre-period is too short for pseudo-interventions."
     },
     "familySignificant": "Still significant after adjusting for {{family}} experiments shown together (Holm, p = {{p}}).",
-    "familyNotSignificant": "Not significant after adjusting for {{family}} experiments shown together (Holm, p = {{p}})."
+    "familyNotSignificant": "Not significant after adjusting for {{family}} experiments shown together (Holm, p = {{p}}).",
+    "structuralTitle": "Seasonal structural estimate",
+    "structuralMethod": "Local-level trend plus weekly seasonality, with the control regressed out when it is informative. The 95% interval comes from seeded posterior-predictive simulation. This is a BSTS-style approximation, not a full Bayesian fit, and it shows an association, not proven causality.",
+    "pageContamination": "The control page may share links, templates or topic with the changed page, so the same change can affect it. Treat the result as weaker than a result with an independent control.",
+    "pageLoad": "Load daily series of this page",
+    "pageNeedsGsc": "Connect a Search Console property first.",
+    "pageLoadFailed": "The daily series could not be loaded or saved.",
+    "ga4Load": "Load daily GA4 series",
+    "ga4NeedsConnection": "Connect Google Analytics first.",
+    "ga4Loaded": "Saved {{days}} days; revenue is in {{currency}}.",
+    "ga4LoadFailed": "The GA4 series could not be loaded or saved."
   },
   "revenueImportUi": {
     "title": "Revenue (optional GA4 export)",
@@ -9289,8 +9358,12 @@
       "not-organic": "Confirm that the export is limited to organic search sessions.",
       "no-header": "No header with a landing page column and a revenue column was found.",
       "no-rows": "The file has no landing page with a numeric revenue value.",
-      "storage-failed": "Local storage could not be updated; the import was not saved."
-    }
+      "storage-failed": "Local storage could not be updated; the import was not saved.",
+      "invalid-response": "Google Analytics returned revenue data in an unexpected format.",
+      "fetch-failed": "Revenue could not be fetched from Google Analytics. Check the connection and the property."
+    },
+    "api": "Fetch from GA4 API",
+    "apiNote": "Needs Google Analytics connected. Reads the last 90 full days of organic search revenue per landing page in the property currency GA4 reports. Without purchase events GA4 reports 0."
   },
   "entityParity": {
     "title": "Entities across language versions (Wikidata)",
@@ -9342,5 +9415,24 @@
       "invalid-response": "invalid response",
       "failed": "unknown error"
     }
+  },
+  "imageOcrUi": {
+    "title": "OCR and text-image alignment (local, optional)",
+    "note": "Runs only after you enter a local Ollama vision model that you already run; nothing is downloaded. At most {{max}} images, sent only to your Ollama server. Results are partial: no per-line boxes or confidence. The alignment value is a text-overlap heuristic (ALT, file name, page text), not image understanding.",
+    "model": "Ollama vision model",
+    "run": "Run OCR",
+    "cancel": "Cancel OCR",
+    "status": {
+      "running": "OCR running: {{ok}} done, {{failed}} failed.",
+      "done": "OCR finished: {{ok}} done, {{failed}} failed.",
+      "cancelled": "OCR cancelled: {{ok}} done, {{failed}} failed.",
+      "error": "OCR stopped on an error: {{ok}} done, {{failed}} failed."
+    },
+    "origin": {
+      "media-only": "only in the image",
+      "duplicate-of-html": "also in the HTML"
+    },
+    "fact": "“{{text}}” ({{origin}}, partial) {{url}}",
+    "alignment": "{{url}}: text overlap {{pct}}% (heuristic)"
   }
 }

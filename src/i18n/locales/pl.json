@@ -2377,7 +2377,8 @@
       "authority": "Autorytet tematyczny",
       "aio": "Gotowość na AI",
       "trust": "Zaufanie do encji",
-      "offPage": "Analiza off-page"
+      "offPage": "Analiza off-page",
+      "evidence": "Telemetria, eksperymenty i dryf SERP"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "produkcja",
@@ -6468,6 +6469,53 @@
           "no-follow-links": "Brak linków follow do analizy.",
           "source-text-or-authority-missing": "Część źródeł nie ma tekstu, poprawnych wektorów lub autorytetu dostawcy."
         }
+      },
+      "evidence": {
+        "title": "Telemetria, eksperymenty i dryf SERP",
+        "intro": "Ostatnie zapisane dane projektu. Każdy blok pojawia się tylko, gdy są dane; nic tu nie jest szacowane.",
+        "tRevenue": "Przychód z wyszukiwania organicznego per strona docelowa",
+        "revenueIntro": "Waluta {{0}}; atrybucja {{1}}; okres {{2}}. Brak strony tutaj oznacza brak danych, nie zero.",
+        "colPage": "Strona docelowa",
+        "colRevenue": "Przychód",
+        "tExperiments": "Szacunki eksperymentów",
+        "experimentsIntro": "Skumulowane kliknięcia względem kontrfaktu, z przedziałem 95% w nawiasie. To szacunek związku, nie udowodniona przyczynowość; brak szacunku oznacza, że dane nie pozwoliły na wynik.",
+        "colTarget": "Cel",
+        "colDate": "Data zmiany",
+        "colMethod": "Metoda",
+        "colStatus": "Status",
+        "colEffect": "Efekt skumulowany [95%]",
+        "colProbability": "Prawdopodobieństwo znaku",
+        "tDecay": "Historia dryfu SERP",
+        "decayIntro": "Zapisane porównywalne snapshoty SERP względem pierwszego. Tylko doradczo: dryf to powód do przeglądu, nie dowód straty.",
+        "colQuery": "Zapytanie",
+        "colVerdict": "Werdykt",
+        "colSamples": "Snapshoty",
+        "colShift": "Przesunięcie centroidu",
+        "colEntities": "Encje nowe / utracone",
+        "na": "brak",
+        "disclaimer": "To nie dane Google; brak prognozy strat i automatycznego przepisywania. Brak danych jest pokazany jako niedostępny, nigdy jako zero.",
+        "status": {
+          "estimated": "Oszacowano",
+          "not-estimable": "Nie do oszacowania"
+        },
+        "verdict": {
+          "too-few-samples": "Za mało snapshotów",
+          "incompatible": "Nieporównywalne",
+          "stable": "Stabilne",
+          "not-persistent": "Niepowtarzalne",
+          "cooldown": "Okres karencji",
+          "alert": "Zalecany przegląd"
+        },
+        "method": {
+          "regression": "Regresja",
+          "structural": "Strukturalny sezonowy"
+        },
+        "colOutcome": "Wynik",
+        "outcome": {
+          "gsc-clicks": "Kliknięcia Search Console",
+          "ga4-key-events": "Kluczowe zdarzenia GA4",
+          "ga4-revenue": "Przychód GA4"
+        }
       }
     },
     "recs": {
@@ -9102,6 +9150,11 @@
       "negated": "Wzmianka z przeczeniem; to nie rekomendacja",
       "critical": "Krytyczne słowa przy marce; to nie rekomendacja",
       "quoted": "Cytat lub cudza opinia; to nie rekomendacja samego źródła"
+    },
+    "senses": {
+      "label": "Reguły aliasów (homonimy)",
+      "hint": "Jedna reguła na linię: Alias | -słowa innego znaczenia | +słowa wymagane dla znaczenia marki. Zapis per projekt, użyte w kolejnej analizie.",
+      "error": "Nie udało się zapisać reguł (nieprawidłowe lub zbyt długie)."
     }
   },
   "experimentsUi": {
@@ -9163,6 +9216,12 @@
       "rows-truncated": "Zapisane wiersze stron są ucięte; porównanie strony może być niepełne.",
       "low-volume": "Bazowa liczba kliknięć jest mniejsza niż 30; zbyt mały wolumen do wiarygodnego porównania.",
       "pending": "Data interwencji jest w przyszłości; ocena oczekuje."
+    },
+    "outcome": {
+      "label": "Mierzony wynik",
+      "gsc-clicks": "Kliknięcia Search Console",
+      "ga4-key-events": "Kluczowe zdarzenia GA4 (organiczne)",
+      "ga4-revenue": "Przychód GA4 (organiczny)"
     }
   },
   "linkInjector": {
@@ -9272,7 +9331,17 @@
       "not-estimable": "Backtest niemożliwy: okres przed zmianą jest za krótki na pozorne interwencje."
     },
     "familySignificant": "Nadal istotne po korekcie na {{family}} eksperymentów pokazanych razem (Holm, p = {{p}}).",
-    "familyNotSignificant": "Nieistotne po korekcie na {{family}} eksperymentów pokazanych razem (Holm, p = {{p}})."
+    "familyNotSignificant": "Nieistotne po korekcie na {{family}} eksperymentów pokazanych razem (Holm, p = {{p}}).",
+    "structuralTitle": "Sezonowy model strukturalny",
+    "structuralMethod": "Trend poziomu lokalnego plus sezonowość tygodniowa, z odjętą kontrolą, gdy niesie informację. Przedział 95% pochodzi z symulacji predykcyjnej z ustalonym ziarnem. To przybliżenie typu BSTS, nie pełny model bayesowski, i pokazuje związek, a nie udowodnioną przyczynowość.",
+    "pageContamination": "Strona kontrolna może dzielić linki, szablony lub temat ze zmienioną stroną, więc ta sama zmiana może na nią wpływać. Traktuj wynik jako słabszy niż przy niezależnej kontroli.",
+    "pageLoad": "Wczytaj dzienną serię tej strony",
+    "pageNeedsGsc": "Najpierw połącz właściwość Search Console.",
+    "pageLoadFailed": "Nie udało się wczytać lub zapisać serii dziennej.",
+    "ga4Load": "Wczytaj dzienną serię GA4",
+    "ga4NeedsConnection": "Najpierw połącz Google Analytics.",
+    "ga4Loaded": "Zapisano {{days}} dni; przychód w {{currency}}.",
+    "ga4LoadFailed": "Nie udało się wczytać lub zapisać serii GA4."
   },
   "revenueImportUi": {
     "title": "Przychód (opcjonalny eksport GA4)",
@@ -9289,8 +9358,12 @@
       "not-organic": "Potwierdź, że eksport obejmuje wyłącznie sesje z wyszukiwania organicznego.",
       "no-header": "Nie znaleziono nagłówka z kolumną strony docelowej i kolumną przychodu.",
       "no-rows": "Plik nie zawiera strony docelowej z liczbową wartością przychodu.",
-      "storage-failed": "Nie udało się zapisać w pamięci lokalnej; import nie został zapisany."
-    }
+      "storage-failed": "Nie udało się zapisać w pamięci lokalnej; import nie został zapisany.",
+      "invalid-response": "Google Analytics zwrócił dane o przychodzie w nieoczekiwanym formacie.",
+      "fetch-failed": "Nie udało się pobrać przychodu z Google Analytics. Sprawdź połączenie i właściwość."
+    },
+    "api": "Pobierz z GA4 API",
+    "apiNote": "Wymaga połączonego Google Analytics. Czyta ostatnie 90 pełnych dni przychodu z wyszukiwania organicznego per strona docelowa, w walucie właściwości zgłaszanej przez GA4. Bez zdarzeń zakupu GA4 zwraca 0."
   },
   "entityParity": {
     "title": "Encje w wersjach językowych (Wikidata)",
@@ -9342,5 +9415,24 @@
       "invalid-response": "nieprawidłowa odpowiedź",
       "failed": "nieznany błąd"
     }
+  },
+  "imageOcrUi": {
+    "title": "OCR i zgodność tekstu z obrazem (lokalnie, opcjonalnie)",
+    "note": "Działa dopiero po wpisaniu lokalnego modelu wizyjnego Ollama, który już uruchamiasz; nic nie jest pobierane. Maksymalnie {{max}} obrazów, wysyłanych tylko na Twój serwer Ollama. Wyniki są częściowe: bez ramek per linia i bez pewności. Zgodność to heurystyka nakładania się tekstu (ALT, nazwa pliku, tekst strony), nie rozumienie obrazu.",
+    "model": "Model wizyjny Ollama",
+    "run": "Uruchom OCR",
+    "cancel": "Anuluj OCR",
+    "status": {
+      "running": "OCR trwa: {{ok}} gotowych, {{failed}} z błędem.",
+      "done": "OCR zakończony: {{ok}} gotowych, {{failed}} z błędem.",
+      "cancelled": "OCR anulowany: {{ok}} gotowych, {{failed}} z błędem.",
+      "error": "OCR zatrzymany przez błąd: {{ok}} gotowych, {{failed}} z błędem."
+    },
+    "origin": {
+      "media-only": "tylko w obrazie",
+      "duplicate-of-html": "także w HTML"
+    },
+    "fact": "„{{text}}” ({{origin}}, częściowe) {{url}}",
+    "alignment": "{{url}}: nakładanie tekstu {{pct}}% (heurystyka)"
   }
 }

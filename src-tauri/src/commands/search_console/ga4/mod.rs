@@ -5,10 +5,14 @@ pub mod commands;
 mod commands_ipc_tests;
 #[cfg(test)]
 mod commands_tests;
+pub mod daily;
+mod daily_model;
 mod mapping;
 mod models;
 mod provider_models;
 mod report;
+pub mod revenue;
+mod revenue_model;
 mod streams;
 mod transport;
 mod validation;
