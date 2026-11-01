@@ -1,0 +1,28 @@
+[
+  {
+    "contractVersion": 1,
+    "projectId": "proj-1",
+    "runId": "run-7",
+    "module": "sfs",
+    "algorithmVersion": 3,
+    "profileId": "sfs-pl",
+    "modelId": null,
+    "contentHash": "0123456789abcdef",
+    "generatedAt": "2026-01-15T10:00:00.000Z",
+    "availability": { "status": "complete", "reason": null, "coverage": 1.0 },
+    "value": { "score": 0, "pages": 12 }
+  },
+  {
+    "contractVersion": 1,
+    "projectId": "proj-1",
+    "runId": null,
+    "module": "tas",
+    "algorithmVersion": 0,
+    "profileId": null,
+    "modelId": "nomic-embed-text",
+    "contentHash": null,
+    "generatedAt": "2026-01-16T10:00:00.000Z",
+    "availability": { "status": "unavailable", "reason": "no-inputs", "coverage": 0.0 },
+    "value": null
+  }
+]

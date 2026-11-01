@@ -7,3 +7,6 @@ export {
 } from './descriptor';
 export { cachedProvider, createEmbeddingCache, EMBEDDING_CACHE_VERSION, type EmbeddingCache, type EmbeddingCacheScope } from './embeddingCache';
 export { classifyProviderError, redactSecrets, withTimeout, type ProviderError, type ProviderFailure } from './providerErrors';
+export { DEFAULT_SEMANTIC_SETTINGS, SEMANTIC_SETTINGS_EVENT, isSemanticSettings, readSemanticSettings, saveSemanticSettings, type SemanticSettings } from './settings';
+export { MAX_PAGE_TEXT_CHARS, pageTexts, type TextPage } from './pageTexts';
+export { loadSemanticSet, semanticCache, type LoadInput, type SemanticLoad } from './loadSet';

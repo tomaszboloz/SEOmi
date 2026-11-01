@@ -7047,7 +7047,8 @@
       "unmatchedTopic": "Ninguna página coincidió con el tema \"{{topic}}\". Se usa el tema detectado.",
       "gateSkipped": "Se omitieron {{count}} páginas (noindex/canonical).",
       "gateInclude": "Incluirlas",
-      "gateExclude": "Excluirlas de nuevo"
+      "gateExclude": "Excluirlas de nuevo",
+      "semantic": "Similitud semántica activa: {{model}}."
     },
     "skip": {
       "render-timeout": "Se agotó el tiempo de renderizado de JavaScript",
@@ -8703,7 +8704,19 @@
     "saveBudget": "Guardar presupuesto",
     "savedBudget": "Presupuesto LLM guardado.",
     "invalidLimit": "Introduce un límite mensual válido.",
-    "invalidWarn": "El umbral debe ser un entero entre 1 y 100."
+    "invalidWarn": "El umbral debe ser un entero entre 1 y 100.",
+    "dictTitle": "Lista de términos YMYL",
+    "dictHint": "Las dosis y cantidades deben aparecer junto al mismo término en la fuente. La semilla MeSH es de dominio público. ICD-10 no se incluye: importe su propia lista con licencia o abierta. La lista permanece en este dispositivo.",
+    "dictSeed": "Usar la semilla MeSH incluida (dominio público)",
+    "dictFile": "Importar lista (TXT o CSV)",
+    "dictPaste": "O pegue términos, uno por línea",
+    "dictSave": "Guardar lista",
+    "dictClear": "Borrar lista importada",
+    "dictSaved": "Lista de términos guardada.",
+    "dictFailed": "No se pudo guardar la lista de términos.",
+    "dictEmpty": "No se encontraron términos utilizables.",
+    "dictCount": "{{count}} términos activos",
+    "dictPasted": "lista pegada"
   },
   "templateGovernor": {
     "title": "Calidad de plantillas programáticas",
@@ -9300,5 +9313,34 @@
       "error": "búsqueda fallida"
     },
     "correctPlaceholder": "Q123 / none"
+  },
+  "semanticSource": {
+    "title": "Similitud semántica (opcional)",
+    "hint": "Usa un modelo de embeddings local de Ollama para emparejar sinónimos en Site Focus y Topical Authority. Desactivado por defecto. Sin él, los informes usan TF-IDF y lo indican. No se instala ni descarga nada por usted.",
+    "enable": "Usar embeddings cuando estén disponibles",
+    "provider": "Fuente",
+    "providerOllama": "Ollama (neuronal)",
+    "providerHybrid": "Híbrido (hash local + Ollama)",
+    "url": "Dirección de Ollama (vacío = local por defecto)",
+    "model": "Modelo de embeddings",
+    "timeout": "Tiempo límite por lote (ms)",
+    "maxEntries": "Máx. páginas por ejecución",
+    "save": "Guardar",
+    "test": "Probar conexión con Ollama",
+    "testing": "Probando...",
+    "saved": "Ajustes guardados.",
+    "failed": "No se pudieron guardar los ajustes.",
+    "invalid": "Revise los valores: tiempo 1000 a 300000 ms, páginas 1 a 5000, modelo no vacío.",
+    "testOk": "Funciona: {{model}}, {{dimensions}} dimensiones.",
+    "testFail": "Se vuelve a TF-IDF: {{reason}}.",
+    "reason": {
+      "offline": "Ollama no está accesible",
+      "timeout": "tiempo agotado",
+      "cancelled": "cancelado",
+      "rate-limited": "límite de peticiones",
+      "model-missing": "modelo no instalado",
+      "invalid-response": "respuesta no válida",
+      "failed": "error desconocido"
+    }
   }
 }

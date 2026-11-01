@@ -23,6 +23,9 @@ export const FocusBanners = ({ report }: { report: SiteFocusReport }) => {
         <p role="status" className={sky}>{t('focus.banner.multiTopic', { count: report.subSites?.length ?? 0 })}</p>
       )}
       {flags.fallbackMode === 'lexical' && <p role="status" className={sky}>{t('focus.banner.lexicalFallback')}</p>}
+      {flags.similaritySource?.mode === 'semantic' && flags.similaritySource.kind === 'embeddings' && (
+        <p role="status" className={sky}>{t('focus.banner.semantic', { model: flags.similaritySource.model })}</p>
+      )}
       {flags.skippedRenderTimeouts > 0 && (
         <p role="status" className={amber}>{t('focus.banner.skippedRender', { count: flags.skippedRenderTimeouts })}</p>
       )}

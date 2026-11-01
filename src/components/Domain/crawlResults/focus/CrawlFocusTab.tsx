@@ -1,5 +1,6 @@
 import { useCallback, useDeferredValue, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSemanticEmbeddings } from '@/hooks/useSemanticEmbeddings';
 import { useSiteFocus } from '@/hooks/useSiteFocus';
 import { buildSiteFocusReport } from '@/services/siteFocus';
 import type { SfsSnapshot, SiteFocusReport } from '@/services/siteFocus';
@@ -47,6 +48,7 @@ const topicText = (topic: string | string[] | undefined): string => (Array.isArr
 export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchmark, historySlot, onReport }: CrawlFocusTabProps) => {
   const { t } = useTranslation();
   const focus = useSiteFocus(run, projectId);
+  const { set: embeddings } = useSemanticEmbeddings(projectId, pages);
   const persisted = Boolean(run) && validFocusProject(projectId);
   const [draft, setDraft] = useState(() => topicText(focus.manualTopic));
   const [anchorDraft, setAnchorDraft] = useState(() => focus.anchorUrls.join('\n'));
@@ -75,9 +77,9 @@ export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchm
   const base = focus.report ?? local;
   const report = useMemo(
     () => (base && (competitorTerms.length || includeGated)
-      ? buildSiteFocusReport(pages, startUrl, { manualTopic: focus.manualTopic ?? (deferredTopic || undefined), anchorUrls, businessGoal: focus.businessGoal, brand: focus.brandPolicy, segments: focus.segments, competitorTerms, includeNonIndexable: includeGated, now: base.generatedAt })
+      ? buildSiteFocusReport(pages, startUrl, { manualTopic: focus.manualTopic ?? (deferredTopic || undefined), anchorUrls, businessGoal: focus.businessGoal, brand: focus.brandPolicy, segments: focus.segments, competitorTerms, includeNonIndexable: includeGated, embeddings, now: base.generatedAt })
       : base),
-    [base, competitorTerms, pages, startUrl, focus.manualTopic, deferredTopic, anchorUrls, focus.businessGoal, focus.brandPolicy, focus.segments, includeGated],
+    [base, competitorTerms, pages, startUrl, focus.manualTopic, deferredTopic, anchorUrls, focus.businessGoal, focus.brandPolicy, focus.segments, includeGated, embeddings],
   );
   useEffect(() => { if (report) onReport?.(report); }, [report, onReport]);
 

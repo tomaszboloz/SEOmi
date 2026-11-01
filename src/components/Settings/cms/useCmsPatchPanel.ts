@@ -5,6 +5,7 @@ import { planPatch, type PatchPlan } from '@/services/cmsPatch/plan';
 import { assertSafeCmsUrl } from '@/services/cmsPatch/ssrf';
 import { cmsTransport } from '@/services/cmsPatch/transport';
 import { CmsError } from '@/services/cmsPatch/types';
+import { loadTermDictionary } from '@/services/llmEconomy/dictionaryStore';
 import { validateYmylClaim, type YmylSource } from '@/services/llmEconomy';
 import { deniedMessage, enforcePermission } from '@/services/team/enforce';
 import { readIdentity } from '@/services/team/identity';
@@ -65,7 +66,7 @@ export const useCmsPatchPanel = (projectId: string | null) => {
     }
   };
   const approve = (checked: boolean) => {
-    setApproval(checked && plan ? { approvedBy: readIdentity().actor, planHash: plan.planHash, factGatePassed, sources: factSources } : null);
+    setApproval(checked && plan ? { approvedBy: readIdentity().actor, planHash: plan.planHash, factGatePassed, sources: factSources, terms: loadTermDictionary() ?? undefined } : null);
     setDryRunHash(null);
     setStatus(null);
     setError(null);
@@ -82,7 +83,7 @@ export const useCmsPatchPanel = (projectId: string | null) => {
         reviewedBy: identity.actor,
         reviewedAt: new Date().toISOString(),
       };
-      const check = validateYmylClaim(plan.replacement, [source]);
+      const check = validateYmylClaim(plan.replacement, [source], loadTermDictionary() ?? undefined);
       if (!check.allowed) {
         setFactGatePassed(false);
         setFactSources([]);
