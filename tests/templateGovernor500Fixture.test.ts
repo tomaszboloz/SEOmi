@@ -9,7 +9,7 @@ const page = (index: number) => CrawledPageSummarySchema.parse({
   template_dom_signature: '0:body>1:main>2:article>3:h1>3:p',
 });
 
-describe('500 local pages of one template (#139 fixture proof, documented in docs/CALIBRATION_DEFAULTS.md)', () => {
+describe('500 local pages of one template (#139 fixture proof, documented in .github/CALIBRATION_DEFAULTS.md)', () => {
   it('give exactly one template event listing all URLs', () => {
     const events = buildTemplateEvents(Array.from({ length: 500 }, (_, index) => page(index)));
     expect(events).toHaveLength(1);

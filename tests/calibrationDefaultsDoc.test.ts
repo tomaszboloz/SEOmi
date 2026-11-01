@@ -4,7 +4,7 @@ import { SFS_BANDS, SFS_TRS_SCALE } from '@/services/siteFocus/profile';
 import { DEFAULT_PRI_THRESHOLD, DEFAULT_TRS_THRESHOLD } from '@/services/urlProtection/decide';
 import { PAGE_MODULE_PROFILE } from '@/services/hss';
 
-const doc = readFileSync('docs/CALIBRATION_DEFAULTS.md', 'utf8');
+const doc = readFileSync('.github/CALIBRATION_DEFAULTS.md', 'utf8');
 
 describe('calibration defaults document matches shipped constants (#52 #81 #72)', () => {
   it('states the SFS scale and bands', () => {
