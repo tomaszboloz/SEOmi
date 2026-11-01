@@ -4,6 +4,7 @@ import { citationReferenceLabel, citationReferenceUrl } from '@/services/citatio
 import { localSupportCheck, type LinkChecker } from '@/services/citationEvidence/support';
 import { FOCUS_RING } from './trustHelpers';
 import { useSourceReachability } from './useSourceReachability';
+import { TrustClaimEntailment } from './TrustClaimEntailment';
 
 const SHOWN = 12;
 
@@ -11,7 +12,7 @@ const SHOWN = 12;
  * Claim-to-citation evidence (#88): relation, evidence kind, a local support check that reads only the
  * page, resolvable DOI/PMID/PMCID links and, after an explicit click, network reachability of each source.
  */
-export const TrustClaimEvidence = ({ claims, unbacked, checker }: { claims: ClaimCitation[]; unbacked?: number; checker?: LinkChecker }) => {
+export const TrustClaimEvidence = ({ claims, unbacked, checker, projectId }: { claims: ClaimCitation[]; unbacked?: number; checker?: LinkChecker; projectId?: string | null }) => {
   const { t } = useTranslation();
   const reach = useSourceReachability(claims, checker);
   if (!claims.length) return null;
@@ -62,6 +63,7 @@ export const TrustClaimEvidence = ({ claims, unbacked, checker }: { claims: Clai
       {claims.length > SHOWN && <p className="mt-1 text-[10px] text-slate-500">{t('trust.claims.more', { n: claims.length - SHOWN })}</p>}
       <p className="mt-1 text-[10px] text-amber-300">{t('trust.signals.associationNote')}</p>
       <p className="text-[10px] text-slate-500">{t('trust.claims.support.note')}</p>
+      <TrustClaimEntailment claims={claims} projectId={projectId} />
       <p className="text-[10px] text-slate-500">{t('trust.claims.linkNote')}</p>
     </details>
   );

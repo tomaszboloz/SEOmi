@@ -23,6 +23,7 @@
     "test:coverage:mcp": "node scripts/run-mcp-coverage.mjs",
     "check:loc": "node scripts/check-max-loc.mjs",
     "bench:sprs": "SPRS_BENCH=1 vitest run tests/sprsBenchmark.test.ts",
+    "bench:prepublish": "PREPUBLISH_BENCH=1 vitest run tests/prePublishBenchmarkRun.test.ts --silent=false",
     "embeddings": "node scripts/embeddings.mts"
   },
   "dependencies": {

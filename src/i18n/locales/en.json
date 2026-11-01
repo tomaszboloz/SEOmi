@@ -8106,6 +8106,24 @@
         "hedged": "hedged wording",
         "negated": "negation",
         "note": "The local check reads only this page (citation position, identifier, hedging, negation). It never reads the cited work, so it cannot confirm support."
+      },
+      "entail": {
+        "sourceLabel": "Source text to compare (paste)",
+        "useModel": "Also ask the local model (Ollama, optional)",
+        "run": "Compare claims with source text",
+        "results": "Comparison results",
+        "label": {
+          "consistent": "consistent with text",
+          "related": "related, not matching",
+          "unrelated": "unrelated",
+          "contradicts": "may contradict",
+          "unknown": "not enough text"
+        },
+        "method": {
+          "heuristic": "word heuristic",
+          "model": "local model"
+        },
+        "note": "Association evidence only. It does not mark the claim as verified or the source as checked."
       }
     },
     "identity": {

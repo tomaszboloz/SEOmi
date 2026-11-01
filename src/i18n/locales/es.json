@@ -8106,6 +8106,24 @@
         "hedged": "redacción prudente",
         "negated": "negación",
         "note": "La comprobación local solo lee esta página (posición de la cita, identificador, matización, negación). Nunca lee el trabajo citado, por lo que no puede confirmar el respaldo."
+      },
+      "entail": {
+        "sourceLabel": "Texto de la fuente para comparar (pegar)",
+        "useModel": "Consultar también el modelo local (Ollama, opcional)",
+        "run": "Comparar afirmaciones con el texto fuente",
+        "results": "Resultados de la comparación",
+        "label": {
+          "consistent": "coherente con el texto",
+          "related": "relacionado, sin coincidencia",
+          "unrelated": "sin relación",
+          "contradicts": "posible contradicción",
+          "unknown": "texto insuficiente"
+        },
+        "method": {
+          "heuristic": "heurística de palabras",
+          "model": "modelo local"
+        },
+        "note": "Solo evidencia de asociación. No marca la afirmación como verificada ni la fuente como comprobada."
       }
     },
     "identity": {

@@ -8106,6 +8106,24 @@
         "hedged": "formulation prudente",
         "negated": "négation",
         "note": "Le contrôle local ne lit que cette page (position de la citation, identifiant, prudence, négation). Il ne lit jamais l'œuvre citée et ne peut donc pas confirmer qu'elle étaye l'affirmation."
+      },
+      "entail": {
+        "sourceLabel": "Texte de la source à comparer (coller)",
+        "useModel": "Interroger aussi le modèle local (Ollama, optionnel)",
+        "run": "Comparer les affirmations au texte source",
+        "results": "Résultats de la comparaison",
+        "label": {
+          "consistent": "cohérent avec le texte",
+          "related": "lié, sans correspondance",
+          "unrelated": "sans rapport",
+          "contradicts": "contradiction possible",
+          "unknown": "texte insuffisant"
+        },
+        "method": {
+          "heuristic": "heuristique lexicale",
+          "model": "modèle local"
+        },
+        "note": "Simple indice d'association. Ne marque ni l'affirmation comme vérifiée ni la source comme contrôlée."
       }
     },
     "identity": {

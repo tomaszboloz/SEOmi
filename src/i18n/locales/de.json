@@ -8106,6 +8106,24 @@
         "hedged": "vorsichtige Formulierung",
         "negated": "Verneinung",
         "note": "Die lokale Prüfung liest nur diese Seite (Position des Zitats, Kennung, vorsichtige Formulierung, Verneinung). Sie liest nie die zitierte Arbeit und kann daher keine Stützung bestätigen."
+      },
+      "entail": {
+        "sourceLabel": "Quelltext zum Vergleich (einfügen)",
+        "useModel": "Zusätzlich lokales Modell fragen (Ollama, optional)",
+        "run": "Aussagen mit Quelltext vergleichen",
+        "results": "Vergleichsergebnisse",
+        "label": {
+          "consistent": "mit Text vereinbar",
+          "related": "verwandt, keine Übereinstimmung",
+          "unrelated": "nicht verwandt",
+          "contradicts": "möglicher Widerspruch",
+          "unknown": "zu wenig Text"
+        },
+        "method": {
+          "heuristic": "Wort-Heuristik",
+          "model": "lokales Modell"
+        },
+        "note": "Nur Assoziationshinweis. Die Aussage gilt nicht als verifiziert, die Quelle nicht als geprüft."
       }
     },
     "identity": {
