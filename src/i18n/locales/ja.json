@@ -6502,6 +6502,12 @@
         "method": {
           "regression": "回帰",
           "structural": "季節構造"
+        },
+        "colOutcome": "成果",
+        "outcome": {
+          "gsc-clicks": "Search Consoleのクリック",
+          "ga4-key-events": "GA4キーイベント",
+          "ga4-revenue": "GA4収益"
         }
       }
     },

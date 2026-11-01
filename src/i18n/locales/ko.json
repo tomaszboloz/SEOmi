@@ -6502,6 +6502,12 @@
         "method": {
           "regression": "회귀",
           "structural": "계절 구조"
+        },
+        "colOutcome": "결과",
+        "outcome": {
+          "gsc-clicks": "Search Console 클릭",
+          "ga4-key-events": "GA4 주요 이벤트",
+          "ga4-revenue": "GA4 수익"
         }
       }
     },

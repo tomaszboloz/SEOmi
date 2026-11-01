@@ -6502,6 +6502,12 @@
         "method": {
           "regression": "انحدار",
           "structural": "هيكلي موسمي"
+        },
+        "colOutcome": "النتيجة",
+        "outcome": {
+          "gsc-clicks": "نقرات Search Console",
+          "ga4-key-events": "أحداث GA4 الرئيسية",
+          "ga4-revenue": "إيرادات GA4"
         }
       }
     },

@@ -6502,6 +6502,12 @@
         "method": {
           "regression": "回归",
           "structural": "季节结构"
+        },
+        "colOutcome": "结果",
+        "outcome": {
+          "gsc-clicks": "Search Console 点击",
+          "ga4-key-events": "GA4 关键事件",
+          "ga4-revenue": "GA4 收入"
         }
       }
     },

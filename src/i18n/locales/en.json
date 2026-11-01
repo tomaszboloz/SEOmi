@@ -6502,6 +6502,12 @@
         "method": {
           "regression": "Regression",
           "structural": "Seasonal structural"
+        },
+        "colOutcome": "Outcome",
+        "outcome": {
+          "gsc-clicks": "Search Console clicks",
+          "ga4-key-events": "GA4 key events",
+          "ga4-revenue": "GA4 revenue"
         }
       }
     },

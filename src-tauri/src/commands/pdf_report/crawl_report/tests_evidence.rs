@@ -9,8 +9,8 @@ fn evidence() -> Value {
         "revenue": {"currency": "PLN", "attribution": "ga4-session-landing-page", "period": "2026-01-01 – 2026-03-31",
             "pages": [{"page": "/a", "revenue": 1250.5}, {"page": "/b", "revenue": 0}]},
         "experiments": [
-            {"target": "https://shop.test/p", "date": "2026-03-18", "method": "structural", "status": "estimated", "effect": 350.4, "lower": 120.0, "upper": 590.0, "probability": 0.97},
-            {"target": "site", "date": "2026-03-01", "method": "regression", "status": "not-estimable", "effect": null, "lower": null, "upper": null, "probability": null},
+            {"target": "https://shop.test/p", "date": "2026-03-18", "method": "structural", "outcome": "ga4-revenue", "status": "estimated", "effect": 350.4, "lower": 120.0, "upper": 590.0, "probability": 0.97},
+            {"target": "site", "date": "2026-03-01", "method": "regression", "outcome": "gsc-clicks", "status": "not-estimable", "effect": null, "lower": null, "upper": null, "probability": null},
             {"target": "x", "date": "2026-03-02", "method": "future-method", "status": "estimated", "effect": 1.0, "lower": null, "upper": 2.0, "probability": 0.5}
         ],
         "decay": [
@@ -44,6 +44,9 @@ fn evidence_section_renders_revenue_experiments_and_drift_with_the_fixed_disclai
         "+590]",
         "97%",
         "estimable",
+        "GA4",
+        "revenue",
+        "Outcome",
         "n/a",
         "future-method",
         "SERP drift history",
@@ -100,6 +103,11 @@ fn every_evidence_label_exists_in_all_twelve_pdf_languages() {
         ]
         .iter()
         .map(|code| format!("{}.{code}", e::VERDICT)),
+    );
+    keys.extend(
+        ["gsc-clicks", "ga4-key-events", "ga4-revenue"]
+            .iter()
+            .map(|code| format!("{}.{code}", e::OUTCOME)),
     );
     keys.extend(
         ["regression", "structural"]

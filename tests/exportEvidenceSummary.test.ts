@@ -2,6 +2,7 @@ import { beforeEach, expect, it, vi } from 'vitest';
 import { downloadCrawlPdf } from '@/services/export/crawlReport';
 import { crawlEvidenceSummary, EVIDENCE_ROWS } from '@/services/export/evidenceSummary';
 import { addIntervention } from '@/services/experiments/registry';
+import { saveGa4Outcomes, saveOutcomeChoice } from '@/services/experiments/ga4OutcomeStore';
 import { savePageSeries } from '@/services/experiments/pageSeries';
 import { appendSerpSnapshot } from '@/services/semanticDecay/snapshotStore';
 import { rememberRevenueImport, type RevenueImport } from '@/services/urlTelemetry';
@@ -59,6 +60,15 @@ it('lists site and page experiments with their estimate and skips ones without a
   const short = [gsc('sc-domain:shop.test', test.slice(0, 20))];
   vi.mocked(readGscSnapshots).mockReturnValue(short);
   expect(crawlEvidenceSummary(run, NOW, 'https://shop.test/')!.experiments!.find((item) => item.target === 'site')).toMatchObject({ method: 'structural', status: 'not-estimable' });
+});
+
+it('summarises GA4 outcomes when that outcome is chosen and labels it', () => {
+  addIntervention('p1', { url: 'site', date: '2026-03-18', kind: 'content', note: '' }, experimentNow);
+  const daily = Array.from({ length: 60 }, (_, i) => ({ date: new Date(Date.parse('2026-02-01T00:00:00Z') + i * 86_400_000).toISOString().slice(0, 10), keyEvents: 50 + noise(i) + (i >= 45 ? 20 : 0), revenue: 100 }));
+  saveGa4Outcomes('p1', 'site', { property: 'properties/9', currency: 'PLN', fetchedAt: NOW.toISOString(), daily });
+  expect(crawlEvidenceSummary(run, NOW)).toBeUndefined();
+  saveOutcomeChoice('p1', 'ga4-key-events');
+  expect(crawlEvidenceSummary(run, NOW)!.experiments![0]).toMatchObject({ target: 'site', outcome: 'ga4-key-events', method: 'structural' });
 });
 
 it('reports SERP drift per saved history using the injected clock', () => {

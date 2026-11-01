@@ -59,6 +59,7 @@ pub fn experiments(rows: &[Value]) -> Table {
                 bounded(&cell(row, "target"), 80),
                 cell(row, "date"),
                 coded(e::METHOD, &cell(row, "method"), &[]),
+                coded(e::OUTCOME, &cell(row, "outcome"), &[]),
                 coded(e::STATUS, &cell(row, "status"), &[]),
                 effect(row),
                 probability,
@@ -66,11 +67,12 @@ pub fn experiments(rows: &[Value]) -> Table {
         })
         .collect();
     let columns = [
-        (t(e::COL_TARGET), 30.0),
-        (t(e::COL_DATE), 12.0),
-        (t(e::COL_METHOD), 14.0),
-        (t(e::COL_STATUS), 14.0),
-        (t(e::COL_EFFECT), 20.0),
+        (t(e::COL_TARGET), 24.0),
+        (t(e::COL_DATE), 11.0),
+        (t(e::COL_METHOD), 12.0),
+        (t(e::COL_OUTCOME), 13.0),
+        (t(e::COL_STATUS), 12.0),
+        (t(e::COL_EFFECT), 18.0),
         (t(e::COL_PROBABILITY), 10.0),
     ];
     Table::text(

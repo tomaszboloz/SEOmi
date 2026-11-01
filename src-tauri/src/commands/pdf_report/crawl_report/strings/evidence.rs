@@ -19,6 +19,7 @@ keys! {
     COL_DATE => "crawl.evidence.colDate",
     COL_METHOD => "crawl.evidence.colMethod",
     COL_STATUS => "crawl.evidence.colStatus",
+    COL_OUTCOME => "crawl.evidence.colOutcome",
     COL_EFFECT => "crawl.evidence.colEffect",
     COL_PROBABILITY => "crawl.evidence.colProbability",
     T_DECAY => "crawl.evidence.tDecay",
@@ -35,3 +36,4 @@ keys! {
 pub const STATUS: &str = "crawl.evidence.status";
 pub const VERDICT: &str = "crawl.evidence.verdict";
 pub const METHOD: &str = "crawl.evidence.method";
+pub const OUTCOME: &str = "crawl.evidence.outcome";
