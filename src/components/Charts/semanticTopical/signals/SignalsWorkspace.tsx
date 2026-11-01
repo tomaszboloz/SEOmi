@@ -14,6 +14,7 @@ import { SprsWhatIf } from '@/components/Charts/SprsWhatIf';
 import { computeSprs } from '@/services/semanticGraph/sprs';
 import { buildSprsInput } from './sprsAdapter';
 import { useGraphSnapshot } from './useGraphSnapshot';
+import { useSprsEmbeddings } from '../useSprsEmbeddings';
 import { buildParityReport, languageTopics } from './parityAdapter';
 import { useEntityLinks } from './useEntityLinks';
 import { buildTemplateEvents, subtopicsFromAuthorityReport, subtopicsFromGraph } from './templateAdapter';
@@ -38,7 +39,8 @@ export const SignalsWorkspace = ({ projectId = null, pages, graph, subtopicsByUr
   const decay = useDecayHistory(projectId);
   const causalImpact = useCausalImpact(projectId, gscProperty || undefined, gscFilters, gscHydratedProjectId === projectId, true);
   const { snapshot, stale, refresh } = useGraphSnapshot(graph);
-  const sprsInput = useMemo(() => buildSprsInput(snapshot), [snapshot]);
+  const embeddings = useSprsEmbeddings(projectId, pages);
+  const sprsInput = useMemo(() => buildSprsInput(snapshot, embeddings), [snapshot, embeddings]);
   const sprs = useMemo(() => computeSprs(sprsInput.nodes, sprsInput.edges), [sprsInput]);
   const parityExceptions = useParityExceptions(projectId);
   const parity = useMemo(() => buildParityReport(pages, graph, parityExceptions.exceptions), [pages, graph, parityExceptions.exceptions]);
