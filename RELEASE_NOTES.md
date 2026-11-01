@@ -28,6 +28,11 @@ Work on the remaining open issues (round 3). Decisions in the #83 register are a
 - Thresholds for neural embeddings and IGOS (.48/.82) are fixture-calibrated defaults, not confirmed on a real Ollama model.
 - GA4 revenue and key-event commands are tested against mocked responses only.
 - OCR results are partial (whole-image box, no confidence); there is no speech-to-text, only WebVTT and SRT captions.
+# SEOmi 0.8.6 — release notes
+
+## Security
+
+- Dependabot alert 10 (GHSA-g3hv-75wg-m249, minimatch ReDoS through globparts amplification, development scope): `minimatch` is pinned to `^11.0.3` through `overrides`, so eslint and typescript-eslint use the patched release. Lint and type check pass on it.
 
 # SEOmi 0.8.5 — release notes
 
