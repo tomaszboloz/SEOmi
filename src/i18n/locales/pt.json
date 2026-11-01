@@ -9186,7 +9186,13 @@
       "not-estimable": "Backtest impossível: o período anterior é curto demais para pseudo-intervenções."
     },
     "familySignificant": "Ainda significativo após ajuste para {{family}} experimentos exibidos juntos (Holm, p = {{p}}).",
-    "familyNotSignificant": "Não significativo após ajuste para {{family}} experimentos exibidos juntos (Holm, p = {{p}})."
+    "familyNotSignificant": "Não significativo após ajuste para {{family}} experimentos exibidos juntos (Holm, p = {{p}}).",
+    "structuralTitle": "Estimativa estrutural sazonal",
+    "structuralMethod": "Tendência de nível local mais sazonalidade semanal, com o controlo retirado quando é informativo. O intervalo de 95% vem de uma simulação preditiva com semente fixa. É uma aproximação do tipo BSTS, não um ajuste bayesiano completo, e mostra uma associação, não causalidade provada.",
+    "pageContamination": "A página de controlo pode partilhar links, modelos ou tema com a página alterada, pelo que a mesma alteração a pode afetar. Trate o resultado como mais fraco do que com um controlo independente.",
+    "pageLoad": "Carregar a série diária desta página",
+    "pageNeedsGsc": "Ligue primeiro uma propriedade do Search Console.",
+    "pageLoadFailed": "Não foi possível carregar ou guardar a série diária."
   },
   "revenueImportUi": {
     "title": "Receita (exportação opcional do GA4)",

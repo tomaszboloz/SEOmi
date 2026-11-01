@@ -9186,7 +9186,13 @@
       "not-estimable": "Backtest impossibile: il periodo precedente è troppo breve per pseudo-interventi."
     },
     "familySignificant": "Ancora significativo dopo la correzione per {{family}} esperimenti mostrati insieme (Holm, p = {{p}}).",
-    "familyNotSignificant": "Non significativo dopo la correzione per {{family}} esperimenti mostrati insieme (Holm, p = {{p}})."
+    "familyNotSignificant": "Non significativo dopo la correzione per {{family}} esperimenti mostrati insieme (Holm, p = {{p}}).",
+    "structuralTitle": "Stima strutturale stagionale",
+    "structuralMethod": "Tendenza di livello locale più stagionalità settimanale, con il controllo scorporato quando è informativo. L'intervallo al 95% deriva da una simulazione predittiva con seme fisso. È un'approssimazione di tipo BSTS, non un adattamento bayesiano completo, e mostra un'associazione, non una causalità dimostrata.",
+    "pageContamination": "La pagina di controllo può condividere link, modelli o argomento con la pagina modificata, quindi la stessa modifica può influenzarla. Considera il risultato più debole rispetto a un controllo indipendente.",
+    "pageLoad": "Carica la serie giornaliera di questa pagina",
+    "pageNeedsGsc": "Collega prima una proprietà di Search Console.",
+    "pageLoadFailed": "Impossibile caricare o salvare la serie giornaliera."
   },
   "revenueImportUi": {
     "title": "Entrate (esportazione GA4 facoltativa)",

@@ -9186,7 +9186,13 @@
       "not-estimable": "バックテスト不可: 事前期間が疑似介入には短すぎます。"
     },
     "familySignificant": "同時に表示した {{family}} 件の実験で補正後も有意です (Holm, p = {{p}})。",
-    "familyNotSignificant": "同時に表示した {{family}} 件の実験で補正後は有意ではありません (Holm, p = {{p}})。"
+    "familyNotSignificant": "同時に表示した {{family}} 件の実験で補正後は有意ではありません (Holm, p = {{p}})。",
+    "structuralTitle": "季節性を含む構造推定",
+    "structuralMethod": "局所水準トレンドと週次の季節性を用い、情報を持つ対照は回帰で除きます。95%区間は固定シードの事後予測シミュレーションによるものです。これはBSTS型の近似で、完全なベイズ推定ではなく、因果の証明ではなく関連を示します。",
+    "pageContamination": "対照ページは変更したページとリンク、テンプレート、トピックを共有している可能性があり、同じ変更の影響を受けることがあります。独立した対照より弱い結果として扱ってください。",
+    "pageLoad": "このページの日次系列を読み込む",
+    "pageNeedsGsc": "先にSearch Consoleプロパティを接続してください。",
+    "pageLoadFailed": "日次系列を読み込めないか保存できませんでした。"
   },
   "revenueImportUi": {
     "title": "収益（任意の GA4 エクスポート）",

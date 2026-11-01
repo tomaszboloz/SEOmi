@@ -9186,7 +9186,13 @@
       "not-estimable": "Backtest nicht möglich: Der Vorzeitraum ist für Schein-Interventionen zu kurz."
     },
     "familySignificant": "Nach Korrektur für {{family}} gemeinsam angezeigte Experimente weiterhin signifikant (Holm, p = {{p}}).",
-    "familyNotSignificant": "Nach Korrektur für {{family}} gemeinsam angezeigte Experimente nicht signifikant (Holm, p = {{p}})."
+    "familyNotSignificant": "Nach Korrektur für {{family}} gemeinsam angezeigte Experimente nicht signifikant (Holm, p = {{p}}).",
+    "structuralTitle": "Saisonale Strukturschätzung",
+    "structuralMethod": "Lokaler Niveautrend plus Wochensaisonalität; die Kontrolle wird herausgerechnet, wenn sie informativ ist. Das 95-%-Intervall stammt aus einer Posterior-Prädiktiv-Simulation mit festem Seed. Das ist eine BSTS-artige Näherung, kein vollständiger Bayes-Fit, und zeigt einen Zusammenhang, keine bewiesene Kausalität.",
+    "pageContamination": "Die Kontrollseite kann Links, Vorlagen oder Thema mit der geänderten Seite teilen, sodass dieselbe Änderung sie beeinflussen kann. Das Ergebnis ist schwächer als mit unabhängiger Kontrolle.",
+    "pageLoad": "Tagesreihe dieser Seite laden",
+    "pageNeedsGsc": "Verbinden Sie zuerst eine Search-Console-Property.",
+    "pageLoadFailed": "Die Tagesreihe konnte nicht geladen oder gespeichert werden."
   },
   "revenueImportUi": {
     "title": "Umsatz (optionaler GA4-Export)",

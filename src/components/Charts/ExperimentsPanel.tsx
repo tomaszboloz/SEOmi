@@ -6,6 +6,10 @@ import { evaluateIntervention } from '@/services/experiments/evaluate';
 import { readGscSnapshots } from '@/services/gscTracker/read';
 import { causalImpactFor } from '@/services/experiments/causalSeries';
 import { holmAdjust, twoSidedP } from '@/services/experiments/causalPolicy';
+import { causalPageFor } from '@/services/experiments/pageCausal';
+import { loadPageSeries } from '@/services/experiments/pageSeries';
+import { useToolsStore } from '@/stores/toolsStore';
+import { PageSeriesLoader } from './experiments/PageSeriesLoader';
 import { InterventionForm } from './experiments/InterventionForm';
 import { ExperimentCard } from './experiments/ExperimentCard';
 
@@ -15,7 +19,11 @@ const ProjectExperiments = ({ projectId, pages }: { projectId: string; pages: Cr
   const [removeFailed, setRemoveFailed] = useState(false);
   const snapshots = readGscSnapshots(projectId);
   const urls = [...new Set(pages.map(page => page.url))];
-  const causal = entries.map(intervention => causalImpactFor(intervention, snapshots, pages[0]?.url));
+  const [, setSeriesVersion] = useState(0);
+  const clientId = useToolsStore(state => state.gscClientId).trim();
+  const siteUrl = useToolsStore(state => state.gscProperty);
+  const saved = loadPageSeries(projectId);
+  const causal = entries.map(intervention => intervention.url === 'site' ? causalImpactFor(intervention, snapshots, pages[0]?.url) : causalPageFor(intervention, saved));
   const families = holmAdjust(causal.map(setup => twoSidedP(setup.estimate)));
   return <>
     <p>{t('experimentsUi.capacity', { count: 200 })}</p>
@@ -26,6 +34,7 @@ const ProjectExperiments = ({ projectId, pages }: { projectId: string; pages: Cr
     }} />
     {!entries.length && <p>{t('experimentsUi.empty')}</p>}
     {entries.map((intervention, index) => <ExperimentCard key={intervention.id} intervention={intervention}
+      pageLoader={<PageSeriesLoader projectId={projectId} intervention={intervention} clientId={clientId} siteUrl={siteUrl} onLoaded={() => setSeriesVersion(version => version + 1)} />}
       evaluation={evaluateIntervention(intervention, snapshots)} causal={{ ...causal[index], family: families[index] }} onRemove={() => {
         const removed = removeIntervention(projectId, intervention.id);
         setRemoveFailed(!removed);

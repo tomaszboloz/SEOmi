@@ -1,11 +1,13 @@
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Intervention } from '@/services/experiments/registry';
 import type { ExperimentEvaluation } from '@/services/experiments/types';
 import type { CausalSetup } from '@/services/experiments/causalSeries';
 import { CausalImpactSection } from './CausalImpactSection';
+import { StructuralImpactSection } from './StructuralImpactSection';
 
-export const ExperimentCard = ({ intervention, evaluation, causal, onRemove }: {
-  intervention: Intervention; evaluation: ExperimentEvaluation; causal?: CausalSetup; onRemove: () => void;
+export const ExperimentCard = ({ intervention, evaluation, causal, onRemove, pageLoader }: {
+  intervention: Intervention; evaluation: ExperimentEvaluation; causal?: CausalSetup; onRemove: () => void; pageLoader?: ReactNode;
 }) => {
   const { t, i18n } = useTranslation();
   const unavailable = t('experimentsUi.unavailable');
@@ -51,7 +53,8 @@ export const ExperimentCard = ({ intervention, evaluation, causal, onRemove }: {
         {t(`experimentsUi.${key}`)}: {points(evaluation.relativeVsSite?.[key] ?? null)}
       </p>)}
     </>}
-    {causal && <CausalImpactSection setup={causal} />}
+    {intervention.url === 'site' ? causal && <CausalImpactSection setup={causal} /> : pageLoader}
+    {causal?.structural && <StructuralImpactSection estimate={causal.structural} pageLevel={intervention.url !== 'site'} />}
     <h6 className="font-semibold">{t('experimentsUi.limitations')}</h6>
     <ul className="list-disc ps-4">{evaluation.limitations.map(reason =>
       <li key={reason}>{t(`experimentsUi.reasons.${reason}`)}</li>)}</ul>

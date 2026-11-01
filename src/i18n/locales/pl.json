@@ -9186,7 +9186,13 @@
       "not-estimable": "Backtest niemożliwy: okres przed zmianą jest za krótki na pozorne interwencje."
     },
     "familySignificant": "Nadal istotne po korekcie na {{family}} eksperymentów pokazanych razem (Holm, p = {{p}}).",
-    "familyNotSignificant": "Nieistotne po korekcie na {{family}} eksperymentów pokazanych razem (Holm, p = {{p}})."
+    "familyNotSignificant": "Nieistotne po korekcie na {{family}} eksperymentów pokazanych razem (Holm, p = {{p}}).",
+    "structuralTitle": "Sezonowy model strukturalny",
+    "structuralMethod": "Trend poziomu lokalnego plus sezonowość tygodniowa, z odjętą kontrolą, gdy niesie informację. Przedział 95% pochodzi z symulacji predykcyjnej z ustalonym ziarnem. To przybliżenie typu BSTS, nie pełny model bayesowski, i pokazuje związek, a nie udowodnioną przyczynowość.",
+    "pageContamination": "Strona kontrolna może dzielić linki, szablony lub temat ze zmienioną stroną, więc ta sama zmiana może na nią wpływać. Traktuj wynik jako słabszy niż przy niezależnej kontroli.",
+    "pageLoad": "Wczytaj dzienną serię tej strony",
+    "pageNeedsGsc": "Najpierw połącz właściwość Search Console.",
+    "pageLoadFailed": "Nie udało się wczytać lub zapisać serii dziennej."
   },
   "revenueImportUi": {
     "title": "Przychód (opcjonalny eksport GA4)",

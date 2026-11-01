@@ -9186,7 +9186,13 @@
       "not-estimable": "Backtest impossible : la période antérieure est trop courte pour des pseudo-interventions."
     },
     "familySignificant": "Toujours significatif après ajustement pour {{family}} expériences affichées ensemble (Holm, p = {{p}}).",
-    "familyNotSignificant": "Non significatif après ajustement pour {{family}} expériences affichées ensemble (Holm, p = {{p}})."
+    "familyNotSignificant": "Non significatif après ajustement pour {{family}} expériences affichées ensemble (Holm, p = {{p}}).",
+    "structuralTitle": "Estimation structurelle saisonnière",
+    "structuralMethod": "Tendance de niveau local plus saisonnalité hebdomadaire, le contrôle étant retiré lorsqu'il est informatif. L'intervalle à 95 % provient d'une simulation prédictive à graine fixe. C'est une approximation de type BSTS, pas un ajustement bayésien complet, et elle montre une association, pas une causalité prouvée.",
+    "pageContamination": "La page de contrôle peut partager liens, modèles ou sujet avec la page modifiée ; le même changement peut donc l'affecter. Considérez le résultat comme plus faible qu'avec un contrôle indépendant.",
+    "pageLoad": "Charger la série quotidienne de cette page",
+    "pageNeedsGsc": "Connectez d'abord une propriété Search Console.",
+    "pageLoadFailed": "La série quotidienne n'a pas pu être chargée ou enregistrée."
   },
   "revenueImportUi": {
     "title": "Revenus (export GA4 facultatif)",

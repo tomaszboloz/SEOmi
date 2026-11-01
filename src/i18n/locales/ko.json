@@ -9186,7 +9186,13 @@
       "not-estimable": "백테스트 불가: 사전 기간이 가상 개입에 너무 짧습니다."
     },
     "familySignificant": "함께 표시된 실험 {{family}}건에 대해 보정한 뒤에도 유의합니다 (Holm, p = {{p}}).",
-    "familyNotSignificant": "함께 표시된 실험 {{family}}건에 대해 보정하면 유의하지 않습니다 (Holm, p = {{p}})."
+    "familyNotSignificant": "함께 표시된 실험 {{family}}건에 대해 보정하면 유의하지 않습니다 (Holm, p = {{p}}).",
+    "structuralTitle": "계절성 구조 추정",
+    "structuralMethod": "국소 수준 추세와 주간 계절성을 사용하며, 정보가 있는 대조군은 회귀로 제거합니다. 95% 구간은 고정 시드 사후 예측 시뮬레이션에서 나옵니다. BSTS 방식의 근사이며 완전한 베이즈 적합이 아니고, 인과가 아니라 연관을 보여 줍니다.",
+    "pageContamination": "대조 페이지는 변경한 페이지와 링크, 템플릿, 주제를 공유할 수 있어 같은 변경의 영향을 받을 수 있습니다. 독립 대조군보다 약한 결과로 보세요.",
+    "pageLoad": "이 페이지의 일별 시계열 불러오기",
+    "pageNeedsGsc": "먼저 Search Console 속성을 연결하세요.",
+    "pageLoadFailed": "일별 시계열을 불러오거나 저장하지 못했습니다."
   },
   "revenueImportUi": {
     "title": "수익(선택 사항인 GA4 내보내기)",

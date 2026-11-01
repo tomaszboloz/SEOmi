@@ -2,6 +2,7 @@ import type { GscPerformanceSnapshot } from '@/services/gscTracker/types';
 import { filtersEqual } from '@/services/gscTracker/filters';
 import { areSitesIndependent, propertyMatchScore } from '@/services/causalMarket/domain';
 import type { Intervention } from './registry';
+import { estimateStructuralImpact } from './structuralImpact';
 import { estimateCausalImpact, type CausalEstimate, type CausalInput } from './causalImpact';
 import { fitLinear } from './causalStats';
 import { backtestCausal, type BacktestResult, type FamilyResult } from './causalPolicy';
@@ -35,6 +36,8 @@ export interface CausalSetup {
   testSite: string | null; controlSite: string | null; estimate: CausalEstimate | null; unavailable: 'page-series-unavailable' | 'no-test-series' | null;
   /** Pseudo-intervention backtest; only run when the real estimate exists. */
   backtest?: BacktestResult | null;
+  /** Same intervention estimated with the seasonal structural model (#97). */
+  structural?: CausalEstimate | null;
   /** Holm-adjusted result across the experiments shown together. */
   family?: FamilyResult;
 }
@@ -68,5 +71,5 @@ export const causalImpactFor = (intervention: Intervention, snapshots: readonly 
     control: control ? dates.map((date) => control.daily.get(date) ?? null) : null,
   };
   const estimate = estimateCausalImpact(input);
-  return { testSite: test.site, controlSite: control?.site ?? null, estimate, unavailable: null, backtest: estimate.status === 'estimated' ? backtestCausal(input) : null };
+  return { testSite: test.site, controlSite: control?.site ?? null, estimate, structural: estimateStructuralImpact(input), unavailable: null, backtest: estimate.status === 'estimated' ? backtestCausal(input) : null };
 };

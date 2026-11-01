@@ -9186,7 +9186,13 @@
       "not-estimable": "Backtest not possible: the pre-period is too short for pseudo-interventions."
     },
     "familySignificant": "Still significant after adjusting for {{family}} experiments shown together (Holm, p = {{p}}).",
-    "familyNotSignificant": "Not significant after adjusting for {{family}} experiments shown together (Holm, p = {{p}})."
+    "familyNotSignificant": "Not significant after adjusting for {{family}} experiments shown together (Holm, p = {{p}}).",
+    "structuralTitle": "Seasonal structural estimate",
+    "structuralMethod": "Local-level trend plus weekly seasonality, with the control regressed out when it is informative. The 95% interval comes from seeded posterior-predictive simulation. This is a BSTS-style approximation, not a full Bayesian fit, and it shows an association, not proven causality.",
+    "pageContamination": "The control page may share links, templates or topic with the changed page, so the same change can affect it. Treat the result as weaker than a result with an independent control.",
+    "pageLoad": "Load daily series of this page",
+    "pageNeedsGsc": "Connect a Search Console property first.",
+    "pageLoadFailed": "The daily series could not be loaded or saved."
   },
   "revenueImportUi": {
     "title": "Revenue (optional GA4 export)",

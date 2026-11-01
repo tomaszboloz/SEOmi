@@ -60,7 +60,7 @@ export const estimateStructuralImpact = (input: CausalInput): CausalEstimate => 
   if (result.reasons.length) return result;
   const expectedTotal = mean(main.cumulative);
   result.absolute = main.absolute;
-  result.relative = expectedTotal > 0 ? { estimate: main.absolute.estimate / expectedTotal, lower: main.absolute.lower / expectedTotal, upper: main.absolute.upper / expectedTotal } : null;
+  result.relative = mean(pre.y) > 0 && expectedTotal > 0 ? { estimate: main.absolute.estimate / expectedTotal, lower: main.absolute.lower / expectedTotal, upper: main.absolute.upper / expectedTotal } : null;
   const positive = main.cumulative.filter((value) => main.actual > value).length / main.cumulative.length;
   result.probability = main.absolute.estimate >= 0 ? positive : 1 - positive;
   result.status = 'estimated';

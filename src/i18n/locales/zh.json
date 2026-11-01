@@ -9186,7 +9186,13 @@
       "not-estimable": "无法回测：前期太短，无法进行伪干预。"
     },
     "familySignificant": "对同时显示的 {{family}} 个实验校正后仍显著（Holm，p = {{p}}）。",
-    "familyNotSignificant": "对同时显示的 {{family}} 个实验校正后不显著（Holm，p = {{p}}）。"
+    "familyNotSignificant": "对同时显示的 {{family}} 个实验校正后不显著（Holm，p = {{p}}）。",
+    "structuralTitle": "含季节性的结构估计",
+    "structuralMethod": "局部水平趋势加每周季节性;对照有信息量时先回归剔除。95%区间来自固定种子的后验预测模拟。这是 BSTS 式近似,不是完整的贝叶斯拟合,显示的是关联而非已证明的因果。",
+    "pageContamination": "对照页面可能与被修改页面共享链接、模板或主题,同一改动可能影响它。请把结果视为弱于独立对照的结果。",
+    "pageLoad": "加载此页面的每日序列",
+    "pageNeedsGsc": "请先连接 Search Console 资源。",
+    "pageLoadFailed": "无法加载或保存每日序列。"
   },
   "revenueImportUi": {
     "title": "收入（可选的 GA4 导出）",
