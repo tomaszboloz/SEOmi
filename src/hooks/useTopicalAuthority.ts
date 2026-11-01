@@ -94,7 +94,7 @@ export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runn
       writeTaxonomy(projectId, stamped);
       const embedding = loadEmbeddingSession(projectId ?? null).settings;
       const neural = embedding.provider === 'ollama' && embedding.ollamaModel?.trim()
-        ? await neuralMarketCentroid(stamped, { model: embedding.ollamaModel, signal: own.signal }).catch(() => null) : null;
+        ? await neuralMarketCentroid(stamped, { model: embedding.ollamaModel, competitors: outcome.competitors, signal: own.signal }).catch(() => null) : null;
       if (controller.current !== own) return;
       recordReferenceSnapshot(projectId ?? null, stamped, outcome.serp, where, neural ?? undefined);
       const fresh = buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: stamped, now: sfs.generatedAt });

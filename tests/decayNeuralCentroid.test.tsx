@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, expect, it, vi } from 'vitest';
 import { useTopicalAuthority } from '@/hooks/useTopicalAuthority';
-import { neuralMarketCentroid, NEURAL_TERMS } from '@/services/semanticDecay/neuralCentroid';
+import { DIGEST_CHARS, MAX_DIGESTS, neuralMarketCentroid, NEURAL_TERMS, pageDigest } from '@/services/semanticDecay/neuralCentroid';
 import { buildReferenceSnapshot, REFERENCE_DECAY_MODEL } from '@/services/semanticDecay/recordReferenceSnapshot';
 import { loadSerpHistory } from '@/services/semanticDecay/snapshotStore';
 import type { ReferenceTaxonomy } from '@/services/topicalAuthority';
@@ -31,6 +31,41 @@ it('averages group embeddings by competitor share and labels the model', async (
   const capped = embed(Array.from({ length: 10 }, () => [1, 0]));
   await neuralMarketCentroid(taxonomy(big), { model: 'm', fetchImpl: capped });
   expect(JSON.parse(String(capped.mock.calls[0][1].body)).input).toHaveLength(NEURAL_TERMS / 8);
+});
+
+const textPage = (title: string | null, paragraphs: string[] = [], description: string | null = null) =>
+  ({ url: `https://c.test/${title}`, title, meta_description: description, rag_sections: [{ heading: '', level: 0, paragraphs, tables: 0, ordered_lists: 0, unordered_lists: 0, definition_lists: 0 }] }) as never;
+const rival = (pages: unknown[], domain = 'c.test') => ({ domain, pages }) as never;
+
+it('digests a page from title, description and lead paragraphs within the cap', () => {
+  expect(pageDigest(textPage('Coffee guide', ['  Brew   with\nwater ', 'Grind fresh'], 'All about coffee'))).toBe('Coffee guide All about coffee Brew with water Grind fresh');
+  expect(pageDigest(textPage(null))).toBe('');
+  expect(pageDigest({ url: 'u' } as never)).toBe('');
+  expect(pageDigest(textPage('x', ['y'.repeat(DIGEST_CHARS * 2)]))).toHaveLength(DIGEST_CHARS);
+});
+
+it('embeds page digests when enough competitor text exists and labels the input', async () => {
+  const pages = ['a', 'b', 'c', 'd'].map((name) => textPage(`Page ${name}`, [`Text of ${name}`]));
+  const fetchImpl = embed([[1, 0], [0, 1], [1, 1], [2, 1]]);
+  const result = await neuralMarketCentroid(taxonomy({ coffee: 1 }), { model: 'nomic', competitors: [rival(pages.slice(0, 2)), rival(pages.slice(2), 'd.test')], fetchImpl });
+  expect(result!.model).toBe('tas-reference-ollama:nomic-pages-v1');
+  const input = JSON.parse(String(fetchImpl.mock.calls[0][1].body)).input as string[];
+  expect(input).toEqual(['Page a Text of a', 'Page b Text of b', 'Page c Text of c', 'Page d Text of d']);
+  expect(Math.hypot(...result!.centroid)).toBeCloseTo(1, 6);
+});
+
+it('caps pages per competitor and total digests, and falls back to vocabulary with too little text', async () => {
+  const many = Array.from({ length: 10 }, (_, i) => textPage(`P${i}`, ['t']));
+  const fetchImpl = embed(Array.from({ length: MAX_DIGESTS }, () => [1, 0]));
+  await neuralMarketCentroid(taxonomy({ coffee: 1 }), { model: 'm', competitors: Array.from({ length: 20 }, (_, i) => rival(many, `d${i}.test`)), fetchImpl });
+  const input = JSON.parse(String(fetchImpl.mock.calls[0][1].body)).input as string[];
+  expect(input).toHaveLength(MAX_DIGESTS);
+  expect(input.filter((text) => text.startsWith('P3'))).toHaveLength(0);
+  const sparse = embed([[1, 0]]);
+  const fallback = await neuralMarketCentroid(taxonomy({ coffee: 1 }), { model: 'm', competitors: [rival([textPage('only one', ['text']), textPage(null)])], fetchImpl: sparse });
+  expect(fallback!.model).toBe('tas-reference-ollama:m-v1');
+  expect(JSON.parse(String(sparse.mock.calls[0][1].body)).input).toEqual(['coffee']);
+  expect(await neuralMarketCentroid(taxonomy({}), { model: 'm', competitors: [rival([textPage(null)])], fetchImpl: embed([[1, 0]]) })).toBeNull();
 });
 
 it('orders equal shares by term so the request is deterministic', async () => {
@@ -76,7 +111,7 @@ it('records a neural snapshot when the project uses an Ollama model and falls ba
     const count = (JSON.parse(String(init.body)).input as string[]).length;
     return new Response(JSON.stringify({ embeddings: Array.from({ length: count }, () => [1, 2]) }), { status: 200 });
   });
-  expect((await run(true, ok as unknown as typeof fetch))[0].model).toBe('tas-reference-ollama:nomic-v1');
+  expect((await run(true, ok as unknown as typeof fetch))[0].model).toBe('tas-reference-ollama:nomic-pages-v1');
   localStorage.clear();
   const down = vi.fn().mockRejectedValue(new Error('down'));
   expect((await run(true, down as unknown as typeof fetch))[0].model).toBe(REFERENCE_DECAY_MODEL);
