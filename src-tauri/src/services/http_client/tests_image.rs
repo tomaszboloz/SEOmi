@@ -51,8 +51,7 @@ async fn refuses_bad_redirects_statuses_and_content() {
 #[tokio::test]
 async fn enforces_the_size_cap_and_the_deadline() {
     let mut big =
-        format!("HTTP/1.1 200 OK\r\nContent-Type: image/png\r\nConnection: close\r\n\r\n")
-            .into_bytes();
+        b"HTTP/1.1 200 OK\r\nContent-Type: image/png\r\nConnection: close\r\n\r\n".to_vec();
     big.extend(vec![0u8; MAX_IMAGE_BYTES + 1]);
     let address = fixture_bytes(vec![big]).await;
     let target = Url::parse(&format!("http://img.example:{}/", address.port())).unwrap();
