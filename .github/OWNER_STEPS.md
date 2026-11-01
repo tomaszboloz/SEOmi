@@ -36,7 +36,9 @@ Contributor Covenant 2.1 with the `SECURITY.md` channel is the accepted default.
 - Read back: `gh api repos/OWNER/REPO -q .security_and_analysis`.
 
 ## S7 community profile (#101)
+- Do: merge the PR that carries the forms, CODEOWNERS and CONTRIBUTING.
 - Read back after merge: `gh api repos/OWNER/REPO/community/profile -q .health_percentage` and confirm forms, CODEOWNERS and CONTRIBUTING are listed.
 
 ## S8 CodeQL alert (#103)
+- Do: open the Security tab and triage each open alert; fix or dismiss with a written reason.
 - Read back: `gh api repos/OWNER/REPO/code-scanning/alerts?state=open -q length`; triage any alert in the Security tab. Do not dismiss without a reason.
