@@ -59,6 +59,7 @@ pub(super) const IPC_COMMANDS: &[&str] = &[
     "list_google_analytics_properties",
     "google_analytics_performance",
     "google_analytics_revenue",
+    "google_analytics_daily",
     "search_console_page_daily",
     "connect_search_console",
     "list_search_console_properties",
