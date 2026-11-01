@@ -30,7 +30,7 @@ export interface ExecutiveActionFeedProps { actions: ExecutiveAction[]; onOpen: 
 export const ExecutiveActionFeed = ({ actions, onOpen, projectId = null, hss = null, focus = null }: ExecutiveActionFeedProps) => {
   const { t } = useTranslation();
   const [log, setLog] = useState(() => readDecisionLog(projectId));
-  const decide = (action: ExecutiveAction, decision: ActionDecisionKind) => setLog(recordDecision(projectId, hss?.runId ?? 'unsaved', action, decision));
+  const decide = (runId: string, action: ExecutiveAction, decision: ActionDecisionKind) => setLog(recordDecision(projectId, runId, action, decision));
   return (
     <section aria-labelledby="executive-actions-title" className="space-y-2 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
       <h2 id="executive-actions-title" className="text-sm font-semibold text-slate-200">{t('executive.actions.title')}</h2>
@@ -53,7 +53,7 @@ export const ExecutiveActionFeed = ({ actions, onOpen, projectId = null, hss = n
                 {t('executive.actions.open', { tab: t(`crawl.tabs.${action.drillTab}`) })}
               </button>
               <ExecutionCardDetails action={action} hss={hss} projectId={projectId} onOpen={onOpen} focus={focus} />
-              {projectId && hss && <ExecutiveActionReview projectId={projectId} action={action} log={log} onDecide={decide} />}
+              {projectId && hss && <ExecutiveActionReview projectId={projectId} action={action} log={log} onDecide={(item, decision) => decide(hss.runId, item, decision)} />}
             </li>
           ))}
         </ol>
