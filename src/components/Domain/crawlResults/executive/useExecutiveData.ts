@@ -11,7 +11,7 @@ import { guardRemovals } from '@/services/recommendationBus/guard';
 import { buildSemanticMap } from '@/services/semanticMap';
 import { computeSprs } from '@/services/semanticGraph/sprs';
 import { buildSprsInput } from '@/services/sprs/report';
-import { buildSiteFocusReport } from '@/services/siteFocus';
+import { buildSiteFocusReport, type SiteFocusReport } from '@/services/siteFocus';
 import { projectFocusOptions } from '@/services/siteFocusMonitoring/focusOptions';
 import { buildAuthorityReport } from '@/services/topicalAuthority';
 import { readTaxonomy } from '@/services/topicalAuthorityMonitoring/taxonomyStore';
@@ -21,7 +21,7 @@ import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
 /** One module failing on incomplete page data must not take the whole dashboard down: it becomes unavailable. */
 const attempt = <T,>(build: () => T | null | undefined): T | null => { try { return build() ?? null; } catch { return null; } };
 
-export interface ExecutiveData { runId: string; hss: HssReport; actions: ExecutiveAction[] }
+export interface ExecutiveData { runId: string; hss: HssReport; actions: ExecutiveAction[]; sfs: SiteFocusReport | null }
 
 /**
  * Composition layer of the Executive dashboard (#73): builds the module reports of the selected run with
@@ -44,6 +44,6 @@ export const useExecutiveData = (pages: CrawledPageSummary[], startUrl: string, 
     const bus = runRecommendationBus(busInputFromReports(sfs ?? undefined, tas ?? undefined, guard));
     const links = attempt(() => findInternalLinkOpportunities(excludeQuarantinedPages(pages, bus.quarantine)))?.opportunities ?? [];
     const actions = buildActionFeed({ projectId: projectId ?? '', runId, hss, sfs, tas, trust, linkOpportunities: links, guard });
-    return { runId, hss, actions };
+    return { runId, hss, actions, sfs };
   }, [pages, startUrl, run?.completedAt, runId, projectId]);
 };

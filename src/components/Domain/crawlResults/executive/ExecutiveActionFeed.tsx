@@ -7,7 +7,7 @@ import { ExecutiveActionReview } from './ExecutiveActionReview';
 import type { CodeParams } from '@/services/siteFocus/types';
 import type { CrawlTab } from '../helpers/crawlResultsTabsConfig';
 import { codeTitle } from '../focus/focusText';
-import { ExecutionCardDetails } from './ExecutionCardDetails';
+import { ExecutionCardDetails, type CardFocus } from './ExecutionCardDetails';
 
 const MAX_SHOWN = 25;
 
@@ -23,10 +23,10 @@ export const actionTitle = (t: TFunction, action: ExecutiveAction): string => {
 
 const signed = (value: number): string => `${value > 0 ? '+' : ''}${value}`;
 
-export interface ExecutiveActionFeedProps { actions: ExecutiveAction[]; onOpen: (tab: CrawlTab) => void; hss?: HssReport | null; projectId?: string | null }
+export interface ExecutiveActionFeedProps { actions: ExecutiveAction[]; onOpen: (tab: CrawlTab) => void; hss?: HssReport | null; projectId?: string | null; focus?: CardFocus | null }
 
 /** Action feed (#89 / #73 GEM-73-05): explicit delta, effort range, conflicts and a drill-down to the module screen. */
-export const ExecutiveActionFeed = ({ actions, onOpen, projectId = null, hss = null }: ExecutiveActionFeedProps) => {
+export const ExecutiveActionFeed = ({ actions, onOpen, projectId = null, hss = null, focus = null }: ExecutiveActionFeedProps) => {
   const { t } = useTranslation();
   const [log, setLog] = useState(() => readDecisionLog(projectId));
   const decide = (action: ExecutiveAction, decision: ActionDecisionKind) => setLog(recordDecision(projectId, hss?.runId ?? 'unsaved', action, decision));
@@ -51,7 +51,7 @@ export const ExecutiveActionFeed = ({ actions, onOpen, projectId = null, hss = n
               <button type="button" onClick={() => onOpen(action.drillTab)} className="mt-2 rounded border border-slate-700 px-2 py-1 text-slate-200 hover:border-emerald-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
                 {t('executive.actions.open', { tab: t(`crawl.tabs.${action.drillTab}`) })}
               </button>
-              <ExecutionCardDetails action={action} hss={hss} projectId={projectId} onOpen={onOpen} />
+              <ExecutionCardDetails action={action} hss={hss} projectId={projectId} onOpen={onOpen} focus={focus} />
               {projectId && hss && <ExecutiveActionReview projectId={projectId} action={action} log={log} onDecide={decide} />}
             </li>
           ))}

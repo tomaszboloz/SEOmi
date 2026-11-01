@@ -28,7 +28,7 @@ type CopyState = 'idle' | 'copied' | 'failed';
  */
 export const CrawlExecutiveTab = ({ pages, startUrl, run, projectId, onOpenTab }: CrawlExecutiveTabProps) => {
   const { t, i18n } = useTranslation();
-  const { hss, actions } = useExecutiveData(pages, startUrl, run, projectId);
+  const { hss, actions, sfs } = useExecutiveData(pages, startUrl, run, projectId);
   const trend = useHssTrend(projectId, hss, run?.completedAt);
   const [copy, setCopy] = useState<CopyState>('idle');
   const exportJson = async () => {
@@ -55,7 +55,7 @@ export const CrawlExecutiveTab = ({ pages, startUrl, run, projectId, onOpenTab }
       <ExecutiveHssHero hss={hss} trend={trend} />
       <ExecutiveModuleCards hss={hss} trend={trend} onOpen={onOpenTab} />
       <div className="grid gap-4 xl:grid-cols-[2fr_1fr]">
-        <ExecutiveActionFeed key={`${projectId ?? ''}|${hss.runId}`} actions={actions} onOpen={onOpenTab} projectId={projectId} hss={hss} />
+        <ExecutiveActionFeed key={`${projectId ?? ''}|${hss.runId}`} actions={actions} onOpen={onOpenTab} projectId={projectId} hss={hss} focus={sfs ? { report: sfs, pages } : null} />
         <ExecutiveWhatIf key={`${hss.runId}|${hss.profile.version}`} hss={hss} />
       </div>
     </div>
