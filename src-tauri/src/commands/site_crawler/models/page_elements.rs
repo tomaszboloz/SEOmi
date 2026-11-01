@@ -83,6 +83,12 @@ pub struct CrawledLink {
     /// Up to 15 words after the anchor in its block element.
     #[serde(default)]
     pub context_after: Option<String>,
+    /// True when the block held more than 15 words on a side, so the context is cut (#70 GEM-70-02).
+    #[serde(default)]
+    pub context_truncated: bool,
+    /// Visible words before the anchor in its block; absent in older runs or without a block.
+    #[serde(default)]
+    pub context_anchor_offset: Option<usize>,
     /// Nearest H2/H3 before the anchor; absent in older saved runs.
     #[serde(default)]
     pub section_heading: Option<String>,

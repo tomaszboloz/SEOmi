@@ -5,6 +5,7 @@ import { CrawlLinksFilters } from './linksTab/CrawlLinksFilters';
 import { CrawlLinksInternalSummary } from './linksTab/CrawlLinksInternalSummary';
 import { CrawlLinksExternalCheck } from './linksTab/CrawlLinksExternalCheck';
 import { CrawlLinksTable } from './linksTab/CrawlLinksTable';
+import { CrawlFunnelTransitions } from './linksTab/CrawlFunnelTransitions';
 
 type Session = ReturnType<typeof useCrawlResultsSession>;
 
@@ -101,6 +102,8 @@ export const CrawlLinksTab: React.FC<{ session: Session }> = ({ session }) => {
         externalError={externalLinkCheckError}
         t={t}
       />
+
+      <CrawlFunnelTransitions pages={result.pages} />
 
       <CrawlLinksTable
         links={links}

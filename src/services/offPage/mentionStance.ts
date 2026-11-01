@@ -5,6 +5,7 @@
  * analysis, and semantic co-occurrence never proves that an LLM endorses the brand.
  */
 import { mentionsInSense, type AliasSense } from './aliasSense';
+import { splitSentences } from '@/services/textSentences';
 
 export type MentionStance = 'neutral' | 'negated' | 'critical' | 'quoted';
 
@@ -24,7 +25,7 @@ const SUBSTRING = /\s|[\u3040-\u30ff\u4e00-\u9fff\uac00-\ud7af]/u;
 const ATTRIBUTION = /\b(?:according to|said|says|claims?|allegedly)\b|według|zdaniem|twierdzi|podobno|\blaut\b|\bselon\b|\bsegún\b|\bsecondo\b|\bsegundo\b|по словам|据|によると|에 따르면/iu;
 const QUOTES = /["„“”«»「」『』]/u;
 
-const sentences = (text: string): string[] => text.split(/(?<=[.!?…。！？])\s+/u).map((part) => part.trim()).filter(Boolean);
+const sentences = (text: string): string[] => splitSentences(text);
 const tokens = (text: string): string[] => text.toLocaleLowerCase().split(/[^\p{L}\p{N}'’-]+/u).filter(Boolean).map((token) => token.replace(/’/gu, "'"));
 const escape = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 

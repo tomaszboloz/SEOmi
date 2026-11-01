@@ -1,4 +1,5 @@
 import i18n from '@/i18n';
+import { alertFingerprint, type MonitoringAlert } from '@/services/monitoringAlerts';
 import type { CodeParams, Effort, Recommendation, SiteFocusReport } from '@/services/siteFocus';
 
 export const WEEKLY_TASK_COUNT = 3;
@@ -23,4 +24,10 @@ export const weeklyNotification = (weekly: WeeklyReport): { title: string; body:
     : i18n.t('siteFocusMonitoring.weekly.noTasks');
   const delta = weekly.delta === null ? i18n.t('siteFocusMonitoring.weekly.noPrevious') : `${weekly.delta > 0 ? '+' : ''}${weekly.delta}`;
   return { title: i18n.t('siteFocusMonitoring.weekly.title'), body: i18n.t('siteFocusMonitoring.weekly.body', { score: weekly.score, delta, tasks }) };
+};
+
+/** The weekly digest as a regular monitoring alert, so it shares dedupe, history and frequency policy (#106). */
+export const weeklyAlert = (weekly: WeeklyReport, sourceId: string, occurredAt: string): MonitoringAlert => {
+  const evidence: MonitoringAlert['evidence'] = { kind: 'weekly', score: weekly.score, delta: weekly.delta ?? 'none' };
+  return { type: 'focus', sourceId, ...weeklyNotification(weekly), occurredAt, partial: false, evidence, fingerprint: alertFingerprint('focus', sourceId, evidence) };
 };

@@ -1,13 +1,9 @@
-use scraper::{ElementRef, Node};
+use scraper::ElementRef;
 
-use super::link_context_redaction::{is_hidden_text, redact_context_word};
+use super::link_context::link_context;
 use super::link_section_heading::section_heading;
 use super::models::CrawledLink;
 
-/// Words kept on each side of the anchor (issue #70).
-const CONTEXT_WORDS: usize = 15;
-/// Text nodes inspected per block; a larger block gives no context instead of a slow scan.
-const MAX_BLOCK_TEXT_NODES: usize = 400;
 const METHOD_DOM: &str = "dom-ancestry";
 const METHOD_RENDERED: &str = "rendered-viewport";
 
@@ -51,47 +47,6 @@ pub(crate) fn dom_zone(element: &ElementRef<'_>) -> &'static str {
     found.0
 }
 
-/// Up to 15 words before and after the anchor inside its nearest block element.
-pub(crate) fn context_words(element: &ElementRef<'_>) -> (Option<String>, Option<String>) {
-    let Some(block) = element.ancestors().filter_map(ElementRef::wrap).find(|a| {
-        matches!(
-            a.value().name(),
-            "p" | "li" | "td" | "dd" | "blockquote" | "div" | "section" | "article" | "main"
-        )
-    }) else {
-        return (None, None);
-    };
-    let (mut before, mut after) = (Vec::new(), Vec::new());
-    let mut inside = false;
-    for (seen, node) in block.descendants().enumerate() {
-        if seen > MAX_BLOCK_TEXT_NODES {
-            return (None, None);
-        }
-        let Node::Text(text) = node.value() else {
-            continue;
-        };
-        if node.ancestors().any(|a| a.id() == element.id()) {
-            inside = true;
-            continue;
-        }
-        if is_hidden_text(node.parent().and_then(ElementRef::wrap)) {
-            continue;
-        }
-        let words = text.split_whitespace().map(redact_context_word);
-        if inside {
-            after.extend(words)
-        } else {
-            before.extend(words)
-        }
-    }
-    let start = before.len().saturating_sub(CONTEXT_WORDS);
-    let join = |words: &[String]| (!words.is_empty()).then(|| words.join(" "));
-    (
-        join(&before[start..]),
-        join(&after[..after.len().min(CONTEXT_WORDS)]),
-    )
-}
-
 pub(crate) struct LinkFacts {
     pub target_url: String,
     pub anchor_text: String,
@@ -128,7 +83,7 @@ fn placed_zone(element: &ElementRef<'_>, rendered: bool) -> (&'static str, Strin
 
 /// Builds a link with placement evidence; unchecked target fields start empty.
 pub(crate) fn build_link(facts: LinkFacts, element: &ElementRef<'_>) -> CrawledLink {
-    let (context_before, context_after) = context_words(element);
+    let context = link_context(element);
     let (zone, zone_method) = placed_zone(element, facts.rendered);
     CrawledLink {
         target_url: facts.target_url,
@@ -143,8 +98,10 @@ pub(crate) fn build_link(facts: LinkFacts, element: &ElementRef<'_>) -> CrawledL
         target_checked_at: None,
         zone: Some(zone.to_owned()),
         zone_method: Some(zone_method),
-        context_before,
-        context_after,
+        context_before: context.before,
+        context_after: context.after,
+        context_truncated: context.truncated,
+        context_anchor_offset: context.anchor_offset,
         section_heading: section_heading(element),
     }
 }

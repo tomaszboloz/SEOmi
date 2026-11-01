@@ -3,16 +3,15 @@ import { applyIndexabilityGate } from './gate';
 import { evaluatePage, prepare, typeContext } from './evaluate';
 import { LOW_CONFIDENCE_PAGES } from './flags';
 import { buildRecommendations } from './recommend';
+import { topicModelOf } from '@/services/topicModel';
 import type { ScoringModel } from './pageScore';
 import type { FocusPage, PageFocus, SiteFocusReport } from './types';
 
 /** Rebuilds the scoring state stored with a report. */
-export const modelOf = (report: SiteFocusReport): ScoringModel => ({
-  termCluster: new Map(Object.entries(report.model.termCluster)),
-  coreClusterId: report.model.coreClusterId,
-  coreWeights: new Map(Object.entries(report.model.coreWeights)),
-  kCore: report.model.kCore,
-});
+export const modelOf = (report: SiteFocusReport): ScoringModel => {
+  const topic = topicModelOf(report);
+  return { termCluster: new Map(topic.termCluster), coreClusterId: topic.coreClusterId, coreWeights: new Map(topic.coreWeights), kCore: [...topic.kCore] };
+};
 
 /**
  * Scores only new or changed pages against the report's existing centroid and idf,

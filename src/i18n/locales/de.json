@@ -1890,7 +1890,8 @@
       "no": "nein",
       "tableSummary": "Seitentabelle ({{count}})",
       "tableCaption": "Auf der Architekturkarte gezeigte Seiten mit Status, Tiefe, eingehenden Links, TRS und Bereich"
-    }
+    },
+    "coreTopicShare": "{{percent}} % der Begriffe im Kernthema"
   },
   "crawlDiff": {
     "fields": {
@@ -4903,6 +4904,8 @@
         "Zone method",
         "Context before",
         "Context after",
+        "Kontext gekürzt",
+        "Ankerposition (Wörter)",
         "Section heading"
       ],
       "crawlImages": [
@@ -5742,7 +5745,9 @@
           "off-topic-below-quota": "Zu wenige themenrelevante Absätze.",
           "local-lexical-embeddings": "Die Ähnlichkeit nutzt lokale lexikalische Vektoren, kein semantisches Modell; die Zonen sind Näherungen.",
           "heuristic-entities": "Entitäten stammen aus großgeschriebenen Phrasen und Subjekt-Prädikat-Objekt-Fakten, nicht aus einem trainierten Entitätsmodell.",
-          "semantic-provider-unavailable": "Der semantische Embedding-Anbieter des Projekts war nicht verfügbar; stattdessen wurden lokale lexikalische Vektoren verwendet."
+          "semantic-provider-unavailable": "Der semantische Embedding-Anbieter des Projekts war nicht verfügbar; stattdessen wurden lokale lexikalische Vektoren verwendet.",
+          "ollama-entities": "Entitäten wurden zusätzlich zur Großschreibungs-Heuristik vom lokalen Ollama-Modell erweitert.",
+          "ollama-entities-unavailable": "Das Ollama-Entitätsmodell war nicht verfügbar; nur die Großschreibungs-Heuristik wurde verwendet."
         },
         "intent": {
           "definitional": "Definition",
@@ -5763,7 +5768,9 @@
         },
         "mismatchAdvice": "Die Seite hat eine andere Intention als die meisten TOP-Seiten: Prüfe, ob sie dasselbe Bedürfnis erfüllt.",
         "missingBasics": "Fehlende Grundlagen",
-        "basicsAdvice": "Decke zuerst die {{0}} fehlenden Grundthemen ab: Unter der Hälfte Abdeckung wird der Wert gemindert, und neue Fakten ersetzen die Grundlagen nicht."
+        "basicsAdvice": "Decke zuerst die {{0}} fehlenden Grundthemen ab: Unter der Hälfte Abdeckung wird der Wert gemindert, und neue Fakten ersetzen die Grundlagen nicht.",
+        "previous": "Vorheriger gespeicherter Lauf",
+        "previousValue": "{{0}}: Intent {{1}}, SSAS {{2}}, {{3}} Seiten gerendert"
       }
     },
     "crawl": {
@@ -8443,6 +8450,14 @@
     "igos": {
       "title": "IGOS gesunken",
       "body": "Der Informationsgewinn-Wert für „{{phrase}}“ fiel von {{from}} auf {{to}} ({{points}} Punkte) bei gleichen TOP-Seiten und gleichem Modell."
+    },
+    "igosTopChange": {
+      "title": "IGOS: TOP-Set geändert",
+      "body": "Die TOP-Seiten für \"{{phrase}}\" haben sich geändert ({{added}} neu, {{removed}} entfernt). IGOS ist mit dem vorherigen Lauf nicht vergleichbar."
+    },
+    "taskRegression": {
+      "title": "Optimierung hat einen Wert verschlechtert",
+      "body": "{{count}} geprüfte Aufgabe(n) senkten den Wert; am stärksten {{worst}} Punkte auf {{url}}."
     }
   },
   "sprsUi": {
@@ -8473,8 +8488,12 @@
       "before": "Vorher",
       "after": "Nachher",
       "delta": "Änderung",
-      "solver": "Warmstart mit den aktuellen Werten: {{iterations}} Iterationen, Residuum {{residual}}."
-    }
+      "solver": "Warmstart mit den aktuellen Werten: {{iterations}} Iterationen, Residuum {{residual}}.",
+      "flags": "Änderungen der Diagnose-Markierungen",
+      "flagOn": "{{page}} ist jetzt: {{flag}}",
+      "flagOff": "{{page}} ist nicht mehr: {{flag}}"
+    },
+    "meta": "{{iterations}} Iterationen, Residuum {{residual}}"
   },
   "decayUi": {
     "snapshots": "Snapshots als Grundlage dieser Bewertung: {{count}}",
@@ -8549,6 +8568,11 @@
         "product-cards": "Zeige Produkte oder Angebote: {{count}} von {{analysed}} TOP-Seiten zeigen Produkt- oder Preiskarten.",
         "cta": "Fügen Sie einen klaren Call-to-Action hinzu: {{count}} von {{analysed}} TOP-Seiten haben einen (bei rein informativen Seiten überspringen)."
       }
+    },
+    "funnel": {
+      "title": "Funnel-Übergänge zwischen gecrawlten Seiten",
+      "fromTo": "Von \\ nach",
+      "summary": "{{classified}} Seiten klassifiziert, {{unclassified}} ohne gemessene Struktur, {{skipped}} interne Links übersprungen (Ziel nicht klassifiziert)."
     }
   },
   "prePublishUi": {
@@ -8813,7 +8837,9 @@
       "off-topic-below-quota": "Zu wenige themenrelevante Absätze.",
       "local-lexical-embeddings": "Die Ähnlichkeit nutzt lokale lexikalische Vektoren, kein semantisches Modell; die Zonen sind Näherungen.",
       "heuristic-entities": "Entitäten stammen aus großgeschriebenen Phrasen und Subjekt-Prädikat-Objekt-Fakten, nicht aus einem trainierten Entitätsmodell.",
-      "semantic-provider-unavailable": "Der semantische Embedding-Anbieter des Projekts war nicht verfügbar; stattdessen wurden lokale lexikalische Vektoren verwendet."
+      "semantic-provider-unavailable": "Der semantische Embedding-Anbieter des Projekts war nicht verfügbar; stattdessen wurden lokale lexikalische Vektoren verwendet.",
+      "ollama-entities": "Entitäten wurden zusätzlich zur Großschreibungs-Heuristik vom lokalen Ollama-Modell erweitert.",
+      "ollama-entities-unavailable": "Das Ollama-Entitätsmodell war nicht verfügbar; nur die Großschreibungs-Heuristik wurde verwendet."
     },
     "rec": {
       "rewrite-echo": "Der Absatz bei Offset {{offset}} wiederholt eine Konkurrenzpassage: in eigenen Worten umschreiben.",

@@ -18,6 +18,7 @@ mod focus_tables;
 mod focus_text;
 mod issues;
 mod kpis;
+mod link_graph;
 mod metrics;
 mod offpage_tables;
 mod pages;

@@ -132,7 +132,7 @@ describe('GraphEvidencePanel boundaries', () => {
   it('labels a PageRank run that hit the iteration bound', () => {
     pageRank.converged = false;
     render(<GraphEvidencePanel graph={graph as never} />);
-    expect(screen.getByText(new RegExp(i18n.t('mapUi.graphEvidence.bounded')))).toBeTruthy();
+    expect(screen.getByText(i18n.t('sprsUi.notConverged'))).toBeTruthy();
   });
 
   it('shows a placeholder for the property when the GSC property is invalid', () => {

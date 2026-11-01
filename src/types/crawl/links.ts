@@ -17,6 +17,10 @@ export interface CrawledLink {
   /** Up to 15 words before/after the anchor in its block element. */
   context_before?: string | null;
   context_after?: string | null;
+  /** True when the block held more than 15 words on a side, so the context is cut (GEM-70-02); absent in older runs. */
+  context_truncated?: boolean;
+  /** Visible words before the anchor in its block; absent in older runs. */
+  context_anchor_offset?: number | null;
   /** Nearest H2/H3 before the anchor; absent in older runs. */
   section_heading?: string | null;
 }

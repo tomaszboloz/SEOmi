@@ -1,3 +1,4 @@
+import { isOrphan } from '@/services/linkGraph';
 import { normalizeGraphUrl } from '@/services/semanticGraph/urls';
 import type { DiagnosisDocument, DiagnosisVerdict } from '../types';
 import { topicalTerms, weightedJaccard } from '../similarity';
@@ -26,10 +27,11 @@ export const documentVerdicts = (context: VerdictContext): DiagnosisVerdict[] =>
   const verdicts: DiagnosisVerdict[] = [];
   const content = contentDocuments(context);
   const start = normalizeGraphUrl(startUrl);
+  const roots = new Set(content.filter((document) => document.urls.has(start)).map((document) => document.id));
   content.forEach((document) => {
     const sources = [...(links.incoming.get(document.id) ?? [])];
-    // Without captured content links nothing can be said about who links to a document.
-    if (contentLinks && !sources.length && !document.urls.has(start)) {
+    // Without captured content links nothing can be said about who links to a document. One orphan rule (linkGraph).
+    if (contentLinks && isOrphan(document.id, links.incoming, roots)) {
       const orphan = verdict('document-orphan', context.incompleteLinkEvidence ? 'weak' : 'fix', 'document', document.id, [document]);
       if (context.incompleteLinkEvidence) orphan.confidence = 'limited';
       verdicts.push(orphan);

@@ -1890,7 +1890,8 @@
       "no": "non",
       "tableSummary": "Tableau des pages ({{count}})",
       "tableCaption": "Pages affichées sur la carte d'architecture avec statut, profondeur, liens entrants, TRS et section"
-    }
+    },
+    "coreTopicShare": "{{percent}} % des termes dans le sujet principal"
   },
   "crawlDiff": {
     "fields": {
@@ -4903,6 +4904,8 @@
         "Zone method",
         "Context before",
         "Context after",
+        "Contexte tronqué",
+        "Position de l'ancre (mots)",
         "Section heading"
       ],
       "crawlImages": [
@@ -5742,7 +5745,9 @@
           "off-topic-below-quota": "Trop peu de paragraphes sur le sujet.",
           "local-lexical-embeddings": "La similarité utilise des vecteurs lexicaux locaux, pas un modèle sémantique ; les zones sont approximatives.",
           "heuristic-entities": "Les entités proviennent d'expressions en majuscules et de faits sujet-prédicat-objet, pas d'un modèle d'entités entraîné.",
-          "semantic-provider-unavailable": "Le fournisseur sémantique d'embeddings du projet était indisponible ; des vecteurs lexicaux locaux ont été utilisés."
+          "semantic-provider-unavailable": "Le fournisseur sémantique d'embeddings du projet était indisponible ; des vecteurs lexicaux locaux ont été utilisés.",
+          "ollama-entities": "Les entités ont été complétées par le modèle Ollama local en plus de l'heuristique des majuscules.",
+          "ollama-entities-unavailable": "Le modèle d'entités Ollama était indisponible ; seule l'heuristique des majuscules a été utilisée."
         },
         "intent": {
           "definitional": "Définition",
@@ -5763,7 +5768,9 @@
         },
         "mismatchAdvice": "La page relève d’une autre intention que la plupart des pages TOP : vérifiez qu’elle répond au même besoin.",
         "missingBasics": "Fondamentaux manquants",
-        "basicsAdvice": "Couvrez d’abord les {{0}} sujets de base manquants : sous la moitié de couverture le score est pénalisé, et des faits nouveaux ne remplacent pas les bases."
+        "basicsAdvice": "Couvrez d’abord les {{0}} sujets de base manquants : sous la moitié de couverture le score est pénalisé, et des faits nouveaux ne remplacent pas les bases.",
+        "previous": "Exécution enregistrée précédente",
+        "previousValue": "{{0}} : intention {{1}}, SSAS {{2}}, {{3}} pages rendues"
       }
     },
     "crawl": {
@@ -8443,6 +8450,14 @@
     "igos": {
       "title": "IGOS en baisse",
       "body": "Le score de gain d'information de « {{phrase}} » est passé de {{from}} à {{to}} ({{points}} points) avec les mêmes pages TOP et le même modèle."
+    },
+    "igosTopChange": {
+      "title": "IGOS : l'ensemble TOP a changé",
+      "body": "Les pages TOP pour \"{{phrase}}\" ont changé ({{added}} ajoutées, {{removed}} retirées). L'IGOS n'est pas comparable à l'exécution précédente."
+    },
+    "taskRegression": {
+      "title": "Une optimisation a dégradé un score",
+      "body": "{{count}} tâche(s) vérifiée(s) ont fait baisser leur score ; la pire perd {{worst}} points sur {{url}}."
     }
   },
   "sprsUi": {
@@ -8473,8 +8488,12 @@
       "before": "Avant",
       "after": "Après",
       "delta": "Variation",
-      "solver": "Démarrage à chaud depuis les scores actuels : {{iterations}} itérations, résidu {{residual}}."
-    }
+      "solver": "Démarrage à chaud depuis les scores actuels : {{iterations}} itérations, résidu {{residual}}.",
+      "flags": "Changements des indicateurs de diagnostic",
+      "flagOn": "{{page}} est maintenant : {{flag}}",
+      "flagOff": "{{page}} n'est plus : {{flag}}"
+    },
+    "meta": "{{iterations}} itérations, résidu {{residual}}"
   },
   "decayUi": {
     "snapshots": "Instantanés à l’appui de ce verdict : {{count}}",
@@ -8549,6 +8568,11 @@
         "product-cards": "Montrez des produits ou offres : {{count}} pages du TOP sur {{analysed}} affichent des fiches produit ou prix.",
         "cta": "Ajoutez un appel à l'action clair : {{count}} pages TOP sur {{analysed}} en ont un (à ignorer pour les pages purement informatives)."
       }
+    },
+    "funnel": {
+      "title": "Transitions d'entonnoir entre pages explorées",
+      "fromTo": "De \\ vers",
+      "summary": "{{classified}} pages classées, {{unclassified}} sans structure mesurée, {{skipped}} liens internes ignorés (cible non classée)."
     }
   },
   "prePublishUi": {
@@ -8813,7 +8837,9 @@
       "off-topic-below-quota": "Trop peu de paragraphes sur le sujet.",
       "local-lexical-embeddings": "La similarité utilise des vecteurs lexicaux locaux, pas un modèle sémantique ; les zones sont approximatives.",
       "heuristic-entities": "Les entités proviennent d'expressions en majuscules et de faits sujet-prédicat-objet, pas d'un modèle d'entités entraîné.",
-      "semantic-provider-unavailable": "Le fournisseur sémantique d'embeddings du projet était indisponible ; des vecteurs lexicaux locaux ont été utilisés."
+      "semantic-provider-unavailable": "Le fournisseur sémantique d'embeddings du projet était indisponible ; des vecteurs lexicaux locaux ont été utilisés.",
+      "ollama-entities": "Les entités ont été complétées par le modèle Ollama local en plus de l'heuristique des majuscules.",
+      "ollama-entities-unavailable": "Le modèle d'entités Ollama était indisponible ; seule l'heuristique des majuscules a été utilisée."
     },
     "rec": {
       "rewrite-echo": "Le paragraphe au décalage {{offset}} répète un passage concurrent : réécrivez-le avec vos mots.",

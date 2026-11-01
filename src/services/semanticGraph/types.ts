@@ -1,3 +1,4 @@
+import type { TopicModel } from '@/services/topicModel';
 import type { CrawledPageSummary } from '@/types';
 
 export interface SemanticPageNode {
@@ -8,6 +9,8 @@ export interface SemanticPageNode {
   semanticSignalCount: number;
   incomingContentLinks: number;
   orphan: boolean;
+  /** Share of the page's terms in the shared Core Topic (0-1); absent without a TopicModel or terms. */
+  coreTopicShare?: number;
 }
 
 export interface SemanticContentEdge {
@@ -45,6 +48,8 @@ export interface SemanticMap {
   totalEdges: number;
   totalTopicEdges: number;
   totalInternalLinks: number;
+  /** Internal links left out of the edges with their reason (#70 GEM-70-06): self-links and targets not in the crawled set. */
+  skippedLinks?: { selfLinks: number; unresolvedTargets: number };
   clusters: Array<{ id: string; label: string; pageCount: number }>;
   hasSemanticTerms: boolean;
   truncated: boolean;
@@ -53,5 +58,7 @@ export interface SemanticMap {
 export interface SemanticMapOptions {
   /** Include every crawled internal link instead of only content-only links. */
   includeAllInternalLinks?: boolean;
+  /** Shared Site Focus topic model (#106); adds `coreTopicShare` to nodes. */
+  topicModel?: Pick<TopicModel, 'coreKeys' | 'language'>;
 }
 

@@ -1890,7 +1890,8 @@
       "no": "no",
       "tableSummary": "Page table ({{count}})",
       "tableCaption": "Pages shown on the architecture map with status, depth, inbound links, TRS and section"
-    }
+    },
+    "coreTopicShare": "{{percent}}% of terms in the core topic"
   },
   "crawlDiff": {
     "fields": {
@@ -4903,6 +4904,8 @@
         "Zone method",
         "Context before",
         "Context after",
+        "Context truncated",
+        "Anchor word offset",
         "Section heading"
       ],
       "crawlImages": [
@@ -5742,7 +5745,9 @@
           "off-topic-below-quota": "Too few on-topic paragraphs.",
           "local-lexical-embeddings": "Similarity uses local lexical vectors, not a semantic model; zones are approximate.",
           "heuristic-entities": "Entities come from capitalised phrases and subject-predicate-object facts, not from a trained entity model.",
-          "semantic-provider-unavailable": "The project's semantic embedding provider was unavailable; local lexical vectors were used instead."
+          "semantic-provider-unavailable": "The project's semantic embedding provider was unavailable; local lexical vectors were used instead.",
+          "ollama-entities": "Entities were extended by the local Ollama model on top of the capitalised-phrase heuristic.",
+          "ollama-entities-unavailable": "The Ollama entity model was unavailable; only the capitalised-phrase heuristic was used."
         },
         "intent": {
           "definitional": "Definition",
@@ -5763,7 +5768,9 @@
         },
         "mismatchAdvice": "The page reads as a different intent than most TOP pages: check that it answers the same need.",
         "missingBasics": "Missing basics",
-        "basicsAdvice": "Cover the {{0}} missing basic topic(s) first: below half coverage the score is penalised, and new facts do not replace the basics."
+        "basicsAdvice": "Cover the {{0}} missing basic topic(s) first: below half coverage the score is penalised, and new facts do not replace the basics.",
+        "previous": "Previous stored run",
+        "previousValue": "{{0}}: intent {{1}}, SSAS {{2}}, {{3}} pages rendered"
       }
     },
     "crawl": {
@@ -8443,6 +8450,14 @@
     "igos": {
       "title": "IGOS dropped",
       "body": "The information gain score of \"{{phrase}}\" fell from {{from}} to {{to}} ({{points}} points) on the same TOP pages and model."
+    },
+    "igosTopChange": {
+      "title": "IGOS: TOP set changed",
+      "body": "The TOP pages for \"{{phrase}}\" changed ({{added}} added, {{removed}} removed). IGOS is not comparable with the previous run."
+    },
+    "taskRegression": {
+      "title": "Optimization made a score worse",
+      "body": "{{count}} verified task(s) lowered their score; the worst is {{worst}} points on {{url}}."
     }
   },
   "sprsUi": {
@@ -8473,8 +8488,12 @@
       "before": "Before",
       "after": "After",
       "delta": "Change",
-      "solver": "Warm-started from the current scores: {{iterations}} iterations, residual {{residual}}."
-    }
+      "solver": "Warm-started from the current scores: {{iterations}} iterations, residual {{residual}}.",
+      "flags": "Diagnostic flag changes",
+      "flagOn": "{{page}} is now: {{flag}}",
+      "flagOff": "{{page}} is no longer: {{flag}}"
+    },
+    "meta": "{{iterations}} iterations, residual {{residual}}"
   },
   "decayUi": {
     "snapshots": "Snapshots supporting this verdict: {{count}}",
@@ -8549,6 +8568,11 @@
         "product-cards": "Show products or offers: {{count}} of {{analysed}} TOP pages show product or price cards.",
         "cta": "Add a clear call to action: {{count}} of {{analysed}} TOP pages have one (skip this for purely informational pages)."
       }
+    },
+    "funnel": {
+      "title": "Funnel transitions between crawled pages",
+      "fromTo": "From \\ to",
+      "summary": "{{classified}} pages classified, {{unclassified}} without measured structure, {{skipped}} internal links skipped (unclassified target)."
     }
   },
   "prePublishUi": {
@@ -8813,7 +8837,9 @@
       "off-topic-below-quota": "Too few on-topic paragraphs.",
       "local-lexical-embeddings": "Similarity uses local lexical vectors, not a semantic model; zones are approximate.",
       "heuristic-entities": "Entities come from capitalised phrases and subject-predicate-object facts, not from a trained entity model.",
-      "semantic-provider-unavailable": "The project's semantic embedding provider was unavailable; local lexical vectors were used instead."
+      "semantic-provider-unavailable": "The project's semantic embedding provider was unavailable; local lexical vectors were used instead.",
+      "ollama-entities": "Entities were extended by the local Ollama model on top of the capitalised-phrase heuristic.",
+      "ollama-entities-unavailable": "The Ollama entity model was unavailable; only the capitalised-phrase heuristic was used."
     },
     "rec": {
       "rewrite-echo": "The paragraph at offset {{offset}} repeats a competitor passage: rewrite it in your own words.",

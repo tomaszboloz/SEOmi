@@ -26,13 +26,13 @@ describe('export contracts: links', () => {
   it('exports link placement evidence from #70 and leaves it empty for older runs', () => {
     const link = {
       target_url: 'https://site.example/b', anchor_text: 'b', is_internal: true, zone: 'main', zone_method: 'dom-ancestry',
-      context_before: 'read the', context_after: 'guide first', section_heading: 'Pricing plans',
+      context_before: 'read the', context_after: 'guide first', context_truncated: true, context_anchor_offset: 2, section_heading: 'Pricing plans',
     };
     const placed = { ...crawlRun, result: { ...crawlRun.result, pages: crawlRun.result.pages.map((page) => ({ ...page, links: [link] })) } } as CrawlRunRecord;
     const [header, row] = crawlLinksCsv(placed).split(/\r?\n/u).filter((line) => line.includes('Section heading') || line.includes('Pricing plans'));
-    expect(header).toContain('"DOM zone","Zone method","Context before","Context after","Section heading"');
-    expect(row).toContain('"main","dom-ancestry","read the","guide first","Pricing plans"');
+    expect(header).toContain('"DOM zone","Zone method","Context before","Context after","Context truncated","Anchor word offset","Section heading"');
+    expect(row).toContain('"main","dom-ancestry","read the","guide first","true","2","Pricing plans"');
     const legacy = { ...placed, result: { ...placed.result, pages: placed.result.pages.map((page) => ({ ...page, links: [{ target_url: 'https://site.example/c', anchor_text: 'c', is_internal: true }] })) } } as CrawlRunRecord;
-    expect(crawlLinksCsv(legacy)).toMatch(/https:\/\/site\.example\/c.*,"","","","",""\s*$/mu);
+    expect(crawlLinksCsv(legacy)).toMatch(/https:\/\/site\.example\/c.*,"","","","","","",""\s*$/mu);
   });
 });

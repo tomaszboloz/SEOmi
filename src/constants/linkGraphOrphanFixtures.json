@@ -1,0 +1,9 @@
+[
+  { "name": "chain from the root has no orphan", "nodes": ["a", "b", "c"], "edges": [["a", "b"], ["b", "c"]], "roots": ["a"], "orphans": [] },
+  { "name": "a page nobody links to is an orphan", "nodes": ["a", "b", "c"], "edges": [["a", "b"]], "roots": ["a"], "orphans": ["c"] },
+  { "name": "self-links never count", "nodes": ["a", "b"], "edges": [["b", "b"]], "roots": [], "orphans": ["a", "b"] },
+  { "name": "mutual links rescue both pages", "nodes": ["a", "b"], "edges": [["a", "b"], ["b", "a"]], "roots": [], "orphans": [] },
+  { "name": "a root is never an orphan", "nodes": ["a"], "edges": [], "roots": ["a"], "orphans": [] },
+  { "name": "empty endpoints are ignored", "nodes": ["a", "b"], "edges": [["", "b"], ["a", ""]], "roots": [], "orphans": ["a", "b"] },
+  { "name": "duplicate edges count once and result is sorted", "nodes": ["z", "m", "a"], "edges": [["a", "m"], ["a", "m"]], "roots": ["a"], "orphans": ["z"] }
+]

@@ -44,6 +44,7 @@ export const CrawlArchitectureSidebar = ({
             <span>{t('mapUi.topicLabel')}: {selectedNode.clusterLabel}</span><span>·</span>
             <span>{localizedPlural(selectedNode.semanticSignalCount, 'term')}</span><span>·</span>
             <span>{t('mapUi.incomingLinks', { count: selectedNode.incomingContentLinks, label: t(linkMode === 'all' ? 'mapUi.internalLinks' : 'mapUi.contentLinks') })}</span>
+            {selectedNode.coreTopicShare !== undefined && <><span>·</span><span data-testid="core-topic-share">{t('mapUi.coreTopicShare', { percent: Math.round(selectedNode.coreTopicShare * 100) })}</span></>}
           </div>
           <p className="mt-1 text-[10px] text-slate-500">{t('mapUi.contentSource')}: <span className="text-slate-300">{semanticRegionLabel(selectedNode.page.semantic_content_source)}</span> · {t('mapUi.source.provenance')}: <span className="text-slate-300">{semanticProvenanceLabel(selectedNode.page.semantic_content_provenance, selectedNode.page.semantic_content_source)}</span>{selectedNode.page.semantic_content_partial ? <span className="text-amber-300"> · {t('mapUi.source.partial')}</span> : null} · {t('mapUi.outgoingLinks', { count: selectedOutboundEdges.length })}</p>
           {selectedTopicEdges.length > 0 && <div className="mt-2 space-y-1 border-t border-slate-800 pt-2 text-[10px] text-slate-400">

@@ -1890,7 +1890,8 @@
       "no": "いいえ",
       "tableSummary": "ページ表（{{count}}）",
       "tableCaption": "構造マップに表示されるページ（ステータス、深さ、被リンク、TRS、セクション付き）"
-    }
+    },
+    "coreTopicShare": "コアトピックの語の割合 {{percent}}%"
   },
   "crawlDiff": {
     "fields": {
@@ -4903,6 +4904,8 @@
         "Zone method",
         "Context before",
         "Context after",
+        "コンテキスト切り詰め",
+        "アンカー語オフセット",
         "Section heading"
       ],
       "crawlImages": [
@@ -5742,7 +5745,9 @@
           "off-topic-below-quota": "トピック内の段落が少なすぎます。",
           "local-lexical-embeddings": "類似度はセマンティックモデルではなくローカルの語彙ベクトルで計算されるため、ゾーンは近似値です。",
           "heuristic-entities": "エンティティは大文字で始まる語句と主語・述語・目的語の事実から抽出しており、学習済みのエンティティモデルではありません。",
-          "semantic-provider-unavailable": "プロジェクトのセマンティック埋め込みプロバイダーが利用できなかったため、ローカルの語彙ベクトルを使用しました。"
+          "semantic-provider-unavailable": "プロジェクトのセマンティック埋め込みプロバイダーが利用できなかったため、ローカルの語彙ベクトルを使用しました。",
+          "ollama-entities": "大文字フレーズのヒューリスティックに加え、ローカルの Ollama モデルでエンティティを拡張しました。",
+          "ollama-entities-unavailable": "Ollama のエンティティモデルが利用できず、大文字フレーズのヒューリスティックのみを使用しました。"
         },
         "intent": {
           "definitional": "定義",
@@ -5763,7 +5768,9 @@
         },
         "mismatchAdvice": "このページは多くのTOPページと異なる意図に見えます。同じニーズに応えているか確認してください。",
         "missingBasics": "不足している基本事項",
-        "basicsAdvice": "まず不足している基本トピック（{{0}} 件）を扱ってください。網羅率が半分未満だとスコアが減点され、新しい事実は基本を代替しません。"
+        "basicsAdvice": "まず不足している基本トピック（{{0}} 件）を扱ってください。網羅率が半分未満だとスコアが減点され、新しい事実は基本を代替しません。",
+        "previous": "前回保存された実行",
+        "previousValue": "{{0}}：意図 {{1}}、SSAS {{2}}、レンダリング済み {{3}} ページ"
       }
     },
     "crawl": {
@@ -8443,6 +8450,14 @@
     "igos": {
       "title": "IGOSが低下",
       "body": "「{{phrase}}」の情報利得スコアが、同じTOPページとモデルで {{from}} から {{to}} に低下しました（{{points}} ポイント）。"
+    },
+    "igosTopChange": {
+      "title": "IGOS：TOP セットが変更",
+      "body": "「{{phrase}}」の TOP ページが変わりました（追加 {{added}}、削除 {{removed}}）。IGOS は前回の実行と比較できません。"
+    },
+    "taskRegression": {
+      "title": "最適化でスコアが低下",
+      "body": "検証済みタスク {{count}} 件でスコアが低下しました。最大は {{url}} の {{worst}} ポイントです。"
     }
   },
   "sprsUi": {
@@ -8473,8 +8488,12 @@
       "before": "変更前",
       "after": "変更後",
       "delta": "差分",
-      "solver": "現在のスコアからウォームスタート: {{iterations}} 回の反復、残差 {{residual}}。"
-    }
+      "solver": "現在のスコアからウォームスタート: {{iterations}} 回の反復、残差 {{residual}}。",
+      "flags": "診断フラグの変化",
+      "flagOn": "{{page}} は現在：{{flag}}",
+      "flagOff": "{{page}} はもう該当しません：{{flag}}"
+    },
+    "meta": "{{iterations}} 回の反復、残差 {{residual}}"
   },
   "decayUi": {
     "snapshots": "この判定の根拠となるスナップショット数: {{count}}",
@@ -8549,6 +8568,11 @@
         "product-cards": "商品やオファーを表示: 上位 {{analysed}} ページ中 {{count}} ページが商品・価格カードを表示しています。",
         "cta": "明確な行動喚起を追加してください: TOP ページ {{analysed}} 件中 {{count}} 件にあります（純粋な情報ページでは不要です）。"
       }
+    },
+    "funnel": {
+      "title": "クロール済みページ間のファネル遷移",
+      "fromTo": "From \\ to",
+      "summary": "分類済み {{classified}} ページ、構造未計測 {{unclassified}} ページ、スキップした内部リンク {{skipped}} 件（遷移先が未分類）。"
     }
   },
   "prePublishUi": {
@@ -8813,7 +8837,9 @@
       "off-topic-below-quota": "トピック内の段落が少なすぎます。",
       "local-lexical-embeddings": "類似度はセマンティックモデルではなくローカルの語彙ベクトルで計算されるため、ゾーンは近似値です。",
       "heuristic-entities": "エンティティは大文字で始まる語句と主語・述語・目的語の事実から抽出しており、学習済みのエンティティモデルではありません。",
-      "semantic-provider-unavailable": "プロジェクトのセマンティック埋め込みプロバイダーが利用できなかったため、ローカルの語彙ベクトルを使用しました。"
+      "semantic-provider-unavailable": "プロジェクトのセマンティック埋め込みプロバイダーが利用できなかったため、ローカルの語彙ベクトルを使用しました。",
+      "ollama-entities": "大文字フレーズのヒューリスティックに加え、ローカルの Ollama モデルでエンティティを拡張しました。",
+      "ollama-entities-unavailable": "Ollama のエンティティモデルが利用できず、大文字フレーズのヒューリスティックのみを使用しました。"
     },
     "rec": {
       "rewrite-echo": "オフセット {{offset}} の段落は競合の記述と重複しています。自分の言葉で書き直してください。",

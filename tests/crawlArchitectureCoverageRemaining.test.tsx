@@ -76,7 +76,7 @@ describe('crawl architecture remaining coverage', () => {
   it('shows no-node evidence for malformed graph and GSC shapes', () => {
     evidenceState.tools.gscData = [];
     render(<GraphEvidencePanel graph={{ nodes: 'bad', edges: 'bad', truncated: false } as never} />);
-    expect(screen.getByText('mapUi.graphEvidence.noNodes')).toBeTruthy();
+    expect(screen.getByText('sprsUi.empty')).toBeTruthy();
     expect(screen.getByText('mapUi.graphEvidence.status.unavailable')).toBeTruthy();
   });
 

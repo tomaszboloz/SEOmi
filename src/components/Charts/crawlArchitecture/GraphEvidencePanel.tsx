@@ -2,7 +2,8 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { GscPerformanceData } from '@/types';
 import type { SemanticMap } from '@/services/semanticMap';
-import { calculatePageRank } from '@/services/semanticGraph/pageRank';
+import { buildSprsReport } from '@/services/sprs/report';
+import { SprsPanel } from '@/components/Charts/SprsPanel';
 import { buildTrafficEvidence, type TrafficEvidence } from '@/services/semanticGraph/trafficEvidence';
 import { useProjectStore } from '@/stores/projectStore';
 import { useToolsStore } from '@/stores/toolsStore';
@@ -40,12 +41,13 @@ export const GraphEvidencePanel = ({ graph }: Props) => {
   const graphNodes = Array.isArray(graph.nodes) ? graph.nodes : [];
   const graphEdges = Array.isArray(graph.edges) ? graph.edges : [];
 
-  const pageRank = useMemo(() => calculatePageRank(graphNodes, graphEdges), [graphEdges, graphNodes]);
+  // One ranking answer for the same graph: the SPRS solver (zone weights, nofollow, similarity) also used by the Signals tab (#106).
+  const pageRank = useMemo(() => buildSprsReport({ ...graph, nodes: graphNodes, edges: graphEdges, topicEdges: graph.topicEdges ?? [] }), [graph, graphEdges, graphNodes]);
   const traffic = useMemo(() => {
     if (!projectId || !selectedProperty || !gscData) return null;
     return buildTrafficEvidence({ projectId, property: selectedProperty, startDate: gscData.start_date, endDate: gscData.end_date, filters: selectedFilters, nodes: graphNodes, gscData });
   }, [gscData, graphNodes, projectId, selectedFilters, selectedProperty]);
-  const rankedNodes = pageRank.scores.slice(0, 8).map((score) => ({ score, node: graphNodes.find((candidate) => candidate.id === score.nodeId) })).filter((item) => item.node);
+  const rankedNodes = pageRank.pages.slice(0, 8).map((score) => ({ score, node: graphNodes.find((candidate) => candidate.id === score.nodeId) })).filter((item) => item.node);
   const observed = traffic?.matchedNodeIds.length ?? 0;
   const uncertain = traffic?.uncertainNodeIds.length ?? 0;
   const missing = traffic?.missingNodeIds.length ?? 0;
@@ -54,10 +56,7 @@ export const GraphEvidencePanel = ({ graph }: Props) => {
     <div><h3 className="text-sm font-semibold text-slate-100">{t('mapUi.graphEvidence.title')}</h3><p className="mt-1 text-[10px] leading-4 text-slate-500">{t('mapUi.graphEvidence.description')}</p></div>
     <div className="mt-3 grid gap-3 xl:grid-cols-2">
       <article aria-label={t('mapUi.graphEvidence.structureAria')} className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
-        <h4 className="text-xs font-semibold text-emerald-200">{t('mapUi.graphEvidence.structureTitle')}</h4>
-        <p className="mt-1 text-[10px] text-slate-500">{t('mapUi.graphEvidence.structureMeta', { iterations: pageRank.iterations, status: pageRank.converged ? t('mapUi.graphEvidence.converged') : t('mapUi.graphEvidence.bounded') })}</p>
-        <ol className="mt-2 space-y-1.5">{rankedNodes.map(({ score, node }, index) => <li key={node!.id} className="flex items-center gap-2 text-[11px]"><span className="w-5 text-slate-500">{index + 1}.</span><span className="min-w-0 flex-1 truncate text-slate-200" title={node!.page.url}>{shortUrl(node!.page.url)}</span><span className="font-mono text-emerald-200">{(score.score * 100).toFixed(2)}%</span></li>)}</ol>
-        {!rankedNodes.length && <p className="mt-2 text-[10px] text-slate-500">{t('mapUi.graphEvidence.noNodes')}</p>}
+        <SprsPanel report={pageRank} limit={8} labelFor={(id) => shortUrl(graphNodes.find((candidate) => candidate.id === id)!.page.url)} />
         <p className="mt-2 text-[10px] text-slate-500">{t('mapUi.graphEvidence.structureNote')}</p>
         {graph.truncated && <p role="note" className="mt-2 text-[10px] text-amber-200">{t('mapUi.graphEvidence.structurePartial')}</p>}
       </article>

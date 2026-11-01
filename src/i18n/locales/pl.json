@@ -1890,7 +1890,8 @@
       "no": "nie",
       "tableSummary": "Tabela stron ({{count}})",
       "tableCaption": "Strony widoczne na mapie architektury ze statusem, głębokością, linkami przychodzącymi, TRS i sekcją"
-    }
+    },
+    "coreTopicShare": "{{percent}}% terminów w temacie głównym"
   },
   "crawlDiff": {
     "fields": {
@@ -4903,6 +4904,8 @@
         "Zone method",
         "Context before",
         "Context after",
+        "Kontekst ucięty",
+        "Offset kotwicy (słowa)",
         "Section heading"
       ],
       "crawlImages": [
@@ -5742,7 +5745,9 @@
           "off-topic-below-quota": "Zbyt mało akapitów w temacie.",
           "local-lexical-embeddings": "Podobieństwo liczą lokalne wektory leksykalne, nie model semantyczny; strefy są przybliżone.",
           "heuristic-entities": "Encje pochodzą z fraz pisanych wielką literą i faktów podmiot-orzeczenie-dopełnienie, a nie z wytrenowanego modelu encji.",
-          "semantic-provider-unavailable": "Semantyczny dostawca embeddingów projektu był niedostępny; użyto lokalnych wektorów leksykalnych."
+          "semantic-provider-unavailable": "Semantyczny dostawca embeddingów projektu był niedostępny; użyto lokalnych wektorów leksykalnych.",
+          "ollama-entities": "Encje rozszerzył lokalny model Ollama, oprócz heurystyki wielkich liter.",
+          "ollama-entities-unavailable": "Model encji Ollama był niedostępny; użyto tylko heurystyki wielkich liter."
         },
         "intent": {
           "definitional": "Definicja",
@@ -5763,7 +5768,9 @@
         },
         "mismatchAdvice": "Strona ma inną intencję niż większość stron TOP: sprawdź, czy odpowiada na tę samą potrzebę.",
         "missingBasics": "Brakujące podstawy",
-        "basicsAdvice": "Najpierw omów brakujące podstawy ({{0}}): poniżej połowy pokrycia wynik jest obniżany, a nowe fakty nie zastępują podstaw."
+        "basicsAdvice": "Najpierw omów brakujące podstawy ({{0}}): poniżej połowy pokrycia wynik jest obniżany, a nowe fakty nie zastępują podstaw.",
+        "previous": "Poprzedni zapisany przebieg",
+        "previousValue": "{{0}}: intencja {{1}}, SSAS {{2}}, wyrenderowano {{3}} stron"
       }
     },
     "crawl": {
@@ -8443,6 +8450,14 @@
     "igos": {
       "title": "Spadł wynik IGOS",
       "body": "Wynik zysku informacyjnego dla „{{phrase}}” spadł z {{from}} do {{to}} ({{points}} pkt) przy tych samych stronach TOP i modelu."
+    },
+    "igosTopChange": {
+      "title": "IGOS: zmienił się zestaw TOP",
+      "body": "Zestaw stron TOP dla \"{{phrase}}\" zmienił się (dodano {{added}}, usunięto {{removed}}). IGOS nie jest porównywalny z poprzednim przebiegiem."
+    },
+    "taskRegression": {
+      "title": "Optymalizacja pogorszyła wynik",
+      "body": "{{count}} zweryfikowanych zadań obniżyło wynik; najgorsze to {{worst}} pkt na {{url}}."
     }
   },
   "sprsUi": {
@@ -8473,8 +8488,12 @@
       "before": "Przed",
       "after": "Po",
       "delta": "Zmiana",
-      "solver": "Start od obecnych wyników: {{iterations}} iteracji, residuum {{residual}}."
-    }
+      "solver": "Start od obecnych wyników: {{iterations}} iteracji, residuum {{residual}}.",
+      "flags": "Zmiany flag diagnostycznych",
+      "flagOn": "{{page}}: teraz {{flag}}",
+      "flagOff": "{{page}}: już nie {{flag}}"
+    },
+    "meta": "{{iterations}} iteracji, residuum {{residual}}"
   },
   "decayUi": {
     "snapshots": "Liczba zrzutów stanowiących podstawę oceny: {{count}}",
@@ -8549,6 +8568,11 @@
         "product-cards": "Pokaż produkty lub oferty: karty produktów lub cen ma {{count}} z {{analysed}} stron z TOP.",
         "cta": "Dodaj wyraźne wezwanie do działania: ma je {{count}} z {{analysed}} stron TOP (pomiń dla stron czysto informacyjnych)."
       }
+    },
+    "funnel": {
+      "title": "Przejścia lejka między przeskanowanymi stronami",
+      "fromTo": "Z \\ do",
+      "summary": "Sklasyfikowano {{classified}} stron, {{unclassified}} bez zmierzonej struktury, pominięto {{skipped}} linków wewnętrznych (cel bez klasyfikacji)."
     }
   },
   "prePublishUi": {
@@ -8813,7 +8837,9 @@
       "off-topic-below-quota": "Zbyt mało akapitów w temacie.",
       "local-lexical-embeddings": "Podobieństwo liczą lokalne wektory leksykalne, nie model semantyczny; strefy są przybliżone.",
       "heuristic-entities": "Encje pochodzą z fraz pisanych wielką literą i faktów podmiot-orzeczenie-dopełnienie, a nie z wytrenowanego modelu encji.",
-      "semantic-provider-unavailable": "Semantyczny dostawca embeddingów projektu był niedostępny; użyto lokalnych wektorów leksykalnych."
+      "semantic-provider-unavailable": "Semantyczny dostawca embeddingów projektu był niedostępny; użyto lokalnych wektorów leksykalnych.",
+      "ollama-entities": "Encje rozszerzył lokalny model Ollama, oprócz heurystyki wielkich liter.",
+      "ollama-entities-unavailable": "Model encji Ollama był niedostępny; użyto tylko heurystyki wielkich liter."
     },
     "rec": {
       "rewrite-echo": "Akapit na offsecie {{offset}} powtarza fragment konkurencji: przepisz go własnymi słowami.",

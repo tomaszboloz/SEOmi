@@ -1,5 +1,6 @@
 import type { IgosReport } from '@/services/igos/report';
 import type { ChunkZone } from '@/services/igos/types';
+import type { SijaHistoryEntry } from '@/services/sija/history';
 import type { PhraseIntentReport } from '@/services/sija/phraseIntent';
 
 /** IGOS figures for the PDF (#68 GEM-68-06): numbers only, never competitor text. */
@@ -30,6 +31,8 @@ export interface PhraseSijaSummary {
   requested: number;
   funnel: PhraseIntentReport['funnel'];
   gaps: Array<{ format: string; topPages: number; analysed: number }>;
+  /** Previous stored run of the same phrase (GEM-69-08); absent on the first run. */
+  previous?: { runAt: string; intent: string | null; ssas: number | null; analysed: number };
 }
 
 export interface PhraseInsights { phrase: string; igos?: PhraseIgosSummary; sija?: PhraseSijaSummary }
@@ -48,9 +51,10 @@ export const igosSummary = (report: IgosReport): PhraseIgosSummary => {
   };
 };
 
-export const sijaSummary = (report: PhraseIntentReport): PhraseSijaSummary => ({
+export const sijaSummary = (report: PhraseIntentReport, previous?: SijaHistoryEntry): PhraseSijaSummary => ({
   intent: report.page.primary, serpIntent: report.serpIntent.intent, match: report.intentMatch, ssas: report.ssas.score, ssasStatus: report.ssas.status,
   analysed: report.analysed, requested: report.requested, funnel: { ...report.funnel }, gaps: report.gaps.map((gap) => ({ ...gap })),
+  ...(previous ? { previous: { runAt: previous.runAt, intent: previous.intent, ssas: previous.ssas, analysed: previous.analysed } } : {}),
 });
 
 /** Latest phrase results of an audited URL; another phrase replaces the entry, null clears that part. */
@@ -65,8 +69,8 @@ const update = (url: string, phrase: string, patch: Partial<Omit<PhraseInsights,
 export const setPhraseIgos = (url: string, phrase: string, report: IgosReport | null): void =>
   update(url, phrase, report ? { igos: igosSummary(report) } : {}, 'igos');
 
-export const setPhraseSija = (url: string, phrase: string, report: PhraseIntentReport | null): void =>
-  update(url, phrase, report ? { sija: sijaSummary(report) } : {}, 'sija');
+export const setPhraseSija = (url: string, phrase: string, report: PhraseIntentReport | null, previous?: SijaHistoryEntry): void =>
+  update(url, phrase, report ? { sija: sijaSummary(report, previous) } : {}, 'sija');
 
 export const phraseInsightsFor = (url: string): PhraseInsights | null => store.get(keyOf(url)) ?? null;
 

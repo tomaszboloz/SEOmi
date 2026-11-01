@@ -4,12 +4,14 @@ import { normalizeGraphUrl } from './semanticGraph/urls';
 import { buildSemanticTopics, MAX_TOPIC_EDGES } from './semanticGraph/topics';
 import { buildContentEdges, MAX_GRAPH_EDGES } from './semanticGraph/content';
 import { inboundSources, isOrphan } from './linkGraph';
+import { coreTopicShare } from './semanticGraph/topicShare';
 
 export type {
   SemanticPageNode, SemanticContentEdge, SemanticTopicEdge, SemanticMap, SemanticMapOptions,
 } from './semanticGraph/types';
 
 const MAX_GRAPH_NODES = 500;
+const withShare = (share: number | null): { coreTopicShare?: number } => (share === null ? {} : { coreTopicShare: share });
 
 /** Content-only links and bounded lexical similarity remain separate evidence. */
 export const buildSemanticMap = (
@@ -17,7 +19,7 @@ export const buildSemanticMap = (
 ): SemanticMap => {
   const selectedPages = pages.slice(0, MAX_GRAPH_NODES);
   const { termsByPage, topicEdges, totalTopicEdges, groupMembers, groupDetails, find } = buildSemanticTopics(selectedPages);
-  const { allEdges, edges, incoming } = buildContentEdges(selectedPages, options);
+  const { allEdges, edges, incoming, skipped } = buildContentEdges(selectedPages, options);
   const inbound = inboundSources(allEdges.map((edge) => ({ from: edge.source, to: edge.target })));
   const start = normalizeGraphUrl(startUrl);
   const roots = new Set(selectedPages.flatMap((page, index) => (normalizeGraphUrl(page.url) === start || normalizeGraphUrl(page.final_url) === start ? [`page-${index}`] : [])));
@@ -33,6 +35,7 @@ export const buildSemanticMap = (
       semanticSignalCount: termsByPage[index].length,
       incomingContentLinks,
       orphan: isOrphan(id, inbound, roots),
+      ...(options.topicModel ? withShare(coreTopicShare(page, options.topicModel)) : {}),
     };
   });
   const clusters = [...groupMembers.entries()]
@@ -48,6 +51,7 @@ export const buildSemanticMap = (
     totalEdges: allEdges.length,
     totalTopicEdges,
     totalInternalLinks: allEdges.reduce((sum, edge) => sum + edge.links, 0),
+    skippedLinks: skipped,
     truncated: pages.length > MAX_GRAPH_NODES || allEdges.length > MAX_GRAPH_EDGES || totalTopicEdges > MAX_TOPIC_EDGES,
   };
 };

@@ -1890,7 +1890,8 @@
       "no": "no",
       "tableSummary": "Tabella delle pagine ({{count}})",
       "tableCaption": "Pagine mostrate sulla mappa di architettura con stato, profondità, link in entrata, TRS e sezione"
-    }
+    },
+    "coreTopicShare": "{{percent}}% dei termini nel tema principale"
   },
   "crawlDiff": {
     "fields": {
@@ -4903,6 +4904,8 @@
         "Zone method",
         "Context before",
         "Context after",
+        "Contesto troncato",
+        "Posizione dell'àncora (parole)",
         "Section heading"
       ],
       "crawlImages": [
@@ -5742,7 +5745,9 @@
           "off-topic-below-quota": "Troppo pochi paragrafi in tema.",
           "local-lexical-embeddings": "La similarità usa vettori lessicali locali, non un modello semantico; le zone sono approssimative.",
           "heuristic-entities": "Le entità derivano da frasi con maiuscole e da fatti soggetto-predicato-oggetto, non da un modello di entità addestrato.",
-          "semantic-provider-unavailable": "Il provider semantico di embedding del progetto non era disponibile; sono stati usati vettori lessicali locali."
+          "semantic-provider-unavailable": "Il provider semantico di embedding del progetto non era disponibile; sono stati usati vettori lessicali locali.",
+          "ollama-entities": "Le entità sono state estese dal modello Ollama locale oltre all'euristica delle maiuscole.",
+          "ollama-entities-unavailable": "Il modello di entità Ollama non era disponibile; è stata usata solo l'euristica delle maiuscole."
         },
         "intent": {
           "definitional": "Definizione",
@@ -5763,7 +5768,9 @@
         },
         "mismatchAdvice": "La pagina ha un intento diverso dalla maggior parte delle pagine TOP: verifica che risponda allo stesso bisogno.",
         "missingBasics": "Basi mancanti",
-        "basicsAdvice": "Tratta prima i {{0}} argomenti di base mancanti: sotto metà copertura il punteggio è penalizzato e i fatti nuovi non sostituiscono le basi."
+        "basicsAdvice": "Tratta prima i {{0}} argomenti di base mancanti: sotto metà copertura il punteggio è penalizzato e i fatti nuovi non sostituiscono le basi.",
+        "previous": "Esecuzione salvata precedente",
+        "previousValue": "{{0}}: intento {{1}}, SSAS {{2}}, {{3}} pagine renderizzate"
       }
     },
     "crawl": {
@@ -8443,6 +8450,14 @@
     "igos": {
       "title": "Calo dell'IGOS",
       "body": "Il punteggio di guadagno informativo di «{{phrase}}» è sceso da {{from}} a {{to}} ({{points}} punti) con le stesse pagine TOP e lo stesso modello."
+    },
+    "igosTopChange": {
+      "title": "IGOS: insieme TOP cambiato",
+      "body": "Le pagine TOP per \"{{phrase}}\" sono cambiate ({{added}} aggiunte, {{removed}} rimosse). L'IGOS non è confrontabile con l'esecuzione precedente."
+    },
+    "taskRegression": {
+      "title": "Un'ottimizzazione ha peggiorato un punteggio",
+      "body": "{{count}} attività verificate hanno abbassato il punteggio; la peggiore perde {{worst}} punti su {{url}}."
     }
   },
   "sprsUi": {
@@ -8473,8 +8488,12 @@
       "before": "Prima",
       "after": "Dopo",
       "delta": "Variazione",
-      "solver": "Avvio a caldo dai punteggi attuali: {{iterations}} iterazioni, residuo {{residual}}."
-    }
+      "solver": "Avvio a caldo dai punteggi attuali: {{iterations}} iterazioni, residuo {{residual}}.",
+      "flags": "Modifiche agli indicatori diagnostici",
+      "flagOn": "{{page}} ora è: {{flag}}",
+      "flagOff": "{{page}} non è più: {{flag}}"
+    },
+    "meta": "{{iterations}} iterazioni, residuo {{residual}}"
   },
   "decayUi": {
     "snapshots": "Istantanee a supporto di questo verdetto: {{count}}",
@@ -8549,6 +8568,11 @@
         "product-cards": "Mostra prodotti o offerte: {{count}} pagine TOP su {{analysed}} mostrano schede prodotto o prezzo.",
         "cta": "Aggiungi una call to action chiara: {{count}} pagine TOP su {{analysed}} ne hanno una (ignoralo per pagine puramente informative)."
       }
+    },
+    "funnel": {
+      "title": "Transizioni del funnel tra pagine sottoposte a crawl",
+      "fromTo": "Da \\ a",
+      "summary": "{{classified}} pagine classificate, {{unclassified}} senza struttura misurata, {{skipped}} link interni saltati (destinazione non classificata)."
     }
   },
   "prePublishUi": {
@@ -8813,7 +8837,9 @@
       "off-topic-below-quota": "Troppo pochi paragrafi in tema.",
       "local-lexical-embeddings": "La similarità usa vettori lessicali locali, non un modello semantico; le zone sono approssimative.",
       "heuristic-entities": "Le entità derivano da frasi con maiuscole e da fatti soggetto-predicato-oggetto, non da un modello di entità addestrato.",
-      "semantic-provider-unavailable": "Il provider semantico di embedding del progetto non era disponibile; sono stati usati vettori lessicali locali."
+      "semantic-provider-unavailable": "Il provider semantico di embedding del progetto non era disponibile; sono stati usati vettori lessicali locali.",
+      "ollama-entities": "Le entità sono state estese dal modello Ollama locale oltre all'euristica delle maiuscole.",
+      "ollama-entities-unavailable": "Il modello di entità Ollama non era disponibile; è stata usata solo l'euristica delle maiuscole."
     },
     "rec": {
       "rewrite-echo": "Il paragrafo all'offset {{offset}} ripete un passaggio concorrente: riscrivilo con parole tue.",
