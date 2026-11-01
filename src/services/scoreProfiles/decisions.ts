@@ -55,7 +55,7 @@ export const PROFILE_DECISIONS: readonly ProfileDecision[] = [
   accepted('D-HSS', 83, 'Holistic site score', 'minimal coverage and domain/page aggregation; no undescribed formulas',
     {}, 'weights .20/.25/.15/.15/.10/.10/.05 with renormalisation over measured modules; SIJA stays page-level, no invented domain scalar'),
   accepted('D-ANCHOR', 82, 'Anchor pages vs detected segments', 'merge anchors with auto Core Topic and per-segment confidence',
-    {}, 'precedence manual topic, business goal, anchors, detection; inside a segment anchors win, other segments keep auto detection and are reported as split-subsites'),
+    {}, 'precedence manual topic, business goal, anchors, detection for the site Core; each user-defined segment is scored against its own Core built from its own pages, anchors never merge segments'),
 ];
 
 export type DecisionProblem = 'accepted-without-author' | 'accepted-without-date' | 'accepted-without-choice' | 'proposed-with-author';
