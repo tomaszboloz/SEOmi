@@ -1,6 +1,6 @@
 # ADR 0003: Shared semantic sources (embeddings/Ollama, SERP quality)
 
-Status: Proposed. Issue #86. Extends existing owners; no second Ollama or SERP stack.
+Status: Accepted (owner delegation 2026-11-01; defaults in docs/SEMANTIC_SOURCES.md). Issue #86. Extends existing owners; no second Ollama or SERP stack.
 
 ## Owners
 `embeddings/registry.ts`, `ollama.ts`, `ollamaTransport.ts`, `ollamaChat.ts`, `embeddingClustering.ts`, `embeddings/hybridSerp.ts`, `serpImport/contracts.ts`, `freeSerp`, `publicFeedTransport`.
