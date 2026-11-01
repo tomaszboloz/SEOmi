@@ -5765,7 +5765,9 @@
         },
         "mismatchAdvice": "La pagina ha un intento diverso dalla maggior parte delle pagine TOP: verifica che risponda allo stesso bisogno.",
         "missingBasics": "Basi mancanti",
-        "basicsAdvice": "Tratta prima i {{0}} argomenti di base mancanti: sotto metà copertura il punteggio è penalizzato e i fatti nuovi non sostituiscono le basi."
+        "basicsAdvice": "Tratta prima i {{0}} argomenti di base mancanti: sotto metà copertura il punteggio è penalizzato e i fatti nuovi non sostituiscono le basi.",
+        "previous": "Esecuzione salvata precedente",
+        "previousValue": "{{0}}: intento {{1}}, SSAS {{2}}, {{3}} pagine renderizzate"
       }
     },
     "crawl": {

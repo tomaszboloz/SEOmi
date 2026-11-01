@@ -5765,7 +5765,9 @@
         },
         "mismatchAdvice": "The page reads as a different intent than most TOP pages: check that it answers the same need.",
         "missingBasics": "Missing basics",
-        "basicsAdvice": "Cover the {{0}} missing basic topic(s) first: below half coverage the score is penalised, and new facts do not replace the basics."
+        "basicsAdvice": "Cover the {{0}} missing basic topic(s) first: below half coverage the score is penalised, and new facts do not replace the basics.",
+        "previous": "Previous stored run",
+        "previousValue": "{{0}}: intent {{1}}, SSAS {{2}}, {{3}} pages rendered"
       }
     },
     "crawl": {

@@ -5765,7 +5765,9 @@
         },
         "mismatchAdvice": "Die Seite hat eine andere Intention als die meisten TOP-Seiten: Prüfe, ob sie dasselbe Bedürfnis erfüllt.",
         "missingBasics": "Fehlende Grundlagen",
-        "basicsAdvice": "Decke zuerst die {{0}} fehlenden Grundthemen ab: Unter der Hälfte Abdeckung wird der Wert gemindert, und neue Fakten ersetzen die Grundlagen nicht."
+        "basicsAdvice": "Decke zuerst die {{0}} fehlenden Grundthemen ab: Unter der Hälfte Abdeckung wird der Wert gemindert, und neue Fakten ersetzen die Grundlagen nicht.",
+        "previous": "Vorheriger gespeicherter Lauf",
+        "previousValue": "{{0}}: Intent {{1}}, SSAS {{2}}, {{3}} Seiten gerendert"
       }
     },
     "crawl": {

@@ -31,6 +31,8 @@ mod tests_model;
 #[cfg(test)]
 mod tests_phrase;
 #[cfg(test)]
+mod tests_phrase_previous;
+#[cfg(test)]
 mod tests_sections;
 #[cfg(test)]
 mod tests_sections_gaps;

@@ -5765,7 +5765,9 @@
         },
         "mismatchAdvice": "A página tem uma intenção diferente da maioria das páginas TOP: verifique se responde à mesma necessidade.",
         "missingBasics": "Fundamentos em falta",
-        "basicsAdvice": "Cubra primeiro os {{0}} temas básicos em falta: abaixo de metade da cobertura a pontuação é penalizada, e factos novos não substituem o básico."
+        "basicsAdvice": "Cubra primeiro os {{0}} temas básicos em falta: abaixo de metade da cobertura a pontuação é penalizada, e factos novos não substituem o básico.",
+        "previous": "Execução guardada anterior",
+        "previousValue": "{{0}}: intenção {{1}}, SSAS {{2}}, {{3}} páginas renderizadas"
       }
     },
     "crawl": {

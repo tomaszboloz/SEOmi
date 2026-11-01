@@ -5765,7 +5765,9 @@
         },
         "mismatchAdvice": "La page relève d’une autre intention que la plupart des pages TOP : vérifiez qu’elle répond au même besoin.",
         "missingBasics": "Fondamentaux manquants",
-        "basicsAdvice": "Couvrez d’abord les {{0}} sujets de base manquants : sous la moitié de couverture le score est pénalisé, et des faits nouveaux ne remplacent pas les bases."
+        "basicsAdvice": "Couvrez d’abord les {{0}} sujets de base manquants : sous la moitié de couverture le score est pénalisé, et des faits nouveaux ne remplacent pas les bases.",
+        "previous": "Exécution enregistrée précédente",
+        "previousValue": "{{0}} : intention {{1}}, SSAS {{2}}, {{3}} pages rendues"
       }
     },
     "crawl": {

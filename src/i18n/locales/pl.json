@@ -5765,7 +5765,9 @@
         },
         "mismatchAdvice": "Strona ma inną intencję niż większość stron TOP: sprawdź, czy odpowiada na tę samą potrzebę.",
         "missingBasics": "Brakujące podstawy",
-        "basicsAdvice": "Najpierw omów brakujące podstawy ({{0}}): poniżej połowy pokrycia wynik jest obniżany, a nowe fakty nie zastępują podstaw."
+        "basicsAdvice": "Najpierw omów brakujące podstawy ({{0}}): poniżej połowy pokrycia wynik jest obniżany, a nowe fakty nie zastępują podstaw.",
+        "previous": "Poprzedni zapisany przebieg",
+        "previousValue": "{{0}}: intencja {{1}}, SSAS {{2}}, wyrenderowano {{3}} stron"
       }
     },
     "crawl": {
