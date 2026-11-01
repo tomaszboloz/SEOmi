@@ -9227,5 +9227,24 @@
       "error": "Abfrage fehlgeschlagen"
     },
     "correctPlaceholder": "Q123 / none"
+  },
+  "imageOcrUi": {
+    "title": "OCR und Text-Bild-Abgleich (lokal, optional)",
+    "note": "Läuft erst, wenn Sie ein lokales Ollama-Vision-Modell eintragen, das Sie bereits betreiben; nichts wird heruntergeladen. Höchstens {{max}} Bilder, nur an Ihren Ollama-Server. Ergebnisse sind partiell: keine Zeilenboxen, keine Konfidenz. Der Abgleichswert ist eine Textüberlappungs-Heuristik (ALT, Dateiname, Seitentext), kein Bildverständnis.",
+    "model": "Ollama-Vision-Modell",
+    "run": "OCR starten",
+    "cancel": "OCR abbrechen",
+    "status": {
+      "running": "OCR läuft: {{ok}} fertig, {{failed}} fehlgeschlagen.",
+      "done": "OCR beendet: {{ok}} fertig, {{failed}} fehlgeschlagen.",
+      "cancelled": "OCR abgebrochen: {{ok}} fertig, {{failed}} fehlgeschlagen.",
+      "error": "OCR wegen eines Fehlers gestoppt: {{ok}} fertig, {{failed}} fehlgeschlagen."
+    },
+    "origin": {
+      "media-only": "nur im Bild",
+      "duplicate-of-html": "auch im HTML"
+    },
+    "fact": "„{{text}}“ ({{origin}}, partiell) {{url}}",
+    "alignment": "{{url}}: Textüberlappung {{pct}} % (Heuristik)"
   }
 }

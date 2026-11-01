@@ -105,6 +105,7 @@ pub(crate) fn compose<R: tauri::Runtime>(builder: Builder<R>) -> Builder<R> {
                 commands::render_worker::start_render_worker,
                 commands::render_worker::stop_render_worker,
                 commands::render_worker::render_worker_status,
+                commands::image_fetch::fetch_image_bytes,
                 commands::bot_dns::dns_reverse,
                 commands::bot_dns::dns_forward,
                 commands::scheduler::register_audit_wakeup,

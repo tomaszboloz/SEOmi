@@ -9227,5 +9227,24 @@
       "error": "błąd wyszukiwania"
     },
     "correctPlaceholder": "Q123 / none"
+  },
+  "imageOcrUi": {
+    "title": "OCR i zgodność tekstu z obrazem (lokalnie, opcjonalnie)",
+    "note": "Działa dopiero po wpisaniu lokalnego modelu wizyjnego Ollama, który już uruchamiasz; nic nie jest pobierane. Maksymalnie {{max}} obrazów, wysyłanych tylko na Twój serwer Ollama. Wyniki są częściowe: bez ramek per linia i bez pewności. Zgodność to heurystyka nakładania się tekstu (ALT, nazwa pliku, tekst strony), nie rozumienie obrazu.",
+    "model": "Model wizyjny Ollama",
+    "run": "Uruchom OCR",
+    "cancel": "Anuluj OCR",
+    "status": {
+      "running": "OCR trwa: {{ok}} gotowych, {{failed}} z błędem.",
+      "done": "OCR zakończony: {{ok}} gotowych, {{failed}} z błędem.",
+      "cancelled": "OCR anulowany: {{ok}} gotowych, {{failed}} z błędem.",
+      "error": "OCR zatrzymany przez błąd: {{ok}} gotowych, {{failed}} z błędem."
+    },
+    "origin": {
+      "media-only": "tylko w obrazie",
+      "duplicate-of-html": "także w HTML"
+    },
+    "fact": "„{{text}}” ({{origin}}, częściowe) {{url}}",
+    "alignment": "{{url}}: nakładanie tekstu {{pct}}% (heurystyka)"
   }
 }

@@ -7,3 +7,7 @@ export * from './modelProviders';
 export * from './captions';
 export * from './mediaFacts';
 export * from './ollamaVisionOcr';
+export * from './nativeImageSource';
+export * from './phashCalibration';
+export * from './lexicalAlignment';
+export * from './ocrRun';

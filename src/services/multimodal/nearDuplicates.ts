@@ -1,4 +1,5 @@
-import { browserImageSource, canvasDecoder, sha256Hex, type ImageByteSource, type ImageDecoder, type ImageFailure } from './imageBytes';
+import { nativeImageSource } from './nativeImageSource';
+import { canvasDecoder, sha256Hex, type ImageByteSource, type ImageDecoder, type ImageFailure } from './imageBytes';
 import { hammingDistance, perceptualHash } from './phash';
 
 /**
@@ -20,7 +21,7 @@ export interface HashOptions { source?: ImageByteSource; decode?: ImageDecoder; 
 
 /** Hashes each distinct URL once (bounded, 3 at a time); cancelling stops before the next download. */
 export const hashImages = async (urls: readonly string[], options: HashOptions): Promise<ImageHashRow[]> => {
-  const source = options.source ?? browserImageSource();
+  const source = options.source ?? nativeImageSource();
   const decode = options.decode ?? canvasDecoder;
   const unique = [...new Set(urls)].slice(0, MAX_HASHED_IMAGES);
   const rows: ImageHashRow[] = new Array(unique.length);

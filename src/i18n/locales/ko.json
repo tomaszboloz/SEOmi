@@ -9227,5 +9227,24 @@
       "error": "조회 실패"
     },
     "correctPlaceholder": "Q123 / none"
+  },
+  "imageOcrUi": {
+    "title": "OCR 및 텍스트-이미지 정합(로컬, 선택)",
+    "note": "이미 사용 중인 로컬 Ollama 비전 모델을 입력해야만 실행되며 아무것도 다운로드하지 않습니다. 이미지는 최대 {{max}}개이며 사용자의 Ollama 서버로만 전송됩니다. 결과는 부분적이며 줄별 상자나 신뢰도가 없습니다. 정합 값은 텍스트 겹침 휴리스틱(ALT, 파일 이름, 페이지 텍스트)이며 이미지 이해가 아닙니다.",
+    "model": "Ollama 비전 모델",
+    "run": "OCR 실행",
+    "cancel": "OCR 취소",
+    "status": {
+      "running": "OCR 실행 중: 완료 {{ok}}, 실패 {{failed}}.",
+      "done": "OCR 완료: 완료 {{ok}}, 실패 {{failed}}.",
+      "cancelled": "OCR 취소됨: 완료 {{ok}}, 실패 {{failed}}.",
+      "error": "오류로 OCR이 중지됨: 완료 {{ok}}, 실패 {{failed}}."
+    },
+    "origin": {
+      "media-only": "이미지에만 있음",
+      "duplicate-of-html": "HTML에도 있음"
+    },
+    "fact": "“{{text}}” ({{origin}}, 부분적) {{url}}",
+    "alignment": "{{url}}: 텍스트 겹침 {{pct}}%(휴리스틱)"
   }
 }

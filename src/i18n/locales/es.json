@@ -9227,5 +9227,24 @@
       "error": "búsqueda fallida"
     },
     "correctPlaceholder": "Q123 / none"
+  },
+  "imageOcrUi": {
+    "title": "OCR y alineación texto-imagen (local, opcional)",
+    "note": "Solo se ejecuta cuando indica un modelo de visión de Ollama local que ya usa; no se descarga nada. Como máximo {{max}} imágenes, enviadas solo a su servidor Ollama. Los resultados son parciales: sin cajas por línea ni confianza. La alineación es una heurística de solapamiento de texto (ALT, nombre de archivo, texto de la página), no comprensión de imagen.",
+    "model": "Modelo de visión de Ollama",
+    "run": "Ejecutar OCR",
+    "cancel": "Cancelar OCR",
+    "status": {
+      "running": "OCR en curso: {{ok}} listas, {{failed}} con error.",
+      "done": "OCR terminado: {{ok}} listas, {{failed}} con error.",
+      "cancelled": "OCR cancelado: {{ok}} listas, {{failed}} con error.",
+      "error": "OCR detenido por un error: {{ok}} listas, {{failed}} con error."
+    },
+    "origin": {
+      "media-only": "solo en la imagen",
+      "duplicate-of-html": "también en el HTML"
+    },
+    "fact": "«{{text}}» ({{origin}}, parcial) {{url}}",
+    "alignment": "{{url}}: solapamiento de texto {{pct}} % (heurística)"
   }
 }

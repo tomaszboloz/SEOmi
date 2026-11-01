@@ -9227,5 +9227,24 @@
       "error": "ricerca non riuscita"
     },
     "correctPlaceholder": "Q123 / none"
+  },
+  "imageOcrUi": {
+    "title": "OCR e allineamento testo-immagine (locale, opzionale)",
+    "note": "Si avvia solo dopo aver inserito un modello di visione Ollama locale che già usi; non viene scaricato nulla. Al massimo {{max}} immagini, inviate solo al tuo server Ollama. Risultati parziali: niente riquadri per riga né confidenza. L'allineamento è un'euristica di sovrapposizione testuale (ALT, nome file, testo pagina), non comprensione dell'immagine.",
+    "model": "Modello di visione Ollama",
+    "run": "Avvia OCR",
+    "cancel": "Annulla OCR",
+    "status": {
+      "running": "OCR in corso: {{ok}} completate, {{failed}} fallite.",
+      "done": "OCR terminato: {{ok}} completate, {{failed}} fallite.",
+      "cancelled": "OCR annullato: {{ok}} completate, {{failed}} fallite.",
+      "error": "OCR interrotto da un errore: {{ok}} completate, {{failed}} fallite."
+    },
+    "origin": {
+      "media-only": "solo nell'immagine",
+      "duplicate-of-html": "anche nell'HTML"
+    },
+    "fact": "«{{text}}» ({{origin}}, parziale) {{url}}",
+    "alignment": "{{url}}: sovrapposizione testo {{pct}}% (euristica)"
   }
 }

@@ -9227,5 +9227,24 @@
       "error": "検索失敗"
     },
     "correctPlaceholder": "Q123 / none"
+  },
+  "imageOcrUi": {
+    "title": "OCRとテキストと画像の整合(ローカル・任意)",
+    "note": "すでに稼働中のローカルOllama視覚モデル名を入力した場合のみ実行され、何もダウンロードされません。画像は最大{{max}}件、お使いのOllamaサーバーにのみ送信されます。結果は部分的で、行ごとの枠や信頼度はありません。整合値はテキスト重複のヒューリスティック(ALT、ファイル名、ページ本文)であり、画像理解ではありません。",
+    "model": "Ollama視覚モデル",
+    "run": "OCRを実行",
+    "cancel": "OCRをキャンセル",
+    "status": {
+      "running": "OCR実行中: 完了 {{ok}}、失敗 {{failed}}。",
+      "done": "OCR完了: 完了 {{ok}}、失敗 {{failed}}。",
+      "cancelled": "OCRをキャンセルしました: 完了 {{ok}}、失敗 {{failed}}。",
+      "error": "エラーでOCRが停止しました: 完了 {{ok}}、失敗 {{failed}}。"
+    },
+    "origin": {
+      "media-only": "画像内のみ",
+      "duplicate-of-html": "HTMLにも存在"
+    },
+    "fact": "「{{text}}」({{origin}}、部分的) {{url}}",
+    "alignment": "{{url}}: テキスト重複 {{pct}}%(ヒューリスティック)"
   }
 }

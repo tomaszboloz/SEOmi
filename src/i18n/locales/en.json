@@ -9227,5 +9227,24 @@
       "error": "lookup failed"
     },
     "correctPlaceholder": "Q123 / none"
+  },
+  "imageOcrUi": {
+    "title": "OCR and text-image alignment (local, optional)",
+    "note": "Runs only after you enter a local Ollama vision model that you already run; nothing is downloaded. At most {{max}} images, sent only to your Ollama server. Results are partial: no per-line boxes or confidence. The alignment value is a text-overlap heuristic (ALT, file name, page text), not image understanding.",
+    "model": "Ollama vision model",
+    "run": "Run OCR",
+    "cancel": "Cancel OCR",
+    "status": {
+      "running": "OCR running: {{ok}} done, {{failed}} failed.",
+      "done": "OCR finished: {{ok}} done, {{failed}} failed.",
+      "cancelled": "OCR cancelled: {{ok}} done, {{failed}} failed.",
+      "error": "OCR stopped on an error: {{ok}} done, {{failed}} failed."
+    },
+    "origin": {
+      "media-only": "only in the image",
+      "duplicate-of-html": "also in the HTML"
+    },
+    "fact": "“{{text}}” ({{origin}}, partial) {{url}}",
+    "alignment": "{{url}}: text overlap {{pct}}% (heuristic)"
   }
 }

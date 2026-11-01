@@ -9227,5 +9227,24 @@
       "error": "查询失败"
     },
     "correctPlaceholder": "Q123 / none"
+  },
+  "imageOcrUi": {
+    "title": "OCR 与图文一致性(本地,可选)",
+    "note": "仅在您输入已在运行的本地 Ollama 视觉模型后才会运行,不会下载任何内容。最多 {{max}} 张图片,仅发送到您的 Ollama 服务器。结果为部分结果:没有逐行边框或置信度。一致性数值是文本重叠启发式(ALT、文件名、页面文本),并非图像理解。",
+    "model": "Ollama 视觉模型",
+    "run": "运行 OCR",
+    "cancel": "取消 OCR",
+    "status": {
+      "running": "OCR 运行中:完成 {{ok}},失败 {{failed}}。",
+      "done": "OCR 完成:完成 {{ok}},失败 {{failed}}。",
+      "cancelled": "OCR 已取消:完成 {{ok}},失败 {{failed}}。",
+      "error": "OCR 因错误停止:完成 {{ok}},失败 {{failed}}。"
+    },
+    "origin": {
+      "media-only": "仅在图片中",
+      "duplicate-of-html": "HTML 中也有"
+    },
+    "fact": "“{{text}}”({{origin}},部分) {{url}}",
+    "alignment": "{{url}}:文本重叠 {{pct}}%(启发式)"
   }
 }
