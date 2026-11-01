@@ -62,6 +62,29 @@ pub struct ScheduledExecutionHandoff {
     pub scheduler_error: Option<String>,
     #[serde(default)]
     pub result: Option<Value>,
+    /// Stable identity of this delivery (project, schedule, task, window, outcome). The WebView uses it to
+    /// handle one native handoff once even when it is listed again after a restart.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub fingerprint: Option<String>,
+}
+
+impl ScheduledExecutionHandoff {
+    pub(super) fn fingerprint_of(&self) -> String {
+        use sha2::{Digest, Sha256};
+        let identity = [
+            self.project_id.as_str(),
+            self.schedule_id.as_str(),
+            self.task_type.as_str(),
+            self.started_at.as_str(),
+            self.completed_at.as_str(),
+            if self.succeeded { "ok" } else { "failed" },
+        ]
+        .join("\n");
+        Sha256::digest(identity.as_bytes())
+            .iter()
+            .map(|byte| format!("{byte:02x}"))
+            .collect()
+    }
 }
 
 pub(super) fn valid_identifier(value: &str) -> bool {

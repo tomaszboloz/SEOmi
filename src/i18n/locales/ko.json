@@ -2376,7 +2376,8 @@
       "authority": "주제 권위도",
       "aio": "AI 준비도",
       "trust": "엔터티 신뢰도",
-      "offPage": "오프페이지 분석"
+      "offPage": "오프페이지 분석",
+      "evidence": "텔레메트리, 실험, SERP 드리프트"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -6460,6 +6461,47 @@
           "invalid-scale": "권위 척도가 잘못되어 TBVA를 이용할 수 없습니다.",
           "no-follow-links": "분석할 follow 링크가 없습니다.",
           "source-text-or-authority-missing": "일부 출처에 텍스트, 유효한 벡터 또는 제공자 권위 정보가 없습니다."
+        }
+      },
+      "evidence": {
+        "title": "텔레메트리, 실험, SERP 드리프트",
+        "intro": "이 프로젝트의 최근 저장 데이터입니다. 각 블록은 데이터가 있을 때만 나타나며 여기서는 아무것도 추정하지 않습니다.",
+        "tRevenue": "방문 페이지별 오가닉 수익",
+        "revenueIntro": "통화 {{0}}; 기여 {{1}}; 기간 {{2}}. 여기에 없는 페이지는 0이 아니라 알 수 없음입니다.",
+        "colPage": "방문 페이지",
+        "colRevenue": "수익",
+        "tExperiments": "실험 추정",
+        "experimentsIntro": "누적 클릭을 반사실과 비교하고 95% 구간을 괄호에 표시합니다. 인과가 아니라 연관의 추정이며, 추정 불가는 데이터가 결과를 허용하지 않았다는 뜻입니다.",
+        "colTarget": "대상",
+        "colDate": "변경일",
+        "colMethod": "방법",
+        "colStatus": "상태",
+        "colEffect": "누적 효과 [95%]",
+        "colProbability": "부호 확률",
+        "tDecay": "SERP 드리프트 이력",
+        "decayIntro": "저장된 비교 가능한 SERP 스냅샷을 첫 번째와 비교합니다. 참고용이며 드리프트는 검토 사유일 뿐 손실의 증거가 아닙니다.",
+        "colQuery": "쿼리",
+        "colVerdict": "판정",
+        "colSamples": "스냅샷",
+        "colShift": "중심 이동",
+        "colEntities": "엔터티 신규 / 소실",
+        "na": "해당 없음",
+        "disclaimer": "Google 데이터가 아니며 손실 예측이나 자동 재작성은 없습니다. 누락된 데이터는 0이 아니라 사용 불가로 표시됩니다.",
+        "status": {
+          "estimated": "추정됨",
+          "not-estimable": "추정 불가"
+        },
+        "verdict": {
+          "too-few-samples": "스냅샷 부족",
+          "incompatible": "비교 불가",
+          "stable": "안정",
+          "not-persistent": "지속되지 않음",
+          "cooldown": "쿨다운",
+          "alert": "검토 권장"
+        },
+        "method": {
+          "regression": "회귀",
+          "structural": "계절 구조"
         }
       }
     },

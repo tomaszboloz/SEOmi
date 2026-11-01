@@ -1,4 +1,4 @@
-use super::super::super::session_test_modules::{Server, Store};
+use super::super::super::session_test_modules::Server;
 use super::*;
 
 pub(super) const ACCOUNTS: (&str, &str) = (

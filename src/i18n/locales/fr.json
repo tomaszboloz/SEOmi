@@ -2376,7 +2376,8 @@
       "authority": "Autorité thématique",
       "aio": "Préparation à l'IA",
       "trust": "Confiance des entités",
-      "offPage": "Analyse off-page"
+      "offPage": "Analyse off-page",
+      "evidence": "Télémétrie, expériences et dérive de SERP"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -6460,6 +6461,47 @@
           "invalid-scale": "Échelle d’autorité invalide ; TBVA indisponible.",
           "no-follow-links": "Aucun lien follow à analyser.",
           "source-text-or-authority-missing": "Certaines sources n’ont pas de texte, de vecteurs utilisables ou d’autorité fournisseur."
+        }
+      },
+      "evidence": {
+        "title": "Télémétrie, expériences et dérive de SERP",
+        "intro": "Dernières données enregistrées du projet. Chaque bloc n'apparaît que s'il y a des données ; rien n'est estimé ici.",
+        "tRevenue": "Revenus organiques par page de destination",
+        "revenueIntro": "Devise {{0}} ; attribution {{1}} ; période {{2}}. Une page absente est inconnue, pas zéro.",
+        "colPage": "Page de destination",
+        "colRevenue": "Revenus",
+        "tExperiments": "Estimations des expériences",
+        "experimentsIntro": "Clics cumulés face à un contrefactuel, intervalle à 95 % entre crochets. Cela estime une association, pas une causalité prouvée ; non estimable signifie que les données n'ont pas permis de résultat.",
+        "colTarget": "Cible",
+        "colDate": "Date du changement",
+        "colMethod": "Méthode",
+        "colStatus": "Statut",
+        "colEffect": "Effet cumulé [95 %]",
+        "colProbability": "Probabilité du signe",
+        "tDecay": "Historique de dérive de la SERP",
+        "decayIntro": "Instantanés de SERP comparables enregistrés par rapport au premier. À titre indicatif : une dérive appelle une revue, ce n'est pas la preuve d'une perte.",
+        "colQuery": "Requête",
+        "colVerdict": "Verdict",
+        "colSamples": "Instantanés",
+        "colShift": "Décalage du centroïde",
+        "colEntities": "Entités nouvelles / perdues",
+        "na": "n/d",
+        "disclaimer": "Pas des données Google ; aucune prévision de pertes ni réécriture automatique. Les données manquantes sont indiquées comme indisponibles, jamais comme zéro.",
+        "status": {
+          "estimated": "Estimé",
+          "not-estimable": "Non estimable"
+        },
+        "verdict": {
+          "too-few-samples": "Trop peu d'instantanés",
+          "incompatible": "Non comparable",
+          "stable": "Stable",
+          "not-persistent": "Non persistant",
+          "cooldown": "Période de repos",
+          "alert": "Revue suggérée"
+        },
+        "method": {
+          "regression": "Régression",
+          "structural": "Structurel saisonnier"
         }
       }
     },

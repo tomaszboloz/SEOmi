@@ -2376,7 +2376,8 @@
       "authority": "Autorytet tematyczny",
       "aio": "Gotowość na AI",
       "trust": "Zaufanie do encji",
-      "offPage": "Analiza off-page"
+      "offPage": "Analiza off-page",
+      "evidence": "Telemetria, eksperymenty i dryf SERP"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "produkcja",
@@ -6460,6 +6461,47 @@
           "invalid-scale": "Nieprawidłowa skala autorytetu; TBVA jest niedostępne.",
           "no-follow-links": "Brak linków follow do analizy.",
           "source-text-or-authority-missing": "Część źródeł nie ma tekstu, poprawnych wektorów lub autorytetu dostawcy."
+        }
+      },
+      "evidence": {
+        "title": "Telemetria, eksperymenty i dryf SERP",
+        "intro": "Ostatnie zapisane dane projektu. Każdy blok pojawia się tylko, gdy są dane; nic tu nie jest szacowane.",
+        "tRevenue": "Przychód z wyszukiwania organicznego per strona docelowa",
+        "revenueIntro": "Waluta {{0}}; atrybucja {{1}}; okres {{2}}. Brak strony tutaj oznacza brak danych, nie zero.",
+        "colPage": "Strona docelowa",
+        "colRevenue": "Przychód",
+        "tExperiments": "Szacunki eksperymentów",
+        "experimentsIntro": "Skumulowane kliknięcia względem kontrfaktu, z przedziałem 95% w nawiasie. To szacunek związku, nie udowodniona przyczynowość; brak szacunku oznacza, że dane nie pozwoliły na wynik.",
+        "colTarget": "Cel",
+        "colDate": "Data zmiany",
+        "colMethod": "Metoda",
+        "colStatus": "Status",
+        "colEffect": "Efekt skumulowany [95%]",
+        "colProbability": "Prawdopodobieństwo znaku",
+        "tDecay": "Historia dryfu SERP",
+        "decayIntro": "Zapisane porównywalne snapshoty SERP względem pierwszego. Tylko doradczo: dryf to powód do przeglądu, nie dowód straty.",
+        "colQuery": "Zapytanie",
+        "colVerdict": "Werdykt",
+        "colSamples": "Snapshoty",
+        "colShift": "Przesunięcie centroidu",
+        "colEntities": "Encje nowe / utracone",
+        "na": "brak",
+        "disclaimer": "To nie dane Google; brak prognozy strat i automatycznego przepisywania. Brak danych jest pokazany jako niedostępny, nigdy jako zero.",
+        "status": {
+          "estimated": "Oszacowano",
+          "not-estimable": "Nie do oszacowania"
+        },
+        "verdict": {
+          "too-few-samples": "Za mało snapshotów",
+          "incompatible": "Nieporównywalne",
+          "stable": "Stabilne",
+          "not-persistent": "Niepowtarzalne",
+          "cooldown": "Okres karencji",
+          "alert": "Zalecany przegląd"
+        },
+        "method": {
+          "regression": "Regresja",
+          "structural": "Strukturalny sezonowy"
         }
       }
     },

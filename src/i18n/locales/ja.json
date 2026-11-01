@@ -2376,7 +2376,8 @@
       "authority": "トピカルオーソリティ",
       "aio": "AI対応度",
       "trust": "エンティティの信頼性",
-      "offPage": "オフページ分析"
+      "offPage": "オフページ分析",
+      "evidence": "テレメトリ、実験、SERPのドリフト"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -6460,6 +6461,47 @@
           "invalid-scale": "権威スコアの尺度が無効なため、TBVAは利用不可です。",
           "no-follow-links": "分析可能なfollowリンクがありません。",
           "source-text-or-authority-missing": "一部ソースにテキスト、使用可能なベクトル、提供元の権威スコアがありません。"
+        }
+      },
+      "evidence": {
+        "title": "テレメトリ、実験、SERPのドリフト",
+        "intro": "このプロジェクトの最新の保存データです。各ブロックはデータがある場合のみ表示され、ここでは何も推定しません。",
+        "tRevenue": "ランディングページ別オーガニック収益",
+        "revenueIntro": "通貨 {{0}}、アトリビューション {{1}}、期間 {{2}}。ここにないページは不明であり、0ではありません。",
+        "colPage": "ランディングページ",
+        "colRevenue": "収益",
+        "tExperiments": "実験の推定",
+        "experimentsIntro": "累積クリックを反事実と比較し、95%区間を括弧内に示します。これは因果の証明ではなく関連の推定で、推定不可はデータが結果を許さなかったことを意味します。",
+        "colTarget": "対象",
+        "colDate": "変更日",
+        "colMethod": "手法",
+        "colStatus": "状態",
+        "colEffect": "累積効果 [95%]",
+        "colProbability": "符号の確率",
+        "tDecay": "SERPドリフト履歴",
+        "decayIntro": "保存済みの比較可能なSERPスナップショットを最初のものと比較します。参考情報のみで、ドリフトは見直しの理由であり損失の証拠ではありません。",
+        "colQuery": "クエリ",
+        "colVerdict": "判定",
+        "colSamples": "スナップショット",
+        "colShift": "重心のずれ",
+        "colEntities": "エンティティ 新規 / 消失",
+        "na": "なし",
+        "disclaimer": "Googleのデータではありません。損失の予測も自動書き換えも行いません。欠損データは利用不可として表示し、0とはしません。",
+        "status": {
+          "estimated": "推定済み",
+          "not-estimable": "推定不可"
+        },
+        "verdict": {
+          "too-few-samples": "スナップショット不足",
+          "incompatible": "比較不可",
+          "stable": "安定",
+          "not-persistent": "持続せず",
+          "cooldown": "クールダウン",
+          "alert": "見直し推奨"
+        },
+        "method": {
+          "regression": "回帰",
+          "structural": "季節構造"
         }
       }
     },

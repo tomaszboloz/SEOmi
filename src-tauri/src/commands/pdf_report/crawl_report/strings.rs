@@ -4,6 +4,7 @@
 
 pub mod aio;
 pub mod authority;
+pub mod evidence;
 pub mod focus;
 mod labels;
 mod labels_cols;

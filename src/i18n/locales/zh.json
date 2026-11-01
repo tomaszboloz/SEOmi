@@ -2376,7 +2376,8 @@
       "authority": "主题权威度",
       "aio": "AI 就绪度",
       "trust": "实体信任度",
-      "offPage": "站外分析"
+      "offPage": "站外分析",
+      "evidence": "遥测、实验与 SERP 漂移"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -6460,6 +6461,47 @@
           "invalid-scale": "权威值尺度无效；TBVA不可用。",
           "no-follow-links": "没有可分析的follow链接。",
           "source-text-or-authority-missing": "部分来源缺少文本、可用向量或提供方权威值。"
+        }
+      },
+      "evidence": {
+        "title": "遥测、实验与 SERP 漂移",
+        "intro": "本项目最近保存的数据。每个区块仅在有数据时出现;此处不做任何估计。",
+        "tRevenue": "各着陆页自然搜索收入",
+        "revenueIntro": "币种 {{0}};归因 {{1}};期间 {{2}}。此处缺失的页面表示未知,而非零。",
+        "colPage": "着陆页",
+        "colRevenue": "收入",
+        "tExperiments": "实验估计",
+        "experimentsIntro": "累计点击与反事实对比,括号内为 95% 区间。这是关联估计而非已证明的因果;无法估计表示数据不足以得出结果。",
+        "colTarget": "对象",
+        "colDate": "变更日期",
+        "colMethod": "方法",
+        "colStatus": "状态",
+        "colEffect": "累计效应 [95%]",
+        "colProbability": "符号概率",
+        "tDecay": "SERP 漂移历史",
+        "decayIntro": "将已保存的可比 SERP 快照与第一份比较。仅供参考:漂移是复查的理由,不是损失的证据。",
+        "colQuery": "查询",
+        "colVerdict": "判定",
+        "colSamples": "快照",
+        "colShift": "质心偏移",
+        "colEntities": "实体 新增 / 丢失",
+        "na": "无",
+        "disclaimer": "非 Google 数据;不预测损失,也不自动改写。缺失数据显示为不可用,绝不显示为零。",
+        "status": {
+          "estimated": "已估计",
+          "not-estimable": "无法估计"
+        },
+        "verdict": {
+          "too-few-samples": "快照太少",
+          "incompatible": "不可比",
+          "stable": "稳定",
+          "not-persistent": "不持续",
+          "cooldown": "冷却期",
+          "alert": "建议复查"
+        },
+        "method": {
+          "regression": "回归",
+          "structural": "季节结构"
         }
       }
     },

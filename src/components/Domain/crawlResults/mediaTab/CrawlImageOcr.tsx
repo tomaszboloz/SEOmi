@@ -6,6 +6,7 @@ import { readStorage, writeStorage } from '@/services/storage';
 import { absolute, crawlImageUrls } from './CrawlImageNearDuplicates';
 
 const MODEL_KEY = 'seomi.multimodal.ocrModel';
+const MODEL_HINT = 'llama3.2-vision';
 type Status = 'idle' | 'running' | 'done' | 'cancelled' | 'error';
 
 /** Opt-in OCR through a local Ollama vision model (#96). Off until a model name is entered; results stay partial. */
@@ -39,7 +40,7 @@ export const CrawlImageOcr = ({ pages, t, source, fetchImpl }: { pages: CrawledP
       <h4 className="font-semibold">{t('imageOcrUi.title')}</h4>
       <p>{t('imageOcrUi.note', { max: MAX_OCR_IMAGES })}</p>
       <label>{t('imageOcrUi.model')}{' '}
-        <input value={model} placeholder="llama3.2-vision" className="bg-slate-900" disabled={status === 'running'}
+        <input value={model} placeholder={MODEL_HINT} className="bg-slate-900" disabled={status === 'running'}
           onChange={(event) => { setModel(event.currentTarget.value); writeStorage(MODEL_KEY, event.currentTarget.value.trim()); }} />
       </label>
       {status === 'running'

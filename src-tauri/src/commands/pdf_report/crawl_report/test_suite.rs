@@ -22,6 +22,8 @@ mod tests_aio_inspector;
 mod tests_authority;
 #[path = "tests_data.rs"]
 mod tests_data;
+#[path = "tests_evidence.rs"]
+mod tests_evidence;
 #[path = "tests_focus.rs"]
 mod tests_focus;
 #[path = "tests_focus_brand.rs"]

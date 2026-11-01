@@ -2376,7 +2376,8 @@
       "authority": "Topical Authority",
       "aio": "AI readiness",
       "trust": "Entity trust",
-      "offPage": "Off-page analysis"
+      "offPage": "Off-page analysis",
+      "evidence": "Telemetry, experiments and SERP drift"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -6460,6 +6461,47 @@
           "invalid-scale": "Invalid authority scale; TBVA is unavailable.",
           "no-follow-links": "No follow links available for analysis.",
           "source-text-or-authority-missing": "Some sources lack text, usable vectors or provider authority."
+        }
+      },
+      "evidence": {
+        "title": "Telemetry, experiments and SERP drift",
+        "intro": "Latest saved data of this project. Each block appears only when data exists; nothing is estimated here.",
+        "tRevenue": "Organic revenue per landing page",
+        "revenueIntro": "Currency {{0}}; attribution {{1}}; period {{2}}. A page missing here is unknown, not zero.",
+        "colPage": "Landing page",
+        "colRevenue": "Revenue",
+        "tExperiments": "Experiment estimates",
+        "experimentsIntro": "Cumulative clicks versus a counterfactual, with the 95% interval in brackets. These estimate an association, not proven causality; not-estimable means the data did not allow a result.",
+        "colTarget": "Target",
+        "colDate": "Change date",
+        "colMethod": "Method",
+        "colStatus": "Status",
+        "colEffect": "Cumulative effect [95%]",
+        "colProbability": "Same-sign probability",
+        "tDecay": "SERP drift history",
+        "decayIntro": "Saved comparable SERP snapshots against the first one. Advisory only: a drift is a reason to review, not proof of a loss.",
+        "colQuery": "Query",
+        "colVerdict": "Verdict",
+        "colSamples": "Snapshots",
+        "colShift": "Centroid shift",
+        "colEntities": "Entities new / lost",
+        "na": "n/a",
+        "disclaimer": "Not Google data; no forecast of losses and no automatic rewriting. Missing data is shown as unavailable, never as zero.",
+        "status": {
+          "estimated": "Estimated",
+          "not-estimable": "Not estimable"
+        },
+        "verdict": {
+          "too-few-samples": "Too few snapshots",
+          "incompatible": "Not comparable",
+          "stable": "Stable",
+          "not-persistent": "Not persistent",
+          "cooldown": "Cooldown",
+          "alert": "Review suggested"
+        },
+        "method": {
+          "regression": "Regression",
+          "structural": "Seasonal structural"
         }
       }
     },

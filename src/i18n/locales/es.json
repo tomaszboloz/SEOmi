@@ -2376,7 +2376,8 @@
       "authority": "Autoridad temática",
       "aio": "Preparación para IA",
       "trust": "Confianza de entidad",
-      "offPage": "Análisis off-page"
+      "offPage": "Análisis off-page",
+      "evidence": "Telemetría, experimentos y deriva de SERP"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -6460,6 +6461,47 @@
           "invalid-scale": "Escala de autoridad inválida; TBVA no disponible.",
           "no-follow-links": "No hay enlaces follow para analizar.",
           "source-text-or-authority-missing": "Algunas fuentes carecen de texto, vectores utilizables o autoridad del proveedor."
+        }
+      },
+      "evidence": {
+        "title": "Telemetría, experimentos y deriva de SERP",
+        "intro": "Últimos datos guardados de este proyecto. Cada bloque aparece solo si hay datos; aquí no se estima nada.",
+        "tRevenue": "Ingresos orgánicos por página de destino",
+        "revenueIntro": "Moneda {{0}}; atribución {{1}}; periodo {{2}}. Una página ausente es desconocida, no cero.",
+        "colPage": "Página de destino",
+        "colRevenue": "Ingresos",
+        "tExperiments": "Estimaciones de experimentos",
+        "experimentsIntro": "Clics acumulados frente a un contrafactual, con el intervalo del 95 % entre corchetes. Estima una asociación, no causalidad demostrada; no estimable significa que los datos no permitieron un resultado.",
+        "colTarget": "Objetivo",
+        "colDate": "Fecha del cambio",
+        "colMethod": "Método",
+        "colStatus": "Estado",
+        "colEffect": "Efecto acumulado [95 %]",
+        "colProbability": "Probabilidad del signo",
+        "tDecay": "Historial de deriva de SERP",
+        "decayIntro": "Instantáneas de SERP comparables guardadas frente a la primera. Solo orientativo: una deriva es motivo de revisión, no prueba de pérdida.",
+        "colQuery": "Consulta",
+        "colVerdict": "Veredicto",
+        "colSamples": "Instantáneas",
+        "colShift": "Desplazamiento del centroide",
+        "colEntities": "Entidades nuevas / perdidas",
+        "na": "n/d",
+        "disclaimer": "No son datos de Google; sin previsión de pérdidas ni reescritura automática. Los datos ausentes se muestran como no disponibles, nunca como cero.",
+        "status": {
+          "estimated": "Estimado",
+          "not-estimable": "No estimable"
+        },
+        "verdict": {
+          "too-few-samples": "Pocas instantáneas",
+          "incompatible": "No comparable",
+          "stable": "Estable",
+          "not-persistent": "No persistente",
+          "cooldown": "Enfriamiento",
+          "alert": "Revisión sugerida"
+        },
+        "method": {
+          "regression": "Regresión",
+          "structural": "Estructural estacional"
         }
       }
     },

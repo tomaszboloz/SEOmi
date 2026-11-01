@@ -2376,7 +2376,8 @@
       "authority": "Thematische Autorität",
       "aio": "KI-Bereitschaft",
       "trust": "Entitätsvertrauen",
-      "offPage": "Offpage-Analyse"
+      "offPage": "Offpage-Analyse",
+      "evidence": "Telemetrie, Experimente und SERP-Drift"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -6460,6 +6461,47 @@
           "invalid-scale": "Ungültige Autoritätsskala; TBVA nicht verfügbar.",
           "no-follow-links": "Keine Follow-Links zur Analyse verfügbar.",
           "source-text-or-authority-missing": "Einigen Quellen fehlen Text, brauchbare Vektoren oder Anbieterautorität."
+        }
+      },
+      "evidence": {
+        "title": "Telemetrie, Experimente und SERP-Drift",
+        "intro": "Zuletzt gespeicherte Daten dieses Projekts. Jeder Block erscheint nur, wenn Daten vorliegen; hier wird nichts geschätzt.",
+        "tRevenue": "Organischer Umsatz je Landingpage",
+        "revenueIntro": "Währung {{0}}; Zuordnung {{1}}; Zeitraum {{2}}. Eine fehlende Seite ist unbekannt, nicht null.",
+        "colPage": "Landingpage",
+        "colRevenue": "Umsatz",
+        "tExperiments": "Experiment-Schätzungen",
+        "experimentsIntro": "Kumulierte Klicks gegenüber einem Kontrafaktum, 95-%-Intervall in Klammern. Das schätzt einen Zusammenhang, keine bewiesene Kausalität; nicht schätzbar heißt, die Daten erlaubten kein Ergebnis.",
+        "colTarget": "Ziel",
+        "colDate": "Änderungsdatum",
+        "colMethod": "Methode",
+        "colStatus": "Status",
+        "colEffect": "Kumulierter Effekt [95 %]",
+        "colProbability": "Vorzeichenwahrscheinlichkeit",
+        "tDecay": "SERP-Drift-Verlauf",
+        "decayIntro": "Gespeicherte vergleichbare SERP-Snapshots gegenüber dem ersten. Nur beratend: Drift ist ein Anlass zur Prüfung, kein Beleg für einen Verlust.",
+        "colQuery": "Suchanfrage",
+        "colVerdict": "Urteil",
+        "colSamples": "Snapshots",
+        "colShift": "Zentroid-Verschiebung",
+        "colEntities": "Entitäten neu / verloren",
+        "na": "k. A.",
+        "disclaimer": "Keine Google-Daten; keine Verlustprognose und keine automatische Umschreibung. Fehlende Daten erscheinen als nicht verfügbar, nie als null.",
+        "status": {
+          "estimated": "Geschätzt",
+          "not-estimable": "Nicht schätzbar"
+        },
+        "verdict": {
+          "too-few-samples": "Zu wenige Snapshots",
+          "incompatible": "Nicht vergleichbar",
+          "stable": "Stabil",
+          "not-persistent": "Nicht anhaltend",
+          "cooldown": "Abkühlphase",
+          "alert": "Prüfung empfohlen"
+        },
+        "method": {
+          "regression": "Regression",
+          "structural": "Saisonal strukturell"
         }
       }
     },

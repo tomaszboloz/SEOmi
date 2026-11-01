@@ -2376,7 +2376,8 @@
       "authority": "Autorità tematica",
       "aio": "Prontezza per l'IA",
       "trust": "Fiducia delle entità",
-      "offPage": "Analisi off-page"
+      "offPage": "Analisi off-page",
+      "evidence": "Telemetria, esperimenti e deriva SERP"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -6460,6 +6461,47 @@
           "invalid-scale": "Scala di autorità non valida; TBVA non disponibile.",
           "no-follow-links": "Nessun link follow da analizzare.",
           "source-text-or-authority-missing": "Alcune fonti non hanno testo, vettori utilizzabili o autorità del provider."
+        }
+      },
+      "evidence": {
+        "title": "Telemetria, esperimenti e deriva SERP",
+        "intro": "Ultimi dati salvati del progetto. Ogni blocco compare solo se ci sono dati; qui non si stima nulla.",
+        "tRevenue": "Ricavi organici per pagina di destinazione",
+        "revenueIntro": "Valuta {{0}}; attribuzione {{1}}; periodo {{2}}. Una pagina assente è sconosciuta, non zero.",
+        "colPage": "Pagina di destinazione",
+        "colRevenue": "Ricavi",
+        "tExperiments": "Stime degli esperimenti",
+        "experimentsIntro": "Clic cumulati rispetto a un controfattuale, con l'intervallo al 95% tra parentesi. Stima un'associazione, non una causalità dimostrata; non stimabile significa che i dati non hanno permesso un risultato.",
+        "colTarget": "Obiettivo",
+        "colDate": "Data della modifica",
+        "colMethod": "Metodo",
+        "colStatus": "Stato",
+        "colEffect": "Effetto cumulato [95%]",
+        "colProbability": "Probabilità del segno",
+        "tDecay": "Storico della deriva SERP",
+        "decayIntro": "Snapshot SERP confrontabili salvati rispetto al primo. Solo indicativo: una deriva è un motivo di revisione, non la prova di una perdita.",
+        "colQuery": "Query",
+        "colVerdict": "Verdetto",
+        "colSamples": "Snapshot",
+        "colShift": "Spostamento del centroide",
+        "colEntities": "Entità nuove / perse",
+        "na": "n/d",
+        "disclaimer": "Non sono dati Google; nessuna previsione di perdite né riscrittura automatica. I dati mancanti sono indicati come non disponibili, mai come zero.",
+        "status": {
+          "estimated": "Stimato",
+          "not-estimable": "Non stimabile"
+        },
+        "verdict": {
+          "too-few-samples": "Troppi pochi snapshot",
+          "incompatible": "Non confrontabile",
+          "stable": "Stabile",
+          "not-persistent": "Non persistente",
+          "cooldown": "Raffreddamento",
+          "alert": "Revisione consigliata"
+        },
+        "method": {
+          "regression": "Regressione",
+          "structural": "Strutturale stagionale"
         }
       }
     },
