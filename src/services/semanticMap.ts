@@ -4,12 +4,14 @@ import { normalizeGraphUrl } from './semanticGraph/urls';
 import { buildSemanticTopics, MAX_TOPIC_EDGES } from './semanticGraph/topics';
 import { buildContentEdges, MAX_GRAPH_EDGES } from './semanticGraph/content';
 import { inboundSources, isOrphan } from './linkGraph';
+import { coreTopicShare } from './semanticGraph/topicShare';
 
 export type {
   SemanticPageNode, SemanticContentEdge, SemanticTopicEdge, SemanticMap, SemanticMapOptions,
 } from './semanticGraph/types';
 
 const MAX_GRAPH_NODES = 500;
+const withShare = (share: number | null): { coreTopicShare?: number } => (share === null ? {} : { coreTopicShare: share });
 
 /** Content-only links and bounded lexical similarity remain separate evidence. */
 export const buildSemanticMap = (
@@ -33,6 +35,7 @@ export const buildSemanticMap = (
       semanticSignalCount: termsByPage[index].length,
       incomingContentLinks,
       orphan: isOrphan(id, inbound, roots),
+      ...(options.topicModel ? withShare(coreTopicShare(page, options.topicModel)) : {}),
     };
   });
   const clusters = [...groupMembers.entries()]
