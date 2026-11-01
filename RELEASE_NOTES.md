@@ -1,3 +1,9 @@
+# SEOmi 0.8.6 — release notes
+
+## Security
+
+- Dependabot alert 10 (GHSA-g3hv-75wg-m249, minimatch ReDoS through globparts amplification, development scope): `minimatch` is pinned to `^11.0.3` through `overrides`, so eslint and typescript-eslint use the patched release. Lint and type check pass on it.
+
 # SEOmi 0.8.5 — release notes
 
 ## Fixed
