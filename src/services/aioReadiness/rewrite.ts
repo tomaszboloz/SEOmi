@@ -1,3 +1,4 @@
+import { runAiBrief } from '@/services/aiBriefRunner';
 import type { BriefDeps } from '@/services/siteFocusBenchmark/rewriteBrief';
 import type { AioChunk, AioIssue } from './types';
 
@@ -42,22 +43,8 @@ export const buildRewritePrompt = (chunk: Pick<AioChunk, 'heading' | 'text' | 'i
     'Return only the rewritten passage as plain text.',
   ].join('\n');
 
-const abortable = <T,>(work: Promise<T>, signal?: AbortSignal): Promise<T> => signal
-  ? new Promise<T>((resolve, reject) => {
-    const onAbort = (): void => reject(new DOMException('aborted', 'AbortError'));
-    signal.addEventListener('abort', onAbort, { once: true });
-    work.then(resolve, reject).finally(() => signal.removeEventListener('abort', onAbort));
-  }) : work;
-
 /** AI rewrite of one weak passage. Plain text only; nothing is sent when no AI provider is connected. */
 export const rewritePassage = async (deps: BriefDeps, chunk: Pick<AioChunk, 'heading' | 'text' | 'issues'>, options: RewriteOptions = {}): Promise<RewriteOutcome> => {
-  if (options.signal?.aborted) return { status: 'cancelled' };
-  if (!deps.isConfigured()) return { status: 'no-key' };
-  try {
-    const text = sanitizeRewrite(await abortable(deps.generateText(buildRewritePrompt(chunk)), options.signal));
-    return text ? { status: 'ok', text } : { status: 'empty' };
-  } catch (error) {
-    if (options.signal?.aborted || (error instanceof DOMException && error.name === 'AbortError')) return { status: 'cancelled' };
-    return { status: 'error', message: error instanceof Error ? error.message : String(error) };
-  }
+  const outcome = await runAiBrief({ deps, prompt: buildRewritePrompt(chunk), sanitize: sanitizeRewrite, signal: options.signal, cancelBeforeProvider: true });
+  return outcome.status === 'ok' ? { status: 'ok', text: outcome.text } : outcome;
 };
