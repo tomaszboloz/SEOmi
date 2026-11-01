@@ -7558,7 +7558,8 @@
         "entities": "entities",
         "questions": "user questions (PAA)",
         "gain": "information gain"
-      }
+      },
+      "linkFlags": "Internal links by placement: {{menu}} menu, {{sidebarFooter}} sidebar/footer, {{content}} in content, {{unknown}} without placement data. Menu and sidebar/footer links are not counted as content links."
     },
     "warning": {
       "empty-authority": "Empty authority: the site touches {{tcr}}% of the topics but their average depth is only {{depth}}/100. Deepen existing pages with hard data and entities before publishing more.",
@@ -7593,7 +7594,29 @@
       },
       "withPaa": "Include real People Also Ask (DataForSEO advanced SERP, billed separately)",
       "paaUsed": "{{count}} People Also Ask questions from the SERP were used.",
-      "paaMissing": "No People Also Ask source: questions come only from competitor headings and Google Suggest."
+      "paaMissing": "No People Also Ask source: questions come only from competitor headings and Google Suggest.",
+      "autoRefresh": "Refresh this map automatically after scheduled crawls (opt-in; uses SERP quota, at most weekly, 4 attempts per 30 days)",
+      "merge": {
+        "title": "Compare with your topical map pillars",
+        "note": "Preview only. Nothing changes until you add pillars.",
+        "matched": "Matching hand-made pillars ({{count}}):",
+        "added": "Reference pillars missing from your map ({{count}}):",
+        "manualOnly": "Only in your map, kept untouched ({{count}}):",
+        "apply": "Add {{count}} reference pillars to the topical map",
+        "done": "Added {{count}} pillars to the topical map.",
+        "failed": "Could not update the topical map: {{error}}"
+      },
+      "entities": {
+        "label": "Entity recognition",
+        "lexical": "Focus terms only (default)",
+        "heuristic": "Local name detection",
+        "ollama": "Local name detection + Ollama model",
+        "model": "Ollama model"
+      },
+      "kg": {
+        "button": "Link pillars to Wikidata (public lookup)",
+        "summary": "{{linked}} pillars linked to Wikidata items, {{review}} to review (first search hit, not an exact label match)."
+      }
     },
     "coverage": {
       "title": "Topic coverage map",
@@ -8234,7 +8257,9 @@
     "run": "Run: {{date}}",
     "runUnsaved": "Run: not saved yet",
     "refresh": "Recalculate from saved data",
-    "related": { "title": "Related views" },
+    "related": {
+      "title": "Related views"
+    },
     "hss": {
       "title": "Holistic Semantic Score (HSS)",
       "valueAria": "HSS {{value}}",
@@ -8301,7 +8326,11 @@
       "hint": "Ranked by HSS delta per estimated hour. Deltas come only from the modules' own simulations; without one the delta is unavailable. Not a promise of traffic, citations or ROI.",
       "empty": "The module reports of this run produced no actions.",
       "internalLink": "Add an internal link: {{from}} → {{to}}",
-      "module": { "fix-leak": "Fix link leak on {{url}}", "add-inlinks": "Add inbound links to {{url}}", "rewrite-weak-passages": "Rewrite weak passages on {{url}}" },
+      "module": {
+        "fix-leak": "Fix link leak on {{url}}",
+        "add-inlinks": "Add inbound links to {{url}}",
+        "rewrite-weak-passages": "Rewrite weak passages on {{url}}"
+      },
       "delta": "HSS Δ {{value}}",
       "deltaUnavailable": "HSS Δ unavailable (no declared model)",
       "moduleDelta": "{{module}} Δ {{value}}",

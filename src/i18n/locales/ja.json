@@ -7558,7 +7558,8 @@
         "entities": "エンティティ",
         "questions": "ユーザーの質問 (PAA)",
         "gain": "情報利得"
-      }
+      },
+      "linkFlags": "配置別の内部リンク：メニュー {{menu}}、サイドバー/フッター {{sidebarFooter}}、本文 {{content}}、配置データなし {{unknown}}。メニューとサイドバー/フッターのリンクは本文リンクとして数えません。"
     },
     "warning": {
       "empty-authority": "空虚なオーソリティ：トピックの{{tcr}}%に触れていますが平均の深さは{{depth}}/100しかありません。新規公開の前に既存ページを事実とエンティティで深めてください。",
@@ -7593,7 +7594,29 @@
       },
       "withPaa": "実際の「他の人はこちらも質問」(PAA) を含める（DataForSEO 高度 SERP、別料金）",
       "paaUsed": "SERP の PAA 質問を {{count}} 件使用しました。",
-      "paaMissing": "PAA のソースがありません。質問は競合の見出しと Google サジェストのみから取得しています。"
+      "paaMissing": "PAA のソースがありません。質問は競合の見出しと Google サジェストのみから取得しています。",
+      "autoRefresh": "予約クロールの後にこのマップを自動更新する（任意。SERP の利用枠を消費し、最大で週1回、30日あたり4回まで試行）",
+      "merge": {
+        "title": "トピックマップのピラーと比較",
+        "note": "プレビューのみです。ピラーを追加するまで何も変わりません。",
+        "matched": "一致する手作業のピラー（{{count}}）：",
+        "added": "マップにない参照ピラー（{{count}}）：",
+        "manualOnly": "マップにのみ存在し、そのまま残るもの（{{count}}）：",
+        "apply": "参照ピラー {{count}} 件をトピックマップに追加",
+        "done": "ピラー {{count}} 件をトピックマップに追加しました。",
+        "failed": "トピックマップを更新できませんでした：{{error}}"
+      },
+      "entities": {
+        "label": "エンティティ認識",
+        "lexical": "フォーカス用語のみ（既定）",
+        "heuristic": "ローカルの名称検出",
+        "ollama": "ローカルの名称検出 + Ollama モデル",
+        "model": "Ollama モデル"
+      },
+      "kg": {
+        "button": "ピラーを Wikidata に関連付ける（公開検索）",
+        "summary": "{{linked}} 件のピラーを Wikidata の項目に関連付けました。要確認は {{review}} 件です（検索の最初の結果で、ラベルは完全一致ではありません）。"
+      }
     },
     "coverage": {
       "title": "トピックカバレッジマップ",
@@ -8234,7 +8257,9 @@
     "run": "クロール：{{date}}",
     "runUnsaved": "クロール：未保存",
     "refresh": "保存データから再計算",
-    "related": { "title": "関連ビュー" },
+    "related": {
+      "title": "関連ビュー"
+    },
     "hss": {
       "title": "Holistic Semantic Score（HSS）",
       "valueAria": "HSS {{value}}",
@@ -8301,7 +8326,11 @@
       "hint": "推定 1 時間あたりの HSS 差分で並べています。差分は各モジュール自身のシミュレーションのみから算出し、ない場合は利用不可です。トラフィック、引用、ROI を約束するものではありません。",
       "empty": "このクロールのモジュールレポートからアクションは生成されませんでした。",
       "internalLink": "内部リンクを追加：{{from}} → {{to}}",
-      "module": { "fix-leak": "{{url}} のリンク漏れを修正", "add-inlinks": "{{url}} への内部リンクを追加", "rewrite-weak-passages": "{{url}} の弱い箇所を書き直す" },
+      "module": {
+        "fix-leak": "{{url}} のリンク漏れを修正",
+        "add-inlinks": "{{url}} への内部リンクを追加",
+        "rewrite-weak-passages": "{{url}} の弱い箇所を書き直す"
+      },
       "delta": "HSS Δ {{value}}",
       "deltaUnavailable": "HSS Δ 利用不可（宣言されたモデルなし）",
       "moduleDelta": "{{module}} Δ {{value}}",

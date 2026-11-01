@@ -7558,7 +7558,8 @@
         "entities": "엔터티",
         "questions": "사용자 질문(PAA)",
         "gain": "정보 이득"
-      }
+      },
+      "linkFlags": "위치별 내부 링크: 메뉴 {{menu}}, 사이드바/푸터 {{sidebarFooter}}, 본문 {{content}}, 위치 데이터 없음 {{unknown}}. 메뉴와 사이드바/푸터 링크는 본문 링크로 세지 않습니다."
     },
     "warning": {
       "empty-authority": "빈 권위: 주제의 {{tcr}}%를 다루지만 평균 깊이는 {{depth}}/100에 불과합니다. 새 글보다 기존 페이지를 데이터와 엔티티로 보강하세요.",
@@ -7593,7 +7594,29 @@
       },
       "withPaa": "실제 '관련 질문'(People Also Ask) 포함 (DataForSEO 고급 SERP, 별도 과금)",
       "paaUsed": "SERP의 People Also Ask 질문 {{count}}개를 사용했습니다.",
-      "paaMissing": "People Also Ask 소스 없음: 질문은 경쟁사 제목과 Google 자동완성에서만 가져옵니다."
+      "paaMissing": "People Also Ask 소스 없음: 질문은 경쟁사 제목과 Google 자동완성에서만 가져옵니다.",
+      "autoRefresh": "예약된 크롤링 후 이 지도를 자동으로 새로 고침(선택 사항, SERP 할당량 사용, 최대 주 1회, 30일당 4회 시도)",
+      "merge": {
+        "title": "주제 지도의 필러와 비교",
+        "note": "미리보기 전용입니다. 필러를 추가하기 전에는 아무것도 바뀌지 않습니다.",
+        "matched": "일치하는 수동 필러({{count}}):",
+        "added": "지도에 없는 참조 필러({{count}}):",
+        "manualOnly": "내 지도에만 있으며 그대로 유지({{count}}):",
+        "apply": "참조 필러 {{count}}개를 주제 지도에 추가",
+        "done": "필러 {{count}}개를 주제 지도에 추가했습니다.",
+        "failed": "주제 지도를 업데이트하지 못했습니다: {{error}}"
+      },
+      "entities": {
+        "label": "엔터티 인식",
+        "lexical": "포커스 용어만(기본값)",
+        "heuristic": "로컬 이름 감지",
+        "ollama": "로컬 이름 감지 + Ollama 모델",
+        "model": "Ollama 모델"
+      },
+      "kg": {
+        "button": "필러를 Wikidata에 연결(공개 조회)",
+        "summary": "필러 {{linked}}개를 Wikidata 항목에 연결했고, {{review}}개는 검토가 필요합니다(첫 번째 검색 결과이며 레이블이 정확히 일치하지 않음)."
+      }
     },
     "coverage": {
       "title": "주제 커버리지 지도",
@@ -8234,7 +8257,9 @@
     "run": "크롤: {{date}}",
     "runUnsaved": "크롤: 아직 저장되지 않음",
     "refresh": "저장된 데이터로 다시 계산",
-    "related": { "title": "관련 보기" },
+    "related": {
+      "title": "관련 보기"
+    },
     "hss": {
       "title": "Holistic Semantic Score(HSS)",
       "valueAria": "HSS {{value}}",
@@ -8301,7 +8326,11 @@
       "hint": "예상 1시간당 HSS 변화량 순으로 정렬합니다. 변화량은 각 모듈 자체 시뮬레이션에서만 가져오며, 없으면 사용 불가로 표시합니다. 트래픽, 인용, ROI를 약속하지 않습니다.",
       "empty": "이 크롤의 모듈 보고서에서 생성된 작업이 없습니다.",
       "internalLink": "내부 링크 추가: {{from}} → {{to}}",
-      "module": { "fix-leak": "{{url}}의 링크 누수 수정", "add-inlinks": "{{url}}에 들어오는 링크 추가", "rewrite-weak-passages": "{{url}}의 약한 문단 다시 쓰기" },
+      "module": {
+        "fix-leak": "{{url}}의 링크 누수 수정",
+        "add-inlinks": "{{url}}에 들어오는 링크 추가",
+        "rewrite-weak-passages": "{{url}}의 약한 문단 다시 쓰기"
+      },
       "delta": "HSS Δ {{value}}",
       "deltaUnavailable": "HSS Δ 사용 불가(선언된 모델 없음)",
       "moduleDelta": "{{module}} Δ {{value}}",

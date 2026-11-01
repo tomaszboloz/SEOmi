@@ -7558,7 +7558,8 @@
         "entities": "encje",
         "questions": "pytania użytkowników (PAA)",
         "gain": "przyrost informacji"
-      }
+      },
+      "linkFlags": "Linki wewnętrzne wg położenia: {{menu}} w menu, {{sidebarFooter}} w sidebarze/stopce, {{content}} w treści, {{unknown}} bez danych o położeniu. Linki z menu i sidebaru/stopki nie są liczone jako linki w treści."
     },
     "warning": {
       "empty-authority": "Pusty autorytet: witryna dotyka {{tcr}}% tematów, ale średnia głębokość to tylko {{depth}}/100. Pogłębiaj istniejące strony twardymi danymi i encjami, zanim dodasz nowe.",
@@ -7593,7 +7594,29 @@
       },
       "withPaa": "Uwzględnij prawdziwe People Also Ask (zaawansowany SERP DataForSEO, płatny osobno)",
       "paaUsed": "Użyto {{count}} pytań People Also Ask z SERP.",
-      "paaMissing": "Brak źródła People Also Ask: pytania pochodzą tylko z nagłówków konkurencji i Google Suggest."
+      "paaMissing": "Brak źródła People Also Ask: pytania pochodzą tylko z nagłówków konkurencji i Google Suggest.",
+      "autoRefresh": "Odświeżaj tę mapę automatycznie po zaplanowanych crawlach (opt-in; zużywa limit SERP, najwyżej raz w tygodniu, 4 próby na 30 dni)",
+      "merge": {
+        "title": "Porównaj z filarami Twojej mapy tematycznej",
+        "note": "Tylko podgląd. Nic się nie zmieni, dopóki nie dodasz filarów.",
+        "matched": "Pasujące filary ręczne ({{count}}):",
+        "added": "Filary referencyjne, których brakuje w Twojej mapie ({{count}}):",
+        "manualOnly": "Tylko w Twojej mapie, bez zmian ({{count}}):",
+        "apply": "Dodaj {{count}} filarów referencyjnych do mapy tematycznej",
+        "done": "Dodano {{count}} filarów do mapy tematycznej.",
+        "failed": "Nie udało się zaktualizować mapy tematycznej: {{error}}"
+      },
+      "entities": {
+        "label": "Rozpoznawanie encji",
+        "lexical": "Tylko terminy tematyczne (domyślnie)",
+        "heuristic": "Lokalne wykrywanie nazw",
+        "ollama": "Lokalne wykrywanie nazw + model Ollama",
+        "model": "Model Ollama"
+      },
+      "kg": {
+        "button": "Powiąż filary z Wikidata (publiczne zapytanie)",
+        "summary": "{{linked}} filarów powiązanych z elementami Wikidata, {{review}} do sprawdzenia (pierwszy wynik wyszukiwania, nie dokładne dopasowanie etykiety)."
+      }
     },
     "coverage": {
       "title": "Mapa pokrycia tematu",
@@ -8234,7 +8257,9 @@
     "run": "Crawl: {{date}}",
     "runUnsaved": "Crawl: jeszcze niezapisany",
     "refresh": "Przelicz z zapisanych danych",
-    "related": { "title": "Powiązane widoki" },
+    "related": {
+      "title": "Powiązane widoki"
+    },
     "hss": {
       "title": "Holistyczny wynik semantyczny (HSS)",
       "valueAria": "HSS {{value}}",
@@ -8301,7 +8326,11 @@
       "hint": "Kolejność według delty HSS na szacowaną godzinę. Delta pochodzi wyłącznie z symulacji samych modułów; bez niej jest niedostępna. To nie jest obietnica ruchu, cytowań ani ROI.",
       "empty": "Raporty modułów tego crawla nie wygenerowały działań.",
       "internalLink": "Dodaj link wewnętrzny: {{from}} → {{to}}",
-      "module": { "fix-leak": "Napraw wyciek linków na {{url}}", "add-inlinks": "Dodaj linki przychodzące do {{url}}", "rewrite-weak-passages": "Przepisz słabe fragmenty na {{url}}" },
+      "module": {
+        "fix-leak": "Napraw wyciek linków na {{url}}",
+        "add-inlinks": "Dodaj linki przychodzące do {{url}}",
+        "rewrite-weak-passages": "Przepisz słabe fragmenty na {{url}}"
+      },
       "delta": "Δ HSS {{value}}",
       "deltaUnavailable": "Δ HSS niedostępna (brak zadeklarowanego modelu)",
       "moduleDelta": "Δ {{module}} {{value}}",

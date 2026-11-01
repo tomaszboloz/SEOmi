@@ -1,6 +1,6 @@
 import { normalizeUrl } from '@/services/siteFocus/pageType';
 import { pathSegments } from '@/services/siteFocus/pageType';
-import { isChromeOrigin, linkOrigin } from './chrome';
+import { countOrigins, isChromeOrigin, linkOrigin } from './chrome';
 import { unigramKeys, type AuthorityContext, type AuthorityPage } from './context';
 import { blend } from './depth';
 import { orphanNodes } from '@/services/linkGraph';
@@ -78,6 +78,7 @@ const groupConnectivity = (members: AuthorityPage[], links: Set<string>, inbound
 /** Silo Cohesion (SILC) = (0.45 * cluster connectivity + 0.35 * anchor alignment + 0.20 * (1 - orphan/bleed share)) * 100. */
 export const auditSilo = (context: AuthorityContext, eligible: AuthorityPage[], groups: Map<string, AuthorityPage[]>): SiloReport => {
   const edges = contentEdges(context);
+  const linkFlags = countOrigins(context.pages.flatMap((entry) => entry.page.links.filter((link) => link.is_internal).map((link) => link.zone)));
   const links = new Set(edges.map((edge) => `${edge.from}|${edge.to}`));
   const inbound = new Map<string, number>();
   edges.forEach((edge) => inbound.set(edge.to, (inbound.get(edge.to) ?? 0) + 1));
@@ -104,6 +105,6 @@ export const auditSilo = (context: AuthorityContext, eligible: AuthorityPage[], 
   return {
     score: score === null ? null : Math.round(score * 1000) / 10, clusterConnectivity: connectivityMean === null ? null : round3(connectivityMean),
     anchorAlignment: anchorMean === null ? null : round3(anchorMean), orphanRatio: round3(orphanRatio), bleedRatio: round3(bleedRatio),
-    orphans, weakAnchors: scored.filter((value) => value < WEAK_ANCHOR).length, bleedLinks, audits,
+    orphans, weakAnchors: scored.filter((value) => value < WEAK_ANCHOR).length, bleedLinks, audits, linkFlags,
   };
 };

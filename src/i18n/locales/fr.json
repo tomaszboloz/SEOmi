@@ -7558,7 +7558,8 @@
         "entities": "entités",
         "questions": "questions des utilisateurs (PAA)",
         "gain": "gain d’information"
-      }
+      },
+      "linkFlags": "Liens internes par emplacement : {{menu}} dans le menu, {{sidebarFooter}} en barre latérale/pied de page, {{content}} dans le contenu, {{unknown}} sans donnée d'emplacement. Les liens du menu et de la barre latérale/du pied de page ne sont pas comptés comme liens de contenu."
     },
     "warning": {
       "empty-authority": "Autorité creuse : le site touche {{tcr}}% des sujets mais la profondeur moyenne n’est que de {{depth}}/100. Approfondissez les pages existantes avant d’en publier de nouvelles.",
@@ -7593,7 +7594,29 @@
       },
       "withPaa": "Inclure les vrais « Autres questions posées » (SERP avancée DataForSEO, facturée à part)",
       "paaUsed": "{{count}} questions « Autres questions posées » de la SERP ont été utilisées.",
-      "paaMissing": "Aucune source « Autres questions posées » : les questions viennent seulement des titres des concurrents et de Google Suggest."
+      "paaMissing": "Aucune source « Autres questions posées » : les questions viennent seulement des titres des concurrents et de Google Suggest.",
+      "autoRefresh": "Actualiser cette carte automatiquement après les crawls planifiés (option ; consomme du quota SERP, au plus une fois par semaine, 4 essais par 30 jours)",
+      "merge": {
+        "title": "Comparer avec les piliers de votre carte thématique",
+        "note": "Aperçu seulement. Rien ne change tant que vous n'ajoutez pas de piliers.",
+        "matched": "Piliers manuels correspondants ({{count}}) :",
+        "added": "Piliers de référence absents de votre carte ({{count}}) :",
+        "manualOnly": "Uniquement dans votre carte, conservés ({{count}}) :",
+        "apply": "Ajouter {{count}} piliers de référence à la carte thématique",
+        "done": "{{count}} piliers ajoutés à la carte thématique.",
+        "failed": "Impossible de mettre à jour la carte thématique : {{error}}"
+      },
+      "entities": {
+        "label": "Reconnaissance d'entités",
+        "lexical": "Termes thématiques seulement (par défaut)",
+        "heuristic": "Détection locale des noms",
+        "ollama": "Détection locale des noms + modèle Ollama",
+        "model": "Modèle Ollama"
+      },
+      "kg": {
+        "button": "Lier les piliers à Wikidata (requête publique)",
+        "summary": "{{linked}} piliers liés à des éléments Wikidata, {{review}} à vérifier (premier résultat de recherche, pas une correspondance exacte du libellé)."
+      }
     },
     "coverage": {
       "title": "Carte de couverture du sujet",
@@ -8234,7 +8257,9 @@
     "run": "Crawl : {{date}}",
     "runUnsaved": "Crawl : pas encore enregistré",
     "refresh": "Recalculer à partir des données enregistrées",
-    "related": { "title": "Vues associées" },
+    "related": {
+      "title": "Vues associées"
+    },
     "hss": {
       "title": "Holistic Semantic Score (HSS)",
       "valueAria": "HSS {{value}}",
@@ -8301,7 +8326,11 @@
       "hint": "Classé par delta HSS par heure estimée. Les deltas proviennent uniquement des simulations des modules ; sans elles, le delta est indisponible. Aucune promesse de trafic, de citations ni de ROI.",
       "empty": "Les rapports des modules de ce crawl n’ont produit aucune action.",
       "internalLink": "Ajouter un lien interne : {{from}} → {{to}}",
-      "module": { "fix-leak": "Corriger la fuite de liens sur {{url}}", "add-inlinks": "Ajouter des liens entrants vers {{url}}", "rewrite-weak-passages": "Réécrire les passages faibles de {{url}}" },
+      "module": {
+        "fix-leak": "Corriger la fuite de liens sur {{url}}",
+        "add-inlinks": "Ajouter des liens entrants vers {{url}}",
+        "rewrite-weak-passages": "Réécrire les passages faibles de {{url}}"
+      },
       "delta": "Δ HSS {{value}}",
       "deltaUnavailable": "Δ HSS indisponible (aucun modèle déclaré)",
       "moduleDelta": "Δ {{module}} {{value}}",

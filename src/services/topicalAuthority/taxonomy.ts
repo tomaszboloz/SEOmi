@@ -1,4 +1,5 @@
 import { phraseKey } from '@/services/siteFocus/terms';
+import type { EntityOptions } from './ner';
 import { addPhrases, entitiesOf, headingGroups, type CompetitorPages } from './taxonomyGroups';
 import { TAXONOMY_VERSION, type RefPillar, type RefSubtopic, type ReferenceTaxonomy } from './types';
 
@@ -16,6 +17,8 @@ export interface TaxonomyInput {
   paa?: string[];
   source: string;
   now: string;
+  /** Optional entity recognition on top of the lexical focus terms (#58). */
+  entities?: EntityOptions;
 }
 
 const MAX_SUBTOPICS = 60;
@@ -75,7 +78,7 @@ export const buildTaxonomy = (input: TaxonomyInput): ReferenceTaxonomy | null =>
       label: row.group.label,
       keys,
       importance: Math.round(row.importance * 1000) / 1000,
-      entities: entitiesOf(row.group, input.language),
+      entities: entitiesOf(row.group, input.language, input.entities),
       questions: [...row.group.questions],
       sources: { domains: [...row.group.domains].sort(), suggest: row.group.suggest, paa: row.group.paa },
       aliases: [...row.group.aliases].sort().slice(0, MAX_ALIASES),

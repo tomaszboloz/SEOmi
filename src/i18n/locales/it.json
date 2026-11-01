@@ -7558,7 +7558,8 @@
         "entities": "entità",
         "questions": "domande degli utenti (PAA)",
         "gain": "guadagno informativo"
-      }
+      },
+      "linkFlags": "Link interni per posizione: {{menu}} nel menu, {{sidebarFooter}} in barra laterale/footer, {{content}} nel contenuto, {{unknown}} senza dati di posizione. I link del menu e della barra laterale/footer non contano come link di contenuto."
     },
     "warning": {
       "empty-authority": "Autorità vuota: il sito tocca il {{tcr}}% dei temi ma la profondità media è solo {{depth}}/100. Approfondisci le pagine esistenti con dati ed entità prima di pubblicarne altre.",
@@ -7593,7 +7594,29 @@
       },
       "withPaa": "Includi le vere People Also Ask (SERP avanzata DataForSEO, fatturata a parte)",
       "paaUsed": "Sono state usate {{count}} domande People Also Ask dalla SERP.",
-      "paaMissing": "Nessuna fonte People Also Ask: le domande provengono solo dai titoli dei concorrenti e da Google Suggest."
+      "paaMissing": "Nessuna fonte People Also Ask: le domande provengono solo dai titoli dei concorrenti e da Google Suggest.",
+      "autoRefresh": "Aggiorna automaticamente questa mappa dopo le scansioni pianificate (opzionale; usa quota SERP, al massimo una volta a settimana, 4 tentativi ogni 30 giorni)",
+      "merge": {
+        "title": "Confronta con i pilastri della tua mappa tematica",
+        "note": "Solo anteprima. Non cambia nulla finché non aggiungi pilastri.",
+        "matched": "Pilastri manuali corrispondenti ({{count}}):",
+        "added": "Pilastri di riferimento mancanti nella tua mappa ({{count}}):",
+        "manualOnly": "Solo nella tua mappa, lasciati invariati ({{count}}):",
+        "apply": "Aggiungi {{count}} pilastri di riferimento alla mappa tematica",
+        "done": "Aggiunti {{count}} pilastri alla mappa tematica.",
+        "failed": "Impossibile aggiornare la mappa tematica: {{error}}"
+      },
+      "entities": {
+        "label": "Riconoscimento di entità",
+        "lexical": "Solo termini tematici (predefinito)",
+        "heuristic": "Rilevamento locale dei nomi",
+        "ollama": "Rilevamento locale dei nomi + modello Ollama",
+        "model": "Modello Ollama"
+      },
+      "kg": {
+        "button": "Collega i pilastri a Wikidata (ricerca pubblica)",
+        "summary": "{{linked}} pilastri collegati a elementi Wikidata, {{review}} da verificare (primo risultato della ricerca, non una corrispondenza esatta dell'etichetta)."
+      }
     },
     "coverage": {
       "title": "Mappa di copertura del tema",
@@ -8234,7 +8257,9 @@
     "run": "Scansione: {{date}}",
     "runUnsaved": "Scansione: non ancora salvata",
     "refresh": "Ricalcola dai dati salvati",
-    "related": { "title": "Viste correlate" },
+    "related": {
+      "title": "Viste correlate"
+    },
     "hss": {
       "title": "Holistic Semantic Score (HSS)",
       "valueAria": "HSS {{value}}",
@@ -8301,7 +8326,11 @@
       "hint": "Ordinato per delta HSS per ora stimata. I delta provengono solo dalle simulazioni dei moduli stessi; senza di esse il delta non è disponibile. Nessuna promessa di traffico, citazioni o ROI.",
       "empty": "I report dei moduli di questa scansione non hanno prodotto azioni.",
       "internalLink": "Aggiungi un link interno: {{from}} → {{to}}",
-      "module": { "fix-leak": "Correggere la dispersione di link su {{url}}", "add-inlinks": "Aggiungere link in entrata a {{url}}", "rewrite-weak-passages": "Riscrivere i passaggi deboli di {{url}}" },
+      "module": {
+        "fix-leak": "Correggere la dispersione di link su {{url}}",
+        "add-inlinks": "Aggiungere link in entrata a {{url}}",
+        "rewrite-weak-passages": "Riscrivere i passaggi deboli di {{url}}"
+      },
       "delta": "Δ HSS {{value}}",
       "deltaUnavailable": "Δ HSS non disponibile (nessun modello dichiarato)",
       "moduleDelta": "Δ {{module}} {{value}}",

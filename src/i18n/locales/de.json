@@ -7558,7 +7558,8 @@
         "entities": "Entitäten",
         "questions": "Nutzerfragen (PAA)",
         "gain": "Informationsgewinn"
-      }
+      },
+      "linkFlags": "Interne Links nach Position: {{menu}} im Menü, {{sidebarFooter}} in Seitenleiste/Footer, {{content}} im Inhalt, {{unknown}} ohne Positionsdaten. Menü- und Seitenleisten-/Footer-Links zählen nicht als Inhaltslinks."
     },
     "warning": {
       "empty-authority": "Leere Autorität: Die Seite berührt {{tcr}}% der Themen, die durchschnittliche Tiefe beträgt aber nur {{depth}}/100. Bestehende Seiten mit Fakten und Entitäten vertiefen, bevor Neues erscheint.",
@@ -7593,7 +7594,29 @@
       },
       "withPaa": "Echte „Ähnliche Fragen“ (People Also Ask) einbeziehen (DataForSEO Advanced SERP, separat berechnet)",
       "paaUsed": "{{count}} „Ähnliche Fragen“ aus der SERP wurden verwendet.",
-      "paaMissing": "Keine Quelle für „Ähnliche Fragen“: Fragen stammen nur aus Überschriften der Konkurrenz und Google Suggest."
+      "paaMissing": "Keine Quelle für „Ähnliche Fragen“: Fragen stammen nur aus Überschriften der Konkurrenz und Google Suggest.",
+      "autoRefresh": "Diese Karte nach geplanten Crawls automatisch aktualisieren (Opt-in; verbraucht SERP-Kontingent, höchstens wöchentlich, 4 Versuche pro 30 Tage)",
+      "merge": {
+        "title": "Mit den Säulen Ihrer Themenkarte vergleichen",
+        "note": "Nur Vorschau. Nichts ändert sich, bis Sie Säulen hinzufügen.",
+        "matched": "Passende manuelle Säulen ({{count}}):",
+        "added": "Referenzsäulen, die in Ihrer Karte fehlen ({{count}}):",
+        "manualOnly": "Nur in Ihrer Karte, bleiben unberührt ({{count}}):",
+        "apply": "{{count}} Referenzsäulen zur Themenkarte hinzufügen",
+        "done": "{{count}} Säulen zur Themenkarte hinzugefügt.",
+        "failed": "Die Themenkarte konnte nicht aktualisiert werden: {{error}}"
+      },
+      "entities": {
+        "label": "Entitätserkennung",
+        "lexical": "Nur Fokusbegriffe (Standard)",
+        "heuristic": "Lokale Namenserkennung",
+        "ollama": "Lokale Namenserkennung + Ollama-Modell",
+        "model": "Ollama-Modell"
+      },
+      "kg": {
+        "button": "Säulen mit Wikidata verknüpfen (öffentliche Abfrage)",
+        "summary": "{{linked}} Säulen mit Wikidata-Elementen verknüpft, {{review}} zu prüfen (erster Suchtreffer, keine exakte Bezeichnungsübereinstimmung)."
+      }
     },
     "coverage": {
       "title": "Themenabdeckungskarte",
@@ -8234,7 +8257,9 @@
     "run": "Crawl: {{date}}",
     "runUnsaved": "Crawl: noch nicht gespeichert",
     "refresh": "Aus gespeicherten Daten neu berechnen",
-    "related": { "title": "Verwandte Ansichten" },
+    "related": {
+      "title": "Verwandte Ansichten"
+    },
     "hss": {
       "title": "Holistic Semantic Score (HSS)",
       "valueAria": "HSS {{value}}",
@@ -8301,7 +8326,11 @@
       "hint": "Sortiert nach HSS-Delta pro geschätzter Stunde. Deltas stammen nur aus den Simulationen der Module selbst; ohne sie ist das Delta nicht verfügbar. Kein Versprechen für Traffic, Zitate oder ROI.",
       "empty": "Die Modulberichte dieses Crawls ergaben keine Maßnahmen.",
       "internalLink": "Internen Link hinzufügen: {{from}} → {{to}}",
-      "module": { "fix-leak": "Link-Abfluss auf {{url}} beheben", "add-inlinks": "Eingehende Links zu {{url}} ergänzen", "rewrite-weak-passages": "Schwache Passagen auf {{url}} überarbeiten" },
+      "module": {
+        "fix-leak": "Link-Abfluss auf {{url}} beheben",
+        "add-inlinks": "Eingehende Links zu {{url}} ergänzen",
+        "rewrite-weak-passages": "Schwache Passagen auf {{url}} überarbeiten"
+      },
       "delta": "HSS Δ {{value}}",
       "deltaUnavailable": "HSS Δ nicht verfügbar (kein deklariertes Modell)",
       "moduleDelta": "{{module}} Δ {{value}}",

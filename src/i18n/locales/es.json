@@ -7558,7 +7558,8 @@
         "entities": "entidades",
         "questions": "preguntas de usuarios (PAA)",
         "gain": "ganancia de información"
-      }
+      },
+      "linkFlags": "Enlaces internos por ubicación: {{menu}} en el menú, {{sidebarFooter}} en barra lateral/pie, {{content}} en el contenido, {{unknown}} sin datos de ubicación. Los enlaces del menú y de la barra lateral/pie no cuentan como enlaces de contenido."
     },
     "warning": {
       "empty-authority": "Autoridad vacía: el sitio toca el {{tcr}}% de los temas pero su profundidad media es solo {{depth}}/100. Profundiza las páginas actuales con datos y entidades antes de publicar más.",
@@ -7593,7 +7594,29 @@
       },
       "withPaa": "Incluir People Also Ask reales (SERP avanzada de DataForSEO, se factura aparte)",
       "paaUsed": "Se usaron {{count}} preguntas People Also Ask de la SERP.",
-      "paaMissing": "Sin fuente de People Also Ask: las preguntas proceden solo de los encabezados de la competencia y de Google Suggest."
+      "paaMissing": "Sin fuente de People Also Ask: las preguntas proceden solo de los encabezados de la competencia y de Google Suggest.",
+      "autoRefresh": "Actualizar este mapa automáticamente tras los rastreos programados (opcional; usa cuota SERP, como máximo una vez por semana, 4 intentos cada 30 días)",
+      "merge": {
+        "title": "Comparar con los pilares de tu mapa temático",
+        "note": "Solo vista previa. No cambia nada hasta que añadas pilares.",
+        "matched": "Pilares manuales coincidentes ({{count}}):",
+        "added": "Pilares de referencia que faltan en tu mapa ({{count}}):",
+        "manualOnly": "Solo en tu mapa, se conservan ({{count}}):",
+        "apply": "Añadir {{count}} pilares de referencia al mapa temático",
+        "done": "Se añadieron {{count}} pilares al mapa temático.",
+        "failed": "No se pudo actualizar el mapa temático: {{error}}"
+      },
+      "entities": {
+        "label": "Reconocimiento de entidades",
+        "lexical": "Solo términos temáticos (predeterminado)",
+        "heuristic": "Detección local de nombres",
+        "ollama": "Detección local de nombres + modelo Ollama",
+        "model": "Modelo de Ollama"
+      },
+      "kg": {
+        "button": "Vincular pilares con Wikidata (consulta pública)",
+        "summary": "{{linked}} pilares vinculados a elementos de Wikidata, {{review}} por revisar (primer resultado de búsqueda, no una coincidencia exacta de etiqueta)."
+      }
     },
     "coverage": {
       "title": "Mapa de cobertura del tema",
@@ -8234,7 +8257,9 @@
     "run": "Rastreo: {{date}}",
     "runUnsaved": "Rastreo: aún no guardado",
     "refresh": "Recalcular con los datos guardados",
-    "related": { "title": "Vistas relacionadas" },
+    "related": {
+      "title": "Vistas relacionadas"
+    },
     "hss": {
       "title": "Holistic Semantic Score (HSS)",
       "valueAria": "HSS {{value}}",
@@ -8301,7 +8326,11 @@
       "hint": "Ordenado por delta de HSS por hora estimada. Los deltas proceden solo de las simulaciones de los propios módulos; sin ellas el delta no está disponible. No promete tráfico, citas ni ROI.",
       "empty": "Los informes de módulos de este rastreo no generaron acciones.",
       "internalLink": "Añadir un enlace interno: {{from}} → {{to}}",
-      "module": { "fix-leak": "Corregir la fuga de enlaces en {{url}}", "add-inlinks": "Añadir enlaces entrantes a {{url}}", "rewrite-weak-passages": "Reescribir los pasajes débiles de {{url}}" },
+      "module": {
+        "fix-leak": "Corregir la fuga de enlaces en {{url}}",
+        "add-inlinks": "Añadir enlaces entrantes a {{url}}",
+        "rewrite-weak-passages": "Reescribir los pasajes débiles de {{url}}"
+      },
       "delta": "Δ HSS {{value}}",
       "deltaUnavailable": "Δ HSS no disponible (sin modelo declarado)",
       "moduleDelta": "Δ {{module}} {{value}}",

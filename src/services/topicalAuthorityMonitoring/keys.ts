@@ -10,3 +10,4 @@ const keyOf = (name: string) => (projectId: string): string => `seomi_project_${
 export const authorityHistoryKey = keyOf('history');
 export const authorityTaxonomyKey = keyOf('taxonomy');
 export const authorityBenchmarkKey = keyOf('benchmark');
+export const authorityRefreshKey = keyOf('refresh');

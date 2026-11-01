@@ -7558,7 +7558,8 @@
         "entities": "实体",
         "questions": "用户问题（PAA）",
         "gain": "信息增益"
-      }
+      },
+      "linkFlags": "按位置统计的内部链接：菜单 {{menu}}，侧边栏/页脚 {{sidebarFooter}}，正文 {{content}}，无位置数据 {{unknown}}。菜单和侧边栏/页脚链接不计为正文链接。"
     },
     "warning": {
       "empty-authority": "空洞权威：网站涉及 {{tcr}}% 的主题，但平均深度仅 {{depth}}/100。发布新内容前，请先用数据和实体深化现有页面。",
@@ -7593,7 +7594,29 @@
       },
       "withPaa": "包含真实的“相关问题”(People Also Ask)（DataForSEO 高级 SERP，单独计费）",
       "paaUsed": "已使用 SERP 中的 {{count}} 个 People Also Ask 问题。",
-      "paaMissing": "没有 People Also Ask 来源：问题仅来自竞争对手的标题和 Google 搜索建议。"
+      "paaMissing": "没有 People Also Ask 来源：问题仅来自竞争对手的标题和 Google 搜索建议。",
+      "autoRefresh": "在计划抓取后自动刷新此图谱（可选；消耗 SERP 配额，最多每周一次，每 30 天 4 次尝试）",
+      "merge": {
+        "title": "与主题图的支柱比较",
+        "note": "仅预览。添加支柱之前不会有任何更改。",
+        "matched": "匹配的手动支柱（{{count}}）：",
+        "added": "您的图谱中缺少的参考支柱（{{count}}）：",
+        "manualOnly": "仅存在于您的图谱中，保持不变（{{count}}）：",
+        "apply": "将 {{count}} 个参考支柱添加到主题图",
+        "done": "已向主题图添加 {{count}} 个支柱。",
+        "failed": "无法更新主题图：{{error}}"
+      },
+      "entities": {
+        "label": "实体识别",
+        "lexical": "仅焦点词（默认）",
+        "heuristic": "本地名称检测",
+        "ollama": "本地名称检测 + Ollama 模型",
+        "model": "Ollama 模型"
+      },
+      "kg": {
+        "button": "将支柱关联到 Wikidata（公开查询）",
+        "summary": "已将 {{linked}} 个支柱关联到 Wikidata 条目，其中 {{review}} 个需要复核（第一个搜索结果，标签并非完全匹配）。"
+      }
     },
     "coverage": {
       "title": "主题覆盖图谱",
@@ -8234,7 +8257,9 @@
     "run": "抓取：{{date}}",
     "runUnsaved": "抓取：尚未保存",
     "refresh": "根据已保存数据重新计算",
-    "related": { "title": "相关视图" },
+    "related": {
+      "title": "相关视图"
+    },
     "hss": {
       "title": "Holistic Semantic Score（HSS）",
       "valueAria": "HSS {{value}}",
@@ -8301,7 +8326,11 @@
       "hint": "按每估算小时的 HSS 变化量排序。变化量仅来自各模块自身的模拟；没有模拟时显示为不可用。不承诺流量、引用或投资回报。",
       "empty": "此次抓取的模块报告未生成任何行动。",
       "internalLink": "添加内部链接：{{from}} → {{to}}",
-      "module": { "fix-leak": "修复 {{url}} 的链接外流", "add-inlinks": "为 {{url}} 添加入站链接", "rewrite-weak-passages": "重写 {{url}} 上较弱的段落" },
+      "module": {
+        "fix-leak": "修复 {{url}} 的链接外流",
+        "add-inlinks": "为 {{url}} 添加入站链接",
+        "rewrite-weak-passages": "重写 {{url}} 上较弱的段落"
+      },
       "delta": "HSS Δ {{value}}",
       "deltaUnavailable": "HSS Δ 不可用（无声明的模型）",
       "moduleDelta": "{{module}} Δ {{value}}",

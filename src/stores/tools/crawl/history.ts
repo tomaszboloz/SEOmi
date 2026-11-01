@@ -34,6 +34,8 @@ importScheduledCrawlResult: async (result, identity) => {
       const retainedRuns = crawlRuns.slice(0, crawlRuns.length - saveResult.prunedRuns);
       if (activeProjectId() !== projectId) return false;
       set({ crawlResult, crawlRuns: retainedRuns, selectedCrawlRunId: run.id, interruptedCrawl: null, crawlPersistenceError: null, crawlPersistenceNotice: formatCrawlPersistenceNotice(saveResult, retainedRuns.length), crawlPersistenceCompacted: Boolean(saveResult.compactedRuns) });
+      // Lazy import: the wiring reaches back into this store through the reference adapter.
+      void import('@/services/topicalAuthorityMonitoring/scheduledAuthorityWiring').then((module) => module.runScheduledAuthorityDefault(projectId, run)).catch(() => undefined);
       return true;
     } catch (error) {
       if (activeProjectId() === projectId) set({ crawlResult, crawlPersistenceError: isStorageQuotaError(error) ? formatCrawlRuntimeError(error) : error instanceof Error ? error.message : i18n.t('runtimeErrors.tools.crawlHistorySaveFailed') });
