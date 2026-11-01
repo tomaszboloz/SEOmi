@@ -4903,6 +4903,8 @@
         "Zone method",
         "Context before",
         "Context after",
+        "コンテキスト切り詰め",
+        "アンカー語オフセット",
         "Section heading"
       ],
       "crawlImages": [

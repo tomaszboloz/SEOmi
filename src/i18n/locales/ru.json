@@ -4903,6 +4903,8 @@
         "Zone method",
         "Context before",
         "Context after",
+        "Контекст обрезан",
+        "Смещение якоря (слова)",
         "Section heading"
       ],
       "crawlImages": [

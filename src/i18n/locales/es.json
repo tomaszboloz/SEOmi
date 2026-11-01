@@ -4903,6 +4903,8 @@
         "Zone method",
         "Context before",
         "Context after",
+        "Contexto truncado",
+        "Posición del ancla (palabras)",
         "Section heading"
       ],
       "crawlImages": [

@@ -4903,6 +4903,8 @@
         "Zone method",
         "Context before",
         "Context after",
+        "上下文已截断",
+        "锚文本词偏移",
         "Section heading"
       ],
       "crawlImages": [
