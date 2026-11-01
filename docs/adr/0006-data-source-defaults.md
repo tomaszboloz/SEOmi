@@ -1,0 +1,15 @@
+# ADR 0006: Defaults for telemetry, multimodal, experiments and decay (#91 #92 #96 #97 #98)
+
+Status: Accepted by owner delegation (2026-11-01). Register: #83.
+
+## Decisions
+1. **GA4 revenue** comes from the GA4 Data API command `google_analytics_revenue` (organic search `totalRevenue` per landing page, currency as reported by GA4) or from the user's CSV export. Currency is never guessed. A page missing from the data is unknown, not zero. Needs a connected Google account and purchase events in GA4; the command is tested against fixture responses only.
+2. **Crawl Efficiency Matrix** thresholds (`wasteMaxTrs` 45, `wasteMinHits` 25, `starvationMaxHits` 2) are confirmed on labelled fixtures (`matrixCalibration.ts`). Real logs need the user's own labels; every value stays overridable.
+3. **Images**: native Rust download (public hosts, raster only, 5 MB, no cookies) with CORS fetch as fallback. pHash default 8 of 64 bits is confirmed on seeded synthetic fixtures (`phashCalibration.ts`), still adjustable 0-16.
+4. **OCR, CLIP, ASR**: OCR runs only through a local Ollama vision model the user names; results stay partial (whole-image box, no confidence). Text-image alignment is a deterministic lexical heuristic (ALT, file name, page text) with confidence null. Transcripts come from WebVTT/SRT captions; no speech-to-text model is bundled or downloaded.
+5. **Experiments**: the counterfactual adds a seasonal structural model (local level plus weekly seasonality, seeded posterior-predictive simulation). It is a BSTS-style approximation, not a full Bayesian fit. Page-level interventions use per-page daily GSC series saved per project; a control page may share links or templates with the changed page, and the UI says so. Outcome is GSC clicks; GA4 conversion outcomes are not modelled.
+6. **Decay Radar**: an optional Ollama embedding of the market vocabulary gives a neural centroid labelled with the model name. Without a configured model the lexical centroid stays. Native scheduled handoffs carry a SHA-256 delivery fingerprint; the WebView handles a fingerprint once.
+7. **PDF**: one evidence section (revenue, experiment estimates, SERP drift) is part of the crawl report template and appears only with saved data.
+
+## Consequences
+No ML model is mandatory or downloaded. All thresholds are visible defaults with a documented origin, not claims about real-world accuracy.
