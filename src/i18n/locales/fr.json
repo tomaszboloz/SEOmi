@@ -7558,7 +7558,8 @@
         "entities": "entités",
         "questions": "questions des utilisateurs (PAA)",
         "gain": "gain d’information"
-      }
+      },
+      "linkFlags": "Liens internes par emplacement : {{menu}} dans le menu, {{sidebarFooter}} en barre latérale/pied de page, {{content}} dans le contenu, {{unknown}} sans donnée d'emplacement. Les liens du menu et de la barre latérale/du pied de page ne sont pas comptés comme liens de contenu."
     },
     "warning": {
       "empty-authority": "Autorité creuse : le site touche {{tcr}}% des sujets mais la profondeur moyenne n’est que de {{depth}}/100. Approfondissez les pages existantes avant d’en publier de nouvelles.",
@@ -7604,6 +7605,17 @@
         "apply": "Ajouter {{count}} piliers de référence à la carte thématique",
         "done": "{{count}} piliers ajoutés à la carte thématique.",
         "failed": "Impossible de mettre à jour la carte thématique : {{error}}"
+      },
+      "entities": {
+        "label": "Reconnaissance d'entités",
+        "lexical": "Termes thématiques seulement (par défaut)",
+        "heuristic": "Détection locale des noms",
+        "ollama": "Détection locale des noms + modèle Ollama",
+        "model": "Modèle Ollama"
+      },
+      "kg": {
+        "button": "Lier les piliers à Wikidata (requête publique)",
+        "summary": "{{linked}} piliers liés à des éléments Wikidata, {{review}} à vérifier (premier résultat de recherche, pas une correspondance exacte du libellé)."
       }
     },
     "coverage": {

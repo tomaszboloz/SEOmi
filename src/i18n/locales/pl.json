@@ -7558,7 +7558,8 @@
         "entities": "encje",
         "questions": "pytania użytkowników (PAA)",
         "gain": "przyrost informacji"
-      }
+      },
+      "linkFlags": "Linki wewnętrzne wg położenia: {{menu}} w menu, {{sidebarFooter}} w sidebarze/stopce, {{content}} w treści, {{unknown}} bez danych o położeniu. Linki z menu i sidebaru/stopki nie są liczone jako linki w treści."
     },
     "warning": {
       "empty-authority": "Pusty autorytet: witryna dotyka {{tcr}}% tematów, ale średnia głębokość to tylko {{depth}}/100. Pogłębiaj istniejące strony twardymi danymi i encjami, zanim dodasz nowe.",
@@ -7604,6 +7605,17 @@
         "apply": "Dodaj {{count}} filarów referencyjnych do mapy tematycznej",
         "done": "Dodano {{count}} filarów do mapy tematycznej.",
         "failed": "Nie udało się zaktualizować mapy tematycznej: {{error}}"
+      },
+      "entities": {
+        "label": "Rozpoznawanie encji",
+        "lexical": "Tylko terminy tematyczne (domyślnie)",
+        "heuristic": "Lokalne wykrywanie nazw",
+        "ollama": "Lokalne wykrywanie nazw + model Ollama",
+        "model": "Model Ollama"
+      },
+      "kg": {
+        "button": "Powiąż filary z Wikidata (publiczne zapytanie)",
+        "summary": "{{linked}} filarów powiązanych z elementami Wikidata, {{review}} do sprawdzenia (pierwszy wynik wyszukiwania, nie dokładne dopasowanie etykiety)."
       }
     },
     "coverage": {

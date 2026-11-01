@@ -7558,7 +7558,8 @@
         "entities": "实体",
         "questions": "用户问题（PAA）",
         "gain": "信息增益"
-      }
+      },
+      "linkFlags": "按位置统计的内部链接：菜单 {{menu}}，侧边栏/页脚 {{sidebarFooter}}，正文 {{content}}，无位置数据 {{unknown}}。菜单和侧边栏/页脚链接不计为正文链接。"
     },
     "warning": {
       "empty-authority": "空洞权威：网站涉及 {{tcr}}% 的主题，但平均深度仅 {{depth}}/100。发布新内容前，请先用数据和实体深化现有页面。",
@@ -7604,6 +7605,17 @@
         "apply": "将 {{count}} 个参考支柱添加到主题图",
         "done": "已向主题图添加 {{count}} 个支柱。",
         "failed": "无法更新主题图：{{error}}"
+      },
+      "entities": {
+        "label": "实体识别",
+        "lexical": "仅焦点词（默认）",
+        "heuristic": "本地名称检测",
+        "ollama": "本地名称检测 + Ollama 模型",
+        "model": "Ollama 模型"
+      },
+      "kg": {
+        "button": "将支柱关联到 Wikidata（公开查询）",
+        "summary": "已将 {{linked}} 个支柱关联到 Wikidata 条目，其中 {{review}} 个需要复核（第一个搜索结果，标签并非完全匹配）。"
       }
     },
     "coverage": {

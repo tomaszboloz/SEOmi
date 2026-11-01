@@ -1,6 +1,7 @@
 import { fetchFreeSuggestions } from '@/services/freeSuggestions';
 import { createBenchmarkDeps } from '@/services/siteFocusBenchmark';
 import { useToolsStore } from '@/stores/toolsStore';
+import { createOllamaEntityChat, extractEntitiesWithChat } from './ollamaEntities';
 import type { ReferenceDeps } from './types';
 
 export type SuggestionFetcher = (request: { feed: 'google-suggestions'; geo: string; language: string; keyword: string }) => Promise<{ status: string; result: { suggestions: string[] } | null }>;
@@ -15,11 +16,12 @@ export const createSuggestionFetcher = (env: { geo: string; language: string; fe
   };
 
 /** Single place that wires stores and Tauri commands into the pure reference runner. */
-export const createReferenceDeps = (options: { withQuestions?: boolean } = {}): ReferenceDeps => {
+export const createReferenceDeps = (options: { withQuestions?: boolean; ollamaModel?: string } = {}): ReferenceDeps => {
   const tools = useToolsStore.getState();
   const { fetchSerp, crawlSite } = createBenchmarkDeps(options);
   return {
     fetchSerp, crawlSite,
+    ...(options.ollamaModel ? { extractEntities: (texts: string[]) => extractEntitiesWithChat(texts, createOllamaEntityChat(options.ollamaModel!)) } : {}),
     fetchSuggestions: createSuggestionFetcher({ geo: tools.keywordCountry || 'US', language: tools.keywordLanguage || 'en', fetch: fetchFreeSuggestions as SuggestionFetcher }),
   };
 };

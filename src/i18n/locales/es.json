@@ -7558,7 +7558,8 @@
         "entities": "entidades",
         "questions": "preguntas de usuarios (PAA)",
         "gain": "ganancia de información"
-      }
+      },
+      "linkFlags": "Enlaces internos por ubicación: {{menu}} en el menú, {{sidebarFooter}} en barra lateral/pie, {{content}} en el contenido, {{unknown}} sin datos de ubicación. Los enlaces del menú y de la barra lateral/pie no cuentan como enlaces de contenido."
     },
     "warning": {
       "empty-authority": "Autoridad vacía: el sitio toca el {{tcr}}% de los temas pero su profundidad media es solo {{depth}}/100. Profundiza las páginas actuales con datos y entidades antes de publicar más.",
@@ -7604,6 +7605,17 @@
         "apply": "Añadir {{count}} pilares de referencia al mapa temático",
         "done": "Se añadieron {{count}} pilares al mapa temático.",
         "failed": "No se pudo actualizar el mapa temático: {{error}}"
+      },
+      "entities": {
+        "label": "Reconocimiento de entidades",
+        "lexical": "Solo términos temáticos (predeterminado)",
+        "heuristic": "Detección local de nombres",
+        "ollama": "Detección local de nombres + modelo Ollama",
+        "model": "Modelo de Ollama"
+      },
+      "kg": {
+        "button": "Vincular pilares con Wikidata (consulta pública)",
+        "summary": "{{linked}} pilares vinculados a elementos de Wikidata, {{review}} por revisar (primer resultado de búsqueda, no una coincidencia exacta de etiqueta)."
       }
     },
     "coverage": {

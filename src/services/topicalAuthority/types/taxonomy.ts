@@ -1,7 +1,15 @@
 /** Reference Topic Taxonomy: what the market covers for the site's Core Topic (built from real SERP data only). */
 export const TAXONOMY_VERSION = 1;
 
-export interface RefPillar { id: string; label: string; importance: number }
+export interface RefPillar {
+  id: string;
+  label: string;
+  importance: number;
+  /** Optional Knowledge Graph link (Wikidata item ID) added on explicit user action (#57). */
+  entityId?: string;
+  /** `exact`: the item label equals the pillar label. `search`: first search hit, needs review. */
+  entityMatch?: 'exact' | 'search';
+}
 
 export interface RefSubtopic {
   id: string;

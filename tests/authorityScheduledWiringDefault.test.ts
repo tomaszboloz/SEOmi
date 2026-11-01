@@ -6,6 +6,7 @@ vi.mock('@/services/topicalAuthorityMonitoring/scheduledAuthority', () => ({ run
 vi.mock('@/services/topicalAuthorityReference/run', () => ({ runReference }));
 
 import { runScheduledAuthorityDefault } from '@/services/topicalAuthorityMonitoring/scheduledAuthorityWiring';
+import { writeEntitySettings } from '@/services/topicalAuthorityMonitoring';
 import { createCrawlRunFixture } from './fixtures/crawl';
 
 describe('runScheduledAuthorityDefault', () => {
@@ -15,5 +16,15 @@ describe('runScheduledAuthorityDefault', () => {
     const deps = runScheduledAuthority.mock.calls[0][2];
     await expect(deps.refresh({ startUrl: 'https://x.test/' })).resolves.toEqual({ status: 'cancelled' });
     expect(runReference).toHaveBeenCalledOnce();
+    expect(runReference.mock.calls[0][1]).toMatchObject({ entityMode: 'lexical' });
+  });
+
+  it('uses the project entity recognition setting for scheduled refreshes', async () => {
+    writeEntitySettings('p2', { mode: 'ollama', model: 'qwen3' });
+    await runScheduledAuthorityDefault('p2', createCrawlRunFixture());
+    const deps = runScheduledAuthority.mock.calls.at(-1)![2];
+    await deps.refresh({ startUrl: 'https://x.test/' });
+    expect(runReference.mock.calls.at(-1)![1]).toMatchObject({ entityMode: 'ollama' });
+    expect(typeof runReference.mock.calls.at(-1)![0].extractEntities).toBe('function');
   });
 });

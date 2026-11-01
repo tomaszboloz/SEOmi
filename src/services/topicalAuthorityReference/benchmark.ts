@@ -12,6 +12,10 @@ const round1 = (value: number): number => Math.round(value * 10) / 10;
  * Topical Gap Matrix: the strongest SERP competitors are scored with the very same engine and reference map,
  * so the pillar-by-pillar comparison is like for like.
  */
+/** Highest TAS first (unmeasured last), then your own row, then domain name. */
+export const compareRows = (a: BenchmarkRow, b: BenchmarkRow): number =>
+  (b.tas ?? -1) - (a.tas ?? -1) || Number(b.isOwn) - Number(a.isOwn) || (a.domain < b.domain ? -1 : 1);
+
 export const buildTopicalBenchmark = (
   own: TopicalAuthorityReport, ownDomain: string, competitors: CompetitorPages[], taxonomy: ReferenceTaxonomy, now: string, attempted?: string[],
 ): TopicalBenchmark | null => {
@@ -24,7 +28,7 @@ export const buildTopicalBenchmark = (
   const rows: BenchmarkRow[] = [
     { domain: ownDomain, sfs: own.sfs, tas: own.tas, quadrant: own.quadrant, isOwn: true },
     ...scored.map(({ domain, report }): BenchmarkRow => ({ domain, sfs: report.sfs, tas: report.tas, quadrant: report.quadrant, isOwn: false })),
-  ].sort((a, b) => (b.tas ?? -1) - (a.tas ?? -1) || Number(b.isOwn) - Number(a.isOwn) || (a.domain < b.domain ? -1 : 1));
+  ].sort(compareRows);
   const pillars: PillarComparison[] = own.pillarCoverage.map((pillar) => ({
     id: pillar.id, label: pillar.label, own: pillar.coveragePct,
     competitors: Object.fromEntries(scored.map(({ domain, report }) => [domain, report.pillarCoverage.find((item) => item.id === pillar.id)?.coveragePct ?? 0])),

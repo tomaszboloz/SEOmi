@@ -7558,7 +7558,8 @@
         "entities": "Entitäten",
         "questions": "Nutzerfragen (PAA)",
         "gain": "Informationsgewinn"
-      }
+      },
+      "linkFlags": "Interne Links nach Position: {{menu}} im Menü, {{sidebarFooter}} in Seitenleiste/Footer, {{content}} im Inhalt, {{unknown}} ohne Positionsdaten. Menü- und Seitenleisten-/Footer-Links zählen nicht als Inhaltslinks."
     },
     "warning": {
       "empty-authority": "Leere Autorität: Die Seite berührt {{tcr}}% der Themen, die durchschnittliche Tiefe beträgt aber nur {{depth}}/100. Bestehende Seiten mit Fakten und Entitäten vertiefen, bevor Neues erscheint.",
@@ -7604,6 +7605,17 @@
         "apply": "{{count}} Referenzsäulen zur Themenkarte hinzufügen",
         "done": "{{count}} Säulen zur Themenkarte hinzugefügt.",
         "failed": "Die Themenkarte konnte nicht aktualisiert werden: {{error}}"
+      },
+      "entities": {
+        "label": "Entitätserkennung",
+        "lexical": "Nur Fokusbegriffe (Standard)",
+        "heuristic": "Lokale Namenserkennung",
+        "ollama": "Lokale Namenserkennung + Ollama-Modell",
+        "model": "Ollama-Modell"
+      },
+      "kg": {
+        "button": "Säulen mit Wikidata verknüpfen (öffentliche Abfrage)",
+        "summary": "{{linked}} Säulen mit Wikidata-Elementen verknüpft, {{review}} zu prüfen (erster Suchtreffer, keine exakte Bezeichnungsübereinstimmung)."
       }
     },
     "coverage": {

@@ -7558,7 +7558,8 @@
         "entities": "엔터티",
         "questions": "사용자 질문(PAA)",
         "gain": "정보 이득"
-      }
+      },
+      "linkFlags": "위치별 내부 링크: 메뉴 {{menu}}, 사이드바/푸터 {{sidebarFooter}}, 본문 {{content}}, 위치 데이터 없음 {{unknown}}. 메뉴와 사이드바/푸터 링크는 본문 링크로 세지 않습니다."
     },
     "warning": {
       "empty-authority": "빈 권위: 주제의 {{tcr}}%를 다루지만 평균 깊이는 {{depth}}/100에 불과합니다. 새 글보다 기존 페이지를 데이터와 엔티티로 보강하세요.",
@@ -7604,6 +7605,17 @@
         "apply": "참조 필러 {{count}}개를 주제 지도에 추가",
         "done": "필러 {{count}}개를 주제 지도에 추가했습니다.",
         "failed": "주제 지도를 업데이트하지 못했습니다: {{error}}"
+      },
+      "entities": {
+        "label": "엔터티 인식",
+        "lexical": "포커스 용어만(기본값)",
+        "heuristic": "로컬 이름 감지",
+        "ollama": "로컬 이름 감지 + Ollama 모델",
+        "model": "Ollama 모델"
+      },
+      "kg": {
+        "button": "필러를 Wikidata에 연결(공개 조회)",
+        "summary": "필러 {{linked}}개를 Wikidata 항목에 연결했고, {{review}}개는 검토가 필요합니다(첫 번째 검색 결과이며 레이블이 정확히 일치하지 않음)."
       }
     },
     "coverage": {

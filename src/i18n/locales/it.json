@@ -7558,7 +7558,8 @@
         "entities": "entità",
         "questions": "domande degli utenti (PAA)",
         "gain": "guadagno informativo"
-      }
+      },
+      "linkFlags": "Link interni per posizione: {{menu}} nel menu, {{sidebarFooter}} in barra laterale/footer, {{content}} nel contenuto, {{unknown}} senza dati di posizione. I link del menu e della barra laterale/footer non contano come link di contenuto."
     },
     "warning": {
       "empty-authority": "Autorità vuota: il sito tocca il {{tcr}}% dei temi ma la profondità media è solo {{depth}}/100. Approfondisci le pagine esistenti con dati ed entità prima di pubblicarne altre.",
@@ -7604,6 +7605,17 @@
         "apply": "Aggiungi {{count}} pilastri di riferimento alla mappa tematica",
         "done": "Aggiunti {{count}} pilastri alla mappa tematica.",
         "failed": "Impossibile aggiornare la mappa tematica: {{error}}"
+      },
+      "entities": {
+        "label": "Riconoscimento di entità",
+        "lexical": "Solo termini tematici (predefinito)",
+        "heuristic": "Rilevamento locale dei nomi",
+        "ollama": "Rilevamento locale dei nomi + modello Ollama",
+        "model": "Modello Ollama"
+      },
+      "kg": {
+        "button": "Collega i pilastri a Wikidata (ricerca pubblica)",
+        "summary": "{{linked}} pilastri collegati a elementi Wikidata, {{review}} da verificare (primo risultato della ricerca, non una corrispondenza esatta dell'etichetta)."
       }
     },
     "coverage": {

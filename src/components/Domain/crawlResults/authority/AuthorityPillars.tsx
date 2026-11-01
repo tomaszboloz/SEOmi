@@ -31,6 +31,7 @@ export const AuthorityPillars = ({ report }: { report: TopicalAuthorityReport })
               </p>
               <div className="h-2 overflow-hidden rounded bg-slate-800"><div className={`h-2 rounded ${barFor(value)}`} style={{ width: `${value ?? 0}%` }} /></div>
             <p className="text-[11px] text-slate-400">{notes[key]}</p>
+            {key === 'silc' && report.silo.linkFlags && <p className="text-[11px] text-slate-400">{t('authority.pillars.linkFlags', report.silo.linkFlags)}</p>}
             {key === 'cdes' && report.depthInputs?.status === 'partial' && (
               <p className="text-[11px] text-amber-200">{t('authority.pillars.cdesPartial', { parts: report.depthInputs.missing.map((part) => t(`authority.pillars.depthPart.${part}`)).join(', '), rows: report.depthInputs.rows })}</p>
             )}

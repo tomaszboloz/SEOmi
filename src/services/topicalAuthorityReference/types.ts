@@ -1,10 +1,12 @@
 import type { SerpEvidence, SerpEvidenceSummary } from '@/services/serpSnapshot';
 import type { CodeParams, SiteFocusReport } from '@/services/siteFocus';
 import type { BenchmarkDeps, SerpHit } from '@/services/siteFocusBenchmark';
-import type { CompetitorPages, Quadrant, ReferenceTaxonomy } from '@/services/topicalAuthority';
+import type { CompetitorPages, EntityMode, Quadrant, ReferenceTaxonomy } from '@/services/topicalAuthority';
 
 export interface ReferenceDeps extends Pick<BenchmarkDeps, 'fetchSerp' | 'crawlSite' | 'now'> {
   /** Google Suggest phrases for a query; failures must resolve to an empty list. */
+  /** Optional local-model entity recogniser (Ollama). Absent or failing means the heuristic recogniser alone. */
+  extractEntities?: (texts: string[]) => Promise<string[]>;
   fetchSuggestions?: (keyword: string, signal?: AbortSignal) => Promise<string[]>;
 }
 
@@ -15,6 +17,8 @@ export interface ReferenceInput {
   maxCompetitors?: number;
   pagesPerCompetitor?: number;
   concurrency?: number;
+  /** `lexical` (default) keeps focus-term entities only; `heuristic` adds local name recognition; `ollama` also asks a local model. */
+  entityMode?: EntityMode;
   signal?: AbortSignal;
   onProgress?: (progress: ReferenceProgress) => void;
 }

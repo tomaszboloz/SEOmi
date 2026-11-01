@@ -1,6 +1,7 @@
 import { pickCompetitors, type SerpHit } from '@/services/siteFocusBenchmark';
 import { benchmarkQueries, DEFAULT_COMPETITORS, DEFAULT_CONCURRENCY, DEFAULT_PAGES, DEFAULT_QUERIES } from '@/services/siteFocusBenchmark/benchmark';
 import { buildTaxonomy, type CompetitorPages } from '@/services/topicalAuthority';
+import { pageTexts } from '@/services/topicalAuthority/taxonomyGroups';
 import { coreKeysOf, gatedSiteFocus } from '@/services/topicalAuthority/context';
 import type { FocusPage } from '@/services/siteFocus';
 import type { ReferenceDeps, ReferenceInput, ReferenceOutcome, ReferenceSerpObservation } from './types';
@@ -67,9 +68,13 @@ export const runReference = async (deps: ReferenceDeps, input: ReferenceRunInput
   if (!competitors.length) return { status: 'unavailable', reason: 'no-pages' };
   input.onProgress?.({ phase: 'build', done: 0, total: 1 });
   const model = report.model;
+  const mode = input.entityMode ?? 'lexical';
+  const texts = competitors.flatMap((item) => item.pages.flatMap(pageTexts));
+  const extra = mode === 'ollama' && deps.extractEntities ? await deps.extractEntities(texts).catch(() => [] as string[]) : [];
   const taxonomy = buildTaxonomy({
     coreLabel: report.coreTopic.label, coreKeys: coreKeysOf(report),
     language: model.language, competitors, suggestions: [...suggestions].slice(0, MAX_SUGGESTIONS), paa: [...paa].slice(0, MAX_SUGGESTIONS), source: [...sources].sort().join(', '), now: now(),
+    ...(mode === 'lexical' ? {} : { entities: { heuristic: true, extra } }),
   });
   input.onProgress?.({ phase: 'build', done: 1, total: 1 });
   return taxonomy ? { status: 'ok', taxonomy, competitors, serp, attempted: candidates.map((candidate) => candidate.domain) } : { status: 'unavailable', reason: 'no-taxonomy' };

@@ -7558,7 +7558,8 @@
         "entities": "entities",
         "questions": "user questions (PAA)",
         "gain": "information gain"
-      }
+      },
+      "linkFlags": "Internal links by placement: {{menu}} menu, {{sidebarFooter}} sidebar/footer, {{content}} in content, {{unknown}} without placement data. Menu and sidebar/footer links are not counted as content links."
     },
     "warning": {
       "empty-authority": "Empty authority: the site touches {{tcr}}% of the topics but their average depth is only {{depth}}/100. Deepen existing pages with hard data and entities before publishing more.",
@@ -7604,6 +7605,17 @@
         "apply": "Add {{count}} reference pillars to the topical map",
         "done": "Added {{count}} pillars to the topical map.",
         "failed": "Could not update the topical map: {{error}}"
+      },
+      "entities": {
+        "label": "Entity recognition",
+        "lexical": "Focus terms only (default)",
+        "heuristic": "Local name detection",
+        "ollama": "Local name detection + Ollama model",
+        "model": "Ollama model"
+      },
+      "kg": {
+        "button": "Link pillars to Wikidata (public lookup)",
+        "summary": "{{linked}} pillars linked to Wikidata items, {{review}} to review (first search hit, not an exact label match)."
       }
     },
     "coverage": {
