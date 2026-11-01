@@ -5,6 +5,7 @@ import { normalizeUrl } from '@/services/siteFocus/pageType';
 import { buildTermStats, phraseKey, tfidfVector } from '@/services/siteFocus/terms';
 import { pageVectorFrom } from '@/services/semanticSource/similarity';
 import type { EmbeddingSet } from '@/services/semanticSource/types';
+import { topicModelOf } from '@/services/topicModel';
 
 export type Vector = Map<string, number>;
 
@@ -99,8 +100,7 @@ const withEmbedding = (set: EmbeddingSet | undefined, url: string): { embedding?
   return embedding ? { embedding } : {};
 };
 
-export const coreKeysOf = (report: SiteFocusReport): Set<string> =>
-  new Set(Object.entries(report.model.termCluster).filter(([, id]) => id === report.model.coreClusterId).map(([key]) => key));
+export const coreKeysOf = (report: SiteFocusReport): Set<string> => new Set(topicModelOf(report).coreKeys);
 
 /** Analysed pages of a crawl joined with their Site Focus scores, vectors and heading keys. */
 export const buildContext = (pages: FocusPage[], startUrl: string, report: SiteFocusReport, embeddings?: EmbeddingSet): AuthorityContext => {
