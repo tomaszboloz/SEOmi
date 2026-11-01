@@ -37,7 +37,8 @@ it('lets keyboard users select pages through the accessible table', async () => 
     fireEvent.click(tableButton);
 
     await waitFor(() => expect(screen.getAllByText('Coffee grinding').length).toBeGreaterThan(0));
-    expect(screen.getByRole('table')).toBeTruthy();
+    // The map table and the merged SPRS panel are both tables now; the map table lists the page paths.
+    expect(screen.getAllByRole('table').some((table) => table.textContent?.includes('/grinding'))).toBe(true);
   });
 
 it('shows semantic extraction provenance for rendered DOM and body fallback pages', () => {
