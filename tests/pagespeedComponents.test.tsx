@@ -16,12 +16,11 @@ vi.mock('react-i18next', async (importOriginal) => {
   };
 });
 
-vi.mock('@/stores/projectStore', () => ({
-  useProjectStore: vi.fn((selector) => {
-    const state = { activeProjectId: 'proj1', projects: [{ id: 'proj1', rootUrl: 'https://example.com' }] };
-    return selector(state);
-  }),
-}));
+vi.mock('@/stores/projectStore', () => {
+  const state = { activeProjectId: 'proj1', projects: [{ id: 'proj1', rootUrl: 'https://example.com' }] };
+  // getState is read at import time by stores that this workspace reaches through the export chain.
+  return { useProjectStore: Object.assign(vi.fn((selector) => selector(state)), { getState: () => state }) };
+});
 
 vi.mock('@/stores/settingsStore', () => ({
   useSettingsStore: vi.fn((selector) => selector({ googleMetricsApiKey: 'fake-key' })),
