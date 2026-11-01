@@ -1,3 +1,9 @@
+# SEOmi 0.8.5 — release notes
+
+## Fixed
+
+- LLM budget tests no longer depend on the current month: `withinProjectBudget` calls in `llmEconomyBudget.test.ts` now pass the fixture date. They failed on main on 1 November because spend is recorded per calendar month.
+
 # SEOmi 0.8.4 — release notes
 
 ## Fixed
