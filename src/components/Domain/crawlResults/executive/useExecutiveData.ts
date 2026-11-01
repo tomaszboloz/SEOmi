@@ -28,7 +28,7 @@ export interface ExecutiveData { runId: string; hss: HssReport; actions: Executi
  * the same pure builders the module tabs use (no recrawl, no history writes, no CMS calls) and derives
  * HSS and the action feed from them. Memoised per run/pages/project, so re-rendering is idempotent.
  */
-export const useExecutiveData = (pages: CrawledPageSummary[], startUrl: string, run: CrawlRunRecord | null | undefined, projectId: string | null | undefined): ExecutiveData => {
+export const useExecutiveData = (pages: CrawledPageSummary[], startUrl: string, run: CrawlRunRecord | null | undefined, projectId: string | null | undefined, revision = 0): ExecutiveData => {
   const runId = run?.id ?? 'unsaved';
   return useMemo(() => {
     const now = run?.completedAt;
@@ -36,14 +36,16 @@ export const useExecutiveData = (pages: CrawledPageSummary[], startUrl: string, 
     const tas = sfs ? attempt(() => buildAuthorityReport(pages, startUrl, sfs, { taxonomy: readTaxonomy(projectId), now: sfs.generatedAt })) : null;
     const trust = pages.length ? attempt(() => buildTrustReport(pages, sfs ?? undefined, { ...(now ? { now } : {}), scoringProfile: readScoringProfile(projectId) })) : null;
     const aio = pages.length ? attempt(() => buildAioReport(pages, { crawlRunId: runId, ...(now ? { now } : {}) })) : null;
-    const sprs = pages.length ? attempt(() => { const input = buildSprsInput(buildSemanticMap(pages, startUrl)); return computeSprs(input.nodes, input.edges); }) : null;
+    const graph = pages.length ? attempt(() => buildSemanticMap(pages, startUrl)) : null;
+    const sprs = graph ? attempt(() => { const input = buildSprsInput(graph); return computeSprs(input.nodes, input.edges); }) : null;
+    const urlByNode = new Map((graph?.nodes ?? []).map((node) => [node.id, node.page.url]));
     const hss = computeHss(hssInputsFromReports({ runId, sfs, tas, trust, aio, sprs, igosScores: latestIgosScores(projectId), sijaScores: latestSijaScores(projectId) }), runId);
     const candidates = removalCandidates(sfs ?? undefined);
     const snapshot = projectId && candidates.length ? attempt(() => ensureUrlTelemetry(projectId, pages.map((page) => page.url))) : null;
     const guard = guardRemovals(candidates, snapshot, REMOVE_TRS_BELOW);
     const bus = runRecommendationBus(busInputFromReports(sfs ?? undefined, tas ?? undefined, guard));
     const links = attempt(() => findInternalLinkOpportunities(excludeQuarantinedPages(pages, bus.quarantine)))?.opportunities ?? [];
-    const actions = buildActionFeed({ projectId: projectId ?? '', runId, hss, sfs, tas, trust, linkOpportunities: links, guard });
+    const actions = buildActionFeed({ projectId: projectId ?? '', runId, hss, sfs, tas, trust, linkOpportunities: links, guard, aio, sprs, urlByNode });
     return { runId, hss, actions, sfs };
-  }, [pages, startUrl, run?.completedAt, runId, projectId]);
+  }, [pages, startUrl, run?.completedAt, runId, projectId, revision]);
 };

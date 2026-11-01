@@ -60,3 +60,23 @@ describe('Executive tab passes the Site Focus report to cards (#124)', () => {
     expect(screen.getByText('Executive dashboard')).toBeTruthy();
   });
 });
+
+describe('Executive dashboard refresh and related views (#73)', () => {
+  it('recalculates idempotently and opens related screens', async () => {
+    const { CrawlExecutiveTab } = await import('@/components/Domain/crawlResults/executive/CrawlExecutiveTab');
+    const { RELATED_TABS } = await import('@/components/Domain/crawlResults/executive/ExecutiveRelatedViews');
+    const { createCrawlResultFixture } = await import('./fixtures/crawl');
+    const result = createCrawlResultFixture();
+    const onOpen = vi.fn();
+    render(<CrawlExecutiveTab pages={result.pages} startUrl={result.start_url} projectId="p1" onOpenTab={onOpen} />);
+    const hero = () => screen.getAllByRole('progressbar').map((bar) => bar.getAttribute('aria-valuenow')).join();
+    const before = hero();
+    fireEvent.click(screen.getByRole('button', { name: 'Recalculate from saved data' }));
+    expect(hero()).toBe(before);
+    const nav = screen.getByRole('navigation', { name: 'Related views' });
+    const buttons = nav.querySelectorAll('button');
+    expect(buttons).toHaveLength(RELATED_TABS.length);
+    fireEvent.click(buttons[1]);
+    expect(onOpen).toHaveBeenCalledWith(RELATED_TABS[1]);
+  });
+});

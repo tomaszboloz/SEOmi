@@ -8233,6 +8233,8 @@
     "workflow": "Ablauf: Diagnose → Priorität wählen → Modulbelege → What-If → Brief / Kopieren / Export. Nichts wird in ein CMS veröffentlicht.",
     "run": "Crawl: {{date}}",
     "runUnsaved": "Crawl: noch nicht gespeichert",
+    "refresh": "Aus gespeicherten Daten neu berechnen",
+    "related": { "title": "Verwandte Ansichten" },
     "hss": {
       "title": "Holistic Semantic Score (HSS)",
       "valueAria": "HSS {{value}}",
@@ -8299,6 +8301,7 @@
       "hint": "Sortiert nach HSS-Delta pro geschätzter Stunde. Deltas stammen nur aus den Simulationen der Module selbst; ohne sie ist das Delta nicht verfügbar. Kein Versprechen für Traffic, Zitate oder ROI.",
       "empty": "Die Modulberichte dieses Crawls ergaben keine Maßnahmen.",
       "internalLink": "Internen Link hinzufügen: {{from}} → {{to}}",
+      "module": { "fix-leak": "Link-Abfluss auf {{url}} beheben", "add-inlinks": "Eingehende Links zu {{url}} ergänzen", "rewrite-weak-passages": "Schwache Passagen auf {{url}} überarbeiten" },
       "delta": "HSS Δ {{value}}",
       "deltaUnavailable": "HSS Δ nicht verfügbar (kein deklariertes Modell)",
       "moduleDelta": "{{module}} Δ {{value}}",

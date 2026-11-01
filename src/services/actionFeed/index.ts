@@ -4,8 +4,11 @@ import type { InternalLinkOpportunity } from '@/services/internalLinkOpportuniti
 import type { RemovalGuard } from '@/services/recommendationBus/guard';
 import type { SiteFocusReport } from '@/services/siteFocus';
 import type { TopicalAuthorityReport } from '@/services/topicalAuthority';
+import type { AioReport } from '@/services/aioReadiness';
+import type { SprsReport } from '@/services/semanticGraph/sprs';
 import { arbitrateActions } from './arbitrate';
 import { dedupeActions } from './identity';
+import { aioActions, sprsActions } from './moduleSources';
 import { hssDeltaFor, rankActions } from './rank';
 import { linkOpportunityActions, sfsActions, tasActions, trustActions, type ActionScope } from './sources';
 import type { ExecutiveAction } from './types';
@@ -17,6 +20,10 @@ export interface ActionFeedInput extends ActionScope {
   trust?: TrustReport | null;
   linkOpportunities?: readonly InternalLinkOpportunity[];
   guard?: Partial<RemovalGuard>;
+  aio?: AioReport | null;
+  sprs?: SprsReport | null;
+  /** Semantic graph node id to page URL, needed to point SPRS actions at a page. */
+  urlByNode?: ReadonlyMap<string, string>;
 }
 
 /**
@@ -30,6 +37,8 @@ export const buildActionFeed = (input: ActionFeedInput): ExecutiveAction[] => {
     ...tasActions(scope, input.tas),
     ...trustActions(scope, input.trust),
     ...linkOpportunityActions(scope, input.linkOpportunities ?? []),
+    ...sprsActions(scope, input.sprs, input.urlByNode ?? new Map()),
+    ...aioActions(scope, input.aio),
   ]);
   const arbitrated = arbitrateActions(drafted, input.guard);
   return rankActions(arbitrated.map((action) => ({ ...action, hssDelta: hssDeltaFor(action, input.hss) })));
@@ -37,6 +46,7 @@ export const buildActionFeed = (input: ActionFeedInput): ExecutiveAction[] => {
 
 export { actionId, dedupeActions } from './identity';
 export { arbitrateActions } from './arbitrate';
+export { aioActions, MODULE_ACTION_LIMIT, sprsActions } from './moduleSources';
 export { actionRatio, hssDeltaFor, rankActions } from './rank';
 export type { ActionConflict, ActionConflictKind, ActionDrillTab, ActionEffort, ActionEvidence, ActionSource, ExecutiveAction, ModuleDelta } from './types';
 export { ACTION_DECISIONS, actionSubject, currentDecisions, decisionHistory, DECISION_HISTORY_LIMIT, readDecisionLog, recordDecision, type ActionDecision, type ActionDecisionKind } from './decisions';

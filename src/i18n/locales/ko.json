@@ -8233,6 +8233,8 @@
     "workflow": "흐름: 진단 → 우선순위 선택 → 모듈 근거 → What-If → 브리프 / 복사 / 내보내기. CMS에 게시하지 않습니다.",
     "run": "크롤: {{date}}",
     "runUnsaved": "크롤: 아직 저장되지 않음",
+    "refresh": "저장된 데이터로 다시 계산",
+    "related": { "title": "관련 보기" },
     "hss": {
       "title": "Holistic Semantic Score(HSS)",
       "valueAria": "HSS {{value}}",
@@ -8299,6 +8301,7 @@
       "hint": "예상 1시간당 HSS 변화량 순으로 정렬합니다. 변화량은 각 모듈 자체 시뮬레이션에서만 가져오며, 없으면 사용 불가로 표시합니다. 트래픽, 인용, ROI를 약속하지 않습니다.",
       "empty": "이 크롤의 모듈 보고서에서 생성된 작업이 없습니다.",
       "internalLink": "내부 링크 추가: {{from}} → {{to}}",
+      "module": { "fix-leak": "{{url}}의 링크 누수 수정", "add-inlinks": "{{url}}에 들어오는 링크 추가", "rewrite-weak-passages": "{{url}}의 약한 문단 다시 쓰기" },
       "delta": "HSS Δ {{value}}",
       "deltaUnavailable": "HSS Δ 사용 불가(선언된 모델 없음)",
       "moduleDelta": "{{module}} Δ {{value}}",

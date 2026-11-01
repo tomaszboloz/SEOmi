@@ -18,6 +18,7 @@ export const actionTitle = (t: TFunction, action: ExecutiveAction): string => {
   if (action.source === 'sfs' && action.type !== 'internal-link') return codeTitle(t, 'recommendation', code, params);
   if (action.source === 'tas') return t(`authority.rec.${code}`, { ...params, defaultValue: code });
   if (action.source === 'eetv') return t(`trust.findings.code.${code}`, { ...params, defaultValue: code });
+  if (action.source === 'sprs' || action.source === 'aior') return t(`executive.actions.module.${code}`, { url: action.urls[0] ?? '' });
   return t('executive.actions.internalLink', { from: action.urls[0] ?? '', to: action.urls[1] ?? '' });
 };
 

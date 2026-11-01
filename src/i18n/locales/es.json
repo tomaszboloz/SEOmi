@@ -8233,6 +8233,8 @@
     "workflow": "Flujo: diagnóstico → elegir prioridad → evidencia del módulo → What-If → brief / copiar / exportar. No se publica nada en un CMS.",
     "run": "Rastreo: {{date}}",
     "runUnsaved": "Rastreo: aún no guardado",
+    "refresh": "Recalcular con los datos guardados",
+    "related": { "title": "Vistas relacionadas" },
     "hss": {
       "title": "Holistic Semantic Score (HSS)",
       "valueAria": "HSS {{value}}",
@@ -8299,6 +8301,7 @@
       "hint": "Ordenado por delta de HSS por hora estimada. Los deltas proceden solo de las simulaciones de los propios módulos; sin ellas el delta no está disponible. No promete tráfico, citas ni ROI.",
       "empty": "Los informes de módulos de este rastreo no generaron acciones.",
       "internalLink": "Añadir un enlace interno: {{from}} → {{to}}",
+      "module": { "fix-leak": "Corregir la fuga de enlaces en {{url}}", "add-inlinks": "Añadir enlaces entrantes a {{url}}", "rewrite-weak-passages": "Reescribir los pasajes débiles de {{url}}" },
       "delta": "Δ HSS {{value}}",
       "deltaUnavailable": "Δ HSS no disponible (sin modelo declarado)",
       "moduleDelta": "Δ {{module}} {{value}}",

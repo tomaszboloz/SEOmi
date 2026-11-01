@@ -1,8 +1,8 @@
 import type { HssModule } from '@/services/hss';
 
-export type ActionSource = 'sfs' | 'tas' | 'eetv' | 'links';
+export type ActionSource = 'sfs' | 'tas' | 'eetv' | 'links' | 'sprs' | 'aior';
 /** Existing workspace screen the action drills down to; the dashboard only navigates, it never recomputes. */
-export type ActionDrillTab = 'focus' | 'authority' | 'trust' | 'visualisations';
+export type ActionDrillTab = 'focus' | 'authority' | 'trust' | 'visualisations' | 'aio';
 
 export interface ActionEvidence {
   source: ActionSource;
