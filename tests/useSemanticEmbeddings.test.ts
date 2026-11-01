@@ -39,8 +39,8 @@ describe('useSemanticEmbeddings', () => {
     await waitFor(() => expect(result.current).toEqual({ set: undefined, status: 'fallback', failure: 'offline' }));
     spy.mockResolvedValue({ status: 'fallback', error: null });
     rerender({ list: [...pages] });
-    await waitFor(() => expect(result.current.failure).toBeNull());
-    expect(result.current.status).toBe('fallback');
+    // failure is also null while loading, so wait for the settled state, not for null alone.
+    await waitFor(() => expect(result.current).toEqual({ set: undefined, status: 'fallback', failure: null }));
   });
 
   it('maps an off result to off', async () => {
