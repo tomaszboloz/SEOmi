@@ -43,7 +43,7 @@ export const LinksWorkspace = ({ projectId, pages, run }: { projectId: string | 
   const bus = useMemo(() => runRecommendationBus(busInputFromReports(sfs, tas, guard)), [sfs, tas, guard]);
   const linkPages = useMemo(() => excludeQuarantinedPages(pages, bus.quarantine), [pages, bus]);
   const rules = useMemo(() => rulesFromQuarantine(bus.quarantine), [bus]);
-  const topicModel = useMemo(() => (sfs && !sfs.unavailable ? topicModelOf(sfs) : undefined), [sfs]);
+  const topicModel = useMemo(() => (sfs && !sfs.unavailable && sfs.model ? topicModelOf(sfs) : undefined), [sfs]);
   const semanticGraph = useMemo(() => (pages.length ? attempt(() => buildSemanticMap(pages, startUrl, { topicModel })) : undefined), [pages, startUrl, topicModel]);
   const embeddings = useSprsEmbeddings(projectId, pages);
   const sprs = useMemo(() => (semanticGraph ? attempt(() => buildSprsReport(semanticGraph, embeddings)) : undefined), [semanticGraph, embeddings]);

@@ -22,6 +22,6 @@ it('sends newly verified task deltas to the alert policy and survives a failing 
   render(<OptimizationTaskTracker projectId="p" pages={[page({ url: A, final_url: A, http_status: 200 })]} scoreFor={() => 55} crawlStartedAt="2026-10-26T10:00:00Z" />);
   fireEvent.click(screen.getByRole('button', { name: tr('markImplemented') }));
   fireEvent.click(screen.getByRole('button', { name: tr('verify') }));
-  await Promise.resolve();
+  await vi.waitFor(() => expect(monitor).toHaveBeenCalled());
   expect(monitor).toHaveBeenCalledWith('p', [expect.objectContaining({ module: 'sfs', url: A, delta: -5, status: 'failed' })], expect.any(String));
 });
