@@ -14,3 +14,14 @@ Status: Accepted (owner delegation 2026-11-01). Issues #63 #64 #65 #66 #87 #88 #
 
 ## Re-calibration
 Thresholds and weights live in code constants (`ENTAILMENT_THRESHOLDS`, AIO profile). Change the constant and the fixture table in the matching test together.
+
+## Pre-publish benchmark (#94 GEM-94-09)
+Reproduce: `npm run bench:prepublish` (optional `PREPUBLISH_BENCH_PROVIDER=ollama`). Local-hash provider, this dev machine, 2026-11-01 (a measurement, not an SLA):
+
+| Pages | Cold ms | Warm median ms | Warm p95 ms |
+| ---: | ---: | ---: | ---: |
+| 50 | 92 | 26 | 35 |
+| 200 | 130 | 58 | 176 |
+| 500 | 243 | 138 | 265 |
+
+All under the 2 s target. Defaults stay: similarity .85, TRS >= 70, donor window .60-.85.
