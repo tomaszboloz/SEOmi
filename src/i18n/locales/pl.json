@@ -5742,7 +5742,9 @@
           "off-topic-below-quota": "Zbyt mało akapitów w temacie.",
           "local-lexical-embeddings": "Podobieństwo liczą lokalne wektory leksykalne, nie model semantyczny; strefy są przybliżone.",
           "heuristic-entities": "Encje pochodzą z fraz pisanych wielką literą i faktów podmiot-orzeczenie-dopełnienie, a nie z wytrenowanego modelu encji.",
-          "semantic-provider-unavailable": "Semantyczny dostawca embeddingów projektu był niedostępny; użyto lokalnych wektorów leksykalnych."
+          "semantic-provider-unavailable": "Semantyczny dostawca embeddingów projektu był niedostępny; użyto lokalnych wektorów leksykalnych.",
+          "ollama-entities": "Encje rozszerzył lokalny model Ollama, oprócz heurystyki wielkich liter.",
+          "ollama-entities-unavailable": "Model encji Ollama był niedostępny; użyto tylko heurystyki wielkich liter."
         },
         "intent": {
           "definitional": "Definicja",
@@ -8770,7 +8772,9 @@
       "off-topic-below-quota": "Zbyt mało akapitów w temacie.",
       "local-lexical-embeddings": "Podobieństwo liczą lokalne wektory leksykalne, nie model semantyczny; strefy są przybliżone.",
       "heuristic-entities": "Encje pochodzą z fraz pisanych wielką literą i faktów podmiot-orzeczenie-dopełnienie, a nie z wytrenowanego modelu encji.",
-      "semantic-provider-unavailable": "Semantyczny dostawca embeddingów projektu był niedostępny; użyto lokalnych wektorów leksykalnych."
+      "semantic-provider-unavailable": "Semantyczny dostawca embeddingów projektu był niedostępny; użyto lokalnych wektorów leksykalnych.",
+      "ollama-entities": "Encje rozszerzył lokalny model Ollama, oprócz heurystyki wielkich liter.",
+      "ollama-entities-unavailable": "Model encji Ollama był niedostępny; użyto tylko heurystyki wielkich liter."
     },
     "rec": {
       "rewrite-echo": "Akapit na offsecie {{offset}} powtarza fragment konkurencji: przepisz go własnymi słowami.",

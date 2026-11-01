@@ -10,7 +10,7 @@ export const ENTITY_PROFILE = { minSpanStems: 2, maxSpanStems: 4, maxEntities: 8
 /** Two to four capitalised words in a row, e.g. `World Health Organization`, `Type 2 Diabetes`. */
 const PROPER_SPAN = /(?:\p{Lu}[\p{L}\p{N}-]*|\d+)(?:\s+(?:\p{Lu}[\p{L}\p{N}-]*|\d+)){1,3}/gu;
 
-const spanKey = (value: string): string | null => {
+export const spanKey = (value: string): string | null => {
   const stems = contentStems(value);
   return stems.length >= ENTITY_PROFILE.minSpanStems && stems.length <= ENTITY_PROFILE.maxSpanStems ? stems.join(' ') : null;
 };

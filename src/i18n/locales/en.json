@@ -5742,7 +5742,9 @@
           "off-topic-below-quota": "Too few on-topic paragraphs.",
           "local-lexical-embeddings": "Similarity uses local lexical vectors, not a semantic model; zones are approximate.",
           "heuristic-entities": "Entities come from capitalised phrases and subject-predicate-object facts, not from a trained entity model.",
-          "semantic-provider-unavailable": "The project's semantic embedding provider was unavailable; local lexical vectors were used instead."
+          "semantic-provider-unavailable": "The project's semantic embedding provider was unavailable; local lexical vectors were used instead.",
+          "ollama-entities": "Entities were extended by the local Ollama model on top of the capitalised-phrase heuristic.",
+          "ollama-entities-unavailable": "The Ollama entity model was unavailable; only the capitalised-phrase heuristic was used."
         },
         "intent": {
           "definitional": "Definition",
@@ -8770,7 +8772,9 @@
       "off-topic-below-quota": "Too few on-topic paragraphs.",
       "local-lexical-embeddings": "Similarity uses local lexical vectors, not a semantic model; zones are approximate.",
       "heuristic-entities": "Entities come from capitalised phrases and subject-predicate-object facts, not from a trained entity model.",
-      "semantic-provider-unavailable": "The project's semantic embedding provider was unavailable; local lexical vectors were used instead."
+      "semantic-provider-unavailable": "The project's semantic embedding provider was unavailable; local lexical vectors were used instead.",
+      "ollama-entities": "Entities were extended by the local Ollama model on top of the capitalised-phrase heuristic.",
+      "ollama-entities-unavailable": "The Ollama entity model was unavailable; only the capitalised-phrase heuristic was used."
     },
     "rec": {
       "rewrite-echo": "The paragraph at offset {{offset}} repeats a competitor passage: rewrite it in your own words.",

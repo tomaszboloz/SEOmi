@@ -5742,7 +5742,9 @@
           "off-topic-below-quota": "Troppo pochi paragrafi in tema.",
           "local-lexical-embeddings": "La similarità usa vettori lessicali locali, non un modello semantico; le zone sono approssimative.",
           "heuristic-entities": "Le entità derivano da frasi con maiuscole e da fatti soggetto-predicato-oggetto, non da un modello di entità addestrato.",
-          "semantic-provider-unavailable": "Il provider semantico di embedding del progetto non era disponibile; sono stati usati vettori lessicali locali."
+          "semantic-provider-unavailable": "Il provider semantico di embedding del progetto non era disponibile; sono stati usati vettori lessicali locali.",
+          "ollama-entities": "Le entità sono state estese dal modello Ollama locale oltre all'euristica delle maiuscole.",
+          "ollama-entities-unavailable": "Il modello di entità Ollama non era disponibile; è stata usata solo l'euristica delle maiuscole."
         },
         "intent": {
           "definitional": "Definizione",
@@ -8770,7 +8772,9 @@
       "off-topic-below-quota": "Troppo pochi paragrafi in tema.",
       "local-lexical-embeddings": "La similarità usa vettori lessicali locali, non un modello semantico; le zone sono approssimative.",
       "heuristic-entities": "Le entità derivano da frasi con maiuscole e da fatti soggetto-predicato-oggetto, non da un modello di entità addestrato.",
-      "semantic-provider-unavailable": "Il provider semantico di embedding del progetto non era disponibile; sono stati usati vettori lessicali locali."
+      "semantic-provider-unavailable": "Il provider semantico di embedding del progetto non era disponibile; sono stati usati vettori lessicali locali.",
+      "ollama-entities": "Le entità sono state estese dal modello Ollama locale oltre all'euristica delle maiuscole.",
+      "ollama-entities-unavailable": "Il modello di entità Ollama non era disponibile; è stata usata solo l'euristica delle maiuscole."
     },
     "rec": {
       "rewrite-echo": "Il paragrafo all'offset {{offset}} ripete un passaggio concorrente: riscrivilo con parole tue.",

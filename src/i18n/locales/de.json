@@ -5742,7 +5742,9 @@
           "off-topic-below-quota": "Zu wenige themenrelevante Absätze.",
           "local-lexical-embeddings": "Die Ähnlichkeit nutzt lokale lexikalische Vektoren, kein semantisches Modell; die Zonen sind Näherungen.",
           "heuristic-entities": "Entitäten stammen aus großgeschriebenen Phrasen und Subjekt-Prädikat-Objekt-Fakten, nicht aus einem trainierten Entitätsmodell.",
-          "semantic-provider-unavailable": "Der semantische Embedding-Anbieter des Projekts war nicht verfügbar; stattdessen wurden lokale lexikalische Vektoren verwendet."
+          "semantic-provider-unavailable": "Der semantische Embedding-Anbieter des Projekts war nicht verfügbar; stattdessen wurden lokale lexikalische Vektoren verwendet.",
+          "ollama-entities": "Entitäten wurden zusätzlich zur Großschreibungs-Heuristik vom lokalen Ollama-Modell erweitert.",
+          "ollama-entities-unavailable": "Das Ollama-Entitätsmodell war nicht verfügbar; nur die Großschreibungs-Heuristik wurde verwendet."
         },
         "intent": {
           "definitional": "Definition",
@@ -8770,7 +8772,9 @@
       "off-topic-below-quota": "Zu wenige themenrelevante Absätze.",
       "local-lexical-embeddings": "Die Ähnlichkeit nutzt lokale lexikalische Vektoren, kein semantisches Modell; die Zonen sind Näherungen.",
       "heuristic-entities": "Entitäten stammen aus großgeschriebenen Phrasen und Subjekt-Prädikat-Objekt-Fakten, nicht aus einem trainierten Entitätsmodell.",
-      "semantic-provider-unavailable": "Der semantische Embedding-Anbieter des Projekts war nicht verfügbar; stattdessen wurden lokale lexikalische Vektoren verwendet."
+      "semantic-provider-unavailable": "Der semantische Embedding-Anbieter des Projekts war nicht verfügbar; stattdessen wurden lokale lexikalische Vektoren verwendet.",
+      "ollama-entities": "Entitäten wurden zusätzlich zur Großschreibungs-Heuristik vom lokalen Ollama-Modell erweitert.",
+      "ollama-entities-unavailable": "Das Ollama-Entitätsmodell war nicht verfügbar; nur die Großschreibungs-Heuristik wurde verwendet."
     },
     "rec": {
       "rewrite-echo": "Der Absatz bei Offset {{offset}} wiederholt eine Konkurrenzpassage: in eigenen Worten umschreiben.",

@@ -5742,7 +5742,9 @@
           "off-topic-below-quota": "주제에 맞는 문단이 너무 적습니다.",
           "local-lexical-embeddings": "유사도는 의미 모델이 아닌 로컬 어휘 벡터로 계산되므로 영역은 근사치입니다.",
           "heuristic-entities": "엔터티는 대문자 구문과 주어-서술어-목적어 사실에서 추출하며, 학습된 엔터티 모델이 아닙니다.",
-          "semantic-provider-unavailable": "프로젝트의 의미 임베딩 제공자를 사용할 수 없어 로컬 어휘 벡터를 사용했습니다."
+          "semantic-provider-unavailable": "프로젝트의 의미 임베딩 제공자를 사용할 수 없어 로컬 어휘 벡터를 사용했습니다.",
+          "ollama-entities": "대문자 구문 휴리스틱에 더해 로컬 Ollama 모델로 엔터티를 확장했습니다.",
+          "ollama-entities-unavailable": "Ollama 엔터티 모델을 사용할 수 없어 대문자 구문 휴리스틱만 사용했습니다."
         },
         "intent": {
           "definitional": "정의",
@@ -8770,7 +8772,9 @@
       "off-topic-below-quota": "주제에 맞는 문단이 너무 적습니다.",
       "local-lexical-embeddings": "유사도는 의미 모델이 아닌 로컬 어휘 벡터로 계산되므로 영역은 근사치입니다.",
       "heuristic-entities": "엔터티는 대문자 구문과 주어-서술어-목적어 사실에서 추출하며, 학습된 엔터티 모델이 아닙니다.",
-      "semantic-provider-unavailable": "프로젝트의 의미 임베딩 제공자를 사용할 수 없어 로컬 어휘 벡터를 사용했습니다."
+      "semantic-provider-unavailable": "프로젝트의 의미 임베딩 제공자를 사용할 수 없어 로컬 어휘 벡터를 사용했습니다.",
+      "ollama-entities": "대문자 구문 휴리스틱에 더해 로컬 Ollama 모델로 엔터티를 확장했습니다.",
+      "ollama-entities-unavailable": "Ollama 엔터티 모델을 사용할 수 없어 대문자 구문 휴리스틱만 사용했습니다."
     },
     "rec": {
       "rewrite-echo": "오프셋 {{offset}}의 문단이 경쟁 구절을 반복합니다. 자신의 말로 다시 쓰세요.",

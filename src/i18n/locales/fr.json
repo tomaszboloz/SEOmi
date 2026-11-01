@@ -5742,7 +5742,9 @@
           "off-topic-below-quota": "Trop peu de paragraphes sur le sujet.",
           "local-lexical-embeddings": "La similarité utilise des vecteurs lexicaux locaux, pas un modèle sémantique ; les zones sont approximatives.",
           "heuristic-entities": "Les entités proviennent d'expressions en majuscules et de faits sujet-prédicat-objet, pas d'un modèle d'entités entraîné.",
-          "semantic-provider-unavailable": "Le fournisseur sémantique d'embeddings du projet était indisponible ; des vecteurs lexicaux locaux ont été utilisés."
+          "semantic-provider-unavailable": "Le fournisseur sémantique d'embeddings du projet était indisponible ; des vecteurs lexicaux locaux ont été utilisés.",
+          "ollama-entities": "Les entités ont été complétées par le modèle Ollama local en plus de l'heuristique des majuscules.",
+          "ollama-entities-unavailable": "Le modèle d'entités Ollama était indisponible ; seule l'heuristique des majuscules a été utilisée."
         },
         "intent": {
           "definitional": "Définition",
@@ -8770,7 +8772,9 @@
       "off-topic-below-quota": "Trop peu de paragraphes sur le sujet.",
       "local-lexical-embeddings": "La similarité utilise des vecteurs lexicaux locaux, pas un modèle sémantique ; les zones sont approximatives.",
       "heuristic-entities": "Les entités proviennent d'expressions en majuscules et de faits sujet-prédicat-objet, pas d'un modèle d'entités entraîné.",
-      "semantic-provider-unavailable": "Le fournisseur sémantique d'embeddings du projet était indisponible ; des vecteurs lexicaux locaux ont été utilisés."
+      "semantic-provider-unavailable": "Le fournisseur sémantique d'embeddings du projet était indisponible ; des vecteurs lexicaux locaux ont été utilisés.",
+      "ollama-entities": "Les entités ont été complétées par le modèle Ollama local en plus de l'heuristique des majuscules.",
+      "ollama-entities-unavailable": "Le modèle d'entités Ollama était indisponible ; seule l'heuristique des majuscules a été utilisée."
     },
     "rec": {
       "rewrite-echo": "Le paragraphe au décalage {{offset}} répète un passage concurrent : réécrivez-le avec vos mots.",

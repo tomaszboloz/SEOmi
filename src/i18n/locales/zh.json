@@ -5742,7 +5742,9 @@
           "off-topic-below-quota": "切题段落太少。",
           "local-lexical-embeddings": "相似度使用本地词汇向量而非语义模型计算，区域为近似值。",
           "heuristic-entities": "实体来自首字母大写的短语和主谓宾事实，而不是训练好的实体模型。",
-          "semantic-provider-unavailable": "项目的语义嵌入提供方不可用，已改用本地词汇向量。"
+          "semantic-provider-unavailable": "项目的语义嵌入提供方不可用，已改用本地词汇向量。",
+          "ollama-entities": "除大写短语启发式外，实体还由本地 Ollama 模型扩展。",
+          "ollama-entities-unavailable": "Ollama 实体模型不可用，仅使用了大写短语启发式。"
         },
         "intent": {
           "definitional": "定义",
@@ -8770,7 +8772,9 @@
       "off-topic-below-quota": "切题段落太少。",
       "local-lexical-embeddings": "相似度使用本地词汇向量而非语义模型计算，区域为近似值。",
       "heuristic-entities": "实体来自首字母大写的短语和主谓宾事实，而不是训练好的实体模型。",
-      "semantic-provider-unavailable": "项目的语义嵌入提供方不可用，已改用本地词汇向量。"
+      "semantic-provider-unavailable": "项目的语义嵌入提供方不可用，已改用本地词汇向量。",
+      "ollama-entities": "除大写短语启发式外，实体还由本地 Ollama 模型扩展。",
+      "ollama-entities-unavailable": "Ollama 实体模型不可用，仅使用了大写短语启发式。"
     },
     "rec": {
       "rewrite-echo": "偏移量 {{offset}} 处的段落重复了竞品内容：请用自己的话改写。",

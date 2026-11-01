@@ -5742,7 +5742,9 @@
           "off-topic-below-quota": "Poucos parágrafos dentro do tema.",
           "local-lexical-embeddings": "A similaridade usa vetores léxicos locais, não um modelo semântico; as zonas são aproximadas.",
           "heuristic-entities": "As entidades vêm de frases com maiúscula e de factos sujeito-predicado-objeto, não de um modelo de entidades treinado.",
-          "semantic-provider-unavailable": "O fornecedor semântico de embeddings do projeto estava indisponível; foram usados vetores lexicais locais."
+          "semantic-provider-unavailable": "O fornecedor semântico de embeddings do projeto estava indisponível; foram usados vetores lexicais locais.",
+          "ollama-entities": "As entidades foram ampliadas pelo modelo Ollama local, além da heurística de maiúsculas.",
+          "ollama-entities-unavailable": "O modelo de entidades do Ollama estava indisponível; só a heurística de maiúsculas foi usada."
         },
         "intent": {
           "definitional": "Definição",
@@ -8770,7 +8772,9 @@
       "off-topic-below-quota": "Poucos parágrafos dentro do tema.",
       "local-lexical-embeddings": "A similaridade usa vetores léxicos locais, não um modelo semântico; as zonas são aproximadas.",
       "heuristic-entities": "As entidades vêm de frases com maiúscula e de factos sujeito-predicado-objeto, não de um modelo de entidades treinado.",
-      "semantic-provider-unavailable": "O fornecedor semântico de embeddings do projeto estava indisponível; foram usados vetores lexicais locais."
+      "semantic-provider-unavailable": "O fornecedor semântico de embeddings do projeto estava indisponível; foram usados vetores lexicais locais.",
+      "ollama-entities": "As entidades foram ampliadas pelo modelo Ollama local, além da heurística de maiúsculas.",
+      "ollama-entities-unavailable": "O modelo de entidades do Ollama estava indisponível; só a heurística de maiúsculas foi usada."
     },
     "rec": {
       "rewrite-echo": "O parágrafo no deslocamento {{offset}} repete um trecho concorrente: reescreva com suas palavras.",
