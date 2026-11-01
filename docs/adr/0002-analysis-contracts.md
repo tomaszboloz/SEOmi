@@ -1,6 +1,6 @@
 # ADR 0002: Shared analysis contracts (parse once, provenance, DAG, cache, migrations)
 
-Status: Proposed. Issue #85. Contracts only; no new database is adopted.
+Status: Accepted. Issue #85. Contracts only; no new database is adopted.
 
 ## Context
 Modules keep separate histories and versions. A shared data contract is missing. Owners today: `CrawledPageSummary`, `CrawledLink`, `RagSection`, native `crawl_storage`, `projectStore`, `topicalDocument`.
@@ -24,7 +24,7 @@ Adapter keeps provider, query, market, rank, K, time and availability. The curre
 Each node declares inputs, outputs and dependency status. HSS never mixes different `crawlRunId`. Final TAS and IGOS do not form a loop (see ADR 0001). Partial, error and cancelled states propagate.
 
 ## Storage and migrations
-Choose storage by artifact size. localStorage cannot hold a 10k+ URL crawl or an embedding matrix. Migrations keep old projects, topics, facts, briefs and histories. Writes are atomic with backup, restore, quota handling and corruption detection. Decision GEM-85-D01 (storage and schema migration) stays open for the owner.
+Choose storage by artifact size. localStorage cannot hold a 10k+ URL crawl or an embedding matrix. Migrations keep old projects, topics, facts, briefs and histories. Writes are atomic with backup, restore, quota handling and corruption detection. Decision GEM-85-D01 (accepted default, owner delegation 2026-11-01): keep browser storage through `readVersioned`/`writeVersioned` (schemaVersion, step migrations, rollback, quarantine) for small records and histories; large artifacts (10k+ URL crawl, embedding matrix) stay in native `crawl_storage` on disk. No new database is adopted. Revisit only when a measured artifact exceeds the storage quota.
 
 ## Safety
 HTML and prompt content is data and cannot steer tools. Payloads are bounded, secrets redacted, exports carry source provenance without sensitive data.
