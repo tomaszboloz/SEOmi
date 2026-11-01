@@ -6,7 +6,7 @@ import { DEFAULT_SIMILARITY_THRESHOLDS, safeCosine, similarityThreshold, describ
  * D02 calibration on a pinned fixture (#86). The local-hash provider is deterministic and offline, so its
  * threshold can be verified in CI. Neural and hybrid thresholds are documented defaults for
  * nomic-embed-text style models; they need a real Ollama and are checked by the manual protocol in
- * docs/SEMANTIC_SOURCES.md, never silently reused for another model.
+ * .github/SEMANTIC_SOURCES.md, never silently reused for another model.
  */
 const RELATED: Array<[string, string]> = [
   ['blood glucose meter for diabetes', 'glucose meter for diabetes testing'],

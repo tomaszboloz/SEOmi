@@ -1,7 +1,7 @@
 /**
  * Small seed of English MeSH descriptor names for the YMYL fact gate (#137).
  * MeSH is produced by the U.S. National Library of Medicine and is in the public domain
- * (https://www.nlm.nih.gov/databases/download/terms_and_conditions.html). See docs/YMYL_TERM_DATA.md.
+ * (https://www.nlm.nih.gov/databases/download/terms_and_conditions.html). See .github/YMYL_TERM_DATA.md.
  * No ICD-10 data is bundled: its licence is restricted, users import their own list.
  */
 export const MESH_SEED_SOURCE = 'MeSH (NLM, public domain) seed';
