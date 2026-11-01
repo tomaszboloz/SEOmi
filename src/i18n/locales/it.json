@@ -8272,7 +8272,9 @@
     "reason": {
       "not-provided": "Nessun valore fornito.",
       "not-run": "Il modulo non è stato eseguito per questa scansione.",
-      "domain-aggregation-undefined": "Modulo per pagina: un punteggio di sito non è ancora definito, quindi viene escluso invece di essere mediato.",
+      "insufficient-pages": "Troppe poche pagine o frasi misurate per un punteggio di sito (ne servono almeno 3).",
+      "sprs-unavailable": "Non è stato possibile valutare il grafo dei link.",
+      "sprs-not-converged": "Il calcolo del flusso dei link non è convergito.",
       "sfs-no-scored-pages": "Nessuna pagina è stata valutata.",
       "tas-no-reference-map": "Crea la mappa tematica di riferimento per misurare il TAS.",
       "eetv-no-signals": "Nessun segnale di fiducia osservato.",

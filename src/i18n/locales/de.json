@@ -8272,7 +8272,9 @@
     "reason": {
       "not-provided": "Kein Wert angegeben.",
       "not-run": "Das Modul lief für diesen Crawl nicht.",
-      "domain-aggregation-undefined": "Seitenbezogenes Modul: Ein Website-Wert ist noch nicht definiert, daher wird es ausgelassen statt gemittelt.",
+      "insufficient-pages": "Zu wenige gemessene Seiten oder Phrasen für einen Website-Wert (mindestens 3 nötig).",
+      "sprs-unavailable": "Der Link-Graph konnte nicht bewertet werden.",
+      "sprs-not-converged": "Die Linkfluss-Berechnung ist nicht konvergiert.",
       "sfs-no-scored-pages": "Keine Seite konnte bewertet werden.",
       "tas-no-reference-map": "Erstellen Sie die Referenz-Themenkarte, um TAS zu messen.",
       "eetv-no-signals": "Keine Vertrauenssignale beobachtet.",

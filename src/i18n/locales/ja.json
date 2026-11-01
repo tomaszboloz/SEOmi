@@ -8272,7 +8272,9 @@
     "reason": {
       "not-provided": "値が指定されていません。",
       "not-run": "このクロールではモジュールが実行されていません。",
-      "domain-aggregation-undefined": "ページ単位のモジュールです。サイト単位のスコアが未定義のため、平均せずに除外しています。",
+      "insufficient-pages": "サイト単位のスコアには測定済みのページまたはフレーズが少なすぎます（3件以上必要）。",
+      "sprs-unavailable": "リンクグラフを評価できませんでした。",
+      "sprs-not-converged": "リンクフローの計算が収束しませんでした。",
       "sfs-no-scored-pages": "評価できたページがありません。",
       "tas-no-reference-map": "TAS を測定するには参照トピックマップを作成してください。",
       "eetv-no-signals": "信頼シグナルが見つかりませんでした。",

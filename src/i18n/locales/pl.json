@@ -8272,7 +8272,9 @@
     "reason": {
       "not-provided": "Nie podano wartości.",
       "not-run": "Moduł nie był uruchomiony dla tego crawla.",
-      "domain-aggregation-undefined": "Moduł per strona: wynik dla całej witryny nie jest jeszcze zdefiniowany, więc jest pominięty, a nie uśredniany.",
+      "insufficient-pages": "Za mało zmierzonych stron lub fraz, by policzyć wynik witryny (potrzeba co najmniej 3).",
+      "sprs-unavailable": "Nie udało się ocenić grafu linków.",
+      "sprs-not-converged": "Obliczenie przepływu linków nie zbiegło się.",
       "sfs-no-scored-pages": "Żadna strona nie została oceniona.",
       "tas-no-reference-map": "Zbuduj referencyjną mapę tematów, aby zmierzyć TAS.",
       "eetv-no-signals": "Nie zaobserwowano sygnałów zaufania.",

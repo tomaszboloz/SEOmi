@@ -8272,7 +8272,9 @@
     "reason": {
       "not-provided": "未提供数值。",
       "not-run": "此次抓取未运行该模块。",
-      "domain-aggregation-undefined": "按页面计算的模块：尚未定义站点级分数，因此予以排除而不是取平均。",
+      "insufficient-pages": "已测量的页面或短语太少，无法计算站点分数（至少需要 3 个）。",
+      "sprs-unavailable": "无法评估链接图。",
+      "sprs-not-converged": "链接流计算未收敛。",
       "sfs-no-scored-pages": "没有可评分的页面。",
       "tas-no-reference-map": "请先构建参考主题图以测量 TAS。",
       "eetv-no-signals": "未发现信任信号。",

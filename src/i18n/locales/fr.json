@@ -8272,7 +8272,9 @@
     "reason": {
       "not-provided": "Aucune valeur fournie.",
       "not-run": "Le module n’a pas été exécuté pour ce crawl.",
-      "domain-aggregation-undefined": "Module par page : aucun score de site n’est encore défini, il est donc exclu au lieu d’être moyenné.",
+      "insufficient-pages": "Trop peu de pages ou d’expressions mesurées pour un score de site (3 au minimum).",
+      "sprs-unavailable": "Le graphe de liens n’a pas pu être évalué.",
+      "sprs-not-converged": "Le calcul du flux de liens n’a pas convergé.",
       "sfs-no-scored-pages": "Aucune page n’a pu être notée.",
       "tas-no-reference-map": "Générez la carte thématique de référence pour mesurer le TAS.",
       "eetv-no-signals": "Aucun signal de confiance observé.",

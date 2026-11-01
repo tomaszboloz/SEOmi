@@ -8272,7 +8272,9 @@
     "reason": {
       "not-provided": "값이 제공되지 않았습니다.",
       "not-run": "이 크롤에서는 모듈이 실행되지 않았습니다.",
-      "domain-aggregation-undefined": "페이지 단위 모듈입니다. 사이트 단위 점수가 아직 정의되지 않아 평균하지 않고 제외합니다.",
+      "insufficient-pages": "사이트 단위 점수를 내기에는 측정된 페이지나 구문이 너무 적습니다(최소 3개 필요).",
+      "sprs-unavailable": "링크 그래프를 평가하지 못했습니다.",
+      "sprs-not-converged": "링크 흐름 계산이 수렴하지 않았습니다.",
       "sfs-no-scored-pages": "점수를 매길 수 있는 페이지가 없습니다.",
       "tas-no-reference-map": "TAS를 측정하려면 참조 주제 맵을 만드세요.",
       "eetv-no-signals": "신뢰 신호가 관찰되지 않았습니다.",

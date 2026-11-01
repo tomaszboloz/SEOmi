@@ -8272,7 +8272,9 @@
     "reason": {
       "not-provided": "No value was provided.",
       "not-run": "The module did not run for this crawl.",
-      "domain-aggregation-undefined": "Per-page module: a site-level score is not defined yet, so it is left out instead of averaged.",
+      "insufficient-pages": "Too few measured pages or phrases for a site-level score (at least 3 needed).",
+      "sprs-unavailable": "The link graph could not be scored.",
+      "sprs-not-converged": "The link-flow calculation did not converge.",
       "sfs-no-scored-pages": "No page could be scored.",
       "tas-no-reference-map": "Build the reference topic map to measure TAS.",
       "eetv-no-signals": "No trust signals were observed.",
