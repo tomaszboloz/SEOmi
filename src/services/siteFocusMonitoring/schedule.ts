@@ -1,5 +1,4 @@
-import { readMonitoringSettings, type MonitoringDelivery } from '@/services/monitoringAlerts';
-import { sendProjectNotification } from '@/services/desktopNotifications/delivery';
+import { deliverMonitoringAlert, type MonitoringDelivery } from '@/services/monitoringAlerts';
 import type { FocusPage } from '@/services/siteFocus';
 import type { CrawlRunRecord } from '@/types';
 import { readJsonStorage, writeJsonStorage } from '@/services/storage';
@@ -8,7 +7,7 @@ import type { Clock } from './budget';
 import { detectChangedPages } from './changes';
 import { focusScheduleKey, validFocusProject } from './keys';
 import { buildProjectRunReport } from './projectReport';
-import { buildWeeklyReport, weeklyNotification } from './weekly';
+import { buildWeeklyReport, weeklyAlert } from './weekly';
 
 export const INCREMENTAL_INTERVAL_MS = 24 * 3_600_000;
 export const FULL_INTERVAL_MS = 7 * 24 * 3_600_000;
@@ -31,12 +30,6 @@ export const dueFocusJob = (state: FocusScheduleState, now: number): FocusJob | 
 export interface ScheduledFocusDeps { clock?: Clock; delivery?: MonitoringDelivery; sitemapUrls?: string[] }
 export interface ScheduledFocusResult { job: FocusJob | null; skipped?: 'no-base' | 'no-changes' | 'invalid' | 'error' }
 
-const deliverWeekly = async (projectId: string, weekly: ReturnType<typeof buildWeeklyReport>): Promise<boolean> => {
-  const settings = readMonitoringSettings(projectId);
-  if (!settings.enabled || !settings.types.focus) return false;
-  return sendProjectNotification(projectId, () => weeklyNotification(weekly)).catch(() => false);
-};
-
 /** Runs the due job after a completed crawl: weekly full analysis + report, or the daily incremental pass. */
 const runDueJob = async (
   projectId: string, latest: CrawlRunRecord, base: CrawlRunRecord | undefined, deps: ScheduledFocusDeps = {},
@@ -50,7 +43,7 @@ const runDueJob = async (
     const report = buildProjectRunReport(latest, projectId, new Date(clock()).toISOString());
     const record = recordFullAnalysis(projectId, report, latest.id, { clock, delivery: deps.delivery });
     save({ lastFullAt: clock(), lastIncrementalAt: clock() });
-    if (record.saved) await deliverWeekly(projectId, buildWeeklyReport(report, record.previous?.score));
+    if (record.saved) await deliverMonitoringAlert(projectId, weeklyAlert(buildWeeklyReport(report, record.previous?.score), `focus-weekly-${latest.id}`, new Date(clock()).toISOString()), deps.delivery);
     return { job };
   }
   if (job === 'incremental') {
