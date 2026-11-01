@@ -2540,6 +2540,8 @@
     "profileSecretsNotice": "Wartości nie są odczytywane z powrotem do interfejsu po zapisie; aby je zmienić, zapisz nowy profil.",
     "interruptedTitle": "Można wznowić poprzedni crawl",
     "interruptedDescription": "{{url}} · limit {{limit}} URL · częściowy lub przerwany wynik z {{date}}. Wznowienie rozpocznie nowy crawl z zapisaną konfiguracją{{completed}}{{frontier}}.",
+    "interruptedCompleted": ", {{count}} URL ukończonych",
+    "interruptedFrontier": ", {{count}} w kolejce",
     "resumeCrawl": "Wznów crawl",
     "discard": "Odrzuć",
     "progressStatus": "Skanowanie wewnętrznych linków domeny i sprawdzanie kodów statusu…",

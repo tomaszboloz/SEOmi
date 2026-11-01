@@ -1,3 +1,9 @@
+# SEOmi 0.8.4 — release notes
+
+## Fixed
+
+- Resume-crawl banner no longer glues the completed and queued URL counts into one number (for example "18115" for 18 done and 115 queued). Each count now has its own label in all 12 locales.
+
 # SEOmi 0.8.3 — release notes
 
 ## Added

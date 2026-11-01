@@ -2540,6 +2540,8 @@
     "profileSecretsNotice": "Values are not read back into the interface after saving; save a new profile to change them.",
     "interruptedTitle": "前回のクロールを再開できます",
     "interruptedDescription": "{{url}} · {{limit}} URLまで · {{date}}の途中または中断された結果。再開すると保存済み設定で新しいクロールを開始します{{completed}}{{frontier}}。",
+    "interruptedCompleted": "、完了 {{count}} URL",
+    "interruptedFrontier": "、待機中 {{count}}",
     "resumeCrawl": "クロールを再開",
     "discard": "破棄",
     "progressStatus": "Crawling internal domain links and checking status codes…",

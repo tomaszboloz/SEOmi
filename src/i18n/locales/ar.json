@@ -2540,6 +2540,8 @@
     "profileSecretsNotice": "Values are not read back into the interface after saving; save a new profile to change them.",
     "interruptedTitle": "يمكن استئناف الزحف السابق",
     "interruptedDescription": "{{url}} · حد {{limit}} من عناوين URL · نتيجة جزئية أو متوقفة من {{date}}. سيبدأ الاستئناف زحفًا جديدًا بالإعدادات المحفوظة{{completed}}{{frontier}}.",
+    "interruptedCompleted": "، اكتمل {{count}} عنوان URL",
+    "interruptedFrontier": "، {{count}} في قائمة الانتظار",
     "resumeCrawl": "استئناف الزحف",
     "discard": "تجاهل",
     "progressStatus": "Crawling internal domain links and checking status codes…",

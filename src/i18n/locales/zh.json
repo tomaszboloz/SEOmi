@@ -2540,6 +2540,8 @@
     "profileSecretsNotice": "Values are not read back into the interface after saving; save a new profile to change them.",
     "interruptedTitle": "可以恢复上一次抓取",
     "interruptedDescription": "{{url}} · 限制 {{limit}} 个 URL · {{date}} 的部分或中断结果。恢复操作会使用已保存的配置开始新的抓取{{completed}}{{frontier}}。",
+    "interruptedCompleted": "，已完成 {{count}} 个 URL",
+    "interruptedFrontier": "，队列中 {{count}} 个",
     "resumeCrawl": "恢复抓取",
     "discard": "丢弃",
     "progressStatus": "Crawling internal domain links and checking status codes…",

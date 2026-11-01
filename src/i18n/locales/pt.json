@@ -2540,6 +2540,8 @@
     "profileSecretsNotice": "Values are not read back into the interface after saving; save a new profile to change them.",
     "interruptedTitle": "O rastreamento anterior pode ser retomado",
     "interruptedDescription": "{{url}} · limite de {{limit}} URLs · resultado parcial ou interrompido de {{date}}. Retomar inicia um novo rastreamento com a configuração salva{{completed}}{{frontier}}.",
+    "interruptedCompleted": ", {{count}} URLs concluídas",
+    "interruptedFrontier": ", {{count}} na fila",
     "resumeCrawl": "Retomar rastreamento",
     "discard": "Descartar",
     "progressStatus": "Crawling internal domain links and checking status codes…",

@@ -2540,6 +2540,8 @@
     "profileSecretsNotice": "Values are not read back into the interface after saving; save a new profile to change them.",
     "interruptedTitle": "È possibile riprendere il crawl precedente",
     "interruptedDescription": "{{url}} · limite di {{limit}} URL · risultato parziale o interrotto del {{date}}. La ripresa avvia un nuovo crawl con la configurazione salvata{{completed}}{{frontier}}.",
+    "interruptedCompleted": ", {{count}} URL completati",
+    "interruptedFrontier": ", {{count}} in coda",
     "resumeCrawl": "Riprendi crawl",
     "discard": "Scarta",
     "progressStatus": "Crawling internal domain links and checking status codes…",

@@ -2540,6 +2540,8 @@
     "profileSecretsNotice": "Values are not read back into the interface after saving; save a new profile to change them.",
     "interruptedTitle": "이전 크롤링을 재개할 수 있습니다",
     "interruptedDescription": "{{url}} · {{limit}}개 URL 제한 · {{date}}의 부분 또는 중단된 결과입니다. 재개하면 저장된 구성으로 새 크롤링을 시작합니다{{completed}}{{frontier}}.",
+    "interruptedCompleted": ", 완료 {{count}}개 URL",
+    "interruptedFrontier": ", 대기 {{count}}개",
     "resumeCrawl": "크롤링 재개",
     "discard": "삭제",
     "progressStatus": "Crawling internal domain links and checking status codes…",

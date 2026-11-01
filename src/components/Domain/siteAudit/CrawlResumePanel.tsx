@@ -20,12 +20,12 @@ return (<section
                   url: interruptedCrawl.url,
                   limit: interruptedCrawl.limit,
                   date: new Date(interruptedCrawl.startedAt).toLocaleString(appLocale()),
-                  completed:
-                    interruptedCrawl.completedUrls?.length?.toLocaleString(appLocale()) ||
-                    "",
-                  frontier:
-                    interruptedCrawl.frontierUrls?.length?.toLocaleString(appLocale()) ||
-                    "",
+                  completed: interruptedCrawl.completedUrls?.length
+                    ? t("siteAudit.interruptedCompleted", { count: interruptedCrawl.completedUrls.length.toLocaleString(appLocale()) })
+                    : "",
+                  frontier: interruptedCrawl.frontierUrls?.length
+                    ? t("siteAudit.interruptedFrontier", { count: interruptedCrawl.frontierUrls.length.toLocaleString(appLocale()) })
+                    : "",
                 })}
               </p>
               {interruptedCrawl.recoveredRunId && (
