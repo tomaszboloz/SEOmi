@@ -1,5 +1,6 @@
 mod execution;
 mod execution_filename;
+mod fingerprint;
 mod launch;
 mod lock;
 mod models;
