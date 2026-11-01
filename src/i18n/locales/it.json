@@ -8501,6 +8501,11 @@
         "product-cards": "Mostra prodotti o offerte: {{count}} pagine TOP su {{analysed}} mostrano schede prodotto o prezzo.",
         "cta": "Aggiungi una call to action chiara: {{count}} pagine TOP su {{analysed}} ne hanno una (ignoralo per pagine puramente informative)."
       }
+    },
+    "funnel": {
+      "title": "Transizioni del funnel tra pagine sottoposte a crawl",
+      "fromTo": "Da \\ a",
+      "summary": "{{classified}} pagine classificate, {{unclassified}} senza struttura misurata, {{skipped}} link interni saltati (destinazione non classificata)."
     }
   },
   "prePublishUi": {

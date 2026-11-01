@@ -8501,6 +8501,11 @@
         "product-cards": "Show products or offers: {{count}} of {{analysed}} TOP pages show product or price cards.",
         "cta": "Add a clear call to action: {{count}} of {{analysed}} TOP pages have one (skip this for purely informational pages)."
       }
+    },
+    "funnel": {
+      "title": "Funnel transitions between crawled pages",
+      "fromTo": "From \\ to",
+      "summary": "{{classified}} pages classified, {{unclassified}} without measured structure, {{skipped}} internal links skipped (unclassified target)."
     }
   },
   "prePublishUi": {

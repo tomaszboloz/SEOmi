@@ -8501,6 +8501,11 @@
         "product-cards": "商品やオファーを表示: 上位 {{analysed}} ページ中 {{count}} ページが商品・価格カードを表示しています。",
         "cta": "明確な行動喚起を追加してください: TOP ページ {{analysed}} 件中 {{count}} 件にあります（純粋な情報ページでは不要です）。"
       }
+    },
+    "funnel": {
+      "title": "クロール済みページ間のファネル遷移",
+      "fromTo": "From \\ to",
+      "summary": "分類済み {{classified}} ページ、構造未計測 {{unclassified}} ページ、スキップした内部リンク {{skipped}} 件（遷移先が未分類）。"
     }
   },
   "prePublishUi": {

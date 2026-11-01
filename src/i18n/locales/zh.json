@@ -8501,6 +8501,11 @@
         "product-cards": "展示产品或优惠：{{analysed}} 个排名靠前页面中有 {{count}} 个显示产品或价格卡片。",
         "cta": "添加明确的行动号召：{{analysed}} 个 TOP 页面中有 {{count}} 个包含（纯信息页面可忽略）。"
       }
+    },
+    "funnel": {
+      "title": "已抓取页面之间的漏斗转换",
+      "fromTo": "自 \\ 至",
+      "summary": "已分类 {{classified}} 个页面，{{unclassified}} 个无已测结构，跳过 {{skipped}} 条内部链接（目标未分类）。"
     }
   },
   "prePublishUi": {

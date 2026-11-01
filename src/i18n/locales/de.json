@@ -8501,6 +8501,11 @@
         "product-cards": "Zeige Produkte oder Angebote: {{count}} von {{analysed}} TOP-Seiten zeigen Produkt- oder Preiskarten.",
         "cta": "Fügen Sie einen klaren Call-to-Action hinzu: {{count}} von {{analysed}} TOP-Seiten haben einen (bei rein informativen Seiten überspringen)."
       }
+    },
+    "funnel": {
+      "title": "Funnel-Übergänge zwischen gecrawlten Seiten",
+      "fromTo": "Von \\ nach",
+      "summary": "{{classified}} Seiten klassifiziert, {{unclassified}} ohne gemessene Struktur, {{skipped}} interne Links übersprungen (Ziel nicht klassifiziert)."
     }
   },
   "prePublishUi": {

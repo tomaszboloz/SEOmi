@@ -8501,6 +8501,11 @@
         "product-cards": "Mostre produtos ou ofertas: {{count}} de {{analysed}} páginas do TOP mostram cartões de produto ou preço.",
         "cta": "Adicione um apelo à ação claro: {{count}} de {{analysed}} páginas TOP têm um (ignore em páginas puramente informativas)."
       }
+    },
+    "funnel": {
+      "title": "Transições de funil entre páginas rastreadas",
+      "fromTo": "De \\ para",
+      "summary": "{{classified}} páginas classificadas, {{unclassified}} sem estrutura medida, {{skipped}} links internos ignorados (destino não classificado)."
     }
   },
   "prePublishUi": {

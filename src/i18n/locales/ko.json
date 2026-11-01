@@ -8501,6 +8501,11 @@
         "product-cards": "제품이나 혜택 표시: 상위 {{analysed}}개 페이지 중 {{count}}개가 제품 또는 가격 카드를 보여 줍니다.",
         "cta": "명확한 행동 유도를 추가하세요: TOP 페이지 {{analysed}}개 중 {{count}}개에 있습니다(순수 정보 페이지는 제외)."
       }
+    },
+    "funnel": {
+      "title": "크롤된 페이지 간 퍼널 전환",
+      "fromTo": "출발 \\ 도착",
+      "summary": "분류된 페이지 {{classified}}개, 구조 미측정 {{unclassified}}개, 건너뛴 내부 링크 {{skipped}}개(대상 미분류)."
     }
   },
   "prePublishUi": {

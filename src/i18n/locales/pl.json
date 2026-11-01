@@ -8501,6 +8501,11 @@
         "product-cards": "Pokaż produkty lub oferty: karty produktów lub cen ma {{count}} z {{analysed}} stron z TOP.",
         "cta": "Dodaj wyraźne wezwanie do działania: ma je {{count}} z {{analysed}} stron TOP (pomiń dla stron czysto informacyjnych)."
       }
+    },
+    "funnel": {
+      "title": "Przejścia lejka między przeskanowanymi stronami",
+      "fromTo": "Z \\ do",
+      "summary": "Sklasyfikowano {{classified}} stron, {{unclassified}} bez zmierzonej struktury, pominięto {{skipped}} linków wewnętrznych (cel bez klasyfikacji)."
     }
   },
   "prePublishUi": {

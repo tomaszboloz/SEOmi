@@ -8501,6 +8501,11 @@
         "product-cards": "Montrez des produits ou offres : {{count}} pages du TOP sur {{analysed}} affichent des fiches produit ou prix.",
         "cta": "Ajoutez un appel à l'action clair : {{count}} pages TOP sur {{analysed}} en ont un (à ignorer pour les pages purement informatives)."
       }
+    },
+    "funnel": {
+      "title": "Transitions d'entonnoir entre pages explorées",
+      "fromTo": "De \\ vers",
+      "summary": "{{classified}} pages classées, {{unclassified}} sans structure mesurée, {{skipped}} liens internes ignorés (cible non classée)."
     }
   },
   "prePublishUi": {
