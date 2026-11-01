@@ -1,8 +1,7 @@
 use super::data::{flag, list, num};
-use super::link_graph::orphan_nodes;
 use crate::commands::pdf_report::audit_report::ctx::field;
 use serde_json::Value;
-use std::collections::{BTreeMap, HashMap, HashSet};
+use std::collections::BTreeMap;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Idx {
@@ -57,45 +56,7 @@ pub fn duplicate_groups(pages: &[Value], key: &str) -> Vec<(String, Vec<usize>)>
         .collect()
 }
 
-/// Pages no other crawled page links to (crawl seeds, depth 0, are never orphans). Same rule as the app
-/// (`link_graph`): page indexes are the nodes, internal links resolve to a page by its URL or final URL.
-pub fn orphans(pages: &[Value]) -> Vec<usize> {
-    let mut by_url: HashMap<String, Vec<usize>> = HashMap::new();
-    for (index, page) in pages.iter().enumerate() {
-        for url in [field(page, "url"), field(page, "final_url")]
-            .into_iter()
-            .flatten()
-        {
-            by_url.entry(url).or_default().push(index);
-        }
-    }
-    let ids: Vec<String> = (0..pages.len()).map(|index| index.to_string()).collect();
-    let edges: Vec<(&str, &str)> = pages
-        .iter()
-        .enumerate()
-        .flat_map(|(from, page)| {
-            list(page, "links")
-                .iter()
-                .filter(|link| flag(link, "is_internal"))
-                .filter_map(|link| field(link, "target_url").and_then(|url| by_url.get(&url)))
-                .flatten()
-                .map(|&to| (from, to))
-                .collect::<Vec<_>>()
-        })
-        .map(|(from, to)| (ids[from].as_str(), ids[to].as_str()))
-        .collect();
-    let roots: HashSet<&str> = (0..pages.len())
-        .filter(|&i| num(&pages[i], "depth").unwrap_or(0.0) <= 0.0)
-        .map(|i| ids[i].as_str())
-        .collect();
-    let nodes: Vec<&str> = ids.iter().map(String::as_str).collect();
-    let mut found: Vec<usize> = orphan_nodes(&nodes, edges, &roots)
-        .into_iter()
-        .map(|id| id.parse().unwrap_or_default())
-        .collect();
-    found.sort_unstable();
-    found
-}
+pub use super::link_graph::orphans;
 
 pub struct Metrics {
     pub counts: [usize; 3],
