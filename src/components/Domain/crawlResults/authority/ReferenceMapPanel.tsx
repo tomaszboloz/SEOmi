@@ -24,6 +24,9 @@ export interface ReferenceMapPanelProps {
 }
 
 /** Builds the market map from real SERP data; shows an honest empty state when no source is connected. */
+/** Example Ollama model name, a technical identifier rather than translatable copy. */
+const OLLAMA_MODEL_EXAMPLE = 'llama3.2';
+
 export const ReferenceMapPanel = ({ taxonomy, state, onBuild, onCancel, onClear, projectId, autoRefresh = false, onAutoRefresh, entities, onEntities, onLinkPillars }: ReferenceMapPanelProps) => {
   const { t, i18n } = useTranslation();
   const { running, progress, failure, error } = state;
@@ -56,7 +59,7 @@ export const ReferenceMapPanel = ({ taxonomy, state, onBuild, onCancel, onClear,
           {entities.mode === 'ollama' && (
             <label className="flex min-w-0 items-center gap-2">
               {t('authority.reference.entities.model')}
-              <input value={entities.model} disabled={running} onChange={(event) => onEntities({ ...entities, model: event.target.value })} placeholder="llama3.2" className="w-40 min-w-0 rounded border border-slate-700 bg-slate-950 px-2 py-1" />
+              <input value={entities.model} disabled={running} onChange={(event) => onEntities({ ...entities, model: event.target.value })} placeholder={OLLAMA_MODEL_EXAMPLE} className="w-40 min-w-0 rounded border border-slate-700 bg-slate-950 px-2 py-1" />
             </label>
           )}
         </div>
