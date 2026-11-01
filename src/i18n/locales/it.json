@@ -8401,6 +8401,10 @@
     "igosTopChange": {
       "title": "IGOS: insieme TOP cambiato",
       "body": "Le pagine TOP per \"{{phrase}}\" sono cambiate ({{added}} aggiunte, {{removed}} rimosse). L'IGOS non è confrontabile con l'esecuzione precedente."
+    },
+    "taskRegression": {
+      "title": "Un'ottimizzazione ha peggiorato un punteggio",
+      "body": "{{count}} attività verificate hanno abbassato il punteggio; la peggiore perde {{worst}} punti su {{url}}."
     }
   },
   "sprsUi": {

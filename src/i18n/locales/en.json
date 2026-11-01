@@ -8401,6 +8401,10 @@
     "igosTopChange": {
       "title": "IGOS: TOP set changed",
       "body": "The TOP pages for \"{{phrase}}\" changed ({{added}} added, {{removed}} removed). IGOS is not comparable with the previous run."
+    },
+    "taskRegression": {
+      "title": "Optimization made a score worse",
+      "body": "{{count}} verified task(s) lowered their score; the worst is {{worst}} points on {{url}}."
     }
   },
   "sprsUi": {

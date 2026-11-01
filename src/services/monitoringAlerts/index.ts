@@ -8,6 +8,8 @@ import type { SemanticRunComparisonReport } from '@/services/semanticRunComparis
 import { evaluateFocusAlert } from './focus';
 import { evaluateScoreDropAlert, type ScoreDropKind } from './scoreDrop';
 import { evaluateTopSetChangeAlert } from './topSetChange';
+import { evaluateTaskRegressionAlert } from './taskRegression';
+import type { MetricDelta } from '@/services/optimizationTasks/metricHistory';
 import type { AlertEvent } from '@/services/siteFocus';
 import type { MonitoringAlert } from './types';
 import { compareAioForMonitoring, previousComparableAioCrawl } from './aio';
@@ -20,6 +22,7 @@ export * from './evaluators';
 export * from './focus';
 export * from './scoreDrop';
 export * from './topSetChange';
+export * from './taskRegression';
 export * from './aio';
 export * from './aioCalibration';
 export * from './aioThresholdSweep';
@@ -47,6 +50,8 @@ export const monitorSemanticComparison = (projectId: string, report: SemanticRun
 export const monitorSiteFocus = (projectId: string, events: AlertEvent[], sourceId: string, delivery?: MonitoringDelivery) => deliverMonitoringAlert(projectId, evaluateFocusAlert(events, sourceId), delivery);
 export const monitorScoreDrop = (projectId: string, kind: ScoreDropKind, previous: { score: number | null } | undefined, next: { score: number | null }, runId: string, delivery?: MonitoringDelivery, phrase?: string) => deliverMonitoringAlert(projectId, evaluateScoreDropAlert(kind, previous, next, `${kind}-${runId}`, readMonitoringSettings(projectId), phrase), delivery);
 export const monitorTopSetChange = (projectId: string, previousUrls: string[], currentUrls: string[], runId: string, phrase: string, delivery?: MonitoringDelivery) => deliverMonitoringAlert(projectId, evaluateTopSetChangeAlert(previousUrls, currentUrls, `igos-top-${runId}`, phrase, readMonitoringSettings(projectId)), delivery);
+
+export const monitorTaskRegression = (projectId: string, rows: MetricDelta[], runId: string, delivery?: MonitoringDelivery) => deliverMonitoringAlert(projectId, evaluateTaskRegressionAlert(rows, `task-regression-${runId}`, readMonitoringSettings(projectId)), delivery);
 
 export const monitorAioCrawls = async (projectId: string, current: CrawlRunRecord, runs: CrawlRunRecord[], delivery?: MonitoringDelivery) => {
   const evaluation = compareAioForMonitoring(previousComparableAioCrawl(current, runs, projectId), current, readMonitoringSettings(projectId), projectId);

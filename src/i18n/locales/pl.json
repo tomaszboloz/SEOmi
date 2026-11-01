@@ -8401,6 +8401,10 @@
     "igosTopChange": {
       "title": "IGOS: zmienił się zestaw TOP",
       "body": "Zestaw stron TOP dla \"{{phrase}}\" zmienił się (dodano {{added}}, usunięto {{removed}}). IGOS nie jest porównywalny z poprzednim przebiegiem."
+    },
+    "taskRegression": {
+      "title": "Optymalizacja pogorszyła wynik",
+      "body": "{{count}} zweryfikowanych zadań obniżyło wynik; najgorsze to {{worst}} pkt na {{url}}."
     }
   },
   "sprsUi": {

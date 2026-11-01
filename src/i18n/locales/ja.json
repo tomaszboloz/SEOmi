@@ -8401,6 +8401,10 @@
     "igosTopChange": {
       "title": "IGOS：TOP セットが変更",
       "body": "「{{phrase}}」の TOP ページが変わりました（追加 {{added}}、削除 {{removed}}）。IGOS は前回の実行と比較できません。"
+    },
+    "taskRegression": {
+      "title": "最適化でスコアが低下",
+      "body": "検証済みタスク {{count}} 件でスコアが低下しました。最大は {{url}} の {{worst}} ポイントです。"
     }
   },
   "sprsUi": {

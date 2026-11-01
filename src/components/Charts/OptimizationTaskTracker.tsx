@@ -7,6 +7,7 @@ import type { OptimizationTask } from '@/services/optimizationTasks/types';
 import { verifyTasks } from '@/services/optimizationTasks/verify';
 import { editTask, filterTasks, type TaskFilter } from '@/services/optimizationTasks/edit';
 import { appendDeltas } from '@/services/optimizationTasks/metricHistory';
+import { monitorTaskRegression } from '@/services/monitoringAlerts';
 import { TaskFilterBar } from './TaskFilterBar';
 import { TaskMetaEditor } from './TaskMetaEditor';
 
@@ -53,7 +54,7 @@ export const OptimizationTaskTracker = ({ projectId, pages, scoreFor, crawlStart
   const save = (next: OptimizationTask[]) => { if (writeTasks(projectId, next)) setTasks(next); };
   const verify = () => {
     const next = verifyTasks(tasks, pages, scoreFor, new Date().toISOString(), crawlStartedAt);
-    if (writeTasks(projectId, next)) { appendDeltas(projectId, tasks, next); setTasks(next); }
+    if (writeTasks(projectId, next)) { const rows = appendDeltas(projectId, tasks, next); void monitorTaskRegression(projectId, rows, new Date().toISOString()).catch(() => undefined); setTasks(next); }
   };
   if (!tasks.length) return <p className="rounded-md border border-dashed border-slate-800 p-4 text-center text-xs text-slate-500">{t('executionCard.tasks.empty')}</p>;
   return <section aria-label={t('executionCard.tasks.aria')} className="rounded-xl border border-slate-800 bg-slate-900/45 p-4">

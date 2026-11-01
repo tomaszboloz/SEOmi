@@ -8401,6 +8401,10 @@
     "igosTopChange": {
       "title": "IGOS：TOP 集合已变化",
       "body": "“{{phrase}}”的 TOP 页面已变化（新增 {{added}}，移除 {{removed}}）。IGOS 与上次运行不可比较。"
+    },
+    "taskRegression": {
+      "title": "优化导致得分下降",
+      "body": "{{count}} 个已验证任务使得分下降；最严重的是 {{url}} 下降 {{worst}} 分。"
     }
   },
   "sprsUi": {

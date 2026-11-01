@@ -8401,6 +8401,10 @@
     "igosTopChange": {
       "title": "IGOS: TOP 집합 변경",
       "body": "\"{{phrase}}\"의 TOP 페이지가 변경되었습니다(추가 {{added}}, 제거 {{removed}}). IGOS는 이전 실행과 비교할 수 없습니다."
+    },
+    "taskRegression": {
+      "title": "최적화로 점수가 하락",
+      "body": "검증된 작업 {{count}}개가 점수를 낮췄습니다. 가장 큰 하락은 {{url}}의 {{worst}}점입니다."
     }
   },
   "sprsUi": {
