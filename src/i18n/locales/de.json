@@ -9011,6 +9011,11 @@
       "negated": "Verneinte Erwähnung; keine Empfehlung",
       "critical": "Kritische Wortwahl bei der Marke; keine Empfehlung",
       "quoted": "Zitierte oder zugeschriebene Meinung; keine eigene Empfehlung der Quelle"
+    },
+    "senses": {
+      "label": "Alias-Regeln (Homonyme)",
+      "hint": "Eine Regel pro Zeile: Alias | -Wörter eines anderen Sinns | +Wörter, die für den Markensinn nötig sind. Pro Projekt gespeichert, bei der nächsten Analyse genutzt.",
+      "error": "Regeln konnten nicht gespeichert werden (ungültig oder zu lang)."
     }
   },
   "experimentsUi": {

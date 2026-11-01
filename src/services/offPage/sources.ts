@@ -1,6 +1,7 @@
 import { getDomain } from 'tldts';
 import type { BacklinkProfileData } from '@/types';
 import type { Vector } from '@/services/embeddings/types';
+import type { AliasSense } from './aliasSense';
 
 export type BodyAvailability = 'ok' | 'unavailable' | 'too-large' | 'blocked';
 export interface SourceEvidence {
@@ -16,6 +17,8 @@ export interface SourceAnalysis {
   topic: Vector | null;
   coreEntity: string;
   aliases: string[];
+  /** User-supplied alias/homonym rules (#93); absent means plain whole-word matching. */
+  senses?: AliasSense[];
   embedding?: { provider: string; modelId: string };
 }
 export const SOURCE_LIMIT = 25;

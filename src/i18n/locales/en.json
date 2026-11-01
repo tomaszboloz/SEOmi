@@ -9011,6 +9011,11 @@
       "negated": "Negated mention; not a recommendation",
       "critical": "Critical wording near the brand; not a recommendation",
       "quoted": "Quoted or attributed opinion; not the source's own recommendation"
+    },
+    "senses": {
+      "label": "Alias rules (homonyms)",
+      "hint": "One rule per line: Alias | -words that mark another sense | +words required for the brand sense. Saved per project, used on the next analysis.",
+      "error": "Rules could not be saved (invalid or too long)."
     }
   },
   "experimentsUi": {

@@ -9011,6 +9011,11 @@
       "negated": "Wzmianka z przeczeniem; to nie rekomendacja",
       "critical": "Krytyczne słowa przy marce; to nie rekomendacja",
       "quoted": "Cytat lub cudza opinia; to nie rekomendacja samego źródła"
+    },
+    "senses": {
+      "label": "Reguły aliasów (homonimy)",
+      "hint": "Jedna reguła na linię: Alias | -słowa innego znaczenia | +słowa wymagane dla znaczenia marki. Zapis per projekt, użyte w kolejnej analizie.",
+      "error": "Nie udało się zapisać reguł (nieprawidłowe lub zbyt długie)."
     }
   },
   "experimentsUi": {

@@ -8,6 +8,7 @@ import type { SourceAnalysis, SourceEvidence } from '@/services/offPage/sources'
 import type { SourceEmbeddingSettings } from '@/services/offPage/sourceEmbeddings';
 import { loadEmbeddingSession } from '@/components/Keywords/embeddingClustering/useEmbeddingClustering';
 import { createOffPageHistoryRecord } from '@/services/offPage/historyRecord';
+import { loadAliasSenses } from '@/services/offPage/aliasSenseStore';
 import { saveOffPageHistory } from '@/services/offPage/history';
 import type { OffPageHistoryRecord } from '@/services/offPage/historySchema';
 
@@ -52,7 +53,7 @@ export const useOffPageSources = (profile: BacklinkProfileData) => {
       const analysis = await analyzeSources(profile, project.name, context.coreText,
         context.coreText ? context.focus!.coreTopic.label : '', settings, abort.signal, (sources) => {
           if (request === revision.current) setState({ ...idle, status: 'running', sources });
-        }, project.rootUrl);
+        }, project.rootUrl, loadAliasSenses(project.id));
       if (request === revision.current && !abort.signal.aborted && activeOwner.current === owner) {
         const record = createOffPageHistoryRecord(analysis, settings);
         const historySaved = saveOffPageHistory(project.id, record);

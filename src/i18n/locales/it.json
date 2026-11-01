@@ -9011,6 +9011,11 @@
       "negated": "Menzione negata; non è una raccomandazione",
       "critical": "Termini critici vicino al marchio; non è una raccomandazione",
       "quoted": "Opinione citata o attribuita; non è una raccomandazione della fonte"
+    },
+    "senses": {
+      "label": "Regole alias (omonimi)",
+      "hint": "Una regola per riga: Alias | -parole di un altro senso | +parole richieste per il senso di marca. Salvato per progetto, usato nella prossima analisi.",
+      "error": "Impossibile salvare le regole (non valide o troppo lunghe)."
     }
   },
   "experimentsUi": {
