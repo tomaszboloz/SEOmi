@@ -29,7 +29,10 @@ pub struct ReportEnvelope {
 impl ReportEnvelope {
     /// A value may travel only with a status that still vouches for it.
     pub fn is_consistent(&self) -> bool {
-        let keeps = matches!(self.availability.status.as_str(), "complete" | "partial" | "stale");
+        let keeps = matches!(
+            self.availability.status.as_str(),
+            "complete" | "partial" | "stale"
+        );
         keeps || self.value.is_none()
     }
 }
