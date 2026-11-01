@@ -7040,7 +7040,8 @@
       "unmatchedTopic": "没有页面与主题“{{topic}}”匹配,将改用自动识别的主题。",
       "gateSkipped": "已跳过 {{count}} 个页面（noindex/canonical）。",
       "gateInclude": "纳入这些页面",
-      "gateExclude": "重新排除"
+      "gateExclude": "重新排除",
+      "semantic": "语义相似度已启用：{{model}}。"
     },
     "skip": {
       "render-timeout": "JavaScript 渲染超时",
@@ -9234,5 +9235,34 @@
       "error": "查询失败"
     },
     "correctPlaceholder": "Q123 / none"
+  },
+  "semanticSource": {
+    "title": "语义相似度（可选）",
+    "hint": "使用本地 Ollama 嵌入模型，在 Site Focus 和 Topical Authority 中匹配同义词。默认关闭。关闭时报告使用 TF-IDF 并明确说明。不会为您安装或下载任何内容。",
+    "enable": "可用时使用嵌入",
+    "provider": "来源",
+    "providerOllama": "Ollama（神经网络）",
+    "providerHybrid": "混合（本地哈希 + Ollama）",
+    "url": "Ollama 地址（留空 = 本地默认）",
+    "model": "嵌入模型",
+    "timeout": "每批超时（毫秒）",
+    "maxEntries": "每次运行最多页面数",
+    "save": "保存",
+    "test": "测试 Ollama 连接",
+    "testing": "测试中...",
+    "saved": "设置已保存。",
+    "failed": "无法保存设置。",
+    "invalid": "请检查数值：超时 1000 至 300000 毫秒，页面 1 至 5000，模型不能为空。",
+    "testOk": "正常：{{model}}，{{dimensions}} 维。",
+    "testFail": "回退到 TF-IDF：{{reason}}。",
+    "reason": {
+      "offline": "无法连接 Ollama",
+      "timeout": "请求超时",
+      "cancelled": "已取消",
+      "rate-limited": "请求受限",
+      "model-missing": "模型未安装",
+      "invalid-response": "响应无效",
+      "failed": "未知错误"
+    }
   }
 }

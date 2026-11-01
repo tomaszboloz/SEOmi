@@ -7040,7 +7040,8 @@
       "unmatchedTopic": "No pages matched the topic \"{{topic}}\". The detected topic is used instead.",
       "gateSkipped": "Skipped {{count}} pages (noindex/canonical).",
       "gateInclude": "Include them",
-      "gateExclude": "Exclude them again"
+      "gateExclude": "Exclude them again",
+      "semantic": "Semantic similarity active: {{model}}."
     },
     "skip": {
       "render-timeout": "JavaScript rendering timed out",
@@ -9234,5 +9235,34 @@
       "error": "lookup failed"
     },
     "correctPlaceholder": "Q123 / none"
+  },
+  "semanticSource": {
+    "title": "Semantic similarity (optional)",
+    "hint": "Uses a local Ollama embedding model to match synonyms in Site Focus and Topical Authority. Off by default. Without it, reports use TF-IDF and say so. Nothing is installed or downloaded for you.",
+    "enable": "Use embeddings when available",
+    "provider": "Source",
+    "providerOllama": "Ollama (neural)",
+    "providerHybrid": "Hybrid (local hash + Ollama)",
+    "url": "Ollama address (empty = local default)",
+    "model": "Embedding model",
+    "timeout": "Timeout per batch (ms)",
+    "maxEntries": "Most pages embedded per run",
+    "save": "Save",
+    "test": "Test Ollama connection",
+    "testing": "Testing...",
+    "saved": "Settings saved.",
+    "failed": "Could not save settings.",
+    "invalid": "Check the values: timeout 1000 to 300000 ms, pages 1 to 5000, model not empty.",
+    "testOk": "Works: {{model}}, {{dimensions}} dimensions.",
+    "testFail": "Falling back to TF-IDF: {{reason}}.",
+    "reason": {
+      "offline": "Ollama is not reachable",
+      "timeout": "request timed out",
+      "cancelled": "cancelled",
+      "rate-limited": "rate limited",
+      "model-missing": "model not installed",
+      "invalid-response": "invalid response",
+      "failed": "unknown error"
+    }
   }
 }

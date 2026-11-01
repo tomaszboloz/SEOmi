@@ -7040,7 +7040,8 @@
       "unmatchedTopic": "Ninguna página coincidió con el tema \"{{topic}}\". Se usa el tema detectado.",
       "gateSkipped": "Se omitieron {{count}} páginas (noindex/canonical).",
       "gateInclude": "Incluirlas",
-      "gateExclude": "Excluirlas de nuevo"
+      "gateExclude": "Excluirlas de nuevo",
+      "semantic": "Similitud semántica activa: {{model}}."
     },
     "skip": {
       "render-timeout": "Se agotó el tiempo de renderizado de JavaScript",
@@ -9234,5 +9235,34 @@
       "error": "búsqueda fallida"
     },
     "correctPlaceholder": "Q123 / none"
+  },
+  "semanticSource": {
+    "title": "Similitud semántica (opcional)",
+    "hint": "Usa un modelo de embeddings local de Ollama para emparejar sinónimos en Site Focus y Topical Authority. Desactivado por defecto. Sin él, los informes usan TF-IDF y lo indican. No se instala ni descarga nada por usted.",
+    "enable": "Usar embeddings cuando estén disponibles",
+    "provider": "Fuente",
+    "providerOllama": "Ollama (neuronal)",
+    "providerHybrid": "Híbrido (hash local + Ollama)",
+    "url": "Dirección de Ollama (vacío = local por defecto)",
+    "model": "Modelo de embeddings",
+    "timeout": "Tiempo límite por lote (ms)",
+    "maxEntries": "Máx. páginas por ejecución",
+    "save": "Guardar",
+    "test": "Probar conexión con Ollama",
+    "testing": "Probando...",
+    "saved": "Ajustes guardados.",
+    "failed": "No se pudieron guardar los ajustes.",
+    "invalid": "Revise los valores: tiempo 1000 a 300000 ms, páginas 1 a 5000, modelo no vacío.",
+    "testOk": "Funciona: {{model}}, {{dimensions}} dimensiones.",
+    "testFail": "Se vuelve a TF-IDF: {{reason}}.",
+    "reason": {
+      "offline": "Ollama no está accesible",
+      "timeout": "tiempo agotado",
+      "cancelled": "cancelado",
+      "rate-limited": "límite de peticiones",
+      "model-missing": "modelo no instalado",
+      "invalid-response": "respuesta no válida",
+      "failed": "error desconocido"
+    }
   }
 }

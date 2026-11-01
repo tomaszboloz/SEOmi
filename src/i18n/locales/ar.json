@@ -7040,7 +7040,8 @@
       "unmatchedTopic": "لا توجد صفحات تطابق الموضوع \"{{topic}}\". يُستخدم الموضوع المرصود بدلًا منه.",
       "gateSkipped": "تم تخطي {{count}} صفحة (noindex/canonical).",
       "gateInclude": "تضمينها",
-      "gateExclude": "استبعادها مجددًا"
+      "gateExclude": "استبعادها مجددًا",
+      "semantic": "التشابه الدلالي مفعّل: {{model}}."
     },
     "skip": {
       "render-timeout": "انتهت مهلة عرض JavaScript",
@@ -9234,5 +9235,34 @@
       "error": "فشل البحث"
     },
     "correctPlaceholder": "Q123 / none"
+  },
+  "semanticSource": {
+    "title": "التشابه الدلالي (اختياري)",
+    "hint": "يستخدم نموذج تضمين Ollama محليًا لمطابقة المرادفات في Site Focus وTopical Authority. معطّل افتراضيًا. بدونه تستخدم التقارير TF-IDF وتذكر ذلك. لا يتم تثبيت أو تنزيل أي شيء نيابةً عنك.",
+    "enable": "استخدام التضمينات عند توفرها",
+    "provider": "المصدر",
+    "providerOllama": "Ollama (عصبي)",
+    "providerHybrid": "هجين (تجزئة محلية + Ollama)",
+    "url": "عنوان Ollama (فارغ = الافتراضي المحلي)",
+    "model": "نموذج التضمين",
+    "timeout": "مهلة الدفعة (مللي ثانية)",
+    "maxEntries": "أقصى عدد صفحات في كل تشغيل",
+    "save": "حفظ",
+    "test": "اختبار اتصال Ollama",
+    "testing": "جارٍ الاختبار...",
+    "saved": "تم حفظ الإعدادات.",
+    "failed": "تعذر حفظ الإعدادات.",
+    "invalid": "تحقق من القيم: المهلة 1000 إلى 300000 مللي ثانية، الصفحات 1 إلى 5000، واسم النموذج غير فارغ.",
+    "testOk": "يعمل: {{model}}، {{dimensions}} بعدًا.",
+    "testFail": "العودة إلى TF-IDF: {{reason}}.",
+    "reason": {
+      "offline": "تعذر الوصول إلى Ollama",
+      "timeout": "انتهت المهلة",
+      "cancelled": "أُلغي",
+      "rate-limited": "حد الطلبات",
+      "model-missing": "النموذج غير مثبّت",
+      "invalid-response": "استجابة غير صالحة",
+      "failed": "خطأ غير معروف"
+    }
   }
 }

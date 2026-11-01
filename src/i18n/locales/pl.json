@@ -7040,7 +7040,8 @@
       "unmatchedTopic": "Żadna strona nie pasuje do tematu „{{topic}}”. Zamiast niego użyto wykrytego tematu.",
       "gateSkipped": "Pominięto {{count}} stron (noindex/canonical).",
       "gateInclude": "Uwzględnij je",
-      "gateExclude": "Znów pomiń"
+      "gateExclude": "Znów pomiń",
+      "semantic": "Podobieństwo semantyczne aktywne: {{model}}."
     },
     "skip": {
       "render-timeout": "Renderowanie JavaScript przekroczyło limit czasu",
@@ -9234,5 +9235,34 @@
       "error": "błąd wyszukiwania"
     },
     "correctPlaceholder": "Q123 / none"
+  },
+  "semanticSource": {
+    "title": "Podobieństwo semantyczne (opcjonalne)",
+    "hint": "Używa lokalnego modelu embeddingów Ollama do dopasowania synonimów w Site Focus i Topical Authority. Domyślnie wyłączone. Bez tego raporty używają TF-IDF i mówią o tym wprost. Nic nie jest instalowane ani pobierane za Ciebie.",
+    "enable": "Używaj embeddingów, gdy są dostępne",
+    "provider": "Źródło",
+    "providerOllama": "Ollama (neuronowe)",
+    "providerHybrid": "Hybryda (lokalny hash + Ollama)",
+    "url": "Adres Ollamy (puste = domyślny lokalny)",
+    "model": "Model embeddingów",
+    "timeout": "Limit czasu na partię (ms)",
+    "maxEntries": "Maks. stron na przebieg",
+    "save": "Zapisz",
+    "test": "Testuj połączenie z Ollamą",
+    "testing": "Testowanie...",
+    "saved": "Zapisano ustawienia.",
+    "failed": "Nie udało się zapisać ustawień.",
+    "invalid": "Sprawdź wartości: limit czasu 1000 do 300000 ms, strony 1 do 5000, model niepusty.",
+    "testOk": "Działa: {{model}}, {{dimensions}} wymiarów.",
+    "testFail": "Wracam do TF-IDF: {{reason}}.",
+    "reason": {
+      "offline": "Ollama jest nieosiągalna",
+      "timeout": "przekroczono limit czasu",
+      "cancelled": "anulowano",
+      "rate-limited": "limit zapytań",
+      "model-missing": "model nie jest zainstalowany",
+      "invalid-response": "nieprawidłowa odpowiedź",
+      "failed": "nieznany błąd"
+    }
   }
 }

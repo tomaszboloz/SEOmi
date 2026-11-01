@@ -8,7 +8,6 @@ import type { ReportEnvelope } from './envelope';
 export interface PayloadLimits { maxChars: number; maxDepth: number; maxItems: number }
 export const DEFAULT_LIMITS: PayloadLimits = { maxChars: 2000, maxDepth: 6, maxItems: 200 };
 
-// eslint-disable-next-line no-control-regex
 const CONTROL = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/gu;
 
 export const cleanText = (text: string, maxChars: number): string => redactSecrets(text.replace(CONTROL, '')).slice(0, maxChars);

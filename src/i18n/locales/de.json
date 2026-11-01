@@ -7040,7 +7040,8 @@
       "unmatchedTopic": "Keine Seite passt zum Thema „{{topic}}“. Stattdessen wird das erkannte Thema verwendet.",
       "gateSkipped": "{{count}} Seiten übersprungen (noindex/canonical).",
       "gateInclude": "Einbeziehen",
-      "gateExclude": "Wieder ausschließen"
+      "gateExclude": "Wieder ausschließen",
+      "semantic": "Semantische Ähnlichkeit aktiv: {{model}}."
     },
     "skip": {
       "render-timeout": "JavaScript-Rendering hat das Zeitlimit überschritten",
@@ -9234,5 +9235,34 @@
       "error": "Abfrage fehlgeschlagen"
     },
     "correctPlaceholder": "Q123 / none"
+  },
+  "semanticSource": {
+    "title": "Semantische Ähnlichkeit (optional)",
+    "hint": "Nutzt ein lokales Ollama-Embedding-Modell, um Synonyme in Site Focus und Topical Authority zu erkennen. Standardmäßig aus. Ohne sie nutzen Berichte TF-IDF und sagen das offen. Nichts wird für Sie installiert oder heruntergeladen.",
+    "enable": "Embeddings nutzen, wenn verfügbar",
+    "provider": "Quelle",
+    "providerOllama": "Ollama (neuronal)",
+    "providerHybrid": "Hybrid (lokaler Hash + Ollama)",
+    "url": "Ollama-Adresse (leer = lokaler Standard)",
+    "model": "Embedding-Modell",
+    "timeout": "Zeitlimit pro Batch (ms)",
+    "maxEntries": "Max. Seiten pro Lauf",
+    "save": "Speichern",
+    "test": "Ollama-Verbindung testen",
+    "testing": "Teste...",
+    "saved": "Einstellungen gespeichert.",
+    "failed": "Einstellungen konnten nicht gespeichert werden.",
+    "invalid": "Werte prüfen: Zeitlimit 1000 bis 300000 ms, Seiten 1 bis 5000, Modell nicht leer.",
+    "testOk": "Funktioniert: {{model}}, {{dimensions}} Dimensionen.",
+    "testFail": "Rückfall auf TF-IDF: {{reason}}.",
+    "reason": {
+      "offline": "Ollama nicht erreichbar",
+      "timeout": "Zeitüberschreitung",
+      "cancelled": "abgebrochen",
+      "rate-limited": "Ratenlimit",
+      "model-missing": "Modell nicht installiert",
+      "invalid-response": "ungültige Antwort",
+      "failed": "unbekannter Fehler"
+    }
   }
 }

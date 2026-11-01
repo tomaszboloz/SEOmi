@@ -7040,7 +7040,8 @@
       "unmatchedTopic": "トピック「{{topic}}」に一致するページはありませんでした。代わりに検出されたトピックを使用します。",
       "gateSkipped": "{{count}} ページをスキップしました（noindex/canonical）。",
       "gateInclude": "含める",
-      "gateExclude": "再び除外"
+      "gateExclude": "再び除外",
+      "semantic": "意味的類似度が有効：{{model}}。"
     },
     "skip": {
       "render-timeout": "JavaScript のレンダリングがタイムアウトしました",
@@ -9234,5 +9235,34 @@
       "error": "検索失敗"
     },
     "correctPlaceholder": "Q123 / none"
+  },
+  "semanticSource": {
+    "title": "意味的類似度（任意）",
+    "hint": "ローカルのOllama埋め込みモデルで、Site FocusとTopical Authorityの同義語を照合します。既定ではオフです。オフの場合、レポートはTF-IDFを使い、その旨を表示します。インストールやダウンロードは自動では行いません。",
+    "enable": "利用可能なときは埋め込みを使う",
+    "provider": "ソース",
+    "providerOllama": "Ollama（ニューラル）",
+    "providerHybrid": "ハイブリッド（ローカルハッシュ + Ollama）",
+    "url": "Ollamaのアドレス（空欄 = ローカル既定）",
+    "model": "埋め込みモデル",
+    "timeout": "バッチごとのタイムアウト（ms）",
+    "maxEntries": "1回に処理する最大ページ数",
+    "save": "保存",
+    "test": "Ollama接続をテスト",
+    "testing": "テスト中...",
+    "saved": "設定を保存しました。",
+    "failed": "設定を保存できませんでした。",
+    "invalid": "値を確認してください：タイムアウト1000〜300000 ms、ページ数1〜5000、モデル名は必須。",
+    "testOk": "動作中：{{model}}、{{dimensions}}次元。",
+    "testFail": "TF-IDFに戻ります：{{reason}}。",
+    "reason": {
+      "offline": "Ollamaに接続できません",
+      "timeout": "タイムアウト",
+      "cancelled": "キャンセルされました",
+      "rate-limited": "リクエスト制限",
+      "model-missing": "モデルが未インストール",
+      "invalid-response": "無効な応答",
+      "failed": "不明なエラー"
+    }
   }
 }

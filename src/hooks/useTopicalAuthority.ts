@@ -11,6 +11,7 @@ import {
   type ReferenceInput, type ReferenceOutcome, type ReferenceProgress, type TopicalBenchmark,
 } from '@/services/topicalAuthorityReference';
 
+import { useSemanticEmbeddings } from '@/hooks/useSemanticEmbeddings';
 import { recordReferenceSnapshot } from '@/services/semanticDecay/recordReferenceSnapshot';
 
 export interface ReferenceRunOptions { /** Opt-in real People Also Ask via the separately billed advanced SERP. */ withQuestions?: boolean }
@@ -44,6 +45,7 @@ export interface UseTopicalAuthorityArgs {
 
 /** Topical Authority for a crawl: report, cached reference map, competitor benchmark, history and the map builder. */
 export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runner = defaultReferenceRunner, market = referenceMarket }: UseTopicalAuthorityArgs) => {
+  const { set: embeddings } = useSemanticEmbeddings(projectId, pages);
   const [taxonomy, setTaxonomy] = useState<ReferenceTaxonomy | null>(() => readTaxonomy(projectId));
   const [benchmark, setBenchmark] = useState<TopicalBenchmark | null>(() => readTopicalBenchmark(projectId));
   const [history, setHistory] = useState<AuthorityHistoryEntry[]>(() => readAuthorityHistory(projectId));
@@ -65,8 +67,8 @@ export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runn
   // A cached map built for another Core Topic, language or SERP market is not applied (treated as absent until rebuilt).
   const usable = taxonomy && sfs && taxonomyMatchesCore(taxonomy, { coreLabel: sfs.coreTopic.label, language: sfs.model.language, market: market() }) ? taxonomy : null;
   const report = useMemo<TopicalAuthorityReport | null>(
-    () => (sfs ? buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: usable, now: sfs.generatedAt }) : null),
-    [pages, startUrl, sfs, usable],
+    () => (sfs ? buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: usable, embeddings, now: sfs.generatedAt }) : null),
+    [pages, startUrl, sfs, usable, embeddings],
   );
 
   useEffect(() => {
@@ -91,14 +93,14 @@ export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runn
       const stamped: ReferenceTaxonomy = { ...outcome.taxonomy, market: where };
       writeTaxonomy(projectId, stamped);
       recordReferenceSnapshot(projectId ?? null, stamped, outcome.serp, where);
-      const fresh = buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: stamped, now: sfs.generatedAt });
+      const fresh = buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: stamped, embeddings, now: sfs.generatedAt });
       setPendingBenchmark(withSerpEvidence(buildTopicalBenchmark(fresh, domainOf(startUrl), outcome.competitors, stamped, new Date().toISOString(), outcome.attempted), outcome.serp));
       setTaxonomy(stamped);
       setState(IDLE);
     } catch (error) {
       if (controller.current === own) setState({ ...IDLE, error: error instanceof Error ? error.message : String(error) });
     }
-  }, [sfs, startUrl, pages, projectId, runner, market]);
+  }, [sfs, startUrl, pages, projectId, runner, market, embeddings]);
 
   const cancel = useCallback(() => controller.current?.abort(), []);
   const clear = useCallback(() => { clearTaxonomy(projectId); setTaxonomy(null); setBenchmark(null); setPendingBenchmark(null); }, [projectId]);
