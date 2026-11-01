@@ -8391,6 +8391,10 @@
     "igos": {
       "title": "Spadł wynik IGOS",
       "body": "Wynik zysku informacyjnego dla „{{phrase}}” spadł z {{from}} do {{to}} ({{points}} pkt) przy tych samych stronach TOP i modelu."
+    },
+    "igosTopChange": {
+      "title": "IGOS: zmienił się zestaw TOP",
+      "body": "Zestaw stron TOP dla \"{{phrase}}\" zmienił się (dodano {{added}}, usunięto {{removed}}). IGOS nie jest porównywalny z poprzednim przebiegiem."
     }
   },
   "sprsUi": {

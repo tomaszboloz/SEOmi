@@ -8391,6 +8391,10 @@
     "igos": {
       "title": "IGOS 하락",
       "body": "동일한 TOP 페이지와 모델에서 \"{{phrase}}\"의 정보 이득 점수가 {{from}}에서 {{to}}(으)로 떨어졌습니다({{points}}점)."
+    },
+    "igosTopChange": {
+      "title": "IGOS: TOP 집합 변경",
+      "body": "\"{{phrase}}\"의 TOP 페이지가 변경되었습니다(추가 {{added}}, 제거 {{removed}}). IGOS는 이전 실행과 비교할 수 없습니다."
     }
   },
   "sprsUi": {

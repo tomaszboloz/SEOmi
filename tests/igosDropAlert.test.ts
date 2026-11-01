@@ -2,7 +2,8 @@
 import { beforeEach, expect, it, vi } from 'vitest';
 
 const drop = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
-vi.mock('@/services/monitoringAlerts', () => ({ monitorScoreDrop: drop }));
+const top = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
+vi.mock('@/services/monitoringAlerts', () => ({ monitorScoreDrop: drop, monitorTopSetChange: top }));
 
 import { monitorIgosDrop } from '@/services/igos/alert';
 import type { IgosHistoryEntry } from '@/services/igos/history';
@@ -11,7 +12,7 @@ const row = (runAt: string, igos: number | null, over: Partial<IgosHistoryEntry>
   runAt, targetUrl: 'https://a.test', provider: 'p', model: 'm', igos, status: 'ready', availableDocs: 3, requestedDocs: 3, docUrls: ['u1'], ...over,
 });
 
-beforeEach(() => drop.mockClear());
+beforeEach(() => { drop.mockClear(); top.mockClear(); });
 
 it('alerts on a drop with the same provider, model and TOP set', async () => {
   await monitorIgosDrop('p1', 'seo', [row('2', 40), row('1', 60)]);
@@ -22,6 +23,11 @@ it('stays silent without project, history, or comparable basis', async () => {
   await monitorIgosDrop(null, 'seo', [row('2', 40), row('1', 60)]);
   await monitorIgosDrop('p1', 'seo', [row('1', 60)]);
   await monitorIgosDrop('p1', 'seo', [row('2', 40, { model: 'x' }), row('1', 60)]);
+  expect(drop).not.toHaveBeenCalled();
+});
+
+it('raises the TOP-change alert, not a drop alert, when the TOP set changed', async () => {
   await monitorIgosDrop('p1', 'seo', [row('2', 40, { docUrls: ['u2'] }), row('1', 60)]);
   expect(drop).not.toHaveBeenCalled();
+  expect(top).toHaveBeenCalledWith('p1', ['u1'], ['u2'], 'seo-2', 'seo');
 });

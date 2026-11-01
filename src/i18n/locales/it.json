@@ -8391,6 +8391,10 @@
     "igos": {
       "title": "Calo dell'IGOS",
       "body": "Il punteggio di guadagno informativo di «{{phrase}}» è sceso da {{from}} a {{to}} ({{points}} punti) con le stesse pagine TOP e lo stesso modello."
+    },
+    "igosTopChange": {
+      "title": "IGOS: insieme TOP cambiato",
+      "body": "Le pagine TOP per \"{{phrase}}\" sono cambiate ({{added}} aggiunte, {{removed}} rimosse). L'IGOS non è confrontabile con l'esecuzione precedente."
     }
   },
   "sprsUi": {

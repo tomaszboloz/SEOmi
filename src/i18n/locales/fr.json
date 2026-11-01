@@ -8391,6 +8391,10 @@
     "igos": {
       "title": "IGOS en baisse",
       "body": "Le score de gain d'information de « {{phrase}} » est passé de {{from}} à {{to}} ({{points}} points) avec les mêmes pages TOP et le même modèle."
+    },
+    "igosTopChange": {
+      "title": "IGOS : l'ensemble TOP a changé",
+      "body": "Les pages TOP pour \"{{phrase}}\" ont changé ({{added}} ajoutées, {{removed}} retirées). L'IGOS n'est pas comparable à l'exécution précédente."
     }
   },
   "sprsUi": {

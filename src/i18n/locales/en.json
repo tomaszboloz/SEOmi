@@ -8391,6 +8391,10 @@
     "igos": {
       "title": "IGOS dropped",
       "body": "The information gain score of \"{{phrase}}\" fell from {{from}} to {{to}} ({{points}} points) on the same TOP pages and model."
+    },
+    "igosTopChange": {
+      "title": "IGOS: TOP set changed",
+      "body": "The TOP pages for \"{{phrase}}\" changed ({{added}} added, {{removed}} removed). IGOS is not comparable with the previous run."
     }
   },
   "sprsUi": {

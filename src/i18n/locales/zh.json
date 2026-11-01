@@ -8391,6 +8391,10 @@
     "igos": {
       "title": "IGOS 下降",
       "body": "在相同的 TOP 页面和模型下，“{{phrase}}”的信息增益分从 {{from}} 降至 {{to}}（{{points}} 分）。"
+    },
+    "igosTopChange": {
+      "title": "IGOS：TOP 集合已变化",
+      "body": "“{{phrase}}”的 TOP 页面已变化（新增 {{added}}，移除 {{removed}}）。IGOS 与上次运行不可比较。"
     }
   },
   "sprsUi": {

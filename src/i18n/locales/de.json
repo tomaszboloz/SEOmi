@@ -8391,6 +8391,10 @@
     "igos": {
       "title": "IGOS gesunken",
       "body": "Der Informationsgewinn-Wert für „{{phrase}}“ fiel von {{from}} auf {{to}} ({{points}} Punkte) bei gleichen TOP-Seiten und gleichem Modell."
+    },
+    "igosTopChange": {
+      "title": "IGOS: TOP-Set geändert",
+      "body": "Die TOP-Seiten für \"{{phrase}}\" haben sich geändert ({{added}} neu, {{removed}} entfernt). IGOS ist mit dem vorherigen Lauf nicht vergleichbar."
     }
   },
   "sprsUi": {

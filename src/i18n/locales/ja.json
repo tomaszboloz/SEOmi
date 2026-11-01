@@ -8391,6 +8391,10 @@
     "igos": {
       "title": "IGOSが低下",
       "body": "「{{phrase}}」の情報利得スコアが、同じTOPページとモデルで {{from}} から {{to}} に低下しました（{{points}} ポイント）。"
+    },
+    "igosTopChange": {
+      "title": "IGOS：TOP セットが変更",
+      "body": "「{{phrase}}」の TOP ページが変わりました（追加 {{added}}、削除 {{removed}}）。IGOS は前回の実行と比較できません。"
     }
   },
   "sprsUi": {

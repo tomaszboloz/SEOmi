@@ -8391,6 +8391,10 @@
     "igos": {
       "title": "Queda no IGOS",
       "body": "A pontuação de ganho de informação de “{{phrase}}” caiu de {{from}} para {{to}} ({{points}} pontos) com as mesmas páginas TOP e o mesmo modelo."
+    },
+    "igosTopChange": {
+      "title": "IGOS: conjunto TOP alterado",
+      "body": "As páginas TOP de \"{{phrase}}\" mudaram ({{added}} novas, {{removed}} removidas). O IGOS não é comparável com a execução anterior."
     }
   },
   "sprsUi": {
