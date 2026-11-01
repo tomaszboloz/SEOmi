@@ -52,7 +52,7 @@ export const CrawlTrustTab = ({ pages, startUrl, run, projectId }: CrawlTrustTab
       <TrustFindings findings={report.findings} />
       <div className="grid gap-4 lg:grid-cols-2">
         <TrustEntities report={report} onGenerate={open} onVerify={verify} />
-        <TrustSignals report={report} />
+        <TrustSignals report={report} projectId={projectId} />
       </div>
       {form && <TrustJsonLdGenerator key={form.personName + form.pageUrl} initial={form} observed={observed} onClose={() => setForm(null)} />}
     </div>

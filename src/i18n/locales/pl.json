@@ -8083,6 +8083,24 @@
         "hedged": "ostrożne sformułowanie",
         "negated": "zaprzeczenie",
         "note": "Sprawdzenie lokalne czyta tylko tę stronę (pozycja przypisu, identyfikator, sformułowania ostrożne, zaprzeczenie). Nie czyta cytowanej pracy, więc nie potwierdza poparcia."
+      },
+      "entail": {
+        "sourceLabel": "Tekst źródła do porównania (wklej)",
+        "useModel": "Zapytaj też model lokalny (Ollama, opcjonalnie)",
+        "run": "Porównaj twierdzenia z tekstem źródła",
+        "results": "Wyniki porównania",
+        "label": {
+          "consistent": "zgodne z tekstem",
+          "related": "powiązane, bez dopasowania",
+          "unrelated": "niepowiązane",
+          "contradicts": "możliwa sprzeczność",
+          "unknown": "za mało tekstu"
+        },
+        "method": {
+          "heuristic": "heurystyka słów",
+          "model": "model lokalny"
+        },
+        "note": "Tylko dowód powiązania. Nie oznacza twierdzenia jako zweryfikowanego ani źródła jako sprawdzonego."
       }
     },
     "identity": {

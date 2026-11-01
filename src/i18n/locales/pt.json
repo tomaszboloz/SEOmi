@@ -8083,6 +8083,24 @@
         "hedged": "formulação cautelosa",
         "negated": "negação",
         "note": "A verificação local lê apenas esta página (posição da citação, identificador, cautela, negação). Nunca lê o trabalho citado, por isso não pode confirmar o suporte."
+      },
+      "entail": {
+        "sourceLabel": "Texto da fonte para comparar (colar)",
+        "useModel": "Consultar também o modelo local (Ollama, opcional)",
+        "run": "Comparar afirmações com o texto da fonte",
+        "results": "Resultados da comparação",
+        "label": {
+          "consistent": "coerente com o texto",
+          "related": "relacionado, sem correspondência",
+          "unrelated": "sem relação",
+          "contradicts": "possível contradição",
+          "unknown": "texto insuficiente"
+        },
+        "method": {
+          "heuristic": "heurística de palavras",
+          "model": "modelo local"
+        },
+        "note": "Apenas evidência de associação. Não marca a afirmação como verificada nem a fonte como conferida."
       }
     },
     "identity": {

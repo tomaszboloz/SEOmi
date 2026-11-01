@@ -8083,6 +8083,24 @@
         "hedged": "措辞保留",
         "negated": "否定",
         "note": "本地检查只读取本页面（引用位置、标识符、保留措辞、否定）。它从不读取被引用的文献，因此无法确认支持关系。"
+      },
+      "entail": {
+        "sourceLabel": "要比较的来源文本(粘贴)",
+        "useModel": "同时询问本地模型(Ollama,可选)",
+        "run": "将主张与来源文本比较",
+        "results": "比较结果",
+        "label": {
+          "consistent": "与文本一致",
+          "related": "相关但不匹配",
+          "unrelated": "无关",
+          "contradicts": "可能矛盾",
+          "unknown": "文本不足"
+        },
+        "method": {
+          "heuristic": "词汇启发式",
+          "model": "本地模型"
+        },
+        "note": "仅为关联证据,不会将主张标为已验证或来源标为已核查。"
       }
     },
     "identity": {
